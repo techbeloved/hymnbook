@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">HymnBook</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_favorites_fragment">Hello Favorites fragment</string>
+    <string name="hello_topic_fragment">Welcome to topics fragment</string>
 </resources>
