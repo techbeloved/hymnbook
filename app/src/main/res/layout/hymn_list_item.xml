@@ -2,19 +2,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="?listPreferredItemHeightSmall"
+    android:paddingStart="?listPreferredItemPaddingLeft"
+    android:paddingEnd="?listPreferredItemPaddingRight"
+    android:background="?android:selectableItemBackground">
 
     <TextView
         android:id="@+id/hymn_number"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:padding="4dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="4dp"
+        android:textSize="18sp"
+        android:gravity="center_vertical"
         tools:text="3"/>
     <TextView
         android:id="@+id/hymn_title"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="match_parent"
         android:padding="4dp"
-        android:textSize="14sp"
+        android:textSize="18sp"
+        android:gravity="center_vertical"
         tools:text="To God be the Glory"/>
 </LinearLayout>

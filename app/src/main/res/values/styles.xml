@@ -10,8 +10,8 @@
 
     <!--&lt;!&ndash; App bar style &ndash;&gt;-->
     <!--<style name="MiwokAppBarStyle" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">-->
-        <!--&lt;!&ndash; Remove the shadow below the app bar &ndash;&gt;-->
-        <!--<item name="elevation">0dp</item>-->
+    <!--&lt;!&ndash; Remove the shadow below the app bar &ndash;&gt;-->
+    <!--<item name="elevation">0dp</item>-->
     <!--</style>-->
 
     <!-- Style for a tab that displays a category name -->
@@ -26,5 +26,9 @@
     <style name="CategoryTabTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="android:textColor">#A8A19E</item>
     </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

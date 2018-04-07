@@ -9,6 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.techbeloved.hymnbook.utils.ItemClickSupport;
 
 import java.util.ArrayList;
 
@@ -34,6 +38,14 @@ public class HymnTitlesFragment extends Fragment {
         // Set layout manager to position the items
         rvHymns.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+//        rvHymns.getChildViewHolder()
+        ItemClickSupport.addTo(rvHymns).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                TextView h = v.findViewById(R.id.hymn_number);
+                Toast.makeText(getActivity(), "Hymn " + h.getText() + " clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
         return rootView;
     }
 

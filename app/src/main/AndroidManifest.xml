@@ -16,6 +16,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".HymnDetailActivity"
+            android:label="@string/title_activity_hymn_detail"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
