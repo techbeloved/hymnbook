@@ -1,5 +1,6 @@
 package com.techbeloved.hymnbook;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,6 +24,10 @@ import java.util.ArrayList;
 public class HymnTitlesFragment extends Fragment {
     ArrayList<Hymn> hymns;
 
+    public HymnTitlesFragment() {
+        // Empty constructor
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -39,17 +44,15 @@ public class HymnTitlesFragment extends Fragment {
         rvHymns.setLayoutManager(new LinearLayoutManager(getActivity()));
 
 //        rvHymns.getChildViewHolder()
-        ItemClickSupport.addTo(rvHymns).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-            @Override
-            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                TextView h = v.findViewById(R.id.hymn_number);
-                Toast.makeText(getActivity(), "Hymn " + h.getText() + " clicked", Toast.LENGTH_SHORT).show();
-            }
+        ItemClickSupport.addTo(rvHymns).setOnItemClickListener((recyclerView, position, v) -> {
+
+            TextView h = v.findViewById(R.id.hymn_number);
+
+            Intent intent = new Intent(getActivity(), HymnDetailActivity.class);
+            intent.putExtra(HymnDetailActivity.hymn_tag, position);
+            startActivity(intent);
+//                Toast.makeText(getActivity(), "Hymn " + h.getText() + " clicked", Toast.LENGTH_SHORT).show();
         });
         return rootView;
-    }
-
-    public HymnTitlesFragment(){
-        // Empty constructor
     }
 }

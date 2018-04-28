@@ -32,4 +32,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation 'com.android.support:design:27.1.0'
     implementation 'com.android.support:recyclerview-v7:27.1.0'
+    implementation 'net.sourceforge.htmlcleaner:htmlcleaner:2.21'
+    implementation 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
 }

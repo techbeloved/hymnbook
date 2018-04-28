@@ -19,7 +19,8 @@
         <activity
             android:name=".HymnDetailActivity"
             android:label="@string/title_activity_hymn_detail"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".NewsDetailActivity"></activity>
     </application>
 
 </manifest>
