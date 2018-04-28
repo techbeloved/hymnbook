@@ -1,0 +1,71 @@
+@font-face{
+    font-family: "Cormorant";
+    src: url("fonts/CormorantGaramond-Regular.ttf");
+    font-style: normal;
+}
+@font-face{
+    font-family: "Cormorant";
+    src: url("fonts/CormorantGaramond-Italic.ttf");
+    font-style: italic;
+}
+@font-face {
+    font-family: "CrimsonText";
+    src: url("fonts/CrimsonText-Bold.ttf");
+    font-weight: bold;
+}
+@font-face {
+    font-family: "CrimsonText";
+    src: url("fonts/CrimsonText-Regular.ttf");
+    font-style: normal;
+}
+@font-face {
+    font-family: "CrimsonText";
+    src: url("fonts/CrimsonText-Italic.ttf");
+    font-style: italic;
+}
+body {
+    width: 90%;
+    line-height: 1.5;
+    margin-left: 0;
+    font-family: "CrimsonText", serif;
+    font-size: 1.15rem;
+}
+ol {
+
+    margin-left: 0;
+}
+
+ol li {
+    padding-left: 1rem;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+}
+
+span {
+    display: block;
+    text-indent: -1rem;
+    padding-left: 1rem;
+}
+h2.title {
+    width: 300px;
+    text-align: center;
+    font-weight: 400;
+}
+
+
+p.chorus{
+    margin-left: 2.5rem;
+    padding-left: 1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+}
+
+header {
+    display: flex;
+}
+h2.hymn_no {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-weight: 300;
+}
