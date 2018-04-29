@@ -6,6 +6,7 @@ import android.provider.BaseColumns;
 
 /**
  * Created by kennedy on 4/28/18.
+ * {@link HymnContract} Contract for the hymn app
  */
 
 public final class HymnContract {
