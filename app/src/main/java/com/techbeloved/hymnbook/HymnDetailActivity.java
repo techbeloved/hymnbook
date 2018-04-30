@@ -1,29 +1,20 @@
 package com.techbeloved.hymnbook;
 
 import android.content.ContentUris;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.text.Html;
+import android.support.v7.widget.Toolbar;
 import android.webkit.WebView;
+import android.widget.TextView;
 
-import com.techbeloved.hymnbook.data.HymnContract;
-
-import org.htmlcleaner.ContentNode;
-import org.htmlcleaner.TagNode;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.techbeloved.hymnbook.data.HymnContract.*;
+import static com.techbeloved.hymnbook.data.HymnContract.HymnEntry;
 
 public class HymnDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -31,11 +22,21 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
     public static String hymn_tag = "hymn_number";
     private Uri mUri;
     private WebView mDetailWebView;
+    private TextView mToolBarTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hymn_detail);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // Remove default title
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mToolBarTitle = findViewById(R.id.toolbar_title);
+
 
         // Get uri sent by hymn list
         mUri = getIntent().getData();
@@ -74,6 +75,10 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
 
         mDetailWebView.loadDataWithBaseURL("file:///android_asset/",
                 webData, "text/html", "UTF-8", null);
+
+        // Set the title of the tool bar
+        String toolBarTitle = hymn_no + ". " + title;
+        mToolBarTitle.setText(toolBarTitle);
 
     }
 
