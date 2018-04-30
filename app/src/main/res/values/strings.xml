@@ -7,42 +7,6 @@
     <string name="title_activity_hymn_detail">Hymn Detail</string>
     <string name="action_settings">Settings</string>
 
-    <string name="hymn_sample2"><![CDATA[
-<body>
- <header>
-    <h2 class="hymn_no">3</h2>
-     <h2 class="title">To God be the Glory for all he has done</h2>
- </header>
-   <ol>
-       <li>
-        <span>To God be the glory, great things He has done;</span>
-        <span>So loved He the world that He gave us His Son,</span>
-        <span>Who yielded His life an atonement for sin,</span>
-        <span>And opened the life gate that all may go in.</span>
-       </li>
-       <p class="chorus">
-           <span>Praise the Lord, praise the Lord,</span>
-            <span>Let the earth hear His voice!</span>
-            <span>Praise the Lord, praise the Lord,</span>
-            <span>Let the people rejoice!</span>
-            <span>O come to the Father, through Jesus the Son,</span>
-            <span>And give Him the glory, great things He has done.</span>
-       </p>
-       <li>
-           <span>O perfect redemption, the purchase of blood,</span>
-            <span>To every believer the promise of God;</span>
-            <span>The vilest offender who truly believes,</span>
-            <span>That moment from Jesus a pardon receives.</span>
-       </li>
-
-       <li>
-           <span>Great things He has taught us, great things He has done,</span>
-            <span>And great our rejoicing through Jesus the Son;</span>
-            <span>But purer, and higher, and greater will be</span>
-            <span>Our wonder, our transport, when Jesus we see.</span>
-       </li>
-   </ol>
-
-</body>
-    ]]></string>
+    <string name="html_body_template"><![CDATA[<body> <header> <h2 class=\"hymn_no\">%1$d</h2> <h2 class=\"title\">%2$s</h2> </header> %3$s </body>]]></string>
+    <string name="css_link"><![CDATA[<link rel=\"stylesheet\" href=\"style.css\">]]></string>
 </resources>

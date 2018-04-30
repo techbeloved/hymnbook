@@ -20,7 +20,11 @@
             android:name=".HymnDetailActivity"
             android:label="@string/title_activity_hymn_detail"
             android:theme="@style/AppTheme" />
-        <activity android:name=".NewsDetailActivity"></activity>
+
+        <provider
+            android:name=".data.HymnProvider"
+            android:authorities="com.techbeloved.hymnbook"
+            android:exported="false" />
     </application>
 
 </manifest>
