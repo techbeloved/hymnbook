@@ -1,28 +1,42 @@
 package com.techbeloved.hymnbook;
 
+
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.techbeloved.hymnbook.data.HymnContract;
 import com.techbeloved.hymnbook.utils.ItemClickSupport;
 
 import java.util.ArrayList;
+
+import static com.techbeloved.hymnbook.data.HymnContract.*;
 
 /**
  * Created by kennedy on 4/6/18.
  */
 
-public class HymnTitlesFragment extends Fragment {
-    ArrayList<Hymn> hymns;
+public class HymnTitlesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    private static final int LOADER_ID = 1;
+    private HymnCursorAdapter mCursorAdapter;
+    private ListView mHymnListView;
 
     public HymnTitlesFragment() {
         // Empty constructor
@@ -32,27 +46,65 @@ public class HymnTitlesFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_song_list, container, false);
-        RecyclerView rvHymns = rootView.findViewById(R.id.song_list_recyclerview);
 
-        // Initialize hymns
-        hymns = Hymn.createHymnList();
-        // Create adapter passing in the sample user data
-        HymnAdapter hymnAdapter = new HymnAdapter(getActivity(), hymns);
-        // Attache the adapter to the recycler
-        rvHymns.setAdapter(hymnAdapter);
-        // Set layout manager to position the items
-        rvHymns.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mHymnListView = rootView.findViewById(R.id.hymn_listview);
+        mCursorAdapter = new HymnCursorAdapter(getActivity(), null, false);
+        mHymnListView.setAdapter(mCursorAdapter);
 
-//        rvHymns.getChildViewHolder()
-        ItemClickSupport.addTo(rvHymns).setOnItemClickListener((recyclerView, position, v) -> {
+        // Enable Toolbar scrolling with listview
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mHymnListView.setNestedScrollingEnabled(true);
+        }
 
-            TextView h = v.findViewById(R.id.hymn_number);
-
-            Intent intent = new Intent(getActivity(), HymnDetailActivity.class);
-            intent.putExtra(HymnDetailActivity.hymn_tag, position);
-            startActivity(intent);
-//                Toast.makeText(getActivity(), "Hymn " + h.getText() + " clicked", Toast.LENGTH_SHORT).show();
+        // Set up click listener
+        mHymnListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Uri uri = Uri.withAppendedPath(HymnEntry.CONTENT_URI, String.valueOf(id));
+                Intent intent = new Intent(Intent.ACTION_VIEW,
+                        uri,
+                        parent.getContext(),
+                        HymnDetailActivity.class
+                );
+                startActivity(intent);
+            }
         });
+
+        getLoaderManager().initLoader(LOADER_ID, null, this);
         return rootView;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
+        // Define a projection that specifies the columns you want to retrieve
+        String[] projection = {HymnEntry._ID, HymnEntry.COLUMN_TITLE};
+
+        switch (id) {
+            case LOADER_ID:
+                return new CursorLoader(getActivity(),
+                        HymnEntry.CONTENT_URI,
+                        projection,
+                        null,
+                        null,
+                        null
+                );
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        mCursorAdapter.swapCursor(cursor);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mCursorAdapter.swapCursor(null);
     }
 }
