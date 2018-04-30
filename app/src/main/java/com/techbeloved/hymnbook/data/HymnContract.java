@@ -11,7 +11,7 @@ import android.provider.BaseColumns;
 
 public final class HymnContract {
 
-    public static final String CONTENT_AUTHORITY = "com.techbeloved.hymbook";
+    public static final String CONTENT_AUTHORITY = "com.techbeloved.hymnbook";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
     public static final String PATH_HYMNS = "hymns";
     public static final String PATH_TOPICS = "topics";
