@@ -13,6 +13,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -35,6 +36,8 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
     private ViewPager mPager;
     private CursorPagerAdapter mAdapter;
 
+    private ActionBar mActionBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +48,11 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
         setSupportActionBar(toolbar);
 
         // Remove default title
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mToolbarTitle = findViewById(R.id.toolbar_title);
-        mToolbarTopic = findViewById(R.id.toolbar_topic);
+        mActionBar = getSupportActionBar();
+//        mToolbarTitle = findViewById(R.id.toolbar_title);
+//        mToolbarTopic = findViewById(R.id.toolbar_topic);
 
         mPager = findViewById(R.id.detail_pager);
         mAdapter = new CursorPagerAdapter(getSupportFragmentManager(), null);
@@ -129,7 +133,6 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
         @Override
         public int getCount() {
             if (mCursor != null && mCursor.getCount() > 0) {
-                Log.i(TAG, "getCount: " + mCursor.getCount());
                 return mCursor.getCount();
             }
             return 0;
@@ -152,8 +155,8 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
             super.setPrimaryItem(container, position, object);
             mCurrentFragment = (HymnDetailFragment) object;
             // Set the Tool Bar title which is stored in the current instance
-            mToolbarTitle.setText(mCurrentFragment.hymnTitle);
-            mToolbarTopic.setText(mCurrentFragment.hymnTopic);
+            mActionBar.setTitle(mCurrentFragment.hymnTitle);
+            mActionBar.setSubtitle(mCurrentFragment.hymnTopic);
         }
 
         HymnDetailFragment getCurrentFragment() {
