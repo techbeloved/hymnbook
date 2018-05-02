@@ -26,7 +26,7 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
 
     private static final String TAG = HymnDetailActivity.class.getSimpleName();
     private static final int LOADER_ID = 1;
-    public static String hymn_tag = "hymn_number";
+
     private Uri mUri;
     private TextView mToolbarTitle;
     private TextView mToolbarTopic;
@@ -44,15 +44,11 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hymn_detail);
 
+        // Configure the ToolBar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        // Remove default title
-//        getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mActionBar = getSupportActionBar();
-//        mToolbarTitle = findViewById(R.id.toolbar_title);
-//        mToolbarTopic = findViewById(R.id.toolbar_topic);
 
         mPager = findViewById(R.id.detail_pager);
         mAdapter = new CursorPagerAdapter(getSupportFragmentManager(), null);
@@ -109,6 +105,9 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
         mAdapter.swapCursor(null);
     }
 
+    /**
+     * The {@link CursorPagerAdapter }
+     */
     private class CursorPagerAdapter extends FragmentStatePagerAdapter {
 
         private Cursor mCursor;
