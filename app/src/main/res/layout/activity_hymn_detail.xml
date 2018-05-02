@@ -7,8 +7,9 @@
     tools:context="com.techbeloved.hymnbook.HymnDetailActivity">
     <!--Pull in the toolbar layout-->
     <include layout="@layout/include_toolbar_main" />
-    <WebView
-        android:id="@+id/detail_webview"
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/detail_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content" />
 </LinearLayout>
