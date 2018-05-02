@@ -53,6 +53,7 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
         mPager = findViewById(R.id.detail_pager);
         mAdapter = new CursorPagerAdapter(getSupportFragmentManager(), null);
         mPager.setAdapter(mAdapter);
+        mPager.setPageTransformer(true, new DepthPageTransformer());
 
         // Get uri sent by hymn list
         mUri = getIntent().getData();
