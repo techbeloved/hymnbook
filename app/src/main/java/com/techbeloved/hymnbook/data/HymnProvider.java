@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -72,9 +73,8 @@ public class HymnProvider extends ContentProvider {
                 selection = HymnContract.HymnEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
 
-                cursor = db.query(HymnContract.HymnEntry.TABLE_NAME,
-                        projection, selection, selectionArgs,
-                        null, null, sortOrder);
+                // I want to join the topics table in order to get the related topic for the hymn
+                cursor = queryJoin(uri, projection, selection, selectionArgs, sortOrder);
                 break;
 
             case TOPICS:
@@ -111,6 +111,13 @@ public class HymnProvider extends ContentProvider {
         }
 
         return cursor;
+    }
+
+    private Cursor queryJoin(Uri uri, String[] proj, String sel, String[] selArgs, String sort) {
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
+        queryBuilder.setTables("hymns JOIN topics on(hymns.topic_id = topics._id)");
+        return queryBuilder.query(db, proj, "hymns._id=?", selArgs, null, null, null);
     }
 
     /**
