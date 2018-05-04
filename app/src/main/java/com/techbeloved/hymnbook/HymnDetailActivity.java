@@ -31,6 +31,7 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
     private TextView mToolbarTitle;
     private TextView mToolbarTopic;
 
+    // This stores the hymn number, received from an intent and also saved onSaveInstanceState.
     private long mHymnId;
 
     private ViewPager mPager;
@@ -64,6 +65,7 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putLong(HymnDetailFragment.ARG_CURR_ID, mAdapter.getCurrentFragment().currentHymnId);
+        mHymnId = mAdapter.getCurrentFragment().currentHymnId;
         super.onSaveInstanceState(outState);
         Log.i(TAG, "onSaveInstanceState: " + mAdapter.getCurrentFragment().currentHymnId);
     }
