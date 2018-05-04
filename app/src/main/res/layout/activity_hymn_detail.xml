@@ -1,15 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:fitsSystemWindows="true"
     tools:context="com.techbeloved.hymnbook.HymnDetailActivity">
-    <!--Pull in the toolbar layout-->
-    <include layout="@layout/include_toolbar_main" />
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/detail_pager"
+    <!--LinearLayout allows everything to fit the screen-->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:layout_scrollFlags="snap">
+
+            <!--Pull in the toolbar layout-->
+            <include layout="@layout/include_toolbar_main" />
+
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/detail_pager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_play"
+        app:fabSize="normal"
+        app:layout_anchor="@id/detail_pager"
+        app:layout_anchorGravity="bottom|right|end"
+        app:layout_behavior="com.techbeloved.hymnbook.utils.ScrollAwareFABBehaviour" />
+</android.support.design.widget.CoordinatorLayout>
