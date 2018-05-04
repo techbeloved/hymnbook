@@ -11,6 +11,7 @@ import android.view.View;
 
 /**
  * Created by kennedy on 5/4/18.
+ * Copied from https://guides.codepath.com/android/Floating-Action-Buttons
  */
 
 public class ScrollAwareFABBehaviour extends FloatingActionButton.Behavior {
@@ -35,7 +36,8 @@ public class ScrollAwareFABBehaviour extends FloatingActionButton.Behavior {
         super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed,
                 dyUnconsumed, type);
 
-        Log.i(TAG, "onNestedScroll: " + dyConsumed);
+        // https://stackoverflow.com/questions/41807601/onnestedscroll-called-only-once
+        // child.hide() sets the view visibility to GONE which makes it completely unavailable
         if (dyConsumed > 0 && child.getVisibility() == View.VISIBLE) {
             child.hide(new FloatingActionButton.OnVisibilityChangedListener() {
                 @Override
