@@ -2,10 +2,13 @@ package com.techbeloved.hymnbook;
 
 import android.content.ContentUris;
 import android.database.Cursor;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -17,6 +20,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -31,6 +35,8 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
     private TextView mToolbarTitle;
     private TextView mToolbarTopic;
 
+    private FloatingActionButton playFAB;
+
     // This stores the hymn number, received from an intent and also saved onSaveInstanceState.
     private long mHymnId;
 
@@ -39,6 +45,52 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
 
     private ActionBar mActionBar;
 
+    // Media player states
+    private MediaPlayer mMediaPlayer;
+    private AudioManager mAudioManager;
+    // Set up listener to listen for focus change. Only act when something is playing
+    private AudioManager.OnAudioFocusChangeListener audioFocusChangeListener =
+            new AudioManager.OnAudioFocusChangeListener() {
+                @Override
+                public void onAudioFocusChange(int i) {
+                    if (mMediaPlayer != null) {
+                        switch (i) {
+                            case AudioManager.AUDIOFOCUS_GAIN:
+                                // May be returning from a paused state, so resume playback
+                                mMediaPlayer.setVolume(1.0f, 1.0f);
+                                if (!mMediaPlayer.isPlaying()) {
+                                    mMediaPlayer.start();
+                                }
+                                break;
+
+                            case AudioManager.AUDIOFOCUS_LOSS:
+                                // Another app has taken over, stop completely and release MediaPlayer
+                                mMediaPlayer.stop();
+                                releaseMediaPlayer();
+                                break;
+
+                            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                                // Lost focus for a short time, but we have to stop
+                                // playback. We don't release the media player because playback
+                                // is likely to resume
+                                mMediaPlayer.pause();
+                                break;
+
+                            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                                // Lost focus for a short time, we just reduce the volume
+                                mMediaPlayer.setVolume(0.3f, 0.3f);
+                                break;
+
+                        }
+                    }
+                }
+            };
+    private MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
+        @Override
+        public void onCompletion(MediaPlayer mp) {
+            releaseMediaPlayer();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +112,24 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
         mUri = getIntent().getData();
         mHymnId = ContentUris.parseId(mUri);
         getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+
+        // Initialize AudioManager Service
+        mAudioManager = (AudioManager) this.getSystemService(AUDIO_SERVICE);
+
+        playFAB = findViewById(R.id.playFAB);
+        playFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mMediaPlayer != null) {
+                    if (mMediaPlayer.isPlaying()) {
+                        mMediaPlayer.stop();
+                    }
+                    releaseMediaPlayer();
+                }
+
+                playAudio(R.raw.hymn_136);
+            }
+        });
     }
 
     @Override
@@ -106,6 +176,41 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         mAdapter.swapCursor(null);
+    }
+
+    /**
+     * Clean up the media player by releasing its resources.
+     */
+    private void releaseMediaPlayer() {
+        // If the media player is not null, then it may be currently playing a sound.
+        if (mMediaPlayer != null) {
+            // Regardless of the current state of the media player, release its resources
+            // because we no longer need it.
+            mMediaPlayer.release();
+
+            // Set the media player back to null. For our code, we've decided that
+            // setting the media player to null is an easy way to tell that the media player
+            // is not configured to play an audio file at the moment.
+            mMediaPlayer = null;
+            mAudioManager.abandonAudioFocus(audioFocusChangeListener);
+
+        }
+    }
+
+    /**
+     * Handle playing of the audio media, which including requesting for focus and etc
+     */
+    private void playAudio(int soundResourceId) {
+        // Request for focus. requestAudioFocus(OnAudioFocusChangeListener l, int streamType, int durationHint)
+        int focus = mAudioManager.requestAudioFocus(audioFocusChangeListener,
+                AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+        // Play audio if focus request granted
+        if (focus == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            mMediaPlayer = MediaPlayer.create(this, soundResourceId);
+            mMediaPlayer.start();
+
+            mMediaPlayer.setOnCompletionListener(mCompletionListener);
+        }
     }
 
     /**
