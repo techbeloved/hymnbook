@@ -6,6 +6,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 /**
@@ -13,6 +14,8 @@ import android.view.View;
  */
 
 public class ScrollAwareFABBehaviour extends FloatingActionButton.Behavior {
+
+    public static final String TAG = ScrollAwareFABBehaviour.class.getSimpleName();
 
     public ScrollAwareFABBehaviour(Context context, AttributeSet attrs) {
         super();
@@ -32,8 +35,20 @@ public class ScrollAwareFABBehaviour extends FloatingActionButton.Behavior {
         super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed,
                 dyUnconsumed, type);
 
+        Log.i(TAG, "onNestedScroll: " + dyConsumed);
         if (dyConsumed > 0 && child.getVisibility() == View.VISIBLE) {
-            child.hide();
+            child.hide(new FloatingActionButton.OnVisibilityChangedListener() {
+                @Override
+                public void onShown(FloatingActionButton fab) {
+                    super.onShown(fab);
+                }
+
+                @Override
+                public void onHidden(FloatingActionButton fab) {
+                    super.onHidden(fab);
+                    child.setVisibility(View.INVISIBLE);
+                }
+            });
         } else if (dyConsumed < 0 && child.getVisibility() != View.VISIBLE) {
             child.show();
         }
