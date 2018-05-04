@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +36,10 @@ import static com.techbeloved.hymnbook.data.HymnContract.*;
 
 public class HymnTitlesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    private static final String TAG = HymnTitlesFragment.class.getSimpleName();
+
     private static final int LOADER_ID = 1;
+    Parcelable state;
     private HymnCursorAdapter mCursorAdapter;
     private ListView mHymnListView;
 
@@ -75,8 +80,19 @@ public class HymnTitlesFragment extends Fragment implements LoaderManager.Loader
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onPause() {
+        Log.d(TAG, "onPause: saving HymnListView State");
+        state = mHymnListView.onSaveInstanceState();
+        super.onPause();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (state != null) {
+            Log.d(TAG, "onViewCreated: restoring listview state");
+            mHymnListView.onRestoreInstanceState(state);
+        }
     }
 
     @Override
@@ -107,4 +123,5 @@ public class HymnTitlesFragment extends Fragment implements LoaderManager.Loader
     public void onLoaderReset(Loader<Cursor> loader) {
         mCursorAdapter.swapCursor(null);
     }
+
 }
