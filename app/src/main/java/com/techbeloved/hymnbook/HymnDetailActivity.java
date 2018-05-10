@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
@@ -23,6 +24,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.File;
 
 import static com.techbeloved.hymnbook.data.HymnContract.HymnEntry;
 
@@ -85,6 +89,15 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
                     }
                 }
             };
+    ViewPager.SimpleOnPageChangeListener pageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
+        @Override
+        public void onPageSelected(int position) {
+            super.onPageSelected(position);
+            // Stop the audio and release mediaPlayer when on a new page
+            releaseMediaPlayer();
+            playFAB.setImageResource(android.R.drawable.ic_media_play);
+        }
+    };
     private MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mp) {
@@ -122,22 +135,40 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
             public void onClick(View view) {
                 if (mMediaPlayer != null) {
                     if (mMediaPlayer.isPlaying()) {
-                        mMediaPlayer.stop();
+                        mMediaPlayer.pause();
+                        playFAB.setImageResource(android.R.drawable.ic_media_play);
+                    } else {
+                        mMediaPlayer.start();
+                        playFAB.setImageResource(android.R.drawable.ic_media_pause);
                     }
-                    releaseMediaPlayer();
-                }
+                } else {
 
-                playAudio(R.raw.hymn_136);
+                    if (playAudio(createAudioUri())) {
+                        playFAB.setImageResource(android.R.drawable.ic_media_pause);
+                    }
+                }
             }
         });
+
+        playFAB.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if (mMediaPlayer != null) {
+                    releaseMediaPlayer();
+                    playFAB.setImageResource(android.R.drawable.ic_media_play);
+                }
+                return true;
+            }
+        });
+
+        mPager.addOnPageChangeListener(pageChangeListener);
+
     }
 
-    @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putLong(HymnDetailFragment.ARG_CURR_ID, mAdapter.getCurrentFragment().currentHymnId);
-        mHymnId = mAdapter.getCurrentFragment().currentHymnId;
+        mHymnId = mAdapter.getCurrentFragment().getCurrentHymnId();
+        outState.putLong(HymnDetailFragment.ARG_CURR_ID, mHymnId);
         super.onSaveInstanceState(outState);
-        Log.i(TAG, "onSaveInstanceState: " + mAdapter.getCurrentFragment().currentHymnId);
     }
 
     @Override
@@ -148,6 +179,12 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
         mPager.setCurrentItem((int) mHymnId - 1, true);
 
         Log.i(TAG, "onRestoreInstanceState: hymn_id: " + mHymnId);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        releaseMediaPlayer();
     }
 
     @Override
@@ -214,6 +251,60 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
     }
 
     /**
+     * Handle playing of the audio media, which including requesting for focus and etc
+     */
+    private boolean playAudio(Uri audioUri) {
+
+        if (audioUri != null) {
+            // Request for focus. requestAudioFocus(OnAudioFocusChangeListener l, int streamType, int durationHint)
+            int focus = mAudioManager.requestAudioFocus(audioFocusChangeListener,
+                    AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+            // Play audio if focus request granted
+            if (focus == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                mMediaPlayer = MediaPlayer.create(this, audioUri);
+                mMediaPlayer.start();
+
+//                mMediaPlayer.setOnCompletionListener(mCompletionListener);
+                mMediaPlayer.setLooping(true);
+                return true;
+            }
+            return false;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Generates the absolute path for the audio specified by the current hymn number
+     *
+     * @return the absolute path fo the requested audio
+     */
+    public Uri createAudioUri() {
+
+        Uri audioUri1 = null;
+        int currentNum = (int) mAdapter.getCurrentFragment().getCurrentHymnId();
+        final String audioFileTitle = "hymn_" + currentNum + ".mid"; //Hymn is stored as "hymn_1.mid"
+        final String privateStoragePath = ContextCompat
+                .getExternalFilesDirs(this, null)[0].getAbsolutePath();
+        File audioFile = new File(privateStoragePath + "/midi/" + audioFileTitle);
+        if (audioFile.exists()) {
+            audioUri1 = Uri.parse(audioFile.getAbsolutePath());
+
+        } else { //Download the audio file from internet if not exist locally
+            // This is not yet implemented
+            Toast.makeText(this, "The tune is " +
+                            "not yet available! "
+                    , Toast.LENGTH_SHORT).show();
+            //String audioUrl = "http://odifek.tk/hymnbook_mid/" + currentNum + ".mid";
+            //downloadAudio(audioUrl);
+        }
+        //else mediaPlayer = null;
+
+        return audioUri1;
+
+    }
+
+    /**
      * The {@link CursorPagerAdapter }
      */
     private class CursorPagerAdapter extends FragmentStatePagerAdapter {
@@ -262,8 +353,8 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
             super.setPrimaryItem(container, position, object);
             mCurrentFragment = (HymnDetailFragment) object;
             // Set the Tool Bar title which is stored in the current instance
-            mActionBar.setTitle(mCurrentFragment.hymnTitle);
-            mActionBar.setSubtitle(mCurrentFragment.hymnTopic);
+            mActionBar.setTitle(mCurrentFragment.getHymnTitle());
+            mActionBar.setSubtitle(mCurrentFragment.getHymnTopic());
         }
 
         HymnDetailFragment getCurrentFragment() {

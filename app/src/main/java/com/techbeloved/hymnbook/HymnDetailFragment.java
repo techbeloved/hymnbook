@@ -7,14 +7,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.TextView;
-
-import com.techbeloved.hymnbook.data.HymnContract;
 
 import static com.techbeloved.hymnbook.data.HymnContract.*;
 
@@ -26,9 +23,9 @@ public class HymnDetailFragment extends Fragment {
     public static final String ARG_ID = "hymn_id";
     public static final String ARG_CURR_ID = "current_id";
     // Externally accessible variables
-    public String hymnTitle;
-    public String hymnTopic;
-    public long currentHymnId;
+    private String mHymnTitle;
+    private String mHymnTopic;
+    private long mCurrentHymnId;
 
     private long mHymnId;
 
@@ -86,19 +83,24 @@ public class HymnDetailFragment extends Fragment {
             mContentView.loadDataWithBaseURL("file:///android_asset/",
                     webData, "text/html", "UTF-8", null);
             // Set the title of the tool bar
-            hymnTitle = mHymnId + ". " + title;
-            hymnTopic = topic;
-            currentHymnId = mHymnId;
+            mHymnTitle = mHymnId + ". " + title;
+            mHymnTopic = topic;
+            mCurrentHymnId = mHymnId;
             cursor.close();
 
         }
         return rootView;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public long getCurrentHymnId() {
+        return mCurrentHymnId;
+    }
 
+    public String getHymnTitle() {
+        return mHymnTitle;
+    }
 
+    public String getHymnTopic() {
+        return mHymnTopic;
     }
 }
