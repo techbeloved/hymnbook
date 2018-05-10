@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 import com.techbeloved.hymnbook.utils.FileAssetManager;
 
@@ -45,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Copy midi assets if not already copied
         if (!getMidiFilesReadyPrefs(MIDI_READY, this)) {
-            if (FileAssetManager.copyAssets(this, 0, 0)) {
+            Log.i(TAG, "onCreate: about copying midi files");
+            if (FileAssetManager.copyAssets(this, 0, 1)) {
                 saveMidiFilesReadyPrefs(MIDI_READY, true, this);
             }
         }

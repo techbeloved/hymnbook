@@ -140,7 +140,7 @@ public class FileAssetManager {
             InputStream in;
             OutputStream out;
             // Check if old version of the file is available and remove it if so
-            File file = new File(ContextCompat.getExternalFilesDirs(context, null)[0], oldVersion + "_" +
+            File newFile = new File(ContextCompat.getExternalFilesDirs(context, null)[0], newVersion + "_" +
                     filename);
             if (oldVersion != newVersion) {
                 removeIfOutdated(context, oldVersion + "_" + filename);
@@ -150,7 +150,7 @@ public class FileAssetManager {
             // check next or continue
             try {
                 in = assetManager.open("midi/" + filename);   // if files resides inside the "Files" directory itself
-                out = new FileOutputStream(file);
+                out = new FileOutputStream(newFile);
 
                 copyFile(in, out);
                 in.close();
