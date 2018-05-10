@@ -22,6 +22,7 @@ import java.util.zip.ZipInputStream;
  */
 
 public class FileAssetManager {
+    private static final String TAG = FileAssetManager.class.getSimpleName();
     /**
      * A zip file extractor
      * https://stackoverflow.com/questions/3382996/how-to-unzip-files-programmatically-in-android
@@ -132,22 +133,27 @@ public class FileAssetManager {
         return false;
     }
 
-    private static void copyAssets(Context context, int oldVersion, int newVersion) {
+    public static boolean copyAssets(Context context, int oldVersion, int newVersion) {
         AssetManager assetManager = context.getAssets();
         String[] files = null;
         try {
             files = assetManager.list("midi");
         } catch (IOException e) {
-            Log.e("tag", e.getMessage());
+            Log.e(TAG, "copyAssets: Failed!", e);
+            return false;
         }
 
         for (String filename : files) {
             //System.out.println("File name => "+filename);
+            Log.i(TAG, "copyAssets: File name => " + filename);
             InputStream in = null;
             OutputStream out = null;
+            // Check if old version of the file is available and remove it if so
             File file = new File(ContextCompat.getExternalFilesDirs(context, null)[0], oldVersion + "_" +
                     filename);
-            removeIfOutdated(context, oldVersion + "_" + filename);
+            if (oldVersion != newVersion) {
+                removeIfOutdated(context, oldVersion + "_" + filename);
+            }
             if (hasExternalStoragePrivateFile(context, oldVersion + "_" + filename))
                 continue; //If file already exists,
             // check next or continue
@@ -166,6 +172,7 @@ public class FileAssetManager {
             }
             deCompressArchive(context, newVersion + "_" + filename, "midi");
         }
+        return true;
     }
 
     private static void copyFile(InputStream in, OutputStream out) throws IOException {
