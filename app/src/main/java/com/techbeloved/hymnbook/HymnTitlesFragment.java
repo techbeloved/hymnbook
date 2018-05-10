@@ -13,20 +13,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
-
-import com.techbeloved.hymnbook.data.HymnContract;
-import com.techbeloved.hymnbook.utils.ItemClickSupport;
-
-import java.util.ArrayList;
 
 import static com.techbeloved.hymnbook.data.HymnContract.*;
 
@@ -62,17 +54,14 @@ public class HymnTitlesFragment extends Fragment implements LoaderManager.Loader
         }
 
         // Set up click listener
-        mHymnListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Uri uri = Uri.withAppendedPath(HymnEntry.CONTENT_URI, String.valueOf(id));
-                Intent intent = new Intent(Intent.ACTION_VIEW,
-                        uri,
-                        parent.getContext(),
-                        HymnDetailActivity.class
-                );
-                startActivity(intent);
-            }
+        mHymnListView.setOnItemClickListener((parent, view, position, id) -> {
+            Uri uri = Uri.withAppendedPath(HymnEntry.CONTENT_URI, String.valueOf(id));
+            Intent intent = new Intent(Intent.ACTION_VIEW,
+                    uri,
+                    parent.getContext(),
+                    HymnDetailActivity.class
+            );
+            startActivity(intent);
         });
 
         getLoaderManager().initLoader(LOADER_ID, null, this);
@@ -95,6 +84,7 @@ public class HymnTitlesFragment extends Fragment implements LoaderManager.Loader
         }
     }
 
+    @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
         // Define a projection that specifies the columns you want to retrieve
@@ -115,12 +105,12 @@ public class HymnTitlesFragment extends Fragment implements LoaderManager.Loader
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
         mCursorAdapter.swapCursor(cursor);
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         mCursorAdapter.swapCursor(null);
     }
 

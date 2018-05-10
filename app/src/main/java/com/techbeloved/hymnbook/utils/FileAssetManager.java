@@ -38,9 +38,8 @@ public class FileAssetManager {
      * @throws IOException
      */
     public static void unzip(File zipFile, File targetDirectory) throws IOException {
-        ZipInputStream zis = new ZipInputStream(
-                new BufferedInputStream(new FileInputStream(zipFile)));
-        try {
+        try (ZipInputStream zis = new ZipInputStream(
+                new BufferedInputStream(new FileInputStream(zipFile)))) {
             ZipEntry ze;
             int count;
             byte[] buffer = new byte[8192];
@@ -65,8 +64,6 @@ public class FileAssetManager {
                 file.setLastModified(time);
             */
             }
-        } finally {
-            zis.close();
         }
     }
 
@@ -79,21 +76,18 @@ public class FileAssetManager {
      */
     public static void deCompressArchive(Context context, final String filename, String extDestination) {
         // Do it in a new thread so that the UI is not freezed!
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String zipFile;
-                String unzipLocation;
-                zipFile = ContextCompat.getExternalFilesDirs(context, null)[0] + "/" + filename;
-                if (extDestination != null && !extDestination.isEmpty()) {
-                    unzipLocation = ContextCompat.getExternalFilesDirs(context, null)[0] + "/" + extDestination + "/";
-                } else {
-                    // Just do it in the default location
-                    unzipLocation = ContextCompat.getExternalFilesDirs(context, null)[0] + "/";
-                }
-                Decompress d = new Decompress(zipFile, unzipLocation);
-                d.unzip();
+        new Thread(() -> {
+            String zipFile;
+            String unzipLocation;
+            zipFile = ContextCompat.getExternalFilesDirs(context, null)[0] + "/" + filename;
+            if (extDestination != null && !extDestination.isEmpty()) {
+                unzipLocation = ContextCompat.getExternalFilesDirs(context, null)[0] + "/" + extDestination + "/";
+            } else {
+                // Just do it in the default location
+                unzipLocation = ContextCompat.getExternalFilesDirs(context, null)[0] + "/";
             }
+            Decompress d = new Decompress(zipFile, unzipLocation);
+            d.unzip();
         }).start();
 
     }
@@ -127,15 +121,12 @@ public class FileAssetManager {
         // Get path for the file on external storage.  If external
         // storage is not currently mounted this will fail.
         File file = new File(ContextCompat.getExternalFilesDirs(context, null)[0], fileName);
-        if (file != null) {
-            return file.exists();
-        }
-        return false;
+        return file != null && file.exists();
     }
 
     public static boolean copyAssets(Context context, int oldVersion, int newVersion) {
         AssetManager assetManager = context.getAssets();
-        String[] files = null;
+        String[] files;
         try {
             files = assetManager.list("midi");
         } catch (IOException e) {
@@ -146,8 +137,8 @@ public class FileAssetManager {
         for (String filename : files) {
             //System.out.println("File name => "+filename);
             Log.i(TAG, "copyAssets: File name => " + filename);
-            InputStream in = null;
-            OutputStream out = null;
+            InputStream in;
+            OutputStream out;
             // Check if old version of the file is available and remove it if so
             File file = new File(ContextCompat.getExternalFilesDirs(context, null)[0], oldVersion + "_" +
                     filename);
@@ -163,10 +154,8 @@ public class FileAssetManager {
 
                 copyFile(in, out);
                 in.close();
-                in = null;
                 out.flush();
                 out.close();
-                out = null;
             } catch (Exception e) {
                 Log.e("tag", e.getMessage());
             }

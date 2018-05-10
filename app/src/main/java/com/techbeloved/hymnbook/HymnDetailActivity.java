@@ -98,12 +98,7 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
             playFAB.setImageResource(android.R.drawable.ic_media_play);
         }
     };
-    private MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
-        @Override
-        public void onCompletion(MediaPlayer mp) {
-            releaseMediaPlayer();
-        }
-    };
+    private MediaPlayer.OnCompletionListener mCompletionListener = mp -> releaseMediaPlayer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,35 +125,29 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
         mAudioManager = (AudioManager) this.getSystemService(AUDIO_SERVICE);
 
         playFAB = findViewById(R.id.playFAB);
-        playFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mMediaPlayer != null) {
-                    if (mMediaPlayer.isPlaying()) {
-                        mMediaPlayer.pause();
-                        playFAB.setImageResource(android.R.drawable.ic_media_play);
-                    } else {
-                        mMediaPlayer.start();
-                        playFAB.setImageResource(android.R.drawable.ic_media_pause);
-                    }
+        playFAB.setOnClickListener(view -> {
+            if (mMediaPlayer != null) {
+                if (mMediaPlayer.isPlaying()) {
+                    mMediaPlayer.pause();
+                    playFAB.setImageResource(android.R.drawable.ic_media_play);
                 } else {
+                    mMediaPlayer.start();
+                    playFAB.setImageResource(android.R.drawable.ic_media_pause);
+                }
+            } else {
 
-                    if (playAudio(createAudioUri())) {
-                        playFAB.setImageResource(android.R.drawable.ic_media_pause);
-                    }
+                if (playAudio(createAudioUri())) {
+                    playFAB.setImageResource(android.R.drawable.ic_media_pause);
                 }
             }
         });
 
-        playFAB.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if (mMediaPlayer != null) {
-                    releaseMediaPlayer();
-                    playFAB.setImageResource(android.R.drawable.ic_media_play);
-                }
-                return true;
+        playFAB.setOnLongClickListener(view -> {
+            if (mMediaPlayer != null) {
+                releaseMediaPlayer();
+                playFAB.setImageResource(android.R.drawable.ic_media_play);
             }
+            return true;
         });
 
         mPager.addOnPageChangeListener(pageChangeListener);
@@ -187,6 +176,7 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
         releaseMediaPlayer();
     }
 
+    @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
         switch (id) {

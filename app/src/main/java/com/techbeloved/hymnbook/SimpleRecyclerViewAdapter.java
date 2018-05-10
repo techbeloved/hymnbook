@@ -19,31 +19,11 @@ import java.util.List;
 public class SimpleRecyclerViewAdapter
         extends RecyclerView.Adapter<SimpleRecyclerViewAdapter.ViewHolder> {
 
-    private final TypedValue mTypedValue = new TypedValue();
     private int mBackground;
     private List<String> mValues;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public String mBoundString;
-
-        public final View mView;
-//        public final ImageView mImageView;
-        public final TextView mTextView;
-
-        public ViewHolder(View view) {
-            super(view);
-            mView = view;
-//            mImageView = view.findViewById(R.id.avatar);
-            mTextView = view.findViewById(android.R.id.text1);
-        }
-
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mTextView.getText();
-        }
-    }
-
     public SimpleRecyclerViewAdapter(Context context, List<String> items) {
+        TypedValue mTypedValue = new TypedValue();
         context.getTheme().resolveAttribute(R.attr.selectableItemBackground, mTypedValue, true);
         mBackground = mTypedValue.resourceId;
         mValues = items;
@@ -62,15 +42,12 @@ public class SimpleRecyclerViewAdapter
         holder.mBoundString = mValues.get(position);
         holder.mTextView.setText(mValues.get(position));
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Context context = v.getContext();
+        holder.mView.setOnClickListener(v -> {
+            Context context = v.getContext();
 //                Intent intent = new Intent(context, CheeseDetailActivity.class);
 //                intent.putExtra(CheeseDetailActivity.EXTRA_NAME, holder.mBoundString);
 //
 //                context.startActivity(intent);
-            }
         });
 
     }
@@ -78,5 +55,24 @@ public class SimpleRecyclerViewAdapter
     @Override
     public int getItemCount() {
         return mValues.size();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        public final View mView;
+        //        public final ImageView mImageView;
+        public final TextView mTextView;
+        public String mBoundString;
+
+        public ViewHolder(View view) {
+            super(view);
+            mView = view;
+//            mImageView = view.findViewById(R.id.avatar);
+            mTextView = view.findViewById(android.R.id.text1);
+        }
+
+        @Override
+        public String toString() {
+            return super.toString() + " '" + mTextView.getText();
+        }
     }
 }

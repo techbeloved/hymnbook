@@ -37,7 +37,7 @@ public class Decompress {
         try {
             FileInputStream fin = new FileInputStream(_zipFile);
             ZipInputStream zin = new ZipInputStream(fin);
-            ZipEntry ze = null;
+            ZipEntry ze;
             while ((ze = zin.getNextEntry()) != null) {
                 Log.v("Decompress", "Unzipping " + ze.getName());
 
