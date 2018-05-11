@@ -24,7 +24,7 @@
     font-style: italic;
 }
 body {
-    width: 90%;
+    width: 95%;
     line-height: 1.5;
     margin-left: 0;
     font-family: "CrimsonText", serif;
@@ -47,9 +47,10 @@ span {
     padding-left: 1rem;
 }
 h2.title {
-    width: 300px;
+    width: 70%;
     text-align: center;
-    font-weight: 400;
+    font-weight: 500;
+    font-family: "Cormorant";
 }
 
 
@@ -63,7 +64,8 @@ header {
     display: flex;
 }
 h2.hymn_no {
+    font-family: "Cormorant";
     padding-left: 1rem;
     padding-right: 1rem;
-    font-weight: 300;
+    font-weight: 200;
 }
