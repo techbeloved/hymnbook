@@ -35,7 +35,7 @@ public class HymnProvider extends ContentProvider {
         sUriMatcher.addURI(HymnContract.CONTENT_AUTHORITY, HymnContract.PATH_TOPICS, TOPICS);
         sUriMatcher.addURI(HymnContract.CONTENT_AUTHORITY, HymnContract.PATH_TOPICS + "/#", TOPIC_ID);
         // For hymns under a particular topic
-        sUriMatcher.addURI(HymnContract.CONTENT_AUTHORITY, HymnContract.PATH_TOPICS + "/#" + "/hymns", TOPIC_HYMNS);
+        sUriMatcher.addURI(HymnContract.CONTENT_AUTHORITY, HymnContract.PATH_TOPICS + "/#/hymns", TOPIC_HYMNS);
     }
 
     /**
@@ -98,6 +98,9 @@ public class HymnProvider extends ContentProvider {
                 // Which implies getting all hymns under topic 3
                 // So we use a simple reference to get all hymns whose topic id matches that
                 // given in the uri
+                String uriStr = uri.toString();
+                // Strip off the last part
+                uri = Uri.parse(uriStr.split("/hymns")[0]);
                 selection = HymnContract.HymnEntry.COLUMN_TOPIC_ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
 
