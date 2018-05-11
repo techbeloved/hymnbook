@@ -59,6 +59,10 @@ public class Decompress {
             Log.e("Decompress", "unzip", e);
         }
 
+        File file = new File(_zipFile);
+        if (file.delete()) {
+            Log.i("Decompress", "unzip: " + _zipFile + " removed successfully");
+        }
     }
 
     private void _dirChecker(String dir) {

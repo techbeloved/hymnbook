@@ -43,6 +43,7 @@
             android:name=".data.HymnProvider"
             android:authorities="com.techbeloved.hymnbook"
             android:exported="false" />
+        <service android:name=".services.AssetManagerService" />
     </application>
 
 </manifest>
