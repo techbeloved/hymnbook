@@ -35,10 +35,9 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
 
     private static final String TAG = HymnDetailActivity.class.getSimpleName();
     private static final int LOADER_ID = 1;
+    private static final String PLAYBACK_POSITION = "playbackPosition";
 
     private Uri mUri;
-    private TextView mToolbarTitle;
-    private TextView mToolbarTopic;
 
     private FloatingActionButton playFAB;
 
@@ -53,6 +52,8 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
     // Media player states
     private MediaPlayer mMediaPlayer;
     private AudioManager mAudioManager;
+
+    private int mPlaybackPos;
     // Set up listener to listen for focus change. Only act when something is playing
     private AudioManager.OnAudioFocusChangeListener audioFocusChangeListener =
             new AudioManager.OnAudioFocusChangeListener() {
@@ -136,12 +137,16 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
                     playFAB.setImageResource(android.R.drawable.ic_media_pause);
                 }
             } else {
-
                 if (playAudio(createAudioUri())) {
                     playFAB.setImageResource(android.R.drawable.ic_media_pause);
                 }
             }
         });
+        if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
+            Log.i(TAG, "onCreate: mediaplayer pos =  " + mMediaPlayer.getCurrentPosition());
+            // Update the UI to show that mediaPlayer is playing
+            playFAB.setImageResource(android.R.drawable.ic_media_pause);
+        }
 
         playFAB.setOnLongClickListener(view -> {
             if (mMediaPlayer != null) {
@@ -152,11 +157,15 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
         });
 
         mPager.addOnPageChangeListener(pageChangeListener);
-
     }
 
     protected void onSaveInstanceState(Bundle outState) {
         mHymnId = mAdapter.getCurrentFragment().getCurrentHymnId();
+        if (mMediaPlayer != null) {
+            mPlaybackPos = mMediaPlayer.getCurrentPosition();
+            outState.putInt(PLAYBACK_POSITION, mPlaybackPos);
+        }
+        Log.i(TAG, "onSaveInstanceState: playback - " + mPlaybackPos);
         outState.putLong(HymnDetailFragment.ARG_CURR_ID, mHymnId);
         super.onSaveInstanceState(outState);
     }
@@ -167,8 +176,8 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
         // Restore the state, that is, the current adapter position
         mHymnId = savedInstanceState.getLong(HymnDetailFragment.ARG_CURR_ID);
         mPager.setCurrentItem((int) mHymnId - 1, true);
-
-        Log.i(TAG, "onRestoreInstanceState: hymn_id: " + mHymnId);
+        mPlaybackPos = savedInstanceState.getInt(PLAYBACK_POSITION);
+        Log.i(TAG, "onRestoreInstanceState: hymn_id: ");
     }
 
     @Override
@@ -267,8 +276,6 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
             if (focus == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
                 mMediaPlayer = MediaPlayer.create(this, audioUri);
                 mMediaPlayer.start();
-
-//                mMediaPlayer.setOnCompletionListener(mCompletionListener);
                 mMediaPlayer.setLooping(true);
                 return true;
             }
