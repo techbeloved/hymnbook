@@ -42,7 +42,7 @@ public class TopicsFragment extends Fragment implements LoaderManager.LoaderCall
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_song_list, container, false);
 
-        mTopicListView = rootView.findViewById(android.R.id.list);
+        mTopicListView = rootView.findViewById(R.id.list);
         mCursorAdapter = new TopicCursorAdapter(getActivity(), null);
         mTopicListView.setAdapter(mCursorAdapter);
 

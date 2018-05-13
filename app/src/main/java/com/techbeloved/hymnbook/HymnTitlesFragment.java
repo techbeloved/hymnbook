@@ -43,7 +43,7 @@ public class HymnTitlesFragment extends Fragment implements LoaderManager.Loader
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_song_list, container, false);
 
-        mHymnListView = rootView.findViewById(android.R.id.list);
+        mHymnListView = rootView.findViewById(R.id.list);
         mCursorAdapter = new HymnCursorAdapter(getActivity(), null, false);
         mHymnListView.setAdapter(mCursorAdapter);
 

@@ -58,7 +58,7 @@ public class SearchResultsActivity extends AppCompatActivity {
             Cursor c = db.getWordMatches(query);
 
             // Populate the adapter with the search results
-            final ListView resultList = findViewById(android.R.id.list);
+            final ListView resultList = findViewById(R.id.list);
             SearchResultsCursorAdapter adapter = new SearchResultsCursorAdapter(this, c);
             resultList.setAdapter(adapter);
 
@@ -73,10 +73,10 @@ public class SearchResultsActivity extends AppCompatActivity {
             });
 
             // Configure the empty View to be displayed when there are no results
-            View emptyView = findViewById(android.R.id.empty);
-            ImageView emptyImage = emptyView.findViewById(R.id.empty_search_image);
-            TextView emptyTitle = emptyImage.findViewById(R.id.empty_title_text);
-            TextView emptySubtTitle = emptyView.findViewById(R.id.empty_subtitle_text);
+            View emptyView = findViewById(R.id.empty);
+            ImageView emptyImage = findViewById(R.id.empty_search_image);
+            TextView emptyTitle = findViewById(R.id.empty_title_text);
+            TextView emptySubtTitle = findViewById(R.id.empty_subtitle_text);
 
             emptyImage.setImageResource(R.drawable.magnifying_glass_funny);
             emptyTitle.setText(R.string.no_results);

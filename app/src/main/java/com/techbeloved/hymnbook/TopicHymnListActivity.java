@@ -37,7 +37,7 @@ public class TopicHymnListActivity extends AppCompatActivity implements LoaderMa
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topic_hymn_list);
-        mHymnListView = findViewById(android.R.id.list);
+        mHymnListView = findViewById(R.id.list);
         mAdapter = new HymnCursorAdapter(this, null, false);
         // Configure the ToolBar
         Toolbar toolbar = findViewById(R.id.toolbar);

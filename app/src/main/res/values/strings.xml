@@ -14,6 +14,6 @@
     <string name="search_hint">Enter search term</string>
     <string name="search_result">Search Results</string>
     <string name="no_results">Sorry! No results found</string>
-    <string name="try_another">Please searching another keyword!</string>
+    <string name="try_another">Please try searching another keyword!</string>
     <string name="hymn">Hymn</string>
 </resources>
