@@ -1,6 +1,8 @@
 package com.techbeloved.hymnbook;
 
+import android.app.SearchManager;
 import android.content.ContentUris;
+import android.content.Context;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -21,9 +23,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -187,6 +192,26 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.search).getActionView();
+        // Assumes current activity is the searchable activity
+        if (searchManager != null) {
+            searchView.setSearchableInfo(
+                    searchManager.getSearchableInfo(getComponentName())
+            );
+        }
+        searchView.setIconifiedByDefault(false);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             // If UP button is pressed, return to the previous activity
@@ -323,7 +348,7 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
         private Cursor mCursor;
         private HymnDetailFragment mCurrentFragment;
 
-        public CursorPagerAdapter(FragmentManager fm, Cursor c) {
+        CursorPagerAdapter(FragmentManager fm, Cursor c) {
             super(fm);
             mCursor = c;
         }

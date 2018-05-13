@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
@@ -15,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.CursorAdapter;
 import android.widget.ListView;
 
 import com.techbeloved.hymnbook.data.HymnContract;
@@ -39,7 +37,7 @@ public class TopicHymnListActivity extends AppCompatActivity implements LoaderMa
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topic_hymn_list);
-        mHymnListView = findViewById(R.id.hymn_listview);
+        mHymnListView = findViewById(android.R.id.list);
         mAdapter = new HymnCursorAdapter(this, null, false);
         // Configure the ToolBar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -85,7 +83,7 @@ public class TopicHymnListActivity extends AppCompatActivity implements LoaderMa
 
     @NonNull
     @Override
-    public Loader onCreateLoader(int id, @Nullable Bundle args) {
+    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
         // Define a projection that specifies the columns you want to retrieve
         String[] projection = {HymnContract.HymnEntry._ID, HymnContract.HymnEntry.COLUMN_TITLE};
 

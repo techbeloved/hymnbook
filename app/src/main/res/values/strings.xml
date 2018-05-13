@@ -10,4 +10,10 @@
     <string name="html_body_template"><![CDATA[<body> <header> <h2 class=\"hymn_no\">%1$d</h2> <h2 class=\"title\">%2$s</h2> </header> %3$s </body>]]></string>
     <string name="css_link"><![CDATA[<link rel=\"stylesheet\" href=\"style.css\">]]></string>
     <string name="midi_song_prefix">hymn_</string>
+    <string name="search_title">Search Hymns</string>
+    <string name="search_hint">Enter search term</string>
+    <string name="search_result">Search Results</string>
+    <string name="no_results">Sorry! No results found</string>
+    <string name="try_another">Please searching another keyword!</string>
+    <string name="hymn">Hymn</string>
 </resources>

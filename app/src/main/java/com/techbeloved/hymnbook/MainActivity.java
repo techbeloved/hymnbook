@@ -1,5 +1,6 @@
 package com.techbeloved.hymnbook;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.widget.SearchView;
 
 import com.techbeloved.hymnbook.services.AssetManagerService;
 import com.techbeloved.hymnbook.utils.FileAssetManager;
@@ -56,6 +60,26 @@ public class MainActivity extends AppCompatActivity {
             saveMidiFilesReadyPrefs(MIDI_READY, true, getApplicationContext());
         }
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.search).getActionView();
+        // Assumes current activity is the searchable activity
+        if (searchManager != null) {
+            searchView.setSearchableInfo(
+                    searchManager.getSearchableInfo(getComponentName())
+            );
+        }
+        searchView.setIconifiedByDefault(false);
+        return true;
     }
 
     private void setupViewPager(ViewPager viewPager) {

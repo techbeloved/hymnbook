@@ -17,7 +17,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import static com.techbeloved.hymnbook.data.HymnContract.*;
@@ -44,7 +43,7 @@ public class HymnTitlesFragment extends Fragment implements LoaderManager.Loader
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_song_list, container, false);
 
-        mHymnListView = rootView.findViewById(R.id.hymn_listview);
+        mHymnListView = rootView.findViewById(android.R.id.list);
         mCursorAdapter = new HymnCursorAdapter(getActivity(), null, false);
         mHymnListView.setAdapter(mCursorAdapter);
 
