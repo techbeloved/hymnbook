@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.TextView;
 
@@ -82,6 +83,11 @@ public class HymnDetailFragment extends Fragment {
 
             mContentView.loadDataWithBaseURL("file:///android_asset/",
                     webData, "text/html", "UTF-8", null);
+
+            // increase the text size for tablet
+            if (getContext().getResources().getBoolean(R.bool.isTablet)) {
+                mContentView.getSettings().setTextZoom(120);
+            }
             // Set the title of the tool bar
             mHymnTitle = mHymnId + ". " + title;
             mHymnTopic = topic;
