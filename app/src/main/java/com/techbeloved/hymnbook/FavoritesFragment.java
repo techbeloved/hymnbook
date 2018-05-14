@@ -82,7 +82,10 @@ public class FavoritesFragment extends Fragment implements LoaderManager.LoaderC
         emptySubtTitle.setText(R.string.add_favorite_hint);
 
         // Favorites should be reloaded every time to make sure newly added songs are retrieved
-        getLoaderManager().restartLoader(LOADER_ID, null, this);
+        // Only do this if there is at least a favorite in the first place
+        if (favoritePreferences.getFavorites(getActivity()) != null) {
+            getLoaderManager().restartLoader(LOADER_ID, null, this);
+        }
         return rootView;
     }
 
@@ -129,6 +132,12 @@ public class FavoritesFragment extends Fragment implements LoaderManager.LoaderC
         mCursorAdapter.swapCursor(null);
     }
 
+    /**
+     * Generates given number of placeholders for the sql query. That is, using ?
+     *
+     * @param len is the number of placeholders to generate
+     * @return a string replresentation of the place holders, eg. "?,?,?,?" for len = 4
+     */
     String makePlaceholders(int len) {
         StringBuilder sb = new StringBuilder(len * 2 - 1);
         sb.append("?");
