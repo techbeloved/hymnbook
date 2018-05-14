@@ -3,6 +3,7 @@ package com.techbeloved.hymnbook;
 import android.app.SearchManager;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -26,11 +27,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import com.techbeloved.hymnbook.utils.FavoritePreferences;
 
 import java.io.File;
 
@@ -38,26 +39,22 @@ import static com.techbeloved.hymnbook.data.HymnContract.HymnEntry;
 
 public class HymnDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    public static final String PREF_FAVORITES = "MyFavorites";
     private static final String TAG = HymnDetailActivity.class.getSimpleName();
     private static final int LOADER_ID = 1;
     private static final String PLAYBACK_POSITION = "playbackPosition";
-
+    // Favorite Preference
+    FavoritePreferences favoritePreferences;
     private Uri mUri;
-
     private FloatingActionButton playFAB;
-
     // This stores the hymn number, received from an intent and also saved onSaveInstanceState.
     private long mHymnId;
-
     private ViewPager mPager;
     private CursorPagerAdapter mAdapter;
-
     private ActionBar mActionBar;
-
     // Media player states
     private MediaPlayer mMediaPlayer;
     private AudioManager mAudioManager;
-
     private int mPlaybackPos;
     // Set up listener to listen for focus change. Only act when something is playing
     private AudioManager.OnAudioFocusChangeListener audioFocusChangeListener =
@@ -162,6 +159,9 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
         });
 
         mPager.addOnPageChangeListener(pageChangeListener);
+
+        // Setup favorites
+        favoritePreferences = new FavoritePreferences();
     }
 
     protected void onSaveInstanceState(Bundle outState) {
@@ -194,7 +194,7 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
+        inflater.inflate(R.menu.details_menu, menu);
 
         // Associate searchable configuration with the SearchView
         SearchManager searchManager =
@@ -230,6 +230,9 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
             // If UP button is pressed, return to the previous activity
             case android.R.id.home:
                 finish();
+                return true;
+            case R.id.add_favorite:
+                addToFavorite();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -351,6 +354,11 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
 
         return audioUri1;
 
+    }
+
+    private void addToFavorite() {
+        favoritePreferences.addFavorite(getApplicationContext(), mAdapter.getCurrentFragment().getCurrentHymnId());
+        Toast.makeText(this, "Song has been added to favorites", Toast.LENGTH_SHORT).show();
     }
 
     /**
