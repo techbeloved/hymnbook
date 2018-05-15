@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">HymnBook</string>
+    <string name="app_name">Watchman Hymnbook</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_favorites_fragment">Hello Favorites fragment</string>
