@@ -24,7 +24,9 @@ public final class HymnContract {
         public static final String _ID = BaseColumns._ID;
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_CONTENT = "content";
-        public static final String COLUMN_AUTHOR_INFO = "author_info";
+        public static final String COLUMN_LYRICS = "lyrics";
+        public static final String COLUMN_MUSIC = "music";
+        public static final String COLUMN_CREDITS = "credits";
         public static final String COLUMN_TOPIC_ID = "topic_id";
 
         public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_HYMNS);

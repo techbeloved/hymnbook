@@ -41,7 +41,7 @@ ol li {
     margin-top: 1rem;
 }
 
-span {
+ol span {
     display: block;
     text-indent: -1rem;
     padding-left: 1rem;
@@ -55,8 +55,6 @@ h2.title {
 
 
 p.chorus{
-    margin-left: 1rem;
-    margin-bottom: 1.5rem;
     font-style: italic;
 }
 
@@ -68,4 +66,16 @@ h2.hymn_no {
     padding-left: 1rem;
     padding-right: 1rem;
     font-weight: 200;
+}
+
+.footer-header {
+	font-style: italic;
+    font-weight: bold;
+}
+
+footer{
+    margin-left: 1rem;
+    padding-left: 1rem;
+    font-size: 0.8rem;
+    font-family: "Cormorant";
 }

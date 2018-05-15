@@ -60,7 +60,15 @@ public class HymnDetailFragment extends Fragment {
         Uri hymnUri = ContentUris.withAppendedId(HymnEntry.CONTENT_URI, mHymnId);
         String fullyQualifiedId = HymnEntry.TABLE_NAME + "." + HymnEntry._ID;
 
-        String[] projection = {fullyQualifiedId, HymnEntry.COLUMN_TITLE, TopicEntry.COLUMN_TITLE, HymnEntry.COLUMN_CONTENT};
+        String[] projection = {
+                fullyQualifiedId,
+                HymnEntry.COLUMN_TITLE,
+                TopicEntry.COLUMN_TITLE,
+                HymnEntry.COLUMN_CONTENT,
+                HymnEntry.COLUMN_LYRICS,
+                HymnEntry.COLUMN_MUSIC,
+                HymnEntry.COLUMN_CREDITS
+        };
         Cursor cursor = getActivity().getContentResolver().query(hymnUri,
                 projection,
                 null,
@@ -74,10 +82,45 @@ public class HymnDetailFragment extends Fragment {
             String content = cursor.getString(cursor.getColumnIndexOrThrow(HymnEntry.COLUMN_CONTENT));
             String topic = cursor.getString(cursor.getColumnIndexOrThrow(TopicEntry.COLUMN_TITLE));
 
+            String lyricsBy = cursor.getString(cursor.getColumnIndexOrThrow(HymnEntry.COLUMN_LYRICS));
+            String musicBy = cursor.getString(cursor.getColumnIndexOrThrow(HymnEntry.COLUMN_MUSIC));
+            String credits = cursor.getString(cursor.getColumnIndexOrThrow(HymnEntry.COLUMN_CREDITS));
+
+
             String htmlBodyTemplate = getString(R.string.html_body_template);
+            // The html skeletons for the footer
+            String lyricsByFormat = "<p><span class=\"footer-header\">Lyrics by: </span> <span class=\"lyrics\">%1$s</span> </p>";
+            String musicByFormat = "<p><span class=\"footer-header\">Music by: </span><span class=\"music\">%1$s</span></p>";
+            String creditsFormat = "<p><span class=\"footer-header\">Credits: </span><span class=\"credits\">%1$s</span></p>";
+
+            // Build the footer
+            StringBuilder footerBuilder = new StringBuilder();
+            footerBuilder.append("<footer>");
+            boolean hasFooter = false;
+            if (lyricsBy != null && !lyricsBy.isEmpty()) {
+                footerBuilder.append(String.format(lyricsByFormat, lyricsBy));
+                hasFooter = true;
+            }
+            if (musicBy != null && !musicBy.isEmpty()) {
+                footerBuilder.append(String.format(musicByFormat, musicBy));
+                hasFooter = true;
+            }
+            if (credits != null && !credits.isEmpty()) {
+                footerBuilder.append(String.format(creditsFormat, credits));
+                hasFooter = true;
+            }
+            footerBuilder.append("</footer>");
+            String footer = footerBuilder.toString();
 
             // Insert the hymn number, title and content in the html template. lol
             String webData = String.format(htmlBodyTemplate, mHymnId, title, content);
+
+            // Append the footer
+            if (hasFooter) {
+                webData = webData + footer;
+            }
+
+            // Append stylesheet link
             String css_link = getString(R.string.css_link);
             webData = css_link + webData;
 
