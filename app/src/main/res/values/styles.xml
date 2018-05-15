@@ -47,4 +47,14 @@
         -->
     </style>
 
+    <style name="SelectableItemTheme">
+        <item name="colorControlActivated">@color/primary_light</item>
+        <item name="colorControlHighlight">@color/primary</item>
+    </style>
+
+    <style name="SelectableItemBackground">
+        <item name="android:theme">@style/SelectableItemTheme</item>
+        <item name="android:background">?android:activatedBackgroundIndicator</item>
+    </style>
+
 </resources>

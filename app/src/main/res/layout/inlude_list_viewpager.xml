@@ -34,16 +34,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </android.support.design.widget.AppBarLayout>
-    <!--LinearLayout ensures nothing is left offscreen-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/main_viewpager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
+    <include layout="@layout/main_pager" />
 </android.support.design.widget.CoordinatorLayout>

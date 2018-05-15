@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <bool name="isTablet">true</bool>
+    <!--Default Text size for list item-->
+    <dimen name="list_item_text_size">22sp</dimen>
 </resources>
