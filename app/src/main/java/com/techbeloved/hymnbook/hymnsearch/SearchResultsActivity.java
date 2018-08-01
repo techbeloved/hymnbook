@@ -1,4 +1,4 @@
-package com.techbeloved.hymnbook;
+package com.techbeloved.hymnbook.hymnsearch;
 
 import android.app.SearchManager;
 import android.content.Intent;
@@ -7,17 +7,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.techbeloved.hymnbook.R;
 import com.techbeloved.hymnbook.data.HymnContract;
-
-import org.w3c.dom.Text;
+import com.techbeloved.hymnbook.hymndetail.HymnDetailActivity;
 
 /**
  * Created by kennedy on 5/12/18.

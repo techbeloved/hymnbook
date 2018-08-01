@@ -1,4 +1,4 @@
-package com.techbeloved.hymnbook;
+package com.techbeloved.hymnbook.hymns;
 
 
 import android.content.Intent;
@@ -13,7 +13,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.view.ActionMode;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,11 +25,12 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.techbeloved.hymnbook.R;
 import com.techbeloved.hymnbook.data.HymnContract;
+import com.techbeloved.hymnbook.hymndetail.HymnDetailActivity;
 import com.techbeloved.hymnbook.utils.FavoritePreferences;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class FavoritesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 

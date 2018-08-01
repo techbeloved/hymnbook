@@ -1,4 +1,4 @@
-package com.techbeloved.hymnbook;
+package com.techbeloved.hymnbook.hymnsearch;
 
 import android.content.ContentValues;
 import android.content.Context;

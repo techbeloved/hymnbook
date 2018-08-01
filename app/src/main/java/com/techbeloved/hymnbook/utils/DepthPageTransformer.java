@@ -1,4 +1,4 @@
-package com.techbeloved.hymnbook;
+package com.techbeloved.hymnbook.utils;
 
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.techbeloved.hymnbook.HymnDetailActivity">
+    tools:context="com.techbeloved.hymnbook.hymndetail.HymnDetailActivity">
     <!--LinearLayout allows everything to fit the screen-->
     <LinearLayout
         android:layout_width="match_parent"

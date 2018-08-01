@@ -1,19 +1,13 @@
 package com.techbeloved.hymnbook.services;
 
 import android.app.IntentService;
-import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.techbeloved.hymnbook.MainActivity;
+import com.techbeloved.hymnbook.hymns.MainActivity;
 import com.techbeloved.hymnbook.utils.FileAssetManager;
-
-import static com.techbeloved.hymnbook.MainActivity.PREF_NAME;
 
 /**
  * Created by kennedy on 5/11/18.

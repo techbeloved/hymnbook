@@ -1,4 +1,4 @@
-package com.techbeloved.hymnbook;
+package com.techbeloved.hymnbook.hymns;
 
 import android.content.ContentUris;
 import android.content.Intent;
@@ -16,7 +16,9 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import com.techbeloved.hymnbook.R;
 import com.techbeloved.hymnbook.data.HymnContract;
+import com.techbeloved.hymnbook.hymndetail.HymnDetailActivity;
 
 /**
  * Created by kennedy on 5/11/18.

@@ -1,9 +1,8 @@
-package com.techbeloved.hymnbook;
+package com.techbeloved.hymnbook.hymndetail;
 
 import android.app.SearchManager;
 import android.content.ContentUris;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -31,6 +30,8 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.techbeloved.hymnbook.utils.DepthPageTransformer;
+import com.techbeloved.hymnbook.R;
 import com.techbeloved.hymnbook.utils.FavoritePreferences;
 
 import java.io.File;

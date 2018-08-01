@@ -1,4 +1,4 @@
-package com.techbeloved.hymnbook;
+package com.techbeloved.hymnbook.hymns;
 
 import android.content.Context;
 import android.support.annotation.Nullable;

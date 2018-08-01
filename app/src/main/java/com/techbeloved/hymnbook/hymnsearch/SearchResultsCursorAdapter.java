@@ -1,10 +1,7 @@
-package com.techbeloved.hymnbook;
+package com.techbeloved.hymnbook.hymnsearch;
 
-import android.app.ListActivity;
 import android.content.Context;
 import android.database.Cursor;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;

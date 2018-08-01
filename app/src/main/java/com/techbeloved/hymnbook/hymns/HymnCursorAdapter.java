@@ -1,4 +1,5 @@
-package com.techbeloved.hymnbook;
+package com.techbeloved.hymnbook.hymns;
+
 
 import android.content.Context;
 import android.database.Cursor;
@@ -8,15 +9,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.techbeloved.hymnbook.R;
 import com.techbeloved.hymnbook.data.HymnContract;
 
 /**
- * Created by kennedy on 5/11/18.
+ * Created by kennedy on 4/29/18.
  */
 
-public class TopicCursorAdapter extends CursorAdapter {
-    public TopicCursorAdapter(Context context, Cursor c) {
-        super(context, c, true);
+public class HymnCursorAdapter extends CursorAdapter {
+    public HymnCursorAdapter(Context context, Cursor c, boolean autoRequery) {
+        super(context, c, autoRequery);
     }
 
     /**
@@ -35,13 +37,13 @@ public class TopicCursorAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        TextView tvTopic = view.findViewById(R.id.hymn_title);
-        TextView tvTopicNumber = view.findViewById(R.id.hymn_number);
+        TextView tvHymnTitle = view.findViewById(R.id.hymn_title);
+        TextView tvHymnNumber = view.findViewById(R.id.hymn_number);
 
-        String hymnTitle = cursor.getString(cursor.getColumnIndexOrThrow(HymnContract.TopicEntry.COLUMN_TITLE));
-        String hymnNumber = cursor.getString(cursor.getColumnIndexOrThrow(HymnContract.TopicEntry._ID));
+        String hymnTitle = cursor.getString(cursor.getColumnIndexOrThrow(HymnContract.HymnEntry.COLUMN_TITLE));
+        String hymnNumber = cursor.getString(cursor.getColumnIndexOrThrow(HymnContract.HymnEntry._ID));
 
-        tvTopic.setText(hymnTitle);
-        tvTopicNumber.setText(hymnNumber);
+        tvHymnTitle.setText(hymnTitle);
+        tvHymnNumber.setText(hymnNumber);
     }
 }

@@ -1,7 +1,9 @@
-package com.techbeloved.hymnbook;
+package com.techbeloved.hymnbook.hymns;
+
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -17,7 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.techbeloved.hymnbook.data.HymnContract;
+import com.techbeloved.hymnbook.hymndetail.HymnDetailActivity;
+import com.techbeloved.hymnbook.R;
 
 import static com.techbeloved.hymnbook.data.HymnContract.*;
 
@@ -25,15 +28,16 @@ import static com.techbeloved.hymnbook.data.HymnContract.*;
  * Created by kennedy on 4/6/18.
  */
 
-public class TopicsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-    private static final String TAG = TopicsFragment.class.getSimpleName();
+public class HymnTitlesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    private static final String TAG = HymnTitlesFragment.class.getSimpleName();
 
     private static final int LOADER_ID = 1;
     Parcelable state;
-    private TopicCursorAdapter mCursorAdapter;
-    private ListView mTopicListView;
+    private HymnCursorAdapter mCursorAdapter;
+    private ListView mHymnListView;
 
-    public TopicsFragment() {
+    public HymnTitlesFragment() {
         // Empty constructor
     }
 
@@ -42,24 +46,23 @@ public class TopicsFragment extends Fragment implements LoaderManager.LoaderCall
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_song_list, container, false);
 
-        mTopicListView = rootView.findViewById(R.id.list);
-        mCursorAdapter = new TopicCursorAdapter(getActivity(), null);
-        mTopicListView.setAdapter(mCursorAdapter);
+        mHymnListView = rootView.findViewById(R.id.list);
+        mCursorAdapter = new HymnCursorAdapter(getActivity(), null, false);
+        mHymnListView.setAdapter(mCursorAdapter);
 
         // Enable Toolbar scrolling with listview
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mTopicListView.setNestedScrollingEnabled(true);
+            mHymnListView.setNestedScrollingEnabled(true);
         }
 
         // Set up click listener
-        mTopicListView.setOnItemClickListener((parent, view, position, id) -> {
-            // Get the present title
-            Cursor cursor = (Cursor) mCursorAdapter.getItem(position);
-            String hymnTitle = cursor.getString(cursor.getColumnIndexOrThrow(HymnContract.TopicEntry.COLUMN_TITLE));
-            Intent intent = new Intent(getContext(), TopicHymnListActivity.class);
-            intent.putExtra(TopicHymnListActivity.TOPIC_ID, id);
-            intent.putExtra(TopicHymnListActivity.TOPIC_NAME, hymnTitle);
-            Log.i(TAG, "onCreateView: topic_id = " + id);
+        mHymnListView.setOnItemClickListener((parent, view, position, id) -> {
+            Uri uri = Uri.withAppendedPath(HymnEntry.CONTENT_URI, String.valueOf(id));
+            Intent intent = new Intent(Intent.ACTION_VIEW,
+                    uri,
+                    parent.getContext(),
+                    HymnDetailActivity.class
+            );
             startActivity(intent);
         });
 
@@ -70,7 +73,7 @@ public class TopicsFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public void onPause() {
         Log.d(TAG, "onPause: saving HymnListView State");
-        state = mTopicListView.onSaveInstanceState();
+        state = mHymnListView.onSaveInstanceState();
         super.onPause();
     }
 
@@ -79,7 +82,7 @@ public class TopicsFragment extends Fragment implements LoaderManager.LoaderCall
         super.onViewCreated(view, savedInstanceState);
         if (state != null) {
             Log.d(TAG, "onViewCreated: restoring listview state");
-            mTopicListView.onRestoreInstanceState(state);
+            mHymnListView.onRestoreInstanceState(state);
         }
     }
 
@@ -87,12 +90,12 @@ public class TopicsFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
         // Define a projection that specifies the columns you want to retrieve
-        String[] projection = {TopicEntry._ID, TopicEntry.COLUMN_TITLE};
+        String[] projection = {HymnEntry._ID, HymnEntry.COLUMN_TITLE};
 
         switch (id) {
             case LOADER_ID:
                 return new CursorLoader(getActivity(),
-                        TopicEntry.CONTENT_URI,
+                        HymnEntry.CONTENT_URI,
                         projection,
                         null,
                         null,

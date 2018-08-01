@@ -18,7 +18,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context="com.techbeloved.hymnbook.MainActivity">
+    tools:context="com.techbeloved.hymnbook.hymns.MainActivity">
 
     <include layout="@layout/inlude_list_viewpager"/>
 </LinearLayout>

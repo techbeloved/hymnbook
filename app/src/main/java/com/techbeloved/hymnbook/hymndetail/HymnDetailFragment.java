@@ -1,4 +1,4 @@
-package com.techbeloved.hymnbook;
+package com.techbeloved.hymnbook.hymndetail;
 
 import android.content.ContentUris;
 import android.database.Cursor;
@@ -10,9 +10,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.TextView;
+
+import com.techbeloved.hymnbook.R;
 
 import static com.techbeloved.hymnbook.data.HymnContract.*;
 

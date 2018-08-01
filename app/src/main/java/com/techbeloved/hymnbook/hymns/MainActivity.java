@@ -1,4 +1,4 @@
-package com.techbeloved.hymnbook;
+package com.techbeloved.hymnbook.hymns;
 
 import android.app.SearchManager;
 import android.content.Context;
@@ -14,8 +14,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.widget.SearchView;
 
+import com.techbeloved.hymnbook.R;
 import com.techbeloved.hymnbook.services.AssetManagerService;
-import com.techbeloved.hymnbook.utils.FileAssetManager;
 
 public class MainActivity extends AppCompatActivity {
     public static final String MIDI_READY = "MidiFilesReady";

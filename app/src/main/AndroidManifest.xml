@@ -13,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".hymns.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,13 +25,13 @@
         </activity>
 
         <activity
-            android:name=".HymnDetailActivity"
+            android:name=".hymndetail.HymnDetailActivity"
             android:label="@string/title_activity_hymn_detail"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".hymns.MainActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".hymns.MainActivity" />
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".SearchResultsActivity" />
@@ -40,14 +40,14 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".TopicHymnListActivity">
+        <activity android:name=".hymns.TopicHymnListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".hymns.MainActivity" />
         </activity>
 
         <activity
-            android:name=".SearchResultsActivity"
+            android:name=".hymnsearch.SearchResultsActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -55,7 +55,7 @@
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".hymns.MainActivity" />
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
