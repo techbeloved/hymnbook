@@ -14,4 +14,8 @@
         android:icon="@drawable/ic_favorite"
         android:title="@string/add_to_favorites"
         app:showAsAction="ifRoom" />
+
+    <item android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        app:showAsAction="never"/>
 </menu>

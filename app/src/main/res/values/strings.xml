@@ -20,4 +20,8 @@
     <string name="no_favorites_found">No favorites found!</string>
     <string name="add_favorite_hint">You can add hymn to favorites from the individual hymn view</string>
     <string name="delete_favorite">Delete Favorite</string>
+    <string name="additional_settings">Additional Settings</string>
+    <string name="send_feedback">Send Feedback</string>
+    <string name="about">About</string>
+    <string name="version_number">1.0.1</string>
 </resources>

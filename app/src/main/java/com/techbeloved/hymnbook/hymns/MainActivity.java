@@ -12,10 +12,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.SearchView;
 
 import com.techbeloved.hymnbook.R;
 import com.techbeloved.hymnbook.services.AssetManagerService;
+import com.techbeloved.hymnbook.settings.SettingsActivity;
 
 public class MainActivity extends AppCompatActivity {
     public static final String MIDI_READY = "MidiFilesReady";
@@ -93,6 +95,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                startActivity(settingsIntent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void setupViewPager(ViewPager viewPager) {

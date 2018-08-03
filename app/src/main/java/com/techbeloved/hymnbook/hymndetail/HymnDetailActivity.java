@@ -3,6 +3,7 @@ package com.techbeloved.hymnbook.hymndetail;
 import android.app.SearchManager;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -30,11 +31,13 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.techbeloved.hymnbook.settings.SettingsActivity;
 import com.techbeloved.hymnbook.utils.DepthPageTransformer;
 import com.techbeloved.hymnbook.R;
 import com.techbeloved.hymnbook.utils.FavoritePreferences;
 
 import java.io.File;
+import java.util.Objects;
 
 import static com.techbeloved.hymnbook.data.HymnContract.HymnEntry;
 
@@ -113,7 +116,7 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
         // Configure the ToolBar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         mActionBar = getSupportActionBar();
 
         mPager = findViewById(R.id.detail_pager);
@@ -235,11 +238,16 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
             case R.id.add_favorite:
                 addToFavorite();
                 return true;
+            case R.id.action_settings:
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                startActivity(settingsIntent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
 
     }
+
 
     @NonNull
     @Override

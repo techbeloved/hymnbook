@@ -9,7 +9,7 @@
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="collapseActionView|ifRoom" />
     <item
-        android:id="@+id/settings"
+        android:id="@+id/action_settings"
         android:title="@string/action_settings"
         app:showAsAction="never"/>
 </menu>

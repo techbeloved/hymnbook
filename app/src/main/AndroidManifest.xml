@@ -19,11 +19,11 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".SearchResultsActivity" />
         </activity>
-
         <activity
             android:name=".hymndetail.HymnDetailActivity"
             android:label="@string/title_activity_hymn_detail"
@@ -35,17 +35,16 @@
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".SearchResultsActivity" />
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
-
         <activity android:name=".hymns.TopicHymnListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".hymns.MainActivity" />
         </activity>
-
         <activity
             android:name=".hymnsearch.SearchResultsActivity"
             android:launchMode="singleTop">
@@ -65,7 +64,16 @@
             android:name=".data.HymnProvider"
             android:authorities="com.techbeloved.hymnbook"
             android:exported="false" />
+
         <service android:name=".services.AssetManagerService" />
+
+        <activity android:name=".settings.SettingsActivity"
+            android:parentActivityName=".hymns.MainActivity"
+            android:launchMode="singleTop">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".hymns.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
