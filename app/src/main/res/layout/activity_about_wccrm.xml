@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".about.AboutWccrmActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <include layout="@layout/include_toolbar_main" />
+    </android.support.design.widget.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/wccrm_name_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/cormorant_garamond"
+                android:padding="8dp"
+                android:text="@string/wccrm_full_name"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="4dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/mission_1"
+                android:drawableStart="@drawable/ic_done"
+                android:drawablePadding="16dp"
+                android:textSize="16sp"
+                android:fontFamily="@font/crimson_text" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/mission_2"
+                android:drawableStart="@drawable/ic_done"
+                android:drawablePadding="16dp"
+                android:textSize="16sp"
+                android:fontFamily="@font/crimson_text" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/mission_3"
+                android:drawableStart="@drawable/ic_done"
+                android:drawablePadding="16dp"
+                android:textSize="16sp"
+                android:fontFamily="@font/crimson_text" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/mission_4"
+                android:drawableStart="@drawable/ic_done"
+                android:drawablePadding="16dp"
+                android:textSize="16sp"
+                android:fontFamily="@font/crimson_text" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/mission_5"
+                android:drawableStart="@drawable/ic_done"
+                android:drawablePadding="16dp"
+                android:textSize="16sp"
+                android:fontFamily="@font/crimson_text" />
+
+            <!--Vision Statement-->
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="4dp"
+                android:text="@string/vision_heading"
+                android:textAllCaps="true"
+                android:fontFamily="@font/cormorant_garamond"
+                android:textSize="24sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/vision_1"
+                android:drawableStart="@drawable/ic_vision"
+                android:drawablePadding="16dp"
+                android:textSize="16sp"
+                android:fontFamily="@font/crimson_text" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/vision_2"
+                android:drawableStart="@drawable/ic_vision"
+                android:drawablePadding="16dp"
+                android:textSize="16sp"
+                android:fontFamily="@font/crimson_text" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/vision_3"
+                android:drawableStart="@drawable/ic_vision"
+                android:drawablePadding="16dp"
+                android:textSize="16sp"
+                android:fontFamily="@font/crimson_text" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/vision_4"
+                android:drawableStart="@drawable/ic_vision"
+                android:drawablePadding="16dp"
+                android:textSize="16sp"
+                android:fontFamily="@font/crimson_text" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/vision_5"
+                android:drawableStart="@drawable/ic_vision"
+                android:drawablePadding="16dp"
+                android:textSize="16sp"
+                android:fontFamily="@font/crimson_text" />
+
+            <!--End-time project-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="4dp"
+                android:text="@string/end_time_project_heading"
+                android:textAllCaps="true"
+                android:fontFamily="@font/cormorant_garamond"
+                android:textSize="24sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/project_1"
+                android:drawableStart="@drawable/ic_work"
+                android:drawablePadding="16dp"
+                android:textSize="16sp"
+                android:fontFamily="@font/crimson_text" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/project_2"
+                android:drawableStart="@drawable/ic_work"
+                android:drawablePadding="16dp"
+                android:textSize="16sp"
+                android:fontFamily="@font/crimson_text" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/project_3"
+                android:drawableStart="@drawable/ic_work"
+                android:drawablePadding="16dp"
+                android:textSize="16sp"
+                android:fontFamily="@font/crimson_text" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/project_4"
+                android:drawableStart="@drawable/ic_work"
+                android:drawablePadding="16dp"
+                android:textSize="16sp"
+                android:fontFamily="@font/crimson_text" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/project_5"
+                android:drawableStart="@drawable/ic_work"
+                android:drawablePadding="16dp"
+                android:textSize="16sp"
+                android:fontFamily="@font/crimson_text" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="4dp"
+                android:text="@string/contact_heading"
+                android:textAllCaps="true"
+                android:fontFamily="@font/cormorant_garamond"
+                android:textSize="24sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/www_website"
+                android:drawableStart="@drawable/ic_web_black_24dp"
+                android:drawablePadding="16dp"
+                android:textSize="16sp"
+                android:fontFamily="@font/crimson_text"
+                android:autoLink="web" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/wccrm_contact_phone"
+                android:drawableStart="@drawable/ic_contact_phone_black_24dp"
+                android:drawablePadding="16dp"
+                android:textSize="16sp"
+                android:fontFamily="@font/crimson_text"
+                android:autoLink="phone" />
+
+            <!-- Days of worship-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="4dp"
+                android:text="@string/days_of_worship_heading"
+                android:fontFamily="@font/cormorant_garamond"
+                android:textAllCaps="true"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/sunday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/sunday_morning"
+                android:drawableStart="@drawable/ic_local_activity_black_24dp"
+                android:drawablePadding="16dp"
+                android:textSize="16sp"
+                android:fontFamily="@font/crimson_text" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="0dp"
+                android:paddingBottom="4dp"
+                android:paddingStart="56dp"
+                android:paddingEnd="16dp"
+                android:text="@string/sunday_light_text"
+                android:textSize="14sp"
+                android:fontFamily="@font/crimson_text"
+                android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/tuesday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/tuesday_evening"
+                android:drawableStart="@drawable/ic_local_activity_black_24dp"
+                android:drawablePadding="16dp"
+                android:textSize="16sp"
+                android:fontFamily="@font/crimson_text" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="0dp"
+                android:paddingBottom="4dp"
+                android:paddingStart="56dp"
+                android:paddingEnd="16dp"
+                android:text="@string/charismatic_hour"
+                android:textSize="14sp"
+                android:fontFamily="@font/crimson_text"
+                android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/thursday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/thursday_evening"
+                android:drawableStart="@drawable/ic_local_activity_black_24dp"
+                android:drawablePadding="16dp"
+                android:textSize="16sp"
+                android:fontFamily="@font/crimson_text" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="0dp"
+                android:paddingBottom="4dp"
+                android:paddingStart="56dp"
+                android:paddingEnd="16dp"
+                android:text="@string/bible_study_text"
+                android:textSize="14sp"
+                android:fontFamily="@font/crimson_text"
+                android:textStyle="italic" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/wccrm_tagline"
+                android:textSize="14sp"
+                android:fontFamily="@font/crimson_text"
+                android:textStyle="italic|bold" />
+        </LinearLayout>
+
+
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>

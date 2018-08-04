@@ -79,3 +79,15 @@ footer{
     font-size: 0.8rem;
     font-family: "Cormorant";
 }
+
+body.about p, body.about li {
+    font-family: "CrimsonText", serif;
+    font-size: 1.15rem;
+    width: 95%;
+    line-height: 1.15rem;
+}
+
+.about h1, .about h2, .about h3, .about h4 {
+    font-family: "Cormorant";
+    width: 95%;
+}

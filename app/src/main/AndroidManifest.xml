@@ -67,13 +67,24 @@
 
         <service android:name=".services.AssetManagerService" />
 
-        <activity android:name=".settings.SettingsActivity"
-            android:parentActivityName=".hymns.MainActivity"
-            android:launchMode="singleTop">
+        <activity
+            android:name=".settings.SettingsActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".hymns.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".hymns.MainActivity" />
         </activity>
+        <activity
+            android:name=".about.AboutActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".settings.SettingsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".settings.SettingsActivity" />
+        </activity>
+        <activity android:name=".about.AboutWccrmActivity" />
+        <activity android:name=".about.AcknowledgementsActivity"></activity>
     </application>
 
 </manifest>
