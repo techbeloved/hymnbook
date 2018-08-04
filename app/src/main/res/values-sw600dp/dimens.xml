@@ -3,4 +3,6 @@
     <bool name="isTablet">true</bool>
     <!--Default Text size for list item-->
     <dimen name="list_item_text_size">22sp</dimen>
+    <dimen name="settings_item_text_size">20sp</dimen>
+    <dimen name="about_title_text_size">28sp</dimen>
 </resources>
