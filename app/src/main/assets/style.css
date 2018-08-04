@@ -50,7 +50,7 @@ h2.title {
     width: 70%;
     text-align: center;
     font-weight: 500;
-    font-family: "Cormorant";
+    font-family: "CrimsonText";
 }
 
 
@@ -76,13 +76,13 @@ h2.hymn_no {
 footer{
     margin-left: 1rem;
     padding-left: 1rem;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     font-family: "Cormorant";
 }
 
 body.about p, body.about li {
     font-family: "CrimsonText", serif;
-    font-size: 1.15rem;
+    font-size: 1.19rem;
     width: 95%;
     line-height: 1.15rem;
 }
