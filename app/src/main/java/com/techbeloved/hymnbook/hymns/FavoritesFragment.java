@@ -227,7 +227,8 @@ public class FavoritesFragment extends Fragment implements LoaderManager.LoaderC
         TextView emptyTitle = rootView.findViewById(R.id.empty_title_text);
         TextView emptySubtTitle = rootView.findViewById(R.id.empty_subtitle_text);
 
-        emptyImage.setImageResource(R.drawable.watchman_logo);
+        emptyImage.setImageResource(R.drawable.im_favorite_border_black_24dp);
+        emptyImage.setImageAlpha(50);
         emptyTitle.setText(R.string.no_favorites_found);
         emptySubtTitle.setText(R.string.add_favorite_hint);
 

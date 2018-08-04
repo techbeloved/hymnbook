@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/empty_search_image"
             android:layout_centerHorizontal="true"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/cormorant_garamond"
             android:paddingTop="16dp"
             android:textAppearance="?android:textAppearanceMedium" />
 
@@ -58,9 +58,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/empty_title_text"
             android:layout_centerHorizontal="true"
-            android:fontFamily="sans-serif"
-            android:paddingTop="8dp"
-            android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="#A2AAB0" />
+            android:fontFamily="@font/crimson_text"
+            android:textAlignment="center"
+            android:padding="16dp"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="?android:textColorSecondary" />
     </RelativeLayout>
 </LinearLayout>
