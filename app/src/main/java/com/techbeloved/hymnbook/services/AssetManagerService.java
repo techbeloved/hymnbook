@@ -30,7 +30,6 @@ public class AssetManagerService extends IntentService {
         if (intent != null) {
             int newVersion = intent.getIntExtra(MainActivity.MIDI_VERSION, 0);
             // Do the file copying in the background
-            Log.i(TAG, "onHandleIntent: service started");
             Toast.makeText(getApplicationContext(), "Start copying tunes to sdcard", Toast.LENGTH_SHORT).show();
             filesCopied = FileAssetManager.copyAssets(this, 0, newVersion);
         }

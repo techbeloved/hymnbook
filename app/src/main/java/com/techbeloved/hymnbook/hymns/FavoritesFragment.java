@@ -35,7 +35,6 @@ import java.util.ArrayList;
 public class FavoritesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int LOADER_ID = 1;
-    private static final String TAG = FavoritesFragment.class.getSimpleName();
     HymnCursorAdapter mCursorAdapter;
     ListView mFavoriteListView;
 

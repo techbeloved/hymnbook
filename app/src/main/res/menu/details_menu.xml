@@ -8,12 +8,12 @@
         android:iconTint="@android:color/white"
         android:title="@string/search_title"
         app:actionViewClass="android.widget.SearchView"
-        app:showAsAction="collapseActionView|ifRoom" />
+        app:showAsAction="collapseActionView|never" />
     <item
         android:id="@+id/add_favorite"
         android:icon="@drawable/ic_favorite"
         android:title="@string/add_to_favorites"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"

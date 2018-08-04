@@ -23,8 +23,6 @@ import com.techbeloved.hymnbook.hymndetail.HymnDetailActivity;
 
 public class SearchResultsActivity extends AppCompatActivity {
 
-    private static final String TAG = SearchResultsActivity.class.getSimpleName();
-
     SearchDatabaseTable db = new SearchDatabaseTable(this);
 
     @Override

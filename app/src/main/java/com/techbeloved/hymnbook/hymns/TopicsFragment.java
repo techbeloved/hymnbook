@@ -27,7 +27,6 @@ import static com.techbeloved.hymnbook.data.HymnContract.*;
  */
 
 public class TopicsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-    private static final String TAG = TopicsFragment.class.getSimpleName();
 
     private static final int LOADER_ID = 1;
     Parcelable state;
@@ -60,7 +59,6 @@ public class TopicsFragment extends Fragment implements LoaderManager.LoaderCall
             Intent intent = new Intent(getContext(), TopicHymnListActivity.class);
             intent.putExtra(TopicHymnListActivity.TOPIC_ID, id);
             intent.putExtra(TopicHymnListActivity.TOPIC_NAME, hymnTitle);
-            Log.i(TAG, "onCreateView: topic_id = " + id);
             startActivity(intent);
         });
 
@@ -70,7 +68,6 @@ public class TopicsFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onPause() {
-        Log.d(TAG, "onPause: saving HymnListView State");
         state = mTopicListView.onSaveInstanceState();
         super.onPause();
     }
@@ -79,7 +76,6 @@ public class TopicsFragment extends Fragment implements LoaderManager.LoaderCall
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (state != null) {
-            Log.d(TAG, "onViewCreated: restoring listview state");
             mTopicListView.onRestoreInstanceState(state);
         }
     }

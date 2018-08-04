@@ -43,8 +43,6 @@ import static com.techbeloved.hymnbook.data.HymnContract.HymnEntry;
 
 public class HymnDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    public static final String PREF_FAVORITES = "MyFavorites";
-    private static final String TAG = HymnDetailActivity.class.getSimpleName();
     private static final int LOADER_ID = 1;
     private static final String PLAYBACK_POSITION = "playbackPosition";
     // Favorite Preference
@@ -149,7 +147,6 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
             }
         });
         if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
-            Log.i(TAG, "onCreate: mediaplayer pos =  " + mMediaPlayer.getCurrentPosition());
             // Update the UI to show that mediaPlayer is playing
             playFAB.setImageResource(android.R.drawable.ic_media_pause);
         }
@@ -174,7 +171,6 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
             mPlaybackPos = mMediaPlayer.getCurrentPosition();
             outState.putInt(PLAYBACK_POSITION, mPlaybackPos);
         }
-        Log.i(TAG, "onSaveInstanceState: playback - " + mPlaybackPos);
         outState.putLong(HymnDetailFragment.ARG_CURR_ID, mHymnId);
         super.onSaveInstanceState(outState);
     }
@@ -186,7 +182,6 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
         mHymnId = savedInstanceState.getLong(HymnDetailFragment.ARG_CURR_ID);
         mPager.setCurrentItem((int) mHymnId - 1, true);
         mPlaybackPos = savedInstanceState.getInt(PLAYBACK_POSITION);
-        Log.i(TAG, "onRestoreInstanceState: hymn_id: ");
     }
 
     @Override
@@ -356,10 +351,7 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
             Toast.makeText(this, "The tune is " +
                             "not yet available! "
                     , Toast.LENGTH_SHORT).show();
-            //String audioUrl = "http://odifek.tk/hymnbook_mid/" + currentNum + ".mid";
-            //downloadAudio(audioUrl);
         }
-        //else mediaPlayer = null;
 
         return audioUri1;
 
@@ -386,11 +378,9 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
         @Override
         public Fragment getItem(int position) {
             if (mCursor.moveToPosition(position)) {
-                Log.i(TAG, "getItem: " + position);
                 long hymnId = mCursor.getLong(mCursor.getColumnIndexOrThrow(HymnEntry._ID));
                 return HymnDetailFragment.init(hymnId);
             }
-            Log.i(TAG, "getItem: is " + mCursor);
             return null;
         }
 

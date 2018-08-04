@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String MIDI_READY = "MidiFilesReady";
     public static final String PREF_NAME = "MyPreferences";
     public static final String MIDI_VERSION = "midiVersoin";
-    private static final String TAG = MainActivity.class.getSimpleName();
 
     public static void saveMidiFilesReadyPrefs(String key, boolean value, Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_NAME, 0);
@@ -55,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Copy midi assets if not already copied
         if (!getMidiFilesReadyPrefs(MIDI_READY, getApplicationContext())) {
-            Log.i(TAG, "onCreate: about copying midi files");
             Intent intent = new Intent(this, AssetManagerService.class);
             intent.putExtra(MIDI_VERSION, 1);
             startService(intent);

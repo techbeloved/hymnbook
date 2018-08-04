@@ -45,13 +45,9 @@ class SearchDatabaseTable {
         builder.setTables(FTS_VIRTUAL_TABLE);
 
         SQLiteDatabase db = mDatabaseOpenHelper.getReadableDatabase();
-        Log.i(TAG, "query: " + db.toString());
 
         Cursor cursor = builder.query(db,
                 null, selection, selectionArgs, null, null, null);
-        Log.i(TAG, "query: result count " + cursor.getCount());
-        //cursor.moveToFirst();
-
 
         if (!cursor.moveToFirst()) {
             cursor.close();
@@ -72,7 +68,6 @@ class SearchDatabaseTable {
 
         DatabaseOpenHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
-            Log.i(TAG, "DatabaseOpenHelper: ");
             mHelperContext = context;
         }
 
@@ -80,20 +75,18 @@ class SearchDatabaseTable {
         public void onCreate(SQLiteDatabase db) {
             mDatabase = db;
             mDatabase.execSQL(FTS_TABLE_CREATE);
-            Log.i(TAG, "onCreate: about to search");
             loadSearchTable();
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
-                    + newVersion + ", which will destroy all old data");
+//            Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
+//                    + newVersion + ", which will destroy all old data");
             db.execSQL("DROP TABLE IF EXISTS " + FTS_VIRTUAL_TABLE);
             onCreate(db);
         }
 
         private void loadSearchTable() {
-            Log.i(TAG, "loadSearchTable: loading the search table");
             new Thread(this::loadSearchData).start();
         }
 
@@ -129,14 +122,13 @@ class SearchDatabaseTable {
                                 .replaceAll("<li>", "")
                                 .replaceAll("<p class=\"chorus\">", "")
                                 .replaceAll("</p>", "");
-                        Log.i(TAG, "loadSearchData: " + firstVerseAndChorus);
                     } else {
                         firstVerseAndChorus = null;
                     }
 
                     long status = addData(index, title, firstVerseAndChorus);
                     if (status < 0) {
-                        Log.e(TAG, "loadSearchData: unable to add data: " + title);
+//                        Log.e(TAG, "loadSearchData: unable to add data: " + title);
                     }
                     cursor.moveToNext();
                 }

@@ -27,7 +27,6 @@ import com.techbeloved.hymnbook.hymndetail.HymnDetailActivity;
 public class TopicHymnListActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     public static final String TOPIC_ID = "topicId";
     public static final String TOPIC_NAME = "topicName";
-    private static final String TAG = TopicHymnListActivity.class.getSimpleName();
     private static final int LOADER_ID = 1;
     private ListView mHymnListView;
     private HymnCursorAdapter mAdapter;
@@ -91,7 +90,6 @@ public class TopicHymnListActivity extends AppCompatActivity implements LoaderMa
 
         Uri uri = ContentUris.withAppendedId(HymnContract.TopicEntry.CONTENT_URI, mTopicId);
         uri = Uri.withAppendedPath(uri, "hymns");
-        Log.i(TAG, "onCreateLoader: " + uri);
         switch (id) {
             case LOADER_ID:
                 return new CursorLoader(this,

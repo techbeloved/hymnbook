@@ -30,8 +30,6 @@ import static com.techbeloved.hymnbook.data.HymnContract.*;
 
 public class HymnTitlesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final String TAG = HymnTitlesFragment.class.getSimpleName();
-
     private static final int LOADER_ID = 1;
     Parcelable state;
     private HymnCursorAdapter mCursorAdapter;
@@ -72,7 +70,6 @@ public class HymnTitlesFragment extends Fragment implements LoaderManager.Loader
 
     @Override
     public void onPause() {
-        Log.d(TAG, "onPause: saving HymnListView State");
         state = mHymnListView.onSaveInstanceState();
         super.onPause();
     }
@@ -81,7 +78,6 @@ public class HymnTitlesFragment extends Fragment implements LoaderManager.Loader
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (state != null) {
-            Log.d(TAG, "onViewCreated: restoring listview state");
             mHymnListView.onRestoreInstanceState(state);
         }
     }
