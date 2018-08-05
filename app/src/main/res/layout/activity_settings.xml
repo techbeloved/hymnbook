@@ -68,7 +68,6 @@
             android:textSize="@dimen/settings_item_text_size"
             android:text="@string/about"/>
         <TextView
-            android:id="@+id/version_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#909090"

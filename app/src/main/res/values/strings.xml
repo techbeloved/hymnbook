@@ -2,14 +2,11 @@
     <string name="app_name">Watchman Hymnbook</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_favorites_fragment">Hello Favorites fragment</string>
-    <string name="hello_topic_fragment">Welcome to topics fragment</string>
     <string name="title_activity_hymn_detail">Hymn Detail</string>
     <string name="action_settings">Settings</string>
 
     <string name="html_body_template"><![CDATA[<body> <header> <h2 class=\"hymn_no\">%1$d</h2> <h2 class=\"title\">%2$s</h2> </header> %3$s </body>]]></string>
     <string name="css_link"><![CDATA[<link rel=\"stylesheet\" href=\"style.css\">]]></string>
-    <string name="midi_song_prefix">hymn_</string>
     <string name="search_title">Search Hymns</string>
     <string name="search_hint">Enter search term</string>
     <string name="search_result">Search Results</string>
