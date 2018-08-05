@@ -14,10 +14,6 @@ import java.util.List;
 
 public class LicenseAdapter extends RecyclerView.Adapter<LicenseAdapter.LicenseViewHolder> {
 
-    private static final String TAG = LicenseAdapter.class.getSimpleName();
-
-    private int mNumberItems;
-
     final private ListItemClickListener mOnClickListener;
 
     private ArrayList<Library> mLibraries;
