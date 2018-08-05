@@ -3,9 +3,9 @@ package com.techbeloved.hymnbook.services;
 import android.app.IntentService;
 import android.content.Intent;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.widget.Toast;
 
+import com.techbeloved.hymnbook.R;
 import com.techbeloved.hymnbook.hymns.MainActivity;
 import com.techbeloved.hymnbook.utils.FileAssetManager;
 
@@ -18,8 +18,6 @@ public class AssetManagerService extends IntentService {
 
     public static final String TAG = AssetManagerService.class.getSimpleName();
 
-    private boolean filesCopied;
-
     public AssetManagerService() {
         super(TAG);
     }
@@ -30,18 +28,13 @@ public class AssetManagerService extends IntentService {
         if (intent != null) {
             int newVersion = intent.getIntExtra(MainActivity.MIDI_VERSION, 0);
             // Do the file copying in the background
-            Toast.makeText(getApplicationContext(), "Start copying tunes to sdcard", Toast.LENGTH_SHORT).show();
-            filesCopied = FileAssetManager.copyAssets(this, 0, newVersion);
+            Toast.makeText(getApplicationContext(), R.string.start_copy_tunes_msg, Toast.LENGTH_SHORT).show();
+            FileAssetManager.copyAssets(getApplicationContext(), 0, newVersion);
         }
     }
 
     @Override
     public void onDestroy() {
-        String message = "Error copying media files";
-        if (filesCopied) {
-            message = "tunes successfully copied to sdcard";
-        }
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
         super.onDestroy();
     }
 }

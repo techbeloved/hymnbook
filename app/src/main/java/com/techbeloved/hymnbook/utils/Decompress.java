@@ -39,7 +39,6 @@ public class Decompress {
             ZipInputStream zin = new ZipInputStream(fin);
             ZipEntry ze;
             while ((ze = zin.getNextEntry()) != null) {
-                Log.v("Decompress", "Unzipping " + ze.getName());
 
                 if (ze.isDirectory()) {
                     _dirChecker(ze.getName());
@@ -56,13 +55,11 @@ public class Decompress {
             }
             zin.close();
         } catch (Exception e) {
-            Log.e("Decompress", "unzip", e);
+            e.printStackTrace();
         }
 
         File file = new File(_zipFile);
-        if (file.delete()) {
-            Log.i("Decompress", "unzip: " + _zipFile + " removed successfully");
-        }
+        file.delete();
     }
 
     private void _dirChecker(String dir) {

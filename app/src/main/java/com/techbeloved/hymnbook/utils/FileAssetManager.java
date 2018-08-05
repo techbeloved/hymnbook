@@ -4,7 +4,8 @@ package com.techbeloved.hymnbook.utils;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
+
+import com.techbeloved.hymnbook.R;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -16,6 +17,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
+import static xdroid.toaster.Toaster.toast;
 
 /**
  * Created by kennedy on 5/5/18.
@@ -35,7 +38,7 @@ public class FileAssetManager {
      *
      * @param zipFile         is the zip file File object
      * @param targetDirectory is the target directory
-     * @throws IOException
+     * @throws IOException Something went wrong
      */
     public static void unzip(File zipFile, File targetDirectory) throws IOException {
         try (ZipInputStream zis = new ZipInputStream(
@@ -51,12 +54,9 @@ public class FileAssetManager {
                             dir.getAbsolutePath());
                 if (ze.isDirectory())
                     continue;
-                FileOutputStream fout = new FileOutputStream(file);
-                try {
+                try (FileOutputStream fout = new FileOutputStream(file)) {
                     while ((count = zis.read(buffer)) != -1)
                         fout.write(buffer, 0, count);
-                } finally {
-                    fout.close();
                 }
             /* if time should be restored as well
             long time = ze.getTime();
@@ -74,7 +74,7 @@ public class FileAssetManager {
      * @param filename       is the zip file name you want to decompress
      * @param extDestination is the location directory
      */
-    public static void deCompressArchive(Context context, final String filename, String extDestination) {
+    private static void deCompressArchive(Context context, final String filename, String extDestination) {
         // Do it in a new thread so that the UI is not freezed!
         new Thread(() -> {
             String zipFile;
@@ -88,6 +88,7 @@ public class FileAssetManager {
             }
             Decompress d = new Decompress(zipFile, unzipLocation);
             d.unzip();
+            new Thread(() -> toast(R.string.tunes_copied_success)).start();
         }).start();
 
     }
@@ -98,7 +99,7 @@ public class FileAssetManager {
      * @param context  is the application {@link Context}
      * @param fileName is the name of the {@link File}
      */
-    public static void removeIfOutdated(Context context, String fileName) {
+    private static void removeIfOutdated(Context context, String fileName) {
         //File file = new File(ContextCompat.getExternalFilesDirs(this, null)[0], fileName);
         File[] availableFiles;
         availableFiles = ContextCompat.getExternalFilesDirs(context, null)[0].listFiles();
@@ -115,33 +116,33 @@ public class FileAssetManager {
      *
      * @param context  is the Application context
      * @param fileName is the name of the file requested
-     * @return
+     * @return boolean
      */
-    public static boolean hasExternalStoragePrivateFile(Context context, String fileName) {
+    private static boolean hasExternalStoragePrivateFile(Context context, String fileName) {
         // Get path for the file on external storage.  If external
         // storage is not currently mounted this will fail.
         File file = new File(ContextCompat.getExternalFilesDirs(context, null)[0], fileName);
-        return file != null && file.exists();
+        return file.exists();
     }
 
-    public static boolean copyAssets(Context context, int oldVersion, int newVersion) {
+    public static void copyAssets(Context context, int oldVersion, int newVersion) {
         AssetManager assetManager = context.getAssets();
         String[] files;
         try {
             files = assetManager.list("midi");
         } catch (IOException e) {
-            Log.e(TAG, "copyAssets: Failed!", e);
-            return false;
+            e.printStackTrace();
+            return;
         }
 
         for (String filename : files) {
             //System.out.println("File name => "+filename);
-            Log.i(TAG, "copyAssets: File name => " + filename);
             InputStream in;
             OutputStream out;
             // Check if old version of the file is available and remove it if so
             File newFile = new File(ContextCompat.getExternalFilesDirs(context, null)[0], newVersion + "_" +
                     filename);
+            // This does nothing now
             if (oldVersion != newVersion) {
                 removeIfOutdated(context, oldVersion + "_" + filename);
             }
@@ -157,11 +158,10 @@ public class FileAssetManager {
                 out.flush();
                 out.close();
             } catch (Exception e) {
-                Log.e("tag", e.getMessage());
+                e.printStackTrace();
             }
             deCompressArchive(context, newVersion + "_" + filename, "midi");
         }
-        return true;
     }
 
     private static void copyFile(InputStream in, OutputStream out) throws IOException {

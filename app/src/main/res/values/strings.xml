@@ -61,4 +61,6 @@
     <string name="bible_study_text">Expository Bible Study</string>
     <string name="developer_email">techbeloved@gmail.com</string>
     <string name="email_mime_type">message/rfc822</string>
+    <string name="tunes_copied_success">Tunes copied successfully</string>
+    <string name="start_copy_tunes_msg">Start copying tunes to sdcard</string>
 </resources>

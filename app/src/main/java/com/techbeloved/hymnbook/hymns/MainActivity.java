@@ -22,7 +22,9 @@ import com.techbeloved.hymnbook.settings.SettingsActivity;
 public class MainActivity extends AppCompatActivity {
     public static final String MIDI_READY = "MidiFilesReady";
     public static final String PREF_NAME = "MyPreferences";
-    public static final String MIDI_VERSION = "midiVersoin";
+    public static final String MIDI_VERSION = "midiVersion";
+    // Update this whenever the midi files are updated in the zip file
+    private static final int CURRENT_MIDI_VERSION = 2;
 
     public static void saveMidiFilesReadyPrefs(String key, boolean value, Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_NAME, 0);
@@ -31,9 +33,21 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
     }
 
+    public static void saveMidiFilesVersion(String key, int newVersion, Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_NAME, 0);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(key, newVersion);
+        editor.apply();
+    }
+
     private static boolean getMidiFilesReadyPrefs(String key, Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_NAME, 0);
         return sharedPreferences.getBoolean(key, false);
+    }
+
+    private static int getMidiFilesVersion(String key, Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_NAME, 0);
+        return sharedPreferences.getInt(key, 0);
     }
 
     @Override
@@ -52,12 +66,16 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        // Copy midi assets if not already copied
-        if (!getMidiFilesReadyPrefs(MIDI_READY, getApplicationContext())) {
+        // Copy midi assets if not already copied or the midi file version has been updated
+        if (!getMidiFilesReadyPrefs(MIDI_READY, getApplicationContext()) ||
+                CURRENT_MIDI_VERSION != getMidiFilesVersion(MIDI_VERSION, getApplicationContext())) {
+
             Intent intent = new Intent(this, AssetManagerService.class);
-            intent.putExtra(MIDI_VERSION, 1);
+            intent.putExtra(MIDI_VERSION, CURRENT_MIDI_VERSION);
             startService(intent);
+
             saveMidiFilesReadyPrefs(MIDI_READY, true, getApplicationContext());
+            saveMidiFilesVersion(MIDI_VERSION, CURRENT_MIDI_VERSION, getApplicationContext());
         }
 
     }
