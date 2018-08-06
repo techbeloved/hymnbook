@@ -59,4 +59,29 @@
         <item name="android:background">?android:activatedBackgroundIndicator</item>
     </style>
 
+    <!--About Ministry styles-->
+    <style name="MinistryTextItemStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">8dp</item>
+        <item name="android:drawablePadding">16dp</item>
+        <item name="android:textSize">@dimen/settings_item_text_size</item>
+        <item name="android:fontFamily">@font/crimson_text</item>
+    </style>
+
+    <style name="MinistryTextHeaderStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">8dp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:fontFamily">@font/cormorant_garamond</item>
+        <item name="android:textSize">@dimen/about_title_text_size</item>
+    </style>
+
 </resources>

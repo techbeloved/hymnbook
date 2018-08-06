@@ -5,8 +5,8 @@
     <string name="title_activity_hymn_detail">Hymn Detail</string>
     <string name="action_settings">Settings</string>
 
-    <string name="html_body_template"><![CDATA[<body> <header> <h2 class=\"hymn_no\">%1$d</h2> <h2 class=\"title\">%2$s</h2> </header> %3$s </body>]]></string>
-    <string name="css_link"><![CDATA[<link rel=\"stylesheet\" href=\"style.css\">]]></string>
+    <string name="html_body_template" translatable="false"><![CDATA[<body> <header> <h2 class=\"hymn_no\">%1$d</h2> <h2 class=\"title\">%2$s</h2> </header> %3$s </body>]]></string>
+    <string name="css_link" translatable="false"><![CDATA[<link rel=\"stylesheet\" href=\"style.css\">]]></string>
     <string name="search_title">Search Hymns</string>
     <string name="search_hint">Enter search term</string>
     <string name="search_result">Search Results</string>
@@ -20,7 +20,7 @@
     <string name="additional_settings">Additional Settings</string>
     <string name="send_feedback">Send Feedback</string>
     <string name="about">About</string>
-    <string name="version_number">1.0.1</string>
+    <string name="version_number" translatable="false">1.0.1</string>
     <string name="watchman">Watchman</string>
     <string name="acknowledgements">Acknowledgements</string>
     <string name="wccrm">Catholic Charismatic Renewal Movement</string>
@@ -44,20 +44,30 @@
     <string name="project_2">Raise the tribes of Israel (denominations of the church);</string>
     <string name="project_3">Restore the preserved of Israel;</string>
     <string name="project_4">Be a light to the gentiles (unbelievers);</string>
-    <string name="project_5">Being God\'s means of salvation to the ends of the earth.</string>
+    <string name="project_5">Be God\'s means of salvation to the ends of the earth.</string>
     <string name="wccrm_tagline">Your welfare in time and eternity is God\'s concern and ours.  Join us, and God will do you good!</string>
-    <string name="wccrm_contact_phone">+2349020705555</string>
+    <string name="wccrm_contact_phone" translatable="false">+2349020705555</string>
     <string name="contact_heading">Contact</string>
-    <string name="www_website">www.wccrmvoice.org</string>
+    <string name="www_website" translatable="false">www.wccrmvoice.org</string>
     <string name="days_of_worship_heading">Days of worship</string>
-    <string name="sunday_morning">Sunday Morning</string>
+    <string name="sunday_morning">Sunday Morning \u2014 <i>Sunday Light Fellowship</i></string>
     <string name="sunday_light_text">Sunday Light Fellowship</string>
-    <string name="tuesday_evening">Tuesday Evening</string>
+    <string name="tuesday_evening">Tuesday Evening \u2014 <i>Charismatic Hour</i></string>
     <string name="charismatic_hour">Charismatic Hour</string>
-    <string name="thursday_evening">Thursday Evening</string>
+    <string name="thursday_evening">Thursday Evening \u2014 <i>Expository Bible Study</i> </string>
     <string name="bible_study_text">Expository Bible Study</string>
-    <string name="developer_email">techbeloved@gmail.com</string>
-    <string name="email_mime_type">message/rfc822</string>
+    <string name="developer_email" translatable="false">techbeloved@gmail.com</string>
+    <string name="email_mime_type" translatable="false">message/rfc822</string>
     <string name="tunes_copied_success">Tunes copied successfully</string>
     <string name="start_copy_tunes_msg">Start copying tunes to sdcard</string>
+    <string name="_11th_hour_business_header">11<sup>th</sup> Hour Business\n(Isaiah 49:5&amp;6)</string>
+    <string name="end_time_project_1">Raising great army of Christians from the various denominations for an imminent great harvest of souls into the kingdom of God;</string>
+    <string name="end_time_project_2">Bringing about a great harvest of souls proper, and a great revival in the entire church;</string>
+    <string name="end_time_project_3">Fulfilling the pre-rapture necessity (Ephesians 4:11\u201415; 5:27).</string>
+    <string name="ministry_values_header">The Watchman is a:</string>
+    <string name="value_1"><b>Model ministry</b> — given to be a standard that others will copy;</string>
+    <string name="value_2"><b>Restorative ministry</b> — given to call the entire Christendom back to the original, biblical Christianity;</string>
+    <string name="value_3"><b>Missionary/evangelistic ministry</b> — given to reach out to all the people even to the ends of the earth with the unadulterated gospel of Jesus Christ;</string>
+    <string name="value_4"><b>Sacrificial ministry</b> — given to lay down our all in order to fulfill the God-given mandate;</string>
+    <string name="value_5"><b>Corrective ministry</b> — given to confront and correct all the errors that Satan and men have brought into Christendom.</string>
 </resources>

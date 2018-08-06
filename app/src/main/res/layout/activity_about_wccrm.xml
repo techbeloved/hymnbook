@@ -43,362 +43,183 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="4dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
+                style="@style/MinistryTextItemStyle"
                 android:text="@string/mission_1"
-                android:drawableStart="@drawable/ic_done"
-                android:drawablePadding="16dp"
-                android:textSize="@dimen/settings_item_text_size"
-                android:fontFamily="@font/crimson_text" />
+                android:drawableStart="@drawable/ic_done" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
+                style="@style/MinistryTextItemStyle"
                 android:text="@string/mission_2"
-                android:drawableStart="@drawable/ic_done"
-                android:drawablePadding="16dp"
-                android:textSize="@dimen/settings_item_text_size"
-                android:fontFamily="@font/crimson_text" />
+                android:drawableStart="@drawable/ic_done" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
+                style="@style/MinistryTextItemStyle"
                 android:text="@string/mission_3"
-                android:drawableStart="@drawable/ic_done"
-                android:drawablePadding="16dp"
-                android:textSize="@dimen/settings_item_text_size"
-                android:fontFamily="@font/crimson_text" />
+                android:drawableStart="@drawable/ic_done" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
+                style="@style/MinistryTextItemStyle"
                 android:text="@string/mission_4"
-                android:drawableStart="@drawable/ic_done"
-                android:drawablePadding="16dp"
-                android:textSize="@dimen/settings_item_text_size"
-                android:fontFamily="@font/crimson_text" />
+                android:drawableStart="@drawable/ic_done" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
+                style="@style/MinistryTextItemStyle"
                 android:text="@string/mission_5"
-                android:drawableStart="@drawable/ic_done"
-                android:drawablePadding="16dp"
-                android:textSize="@dimen/settings_item_text_size"
-                android:fontFamily="@font/crimson_text" />
+                android:drawableStart="@drawable/ic_done" />
 
             <!--Vision Statement-->
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="16dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="4dp"
-                android:text="@string/vision_heading"
-                android:textAllCaps="true"
-                android:fontFamily="@font/cormorant_garamond"
-                android:textSize="@dimen/about_title_text_size" />
+                style="@style/MinistryTextHeaderStyle"
+                android:text="@string/vision_heading" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
+                style="@style/MinistryTextItemStyle"
                 android:text="@string/vision_1"
-                android:drawableStart="@drawable/ic_vision"
-                android:drawablePadding="16dp"
-                android:textSize="@dimen/settings_item_text_size"
-                android:fontFamily="@font/crimson_text" />
+                android:drawableStart="@drawable/ic_vision" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
+                style="@style/MinistryTextItemStyle"
                 android:text="@string/vision_2"
-                android:drawableStart="@drawable/ic_vision"
-                android:drawablePadding="16dp"
-                android:textSize="@dimen/settings_item_text_size"
-                android:fontFamily="@font/crimson_text" />
+                android:drawableStart="@drawable/ic_vision" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
+                style="@style/MinistryTextItemStyle"
                 android:text="@string/vision_3"
-                android:drawableStart="@drawable/ic_vision"
-                android:drawablePadding="16dp"
-                android:textSize="@dimen/settings_item_text_size"
-                android:fontFamily="@font/crimson_text" />
+                android:drawableStart="@drawable/ic_vision" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
+                style="@style/MinistryTextItemStyle"
                 android:text="@string/vision_4"
-                android:drawableStart="@drawable/ic_vision"
-                android:drawablePadding="16dp"
-                android:textSize="@dimen/settings_item_text_size"
-                android:fontFamily="@font/crimson_text" />
+                android:drawableStart="@drawable/ic_vision" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
+                style="@style/MinistryTextItemStyle"
                 android:text="@string/vision_5"
-                android:drawableStart="@drawable/ic_vision"
-                android:drawablePadding="16dp"
-                android:textSize="@dimen/settings_item_text_size"
-                android:fontFamily="@font/crimson_text" />
+                android:drawableStart="@drawable/ic_vision" />
 
             <!--End-time project-->
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="16dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="4dp"
-                android:text="@string/end_time_project_heading"
-                android:textAllCaps="true"
-                android:fontFamily="@font/cormorant_garamond"
-                android:textSize="@dimen/about_title_text_size" />
+                style="@style/MinistryTextHeaderStyle"
+                android:text="@string/end_time_project_heading" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
+                style="@style/MinistryTextItemStyle"
+                android:text="@string/end_time_project_1"
+                android:drawableStart="@drawable/ic_work" />
+            <TextView
+                style="@style/MinistryTextItemStyle"
+                android:text="@string/end_time_project_2"
+                android:drawableStart="@drawable/ic_work" />
+            <TextView
+                style="@style/MinistryTextItemStyle"
+                android:text="@string/end_time_project_3"
+                android:drawableStart="@drawable/ic_work" />
+
+            <!--11TH Hour Business-->
+            <TextView
+                style="@style/MinistryTextHeaderStyle"
+                android:text="@string/_11th_hour_business_header" />
+
+            <TextView
+                style="@style/MinistryTextItemStyle"
                 android:text="@string/project_1"
-                android:drawableStart="@drawable/ic_work"
-                android:drawablePadding="16dp"
-                android:textSize="@dimen/settings_item_text_size"
-                android:fontFamily="@font/crimson_text" />
+                android:drawableStart="@drawable/ic_business" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
+                style="@style/MinistryTextItemStyle"
                 android:text="@string/project_2"
-                android:drawableStart="@drawable/ic_work"
-                android:drawablePadding="16dp"
-                android:textSize="@dimen/settings_item_text_size"
-                android:fontFamily="@font/crimson_text" />
+                android:drawableStart="@drawable/ic_business" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
+                style="@style/MinistryTextItemStyle"
                 android:text="@string/project_3"
-                android:drawableStart="@drawable/ic_work"
-                android:drawablePadding="16dp"
-                android:textSize="@dimen/settings_item_text_size"
-                android:fontFamily="@font/crimson_text" />
+                android:drawableStart="@drawable/ic_business" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
+                style="@style/MinistryTextItemStyle"
                 android:text="@string/project_4"
-                android:drawableStart="@drawable/ic_work"
-                android:drawablePadding="16dp"
-                android:textSize="@dimen/settings_item_text_size"
-                android:fontFamily="@font/crimson_text" />
+                android:drawableStart="@drawable/ic_business" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
+                style="@style/MinistryTextItemStyle"
                 android:text="@string/project_5"
-                android:drawableStart="@drawable/ic_work"
-                android:drawablePadding="16dp"
-                android:textSize="@dimen/settings_item_text_size"
-                android:fontFamily="@font/crimson_text" />
+                android:drawableStart="@drawable/ic_business" />
+
+            <!--The Ministry values-->
+            <TextView
+                style="@style/MinistryTextHeaderStyle"
+                android:text="@string/ministry_values_header" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="16dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="4dp"
-                android:text="@string/contact_heading"
-                android:textAllCaps="true"
-                android:fontFamily="@font/cormorant_garamond"
-                android:textSize="@dimen/about_title_text_size" />
+                style="@style/MinistryTextItemStyle"
+                android:text="@string/value_1"
+                android:drawableStart="@drawable/ic_verified" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
+                style="@style/MinistryTextItemStyle"
+                android:text="@string/value_2"
+                android:drawableStart="@drawable/ic_verified" />
+
+            <TextView
+                style="@style/MinistryTextItemStyle"
+                android:text="@string/value_3"
+                android:drawableStart="@drawable/ic_verified" />
+
+            <TextView
+                style="@style/MinistryTextItemStyle"
+                android:text="@string/value_4"
+                android:drawableStart="@drawable/ic_verified" />
+            <TextView
+                style="@style/MinistryTextItemStyle"
+                android:text="@string/value_5"
+                android:drawableStart="@drawable/ic_verified" />
+
+            <!--Contact-->
+            <TextView
+                style="@style/MinistryTextHeaderStyle"
+                android:text="@string/contact_heading" />
+
+            <TextView
+                style="@style/MinistryTextItemStyle"
                 android:text="@string/www_website"
                 android:drawableStart="@drawable/ic_web_black_24dp"
-                android:drawablePadding="16dp"
-                android:textSize="@dimen/settings_item_text_size"
-                android:fontFamily="@font/crimson_text"
                 android:autoLink="web" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
+                style="@style/MinistryTextItemStyle"
                 android:text="@string/wccrm_contact_phone"
                 android:drawableStart="@drawable/ic_contact_phone_black_24dp"
-                android:drawablePadding="16dp"
-                android:textSize="@dimen/settings_item_text_size"
-                android:fontFamily="@font/crimson_text"
                 android:autoLink="phone" />
 
             <!-- Days of worship-->
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="16dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="4dp"
+                style="@style/MinistryTextHeaderStyle"
                 android:text="@string/days_of_worship_heading"
                 android:fontFamily="@font/cormorant_garamond"
                 android:textAllCaps="true"
                 android:textSize="@dimen/about_title_text_size" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
+                style="@style/MinistryTextItemStyle"
                 android:text="@string/sunday_morning"
-                android:drawableStart="@drawable/ic_local_activity_black_24dp"
-                android:drawablePadding="16dp"
-                android:textSize="@dimen/settings_item_text_size"
-                android:fontFamily="@font/crimson_text" />
+                android:drawableStart="@drawable/ic_local_activity_black_24dp" />
+
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="0dp"
-                android:paddingBottom="4dp"
-                android:paddingStart="56dp"
-                android:paddingEnd="16dp"
-                android:text="@string/sunday_light_text"
-                android:textSize="14sp"
-                android:fontFamily="@font/crimson_text"
-                android:textStyle="italic" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
+                style="@style/MinistryTextItemStyle"
                 android:text="@string/tuesday_evening"
-                android:drawableStart="@drawable/ic_local_activity_black_24dp"
-                android:drawablePadding="16dp"
-                android:textSize="@dimen/settings_item_text_size"
-                android:fontFamily="@font/crimson_text" />
+                android:drawableStart="@drawable/ic_local_activity_black_24dp" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="0dp"
-                android:paddingBottom="4dp"
-                android:paddingStart="56dp"
-                android:paddingEnd="16dp"
-                android:text="@string/charismatic_hour"
-                android:textSize="14sp"
-                android:fontFamily="@font/crimson_text"
-                android:textStyle="italic" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
+                style="@style/MinistryTextItemStyle"
                 android:text="@string/thursday_evening"
-                android:drawableStart="@drawable/ic_local_activity_black_24dp"
-                android:drawablePadding="16dp"
-                android:textSize="@dimen/settings_item_text_size"
-                android:fontFamily="@font/crimson_text" />
+                android:drawableStart="@drawable/ic_local_activity_black_24dp" />
+
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="0dp"
-                android:paddingBottom="4dp"
-                android:paddingStart="56dp"
-                android:paddingEnd="16dp"
-                android:text="@string/bible_study_text"
-                android:textSize="14sp"
-                android:fontFamily="@font/crimson_text"
-                android:textStyle="italic" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
+                style="@style/MinistryTextItemStyle"
+                android:textColor="?colorPrimaryDark"
                 android:text="@string/wccrm_tagline"
                 android:textSize="14sp"
                 android:fontFamily="@font/crimson_text"
