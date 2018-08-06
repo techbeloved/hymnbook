@@ -1,5 +1,6 @@
 package com.techbeloved.hymnbook.hymndetail;
 
+import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.ContentUris;
 import android.content.Context;
@@ -8,7 +9,9 @@ import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -19,14 +22,19 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -35,11 +43,13 @@ import com.techbeloved.hymnbook.settings.SettingsActivity;
 import com.techbeloved.hymnbook.utils.DepthPageTransformer;
 import com.techbeloved.hymnbook.R;
 import com.techbeloved.hymnbook.utils.FavoritePreferences;
+import com.techbeloved.hymnbook.viewgroup.TouchableFrameWrapper;
 
 import java.io.File;
 import java.util.Objects;
 
 import static com.techbeloved.hymnbook.data.HymnContract.HymnEntry;
+import static xdroid.toaster.Toaster.toast;
 
 public class HymnDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -104,12 +114,13 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
             playFAB.setImageResource(android.R.drawable.ic_media_play);
         }
     };
-    private MediaPlayer.OnCompletionListener mCompletionListener = mp -> releaseMediaPlayer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hymn_detail);
+
+        setupImmersiveMode();
 
         // Configure the ToolBar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -163,6 +174,17 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
 
         // Setup favorites
         favoritePreferences = new FavoritePreferences();
+    }
+
+    private void setupImmersiveMode() {
+        // Setup the gesture listener to listen for single tap and toggle fullscreen
+        TouchableFrameWrapper mainView = findViewById(R.id.touchable_frame);
+        GestureDetector.SimpleOnGestureListener gestureListener = new GestureListener(() -> {
+            toggleHideyBar();
+            return false;
+        });
+        final GestureDetector gd = new GestureDetector(this, gestureListener);
+        mainView.setGestureDetector(gd);
     }
 
     protected void onSaveInstanceState(Bundle outState) {
@@ -243,7 +265,6 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
 
     }
 
-
     @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
@@ -289,22 +310,6 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
             mMediaPlayer = null;
             mAudioManager.abandonAudioFocus(audioFocusChangeListener);
 
-        }
-    }
-
-    /**
-     * Handle playing of the audio media, which including requesting for focus and etc
-     */
-    private void playAudio(int soundResourceId) {
-        // Request for focus. requestAudioFocus(OnAudioFocusChangeListener l, int streamType, int durationHint)
-        int focus = mAudioManager.requestAudioFocus(audioFocusChangeListener,
-                AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
-        // Play audio if focus request granted
-        if (focus == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-            mMediaPlayer = MediaPlayer.create(this, soundResourceId);
-            mMediaPlayer.start();
-
-            mMediaPlayer.setOnCompletionListener(mCompletionListener);
         }
     }
 
@@ -361,7 +366,6 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
         favoritePreferences.addFavorite(getApplicationContext(), mAdapter.getCurrentFragment().getCurrentHymnId());
         Toast.makeText(this, "Song has been added to favorites", Toast.LENGTH_SHORT).show();
     }
-
     /**
      * The {@link CursorPagerAdapter }
      */
@@ -416,5 +420,48 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
         HymnDetailFragment getCurrentFragment() {
             return mCurrentFragment;
         }
+    }
+
+    /**
+     * Detects and toggles immersive mode (also known as "hidey bar" mode).
+     */
+    public void toggleHideyBar() {
+
+        // BEGIN_INCLUDE (get_current_ui_flags)
+        // The UI options currently enabled are represented by a bitfield.
+        // getSystemUiVisibility() gives us that bitfield.
+        int newUiOptions = this.getWindow().getDecorView().getSystemUiVisibility();
+        // END_INCLUDE (get_current_ui_flags)
+        // Hide or show toolbar accordingly
+        ActionBar actionBar = getSupportActionBar();
+        boolean isImmersiveModeEnabled =
+                ((newUiOptions | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY) == newUiOptions);
+        if (isImmersiveModeEnabled) {
+            if (actionBar != null) {
+                actionBar.show();
+            }
+        } else {
+            if (actionBar != null) {
+                actionBar.hide();
+            }
+        }
+
+        // BEGIN_INCLUDE (toggle_ui_flags)
+        newUiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        newUiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
+
+
+        // Immersive mode: Backward compatible to KitKat.
+        // Note that this flag doesn't do anything by itself, it only augments the behavior
+        // of HIDE_NAVIGATION and FLAG_FULLSCREEN.  For the purposes of this sample
+        // all three flags are being toggled together.
+        // Note that there are two immersive mode UI flags, one of which is referred to as "sticky".
+        // Sticky immersive mode differs in that it makes the navigation and status bars
+        // semi-transparent, and the UI flag does not get cleared when the user interacts with
+        // the screen.
+        newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+
+        this.getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
+        //END_INCLUDE (set_ui_flags)
     }
 }

@@ -1,12 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?><!--NestedScroll enables the view to work with Coordinator Layout
-    and subsequently help in autohiding the FAB on scroll-->
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/detail_root_view"
     android:layout_height="match_parent"
+    android:layout_width="match_parent"
     android:orientation="vertical">
-
-    <WebView
-        android:id="@+id/detail_webview"
+    <!--NestedScroll enables the view to work with Coordinator Layout
+    and subsequently help in autohiding the FAB on scroll-->
+    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</android.support.v4.widget.NestedScrollView>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <WebView
+            android:id="@+id/detail_webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </android.support.v4.widget.NestedScrollView>
+</LinearLayout>
