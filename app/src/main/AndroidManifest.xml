@@ -22,7 +22,7 @@
 
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value=".SearchResultsActivity" />
+                android:value=".hymnsearch.SearchResultsActivity" />
         </activity>
         <activity
             android:name=".hymndetail.HymnDetailActivity"
@@ -34,7 +34,7 @@
                 android:value=".hymns.MainActivity" />
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value=".SearchResultsActivity" />
+                android:value=".hymnsearch.SearchResultsActivity" />
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
