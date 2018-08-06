@@ -1,6 +1,5 @@
 package com.techbeloved.hymnbook.hymndetail;
 
-import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.ContentUris;
 import android.content.Context;
@@ -9,9 +8,7 @@ import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -22,19 +19,15 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -49,7 +42,6 @@ import java.io.File;
 import java.util.Objects;
 
 import static com.techbeloved.hymnbook.data.HymnContract.HymnEntry;
-import static xdroid.toaster.Toaster.toast;
 
 public class HymnDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 

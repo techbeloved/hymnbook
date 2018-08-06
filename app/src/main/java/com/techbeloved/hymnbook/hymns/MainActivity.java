@@ -9,7 +9,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -40,14 +39,14 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
     }
 
-    private static boolean getMidiFilesReadyPrefs(String key, Context context) {
+    private static boolean getMidiFilesReadyPrefs(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_NAME, 0);
-        return sharedPreferences.getBoolean(key, false);
+        return sharedPreferences.getBoolean(MainActivity.MIDI_READY, false);
     }
 
-    private static int getMidiFilesVersion(String key, Context context) {
+    private static int getMidiFilesVersion(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_NAME, 0);
-        return sharedPreferences.getInt(key, 0);
+        return sharedPreferences.getInt(MainActivity.MIDI_VERSION, 0);
     }
 
     @Override
@@ -67,8 +66,8 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
 
         // Copy midi assets if not already copied or the midi file version has been updated
-        if (!getMidiFilesReadyPrefs(MIDI_READY, getApplicationContext()) ||
-                CURRENT_MIDI_VERSION != getMidiFilesVersion(MIDI_VERSION, getApplicationContext())) {
+        if (!getMidiFilesReadyPrefs(getApplicationContext()) ||
+                CURRENT_MIDI_VERSION != getMidiFilesVersion(getApplicationContext())) {
 
             Intent intent = new Intent(this, AssetManagerService.class);
             intent.putExtra(MIDI_VERSION, CURRENT_MIDI_VERSION);

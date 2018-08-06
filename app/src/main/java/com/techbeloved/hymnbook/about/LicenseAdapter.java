@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.techbeloved.hymnbook.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class LicenseAdapter extends RecyclerView.Adapter<LicenseAdapter.LicenseViewHolder> {
 

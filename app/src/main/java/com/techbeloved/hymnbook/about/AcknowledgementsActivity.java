@@ -6,7 +6,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.techbeloved.hymnbook.R;
 
@@ -59,6 +58,11 @@ public class AcknowledgementsActivity extends AppCompatActivity {
                 "HtmlCleaner",
                 "Copyright (c) 2006-2018, HtmlCleaner team",
                 "BSD License"
+        ));
+        libraries.add(new Library(
+                "Toaster",
+                "Copyright 2014 ShamanLand.Com",
+                "Apache License, Version 2.0"
         ));
 
         mAdapter = new LicenseAdapter(libraries, library -> {
