@@ -3,11 +3,12 @@ package com.techbeloved.hymnbook.services;
 import android.app.IntentService;
 import android.content.Intent;
 import android.support.annotation.Nullable;
-import android.widget.Toast;
 
 import com.techbeloved.hymnbook.R;
 import com.techbeloved.hymnbook.hymns.MainActivity;
 import com.techbeloved.hymnbook.utils.FileAssetManager;
+
+import static xdroid.toaster.Toaster.toast;
 
 /**
  * Created by kennedy on 5/11/18.
@@ -28,7 +29,7 @@ public class AssetManagerService extends IntentService {
         if (intent != null) {
             int newVersion = intent.getIntExtra(MainActivity.MIDI_VERSION, 0);
             // Do the file copying in the background
-            Toast.makeText(getApplicationContext(), R.string.start_copy_tunes_msg, Toast.LENGTH_SHORT).show();
+            new Thread(() -> toast(R.string.start_copy_tunes_msg)).start();
             FileAssetManager.copyAssets(getApplicationContext(), 0, newVersion);
         }
     }

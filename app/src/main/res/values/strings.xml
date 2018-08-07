@@ -70,4 +70,6 @@
     <string name="value_3"><b>Missionary/evangelistic ministry</b> — given to reach out to all the people even to the ends of the earth with the unadulterated gospel of Jesus Christ;</string>
     <string name="value_4"><b>Sacrificial ministry</b> — given to lay down our all in order to fulfill the God-given mandate;</string>
     <string name="value_5"><b>Corrective ministry</b> — given to confront and correct all the errors that Satan and men have brought into Christendom.</string>
+    <string name="tune_not_available_msg">The tune is not yet available!</string>
+    <string name="added_favorite_msg">Song has been added to favorites</string>
 </resources>
