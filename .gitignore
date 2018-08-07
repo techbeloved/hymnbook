@@ -7,3 +7,5 @@
 /build
 /captures
 .externalNativeBuild
+keystore.properties
+.idea/caches/
