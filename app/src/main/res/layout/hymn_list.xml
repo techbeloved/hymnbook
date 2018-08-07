@@ -27,8 +27,10 @@
         android:divider="@null"
         android:dividerHeight="0dp"
         android:drawSelectorOnTop="true"
-        android:paddingTop="8dp"
-        android:background="@android:color/white" />
+        android:background="@android:color/white"
+        android:fastScrollEnabled="true"
+        android:scrollbarThumbVertical="@drawable/scrollbar_vertical_thumb"
+        android:scrollbarTrackVertical="@drawable/scrollbar_vertical_track" />
 
     <RelativeLayout
         android:id="@+id/empty"
