@@ -27,7 +27,8 @@
         android:divider="@null"
         android:dividerHeight="0dp"
         android:drawSelectorOnTop="true"
-        android:paddingTop="8dp" />
+        android:paddingTop="8dp"
+        android:background="@android:color/white" />
 
     <RelativeLayout
         android:id="@+id/empty"

@@ -32,7 +32,7 @@
 
     <!-- Text appearance style for a category tab -->
     <style name="CategoryTabTextAppearance" parent="TextAppearance.Design.Tab">
-        <item name="android:textColor">@color/primary_light</item>
+        <!--<item name="android:textColor">@color/primary_light</item>-->
     </style>
 
 

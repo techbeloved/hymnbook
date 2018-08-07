@@ -183,7 +183,7 @@
             <TextView
                 style="@style/MinistryTextItemStyle"
                 android:text="@string/www_website"
-                android:drawableStart="@drawable/ic_web_black_24dp"
+                android:drawableStart="@drawable/ic_web"
                 android:autoLink="web" />
 
             <TextView
