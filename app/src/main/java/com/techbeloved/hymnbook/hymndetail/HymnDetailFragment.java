@@ -40,58 +40,6 @@ public class HymnDetailFragment extends Fragment {
 
     private WebView mContentView;
 
-    View.OnTouchListener onTouchListener = new View.OnTouchListener() {
-        Handler handler = new Handler();
-
-        int numberOfTaps = 0;
-        long lastTapTimeMs = 0;
-        long touchDownMs = 0;
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    touchDownMs = System.currentTimeMillis();
-                    break;
-                case MotionEvent.ACTION_UP:
-                    handler.removeCallbacksAndMessages(null);
-
-                    if ((System.currentTimeMillis() - touchDownMs) > ViewConfiguration.getTapTimeout()) {
-                        //it was not a tap
-
-                        numberOfTaps = 0;
-                        lastTapTimeMs = 0;
-                        break;
-                    }
-
-                    if (numberOfTaps > 0
-                            && (System.currentTimeMillis() - lastTapTimeMs) < ViewConfiguration.getDoubleTapTimeout()) {
-                        numberOfTaps += 1;
-                    } else {
-                        numberOfTaps = 1;
-                    }
-
-                    lastTapTimeMs = System.currentTimeMillis();
-
-                    if (numberOfTaps == 3) {
-                        //handle triple tap
-                    } else if (numberOfTaps == 2) {
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                //handle double tap
-                                toggleHideyBar();
-                                toast("Double");
-                            }
-                        }, ViewConfiguration.getDoubleTapTimeout());
-                    }
-            }
-
-            return true;
-        }
-    };
-
     static HymnDetailFragment init(long hymnId) {
         HymnDetailFragment detailFragment = new HymnDetailFragment();
         // Supply hymnId input as an argument
@@ -115,9 +63,6 @@ public class HymnDetailFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         mContentView = rootView.findViewById(R.id.detail_webview);
-
-//        LinearLayout layout = rootView.findViewById(R.id.detail_root_view);
-//        mContentView.setOnTouchListener(onTouchListener);
 
         Uri hymnUri = ContentUris.withAppendedId(HymnEntry.CONTENT_URI, mHymnId);
         String fullyQualifiedId = HymnEntry.TABLE_NAME + "." + HymnEntry._ID;
@@ -214,50 +159,4 @@ public class HymnDetailFragment extends Fragment {
     public String getHymnTopic() {
         return mHymnTopic;
     }
-
-    /**
-     * Detects and toggles immersive mode (also known as "hidey bar" mode).
-     */
-    public void toggleHideyBar() {
-
-        // BEGIN_INCLUDE (get_current_ui_flags)
-        // The UI options currently enabled are represented by a bitfield.
-        // getSystemUiVisibility() gives us that bitfield.
-        int newUiOptions = Objects.requireNonNull(getActivity()).getWindow().getDecorView().getSystemUiVisibility();
-        // END_INCLUDE (get_current_ui_flags)
-        // BEGIN_INCLUDE (toggle_ui_flags)
-        newUiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        newUiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
-
-
-        // Immersive mode: Backward compatible to KitKat.
-        // Note that this flag doesn't do anything by itself, it only augments the behavior
-        // of HIDE_NAVIGATION and FLAG_FULLSCREEN.  For the purposes of this sample
-        // all three flags are being toggled together.
-        // Note that there are two immersive mode UI flags, one of which is referred to as "sticky".
-        // Sticky immersive mode differs in that it makes the navigation and status bars
-        // semi-transparent, and the UI flag does not get cleared when the user interacts with
-        // the screen.
-        newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-
-        getActivity().getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
-        //END_INCLUDE (set_ui_flags)
-    }
-
-    class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
-        private static final String DEBUG_TAG = "Gestures";
-
-        @Override
-        public boolean onDown(MotionEvent event) {
-            Log.d(DEBUG_TAG, "onDown: " + event.toString());
-            return true;
-        }
-
-        @Override
-        public boolean onDoubleTap(MotionEvent event) {
-            Log.d(DEBUG_TAG, "onDoubleTap: " + event.toString());
-            return super.onDoubleTap(event);
-        }
-    }
-
 }
