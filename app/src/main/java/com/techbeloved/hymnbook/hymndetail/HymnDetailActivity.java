@@ -30,11 +30,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
-import android.widget.Toast;
 
+import com.techbeloved.hymnbook.R;
 import com.techbeloved.hymnbook.settings.SettingsActivity;
 import com.techbeloved.hymnbook.utils.DepthPageTransformer;
-import com.techbeloved.hymnbook.R;
 import com.techbeloved.hymnbook.utils.FavoritePreferences;
 import com.techbeloved.hymnbook.viewgroup.TouchableFrameWrapper;
 
@@ -42,6 +41,7 @@ import java.io.File;
 import java.util.Objects;
 
 import static com.techbeloved.hymnbook.data.HymnContract.HymnEntry;
+import static xdroid.toaster.Toaster.toast;
 
 public class HymnDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -345,9 +345,7 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
 
         } else { //Download the audio file from internet if not exist locally
             // This is not yet implemented
-            Toast.makeText(this, "The tune is " +
-                            "not yet available! "
-                    , Toast.LENGTH_SHORT).show();
+            toast(R.string.tune_not_available_msg);
         }
 
         return audioUri1;
@@ -356,7 +354,7 @@ public class HymnDetailActivity extends AppCompatActivity implements LoaderManag
 
     private void addToFavorite() {
         favoritePreferences.addFavorite(getApplicationContext(), mAdapter.getCurrentFragment().getCurrentHymnId());
-        Toast.makeText(this, "Song has been added to favorites", Toast.LENGTH_SHORT).show();
+        toast(R.string.added_favorite_msg);
     }
     /**
      * The {@link CursorPagerAdapter }
