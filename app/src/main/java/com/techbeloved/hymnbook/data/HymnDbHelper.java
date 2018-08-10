@@ -11,7 +11,7 @@ import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 public class HymnDbHelper extends SQLiteAssetHelper {
 
     public static final String DATABASE_NAME = "hymnbook.db";
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
 
     public HymnDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
