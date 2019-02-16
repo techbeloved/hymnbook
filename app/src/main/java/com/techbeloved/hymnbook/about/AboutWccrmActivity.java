@@ -1,8 +1,8 @@
 package com.techbeloved.hymnbook.about;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.techbeloved.hymnbook.R;

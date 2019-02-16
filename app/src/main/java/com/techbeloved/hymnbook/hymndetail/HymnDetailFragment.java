@@ -4,22 +4,17 @@ import android.content.ContentUris;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.GestureDetector;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 
 import com.techbeloved.hymnbook.R;
-
-import java.util.Objects;
 
 import static com.techbeloved.hymnbook.data.HymnContract.*;
 import static xdroid.toaster.Toaster.toast;
