@@ -10,14 +10,14 @@ import io.reactivex.Flowable
 
 @Dao
 interface HymnDao {
-    @Query("SELECT * FROM hymns ORDER BY :sortBy ASC")
-    fun getAllHymns(@Hymn.Companion.ColumnName sortBy: String): Flowable<List<Hymn>>
+    @Query("SELECT * FROM hymns ORDER BY title ASC")
+    fun getAllHymns(): Flowable<List<Hymn>>
 
     @Query("SELECT * FROM hymns WHERE num = :number")
     fun getHymnByNumber(number: Int): Flowable<Hymn>
 
-    @Query("SELECT * FROM hymn_title ORDER BY :sortBy ASC")
-    fun getAllHymnTitles(@Hymn.Companion.ColumnName sortBy: String): Flowable<List<HymnTitle>>
+    @Query("SELECT * FROM hymn_titles ORDER BY num ASC")
+    fun getAllHymnTitles(): Flowable<List<HymnTitle>>
 
     @Insert
     fun insertAll(hymns: List<Hymn>)

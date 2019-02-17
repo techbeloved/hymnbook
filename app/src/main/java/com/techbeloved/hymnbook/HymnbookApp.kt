@@ -24,7 +24,8 @@ class HymnbookApp : Application() {
         instance = this
         executors = AppExecutors()
 
-        buildDatabase(this, executors)
+        // TODO: Enable when ready for proper implementation
+        //buildDatabase(this, executors)
 
     }
 
@@ -34,10 +35,11 @@ class HymnbookApp : Application() {
                 .addCallback(object : RoomDatabase.Callback() {
                     override fun onCreate(db: SupportSQLiteDatabase) {
                         super.onCreate(db)
-                        executors.diskIO().execute {
-                            val hymns: List<Hymn> = DataGenerator.generateHymns()
-                            insertInitialData(HymnbookApp.database, hymns)
-                        }
+                        // TODO: Enable when ready for proper implementation
+//                        executors.diskIO().execute {
+//                            val hymns: List<Hymn> = DataGenerator.generateHymns()
+//                            insertInitialData(HymnbookApp.database, hymns)
+//                        }
                     }
                 })
                 .build()

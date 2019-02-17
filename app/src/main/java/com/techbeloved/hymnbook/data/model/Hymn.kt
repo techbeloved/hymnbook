@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
 import java.io.Serializable
 
 @Entity(tableName = "hymns")
-class Hymn(@field:PrimaryKey
+data class Hymn(@field:PrimaryKey
            var id: String, var num: Int, var title: String, var verses: List<String>): Serializable {
 
     var chorus: String? = null
@@ -24,7 +24,7 @@ class Hymn(@field:PrimaryKey
     @Embedded
     var attribution: Attribution? = null
 
-    inner class Audio: Serializable {
+    class Audio: Serializable {
         lateinit var midi: String
         lateinit var mp3: String
 
@@ -40,7 +40,7 @@ class Hymn(@field:PrimaryKey
 
     }
 
-    inner class Attribution: Serializable {
+    class Attribution: Serializable {
         @SerializedName("music_by")
         var musicBy: String? = null
         @SerializedName("lyrics_by")
