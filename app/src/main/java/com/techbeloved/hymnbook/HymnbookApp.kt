@@ -9,6 +9,7 @@ import com.techbeloved.hymnbook.data.model.Hymn
 import com.techbeloved.hymnbook.data.repo.local.HymnsDatabase
 import com.techbeloved.hymnbook.data.repo.local.util.AppExecutors
 import com.techbeloved.hymnbook.data.repo.local.util.DataGenerator
+import timber.log.Timber
 
 class HymnbookApp : Application() {
     companion object {
@@ -26,6 +27,10 @@ class HymnbookApp : Application() {
 
         // TODO: Enable when ready for proper implementation
         //buildDatabase(this, executors)
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
 
     }
 

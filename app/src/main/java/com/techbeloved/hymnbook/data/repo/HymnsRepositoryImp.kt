@@ -1,11 +1,12 @@
 package com.techbeloved.hymnbook.data.repo
 
 import com.techbeloved.hymnbook.data.model.HymnTitle
-import io.reactivex.Observable
+import com.techbeloved.hymnbook.data.repo.local.HymnsDatabase
+import io.reactivex.Flowable
 
-class HymnsRepositoryImp: HymnsRepository {
-    override fun loadHymnTitles(): Observable<List<HymnTitle>> {
-        TODO("Not implemented")
+class HymnsRepositoryImp(private val hymnDatabase: HymnsDatabase): HymnsRepository {
+    override fun loadHymnTitles(): Flowable<List<HymnTitle>> {
+        return hymnDatabase.hymnDao().getAllHymnTitles()
     }
 
 }
