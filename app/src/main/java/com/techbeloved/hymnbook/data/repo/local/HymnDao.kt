@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.techbeloved.hymnbook.data.model.Hymn
+import com.techbeloved.hymnbook.data.model.HymnDetail
 import com.techbeloved.hymnbook.data.model.HymnTitle
 import io.reactivex.Flowable
 
@@ -18,6 +19,9 @@ interface HymnDao {
 
     @Query("SELECT * FROM hymn_titles ORDER BY num ASC")
     fun getAllHymnTitles(): Flowable<List<HymnTitle>>
+
+    @Query("SELECT * FROM hymn_with_topics WHERE num = :hymnNo")
+    fun getHymnDetail(hymnNo: Int): Flowable<HymnDetail>
 
     @Insert
     fun insertAll(hymns: List<Hymn>)
