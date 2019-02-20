@@ -4,6 +4,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.techbeloved.hymnbook.data.model.HymnTitle
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
 import com.techbeloved.hymnbook.ui.TitleItem
@@ -39,6 +40,11 @@ class HymnListingViewModel(private val hymnsRepository: HymnsRepository) : ViewM
         disposables.add(disposable)
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        if (!disposables.isDisposed) disposables.dispose()
+    }
+
     // Our use cases in form Transformers
 
     @VisibleForTesting
@@ -59,6 +65,13 @@ class HymnListingViewModel(private val hymnsRepository: HymnsRepository) : ViewM
                 else -> Flowable.just(titleLce)
             }
         }
+    }
+
+    class Factory(private val repository: HymnsRepository): ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            return HymnListingViewModel(repository) as T
+        }
+
     }
 
 }

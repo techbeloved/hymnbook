@@ -37,6 +37,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    dataBinding {
+        enabled true
+    }
     productFlavors {
     }
 }
@@ -69,7 +73,8 @@ dependencies {
     androidTestImplementation "androidx.arch.core:core-testing:$lifecycle_version"
 
     implementation "androidx.room:room-runtime:$room_version"
-    kapt "androidx.room:room-compiler:$room_version" // For Kotlin use kapt instead of annotationProcessor
+    kapt "androidx.room:room-compiler:$room_version"
+    // For Kotlin use kapt instead of annotationProcessor
 
     // optional - RxJava support for Room
     implementation "androidx.room:room-rxjava2:$room_version"

@@ -1,34 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    style="@style/SelectableItemBackground"
-    android:orientation="horizontal"
-    android:paddingEnd="?listPreferredItemPaddingRight"
-    android:paddingStart="?listPreferredItemPaddingLeft">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/hymn_number"
-        android:layout_width="0dp"
+    <data>
+        <variable
+            name="item"
+            type="com.techbeloved.hymnbook.ui.HymnItemModel"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="end"
-        android:paddingBottom="12dp"
-        android:paddingEnd="16dp"
-        android:paddingTop="12dp"
-        android:textColor="@color/secondary_text"
-        android:textSize="@dimen/list_item_text_size"
-        tools:text="3"/>
-    <TextView
-        android:id="@+id/hymn_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="6"
-        android:gravity="center_vertical"
-        android:maxLines="2"
-        android:paddingBottom="12dp"
-        android:paddingTop="12dp"
-        android:textSize="@dimen/list_item_text_size"
-        tools:text="To God be the Glory"/>
-</LinearLayout>
+        style="@style/SelectableItemBackground"
+        android:orientation="horizontal"
+        android:paddingEnd="?listPreferredItemPaddingRight"
+        android:paddingStart="?listPreferredItemPaddingLeft">
+
+        <TextView
+            android:id="@+id/hymn_number"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:paddingBottom="12dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="12dp"
+            android:textColor="@color/secondary_text"
+            android:textSize="@dimen/list_item_text_size"
+            android:text="@{String.valueOf(item.id)}"
+            tools:text="3" />
+
+        <TextView
+            android:id="@+id/hymn_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="6"
+            android:gravity="center_vertical"
+            android:maxLines="2"
+            android:paddingBottom="12dp"
+            android:paddingTop="12dp"
+            android:textSize="@dimen/list_item_text_size"
+            android:text="@{item.title}"
+            tools:text="To God be the Glory" />
+    </LinearLayout>
+</layout>

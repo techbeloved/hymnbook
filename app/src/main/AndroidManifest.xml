@@ -13,12 +13,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".hymns.MainActivity">
+        <activity android:name=".hymnlisting.MainActivity2">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".hymns.MainActivity">
 
             <meta-data
                 android:name="android.app.default_searchable"
@@ -84,7 +86,7 @@
                 android:value=".settings.SettingsActivity" />
         </activity>
         <activity android:name=".about.AboutWccrmActivity" />
-        <activity android:name=".about.AcknowledgementsActivity"></activity>
+        <activity android:name=".about.AcknowledgementsActivity" />
     </application>
 
 </manifest>

@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.techbeloved.hymnbook.data.model.Hymn
+import com.techbeloved.hymnbook.data.model.Topic
 import com.techbeloved.hymnbook.data.repo.local.HymnsDatabase
 import com.techbeloved.hymnbook.data.repo.local.util.AppExecutors
 import com.techbeloved.hymnbook.data.repo.local.util.DataGenerator
@@ -26,7 +27,7 @@ class HymnbookApp : Application() {
         executors = AppExecutors()
 
         // TODO: Enable when ready for proper implementation
-        //buildDatabase(this, executors)
+        buildDatabase(this, executors)
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
@@ -40,19 +41,22 @@ class HymnbookApp : Application() {
                 .addCallback(object : RoomDatabase.Callback() {
                     override fun onCreate(db: SupportSQLiteDatabase) {
                         super.onCreate(db)
-                        // TODO: Enable when ready for proper implementation
-//                        executors.diskIO().execute {
-//                            val hymns: List<Hymn> = DataGenerator.generateHymns()
-//                            insertInitialData(HymnbookApp.database, hymns)
-//                        }
+                        executors.diskIO().execute {
+                            val hymns: List<Hymn> = DataGenerator.generateHymns()
+                            val topics = DataGenerator.generateTopics()
+                            insertInitialData(HymnbookApp.database, hymns, topics)
+                        }
                     }
                 })
                 .build()
     }
 
-    private fun insertInitialData(hymnDatabase: HymnsDatabase, hymns: List<Hymn>) {
+    private fun insertInitialData(hymnDatabase: HymnsDatabase, hymns: List<Hymn>, topics: List<Topic>) {
         hymnDatabase.runInTransaction {
+            hymnDatabase.topicDao().insertAll(topics)
             hymnDatabase.hymnDao().insertAll(hymns)
+
+            Timber.i("Successfully inserted ${hymns.size} hymns\nand ${topics.size} topics, into the database")
         }
     }
 }
