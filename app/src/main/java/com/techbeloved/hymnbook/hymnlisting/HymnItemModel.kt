@@ -1,8 +1,14 @@
-package com.techbeloved.hymnbook.ui
+package com.techbeloved.hymnbook.hymnlisting
 
 import androidx.recyclerview.widget.DiffUtil
 
 interface HymnItemModel {
+
+    val id: Int
+    val title: String
+    val subtitle: String?
+    val description: String?
+
     object diffCallback: DiffUtil.ItemCallback<HymnItemModel>() {
         override fun areItemsTheSame(oldItem: HymnItemModel, newItem: HymnItemModel): Boolean {
             return oldItem.id == newItem.id
@@ -14,10 +20,9 @@ interface HymnItemModel {
 
     }
 
-    val id: Int
-    val title: String
-    val subtitle: String?
-    val description: String?
+    interface ClickListener<T> {
+        fun onItemClick(item: T)
+    }
 }
 
 data class TitleItem(override val id: Int,

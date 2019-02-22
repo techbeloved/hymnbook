@@ -1,16 +1,10 @@
-package com.techbeloved.hymnbook.hymnlisting
+package com.techbeloved.hymnbook.hymndetail
 
 import androidx.annotation.NonNull
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
-import com.nhaarman.mockitokotlin2.inOrder
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import com.techbeloved.hymnbook.data.model.HymnTitle
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
-import com.techbeloved.hymnbook.data.repo.HymnsRepositoryImp
-import com.techbeloved.hymnbook.data.repo.local.HymnDao
-import com.techbeloved.hymnbook.data.repo.local.HymnsDatabase
-import com.techbeloved.hymnbook.usecases.Lce
 import io.reactivex.Flowable
 import io.reactivex.Scheduler
 import io.reactivex.android.plugins.RxAndroidPlugins
@@ -22,42 +16,18 @@ import org.junit.BeforeClass
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
 
-
 @RunWith(MockitoJUnitRunner::class)
-class HymnListingTest {
+class HymnPagerViewModelShould {
 
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
-    @Mock
-    private lateinit var mHymnsStateObserver: Observer<Lce<List<TitleItem>>>
-    private val loadedHymns = listOf(TitleItem(1, "hymn1"),
-            TitleItem(2, "hymn2"),
-            TitleItem(3, "hymn3"))
-    private val enableLoading = Lce.Loading<List<TitleItem>>(true)
-    private val disableLoading = Lce.Loading<List<TitleItem>>(false)
-
-    private val content: Lce.Content<List<TitleItem>> = Lce.Content(loadedHymns)
-
-    private lateinit var hymnsRepository: HymnsRepository
-    private lateinit var hymnListingViewModel:HymnListingViewModel
-
-    @Mock
-    private lateinit var hymnDatabase: HymnsDatabase
-    @Mock
-    private lateinit var hymnDao: HymnDao
-
-    @Before
-    fun setup() {
-
-        hymnsRepository = HymnsRepositoryImp(hymnDatabase)
-        hymnListingViewModel = HymnListingViewModel(hymnsRepository)
-    }
     // https://stackoverflow.com/questions/43356314/android-rxjava-2-junit-test-getmainlooper-in-android-os-looper-not-mocked-runt
     companion object {
         @BeforeClass
@@ -82,24 +52,23 @@ class HymnListingTest {
             RxAndroidPlugins.setInitMainThreadSchedulerHandler { scheduler -> immediate }
         }
     }
+    @Mock
+    private lateinit var hymnRepository: HymnsRepository
+    lateinit var hymnPagerViewModel: HymnPagerViewModel
+
+    @Before
+    fun setUp() {
+        hymnPagerViewModel = HymnPagerViewModel(hymnRepository)
+    }
 
     @Test
-    fun load_hymn_titles() {
-        val hymnTitles = listOf(HymnTitle(1, "hymn1"),
-                HymnTitle(2, "hymn2"),
-                HymnTitle(3, "hymn3"))
-        val titlesFlow = Flowable.just(hymnTitles)
+    fun loadHymnIndices_gets_all_hymn_numbers_from_repo_sorted_accordingly() {
+        val sorKey = 12
+        val listIndices = listOf(1, 2, 3, 4)
+        whenever(hymnRepository.loadHymnIndices(anyInt())).thenReturn(Flowable.just(listIndices))
 
-        whenever(hymnDatabase.hymnDao()).thenReturn(hymnDao)
-        whenever(hymnDao.getAllHymnTitles()).thenReturn(titlesFlow)
+        hymnPagerViewModel.loadHymnIndices(sorKey)
 
-        hymnListingViewModel.hymnTitlesLiveData.observeForever(mHymnsStateObserver)
-        hymnListingViewModel.loadHymnTitles()
-
-        val inOrder = inOrder(mHymnsStateObserver)
-
-        inOrder.verify(mHymnsStateObserver).onChanged(enableLoading)
-        inOrder.verify(mHymnsStateObserver).onChanged(content)
-        inOrder.verify(mHymnsStateObserver).onChanged(disableLoading)
+        verify(hymnRepository).loadHymnIndices(sorKey)
     }
 }

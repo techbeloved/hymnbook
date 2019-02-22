@@ -13,7 +13,7 @@ data class Hymn(@field:PrimaryKey
            var id: String, var num: Int, var title: String, var verses: List<String>): Serializable {
 
     var chorus: String? = null
-    @SerializedName("topic_id")
+    @SerializedName("topic")
     var topicId: Int = 0
     @Embedded
     var audio: Audio? = null

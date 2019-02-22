@@ -82,7 +82,7 @@ class HymnDetailViewModelShould {
         val hymn = HymnDetail("hymn_1", 1, "hymn1", listOf("verse1", "verse2"), "topic1")
         val hymnFlow = Flowable.just(hymn)
 
-        whenever(hymnRepository.getHymnDetailByNumber(anyInt())).thenReturn(hymnFlow)
+        whenever(hymnRepository.getHymnDetailByNumber(hymn.num)).thenReturn(hymnFlow)
 
         // Execute
         hymnDetailViewModel.loadHymnDetail(hymn.num)

@@ -42,7 +42,7 @@ val HymnDetail.htmlContent: String
         val verseBuilder = StringBuilder()
         val spannedChorus = this.chorus?.let { """<p class="chorus">${it.spannedLines}</p>""" }
         for (verse in this.verses) {
-            verseBuilder.append("<li>${verse.spannedLines} $spannedChorus</li>")
+            verseBuilder.append("<li>${verse.spannedLines} ${spannedChorus ?: ""}</li>")
         }
         var attribution: String? = null
         if (this.attribution != null) {

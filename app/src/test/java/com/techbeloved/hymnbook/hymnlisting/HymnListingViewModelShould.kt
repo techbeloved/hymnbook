@@ -2,16 +2,12 @@ package com.techbeloved.hymnbook.hymnlisting
 
 import androidx.annotation.NonNull
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
-import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.techbeloved.hymnbook.data.model.HymnTitle
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
-import com.techbeloved.hymnbook.ui.TitleItem
 import com.techbeloved.hymnbook.usecases.Lce
 import io.reactivex.Flowable
-import io.reactivex.FlowableTransformer
 import io.reactivex.subscribers.TestSubscriber
 import org.junit.Before
 import org.junit.Rule

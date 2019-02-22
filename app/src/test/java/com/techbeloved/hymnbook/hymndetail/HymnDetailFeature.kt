@@ -6,6 +6,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.whenever
+import com.techbeloved.hymnbook.data.model.Hymn
 import com.techbeloved.hymnbook.data.model.HymnDetail
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
 import com.techbeloved.hymnbook.data.repo.HymnsRepositoryImp
@@ -37,6 +38,9 @@ class HymnDetailFeature {
     @Mock
     private lateinit var hymnDetailStateObserver: Observer<Lce<HymnDetailItem>>
     @Mock
+    private lateinit var hymnIndicesObserver: Observer<in Lce<List<Int>>>
+
+    @Mock
     private lateinit var hymnDatabase: HymnsDatabase
     @Mock
     private lateinit var hymnDao: HymnDao
@@ -45,6 +49,8 @@ class HymnDetailFeature {
     private lateinit var hymnsRepository: HymnsRepository
     private lateinit var detailViewModel: HymnDetailViewModel
 
+    private lateinit var detailPagerViewModel: HymnPagerViewModel
+
     private val enableLoading = Lce.Loading<HymnDetailItem>(true)
     private val disableLoading = Lce.Loading<HymnDetailItem>(false)
 
@@ -52,6 +58,10 @@ class HymnDetailFeature {
     fun setUp() {
         hymnsRepository = HymnsRepositoryImp(hymnDatabase)
         detailViewModel = HymnDetailViewModel(app, hymnsRepository)
+
+        detailPagerViewModel = HymnPagerViewModel(hymnsRepository)
+
+        whenever(hymnDatabase.hymnDao()).thenReturn(hymnDao)
     }
 
     // https://stackoverflow.com/questions/43356314/android-rxjava-2-junit-test-getmainlooper-in-android-os-looper-not-mocked-runt
@@ -88,7 +98,6 @@ class HymnDetailFeature {
         val expectedUiContent = Lce.Content(hymnDetailItem)
         val hymnFlow = Flowable.just(hymn)
 
-        whenever(hymnDatabase.hymnDao()).thenReturn(hymnDao)
         whenever(hymnDao.getHymnDetail(hymn.num)).thenReturn(hymnFlow)
 
         // Execution
@@ -101,6 +110,51 @@ class HymnDetailFeature {
 
         inOrder.verify(hymnDetailStateObserver).onChanged(enableLoading)
         inOrder.verify(hymnDetailStateObserver).onChanged(expectedUiContent)
-        inOrder.verify(hymnDetailStateObserver).onChanged(disableLoading)
+    }
+
+
+    @Test
+    fun load_hymn_indices_sorted_by_number() {
+        val loading = Lce.Loading<List<Int>>(true)
+        val finishedLoading = Lce.Loading<List<Int>>(false)
+
+        val hymnNos = listOf(1, 2, 3, 4, 5, 6, 7)
+        val expectedContent = Lce.Content(hymnNos)
+        val hymnNosFlow = Flowable.just(hymnNos)
+
+        whenever(hymnDao.getIndicesByNumber()).thenReturn(hymnNosFlow)
+
+        // Execution
+        detailPagerViewModel.hymnIndicesLiveData.observeForever(hymnIndicesObserver)
+        detailPagerViewModel.loadHymnIndices(BY_NUMBER)
+
+        // Verification
+
+        val inOrder = inOrder(hymnIndicesObserver)
+
+        inOrder.verify(hymnIndicesObserver).onChanged(loading)
+        inOrder.verify(hymnIndicesObserver).onChanged(expectedContent)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun loading_hymn_indices_by_unsorported_sort_key_returns_error() {
+        val loading = Lce.Loading<List<Int>>(true)
+        val finishedLoading = Lce.Loading<List<Int>>(false)
+
+        val expectedError = Lce.Error<List<Int>>("Failed to load indices of hymns")
+        val wrongSortKey = -1
+
+
+        // Execution
+        detailPagerViewModel.hymnIndicesLiveData.observeForever(hymnIndicesObserver)
+        detailPagerViewModel.loadHymnIndices(wrongSortKey)
+
+        // Verification
+
+        val inOrder = inOrder(hymnIndicesObserver)
+
+        inOrder.verify(hymnIndicesObserver).onChanged(loading)
+        inOrder.verify(hymnIndicesObserver).onChanged(expectedError)
     }
 }

@@ -5,7 +5,10 @@
     <data>
         <variable
             name="item"
-            type="com.techbeloved.hymnbook.ui.HymnItemModel"/>
+            type="com.techbeloved.hymnbook.hymnlisting.HymnItemModel"/>
+        <variable
+            name="callback"
+            type="com.techbeloved.hymnbook.hymnlisting.HymnItemModel.ClickListener"/>
     </data>
 
     <LinearLayout
@@ -14,7 +17,8 @@
         style="@style/SelectableItemBackground"
         android:orientation="horizontal"
         android:paddingEnd="?listPreferredItemPaddingRight"
-        android:paddingStart="?listPreferredItemPaddingLeft">
+        android:paddingStart="?listPreferredItemPaddingLeft"
+        android:onClick="@{() -> callback.onItemClick(item)}">
 
         <TextView
             android:id="@+id/hymn_number"

@@ -8,5 +8,6 @@ import io.reactivex.Flowable
 interface HymnsRepository {
     fun loadHymnTitles(): Flowable<List<HymnTitle>>
     fun getHymnDetailByNumber(hymnNo: Int): Flowable<HymnDetail>
-
+    fun loadHymnIndices(sortBy: Int): Flowable<List<Int>>
+    fun getHymnById(hymnNo: Int): Flowable<Hymn>
 }

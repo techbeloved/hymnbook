@@ -37,4 +37,10 @@ interface HymnDao {
 
     @Query("DELETE FROM hymns")
     fun deleteAll()
+
+    @Query("SELECT num FROM hymns ORDER BY num ASC")
+    fun getIndicesByNumber(): Flowable<List<Int>>
+
+    @Query("SELECT num FROM hymns ORDER BY title ASC")
+    fun getIndicesByTitle(): Flowable<List<Int>>
 }

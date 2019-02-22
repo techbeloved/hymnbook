@@ -7,9 +7,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.HymnListItemBinding
-import com.techbeloved.hymnbook.ui.HymnItemModel
 
-class HymnListAdapter : ListAdapter<HymnItemModel, HymnListAdapter.ViewHolder>(HymnItemModel.diffCallback) {
+class HymnListAdapter(private val clickListener: HymnItemModel.ClickListener<HymnItemModel>) : ListAdapter<HymnItemModel, HymnListAdapter.ViewHolder>(HymnItemModel.diffCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
 
@@ -21,6 +20,7 @@ class HymnListAdapter : ListAdapter<HymnItemModel, HymnListAdapter.ViewHolder>(H
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         holder.binding.item = item
+        holder.binding.callback = clickListener
     }
 
     inner class ViewHolder(internal val binding: HymnListItemBinding) : RecyclerView.ViewHolder(binding.root)

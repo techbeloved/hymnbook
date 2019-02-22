@@ -150,4 +150,36 @@ class HymnsDaoTest {
         testHymnDetailSubscriber.assertValue(detail2)
         testHymnDetailSubscriber.dispose()
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun get_hymn_indices_sorted_according_to_number() {
+        // Setup
+        val expectedIndices = hymnList.sortedBy { it.num }.map { it.num }
+
+        val indicesTestSubscriber = TestSubscriber<List<Int>>()
+
+        // Execute
+        hymnDao.getIndicesByNumber().subscribe(indicesTestSubscriber)
+
+        indicesTestSubscriber.assertSubscribed()
+        indicesTestSubscriber.assertValue(expectedIndices)
+        indicesTestSubscriber.dispose()
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun get_hymn_indices_sorted_according_to_title() {
+        // Setup
+        val expectedIndices = hymnList.sortedBy { it.title }.map { it.num }
+
+        val indicesTestSubscriber = TestSubscriber<List<Int>>()
+
+        // Execute
+        hymnDao.getIndicesByTitle().subscribe(indicesTestSubscriber)
+
+        indicesTestSubscriber.assertSubscribed()
+        indicesTestSubscriber.assertValue(expectedIndices)
+        indicesTestSubscriber.dispose()
+    }
 }

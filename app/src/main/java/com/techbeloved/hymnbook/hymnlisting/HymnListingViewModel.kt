@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.techbeloved.hymnbook.data.model.HymnTitle
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
-import com.techbeloved.hymnbook.ui.TitleItem
 import com.techbeloved.hymnbook.usecases.Lce
 import io.reactivex.Flowable
 import io.reactivex.FlowableTransformer
@@ -28,7 +27,6 @@ class HymnListingViewModel(private val hymnsRepository: HymnsRepository) : ViewM
         val disposable = hymnsRepository.loadHymnTitles()
                 .compose(getHymnTitleUiModels())
                 .compose(getViewState())
-                .compose(sendLoadingCompleteSignal())
                 .startWith(Lce.Loading(true))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

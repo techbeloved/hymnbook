@@ -72,4 +72,8 @@
     <string name="value_5"><b>Corrective ministry</b> — given to confront and correct all the errors that Satan and men have brought into Christendom.</string>
     <string name="tune_not_available_msg">The tune is not yet available!</string>
     <string name="added_favorite_msg">Song has been added to favorites</string>
+    <string name="assest_base_url">file:///android_asset/</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

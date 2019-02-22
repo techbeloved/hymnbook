@@ -2,9 +2,7 @@ package com.techbeloved.hymnbook.hymndetail
 
 import android.app.Application
 import androidx.annotation.VisibleForTesting
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.*
 import com.techbeloved.hymnbook.data.model.HymnDetail
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
 import com.techbeloved.hymnbook.usecases.Lce
@@ -18,21 +16,22 @@ import timber.log.Timber
 
 class HymnDetailViewModel(private val app: Application, private val hymnRepository: HymnsRepository) : AndroidViewModel(app) {
 
-    private val hymnDetailLiveData_: MutableLiveData<Lce<HymnDetailItem>> = MutableLiveData()
+    private val hymnDetailData: MutableLiveData<Lce<HymnDetailItem>> = MutableLiveData()
 
     /**
      * This will be monitored by the UI fragment
      */
     val hymnDetailLiveData: LiveData<Lce<HymnDetailItem>>
-        get() = hymnDetailLiveData_
+        get() = hymnDetailData
 
     private val hymnDetailStateConsumer: Consumer<Lce<HymnDetailItem>> = Consumer {
-        hymnDetailLiveData_.value = it
+        Timber.i("Received: $this, $it")
+        hymnDetailData.value = it
     }
 
     private val errorConsumer: Consumer<Throwable> = Consumer {
         Timber.e(it, "Error loading item!")
-        hymnDetailLiveData_.value = Lce.Error("Error loading item!\n${it.message}")
+        hymnDetailData.value = Lce.Error("Error loading item!\n${it.message}")
     }
 
     private val disposables = CompositeDisposable()
@@ -41,7 +40,6 @@ class HymnDetailViewModel(private val app: Application, private val hymnReposito
                 hymnRepository.getHymnDetailByNumber(hymnNo)
                         .compose(getDetailUiModel())
                         .compose(getDetailUiState())
-                        .compose(sendLoadingCompleteSignal())
                         .startWith(Lce.Loading(true))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -81,12 +79,18 @@ class HymnDetailViewModel(private val app: Application, private val hymnReposito
         upstream.flatMap { detailLce ->
             when (detailLce) {
                 is Lce.Content -> {
-                    Timber.i(detailLce.toString())
                     Flowable.just(detailLce, Lce.Loading(false))
                 }
                 else -> Flowable.just(detailLce)
             }
         }
+    }
+
+    class Factory(private val app: Application, private val repository: HymnsRepository): ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            return HymnDetailViewModel(app, repository) as T
+        }
+
     }
 
 }
