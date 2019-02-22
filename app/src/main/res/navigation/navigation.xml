@@ -17,7 +17,7 @@
     <fragment
         android:id="@+id/hymnListingFragment"
         android:name="com.techbeloved.hymnbook.hymnlisting.HymnListingFragment"
-        android:label="Watchman Hymns"
+        android:label="Hymns"
         tools:layout="@layout/fragment_song_listing">
         <action
             android:id="@+id/action_hymnListingFragment_to_detailPagerFragment"

@@ -13,14 +13,15 @@
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar_main"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar_main"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
                 app:layout_scrollFlags="scroll|enterAlways"
-                android:background="@android:color/white"
+                android:background="?colorPrimary"
                 app:title="Hymnbook" />
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -39,6 +40,9 @@
             android:layout_height="?actionBarSize"
             android:layout_gravity="bottom"
             app:itemBackground="@android:color/white"
+            app:labelVisibilityMode="labeled"
+            app:itemTextAppearanceInactive="@style/TextAppearance.Hymnbook.BottomNav.Deactivated"
+            app:itemTextAppearanceActive="@style/TextAppearance.Hymnbook.BottomNav"
             android:background="@android:color/white"
             app:menu="@menu/bottom_nav"
             app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior" />

@@ -11,4 +11,5 @@
 
     <color name="primary_black">#454545</color>
     <color name="primary_white">#ffffff</color>
+    <color name="deactivated_text">#7f757575</color>
 </resources>
