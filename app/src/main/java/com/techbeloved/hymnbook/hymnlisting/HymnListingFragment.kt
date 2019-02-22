@@ -8,14 +8,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.techbeloved.hymnbook.HymnbookViewModel
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.FragmentSongListingBinding
 import com.techbeloved.hymnbook.di.Injection
-import com.techbeloved.hymnbook.hymndetail.DetailFragment
-import com.techbeloved.hymnbook.hymndetail.DetailPagerFragment
 import com.techbeloved.hymnbook.usecases.Lce
-import timber.log.Timber
 
 class HymnListingFragment: Fragment() {
     private lateinit var binding: FragmentSongListingBinding
@@ -29,13 +28,7 @@ class HymnListingFragment: Fragment() {
     }
 
     private fun navigateToHymnDetail(hymnIndex: Int) {
-        val fragment = DetailPagerFragment()
-        fragment.init(hymnIndex)
-
-        activity?.supportFragmentManager?.beginTransaction()
-                ?.replace(R.id.containerMain, fragment)
-                ?.addToBackStack(null)
-                ?.commit()
+        findNavController().navigate(HymnListingFragmentDirections.actionHymnListingFragmentToDetailPagerFragment(hymnIndex))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -51,13 +44,14 @@ class HymnListingFragment: Fragment() {
         return binding.root
     }
 
+    private lateinit var mainViewModel: HymnbookViewModel
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         val factory = HymnListingViewModel.Factory(Injection.provideRepository())
         viewModel = ViewModelProviders.of(this, factory).get(HymnListingViewModel::class.java)
-        Timber.i("onActivityCreated: Hymn listing. ViewModel: $viewModel")
 
+        mainViewModel = ViewModelProviders.of(activity!!).get(HymnbookViewModel::class.java)
         // Monitor data
         viewModel.hymnTitlesLiveData.observe(this, Observer {
             when (it) {

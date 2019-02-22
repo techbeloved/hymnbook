@@ -76,4 +76,13 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="text_home_label">Home</string>
+    <string name="text_topics_label">Topics</string>
+    <string name="text_playlist_label">Playlists</string>
+    <string name="text_search_label">Search</string>
+    <string name="label_hymns">Hymns</string>
+    <string name="hymn_category_image_description">Hymn Category Image</string>
+    <string name="children_category_image_description">Children Category Image</string>
+    <string name="label_children">Children</string>
+    <string name="detailPagerLabel">Hymn {hymnId}</string>
 </resources>

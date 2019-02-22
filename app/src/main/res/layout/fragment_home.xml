@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".home.HomeFragment"
+        android:background="@android:color/white">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardview_children"
+            android:layout_width="0dp"
+            android:layout_height="196dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="4dp"
+            app:cardPreventCornerOverlap="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toTopOf="@+id/cardview_hymns">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imageview_category_children"
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
+                    android:contentDescription="@string/children_category_image_description"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_music_note_black_24dp" />
+
+                <TextView
+                    android:id="@+id/textView_category_children_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_children"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardview_hymns"
+            android:layout_width="0dp"
+            android:layout_height="196dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="4dp"
+            app:cardPreventCornerOverlap="true"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imageview_category_hymns"
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
+                    android:contentDescription="@string/hymn_category_image_description"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/wccrm_logo" />
+
+                <TextView
+                    android:id="@+id/textView_category_hymns_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_hymns"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

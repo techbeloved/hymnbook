@@ -13,20 +13,6 @@
         android:id="@+id/coordinatorLayout"
         android:background="@android:color/white">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appbar_song_listing"
-            android:layout_width="match_parent"
-            android:layout_height="?actionBarSize">
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/songlist_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@android:color/white"
-                app:title="Hymnbook"
-                app:layout_scrollFlags="scroll|enterAlways" />
-        </com.google.android.material.appbar.AppBarLayout>
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview_song_list"
             android:layout_width="match_parent"

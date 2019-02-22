@@ -13,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".hymnlisting.MainActivity2">
+        <activity android:name=".HymnbookActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,7 +21,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".hymns.MainActivity">
-
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".hymnsearch.SearchResultsActivity" />

@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.techbeloved.hymnbook.HymnbookViewModel
 
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.FragmentDetailPagerBinding
@@ -33,15 +34,15 @@ class DetailPagerFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        binding =  DataBindingUtil.inflate(inflater, R.layout.fragment_detail_pager, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail_pager, container, false)
         binding.lifecycleOwner = this
 
         detailPagerAdapter = DetailPagerAdapter(childFragmentManager)
         binding.viewpagerHymnDetail.adapter = detailPagerAdapter
         binding.viewpagerHymnDetail.setPageTransformer(true, DepthPageTransformer())
 
-        // Load initial page supplied from the listing fragment
-        initialIndex = arguments?.getInt(ARG_INITIAL_INDEX, 1) ?: 1
+        val args = arguments?.let { DetailPagerFragmentArgs.fromBundle(it) }
+        initialIndex = args?.hymnId ?: 1
 
         return binding.root
     }
@@ -54,7 +55,7 @@ class DetailPagerFragment : Fragment() {
         viewModel = ViewModelProviders.of(this, factory).get(HymnPagerViewModel::class.java)
         Timber.i("onActivityCreated")
         viewModel.hymnIndicesLiveData.observe(this, Observer {
-            when(it) {
+            when (it) {
                 is Lce.Loading -> showProgressLoading(it.loading)
                 is Lce.Content -> initializeViewPager(it.content, initialIndex)
                 is Lce.Error -> showContentError(it.error)
@@ -62,6 +63,12 @@ class DetailPagerFragment : Fragment() {
         })
 
         viewModel.loadHymnIndices()
+    }
+
+    private lateinit var mainViewModel: HymnbookViewModel
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        mainViewModel = ViewModelProviders.of(activity!!).get(HymnbookViewModel::class.java)
     }
 
     private fun showContentError(error: String) {
@@ -85,25 +92,19 @@ class DetailPagerFragment : Fragment() {
         //else binding.progressBarHymnDetailLoading.visibility = View.GONE
     }
 
-    fun init(hymnIndex: Int) {
-        val args = Bundle()
-        args.putInt(ARG_INITIAL_INDEX, hymnIndex)
-        this.arguments = args
-    }
-
-    companion object {
-        const val ARG_INITIAL_INDEX = "initialHymnIndex"
-    }
-
     inner class DetailPagerAdapter(private val fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
         private val hymnIndices = mutableListOf<Int>()
         override fun getItem(position: Int): Fragment? {
-            return if (position < hymnIndices.size)  {
+            return if (position < hymnIndices.size) {
                 val detailFragment = DetailFragment()
                 detailFragment.init(hymnIndices[position])
                 detailFragment
-            }
-            else null
+            } else null
+        }
+
+        override fun setPrimaryItem(container: ViewGroup, position: Int, `object`: Any) {
+            super.setPrimaryItem(container, position, `object`)
+            updateToolbarWithCurrentItem(hymnIndices[position])
         }
 
         override fun getCount(): Int {
@@ -116,6 +117,13 @@ class DetailPagerFragment : Fragment() {
             notifyDataSetChanged()
         }
 
+    }
+
+    private var currentItemIndex = -1
+    private fun updateToolbarWithCurrentItem(hymnIndex: Int) {
+        if (hymnIndex == currentItemIndex) return
+        currentItemIndex = hymnIndex
+        mainViewModel.updateToolbarTitle("Hymn, $currentItemIndex")
     }
 
 }

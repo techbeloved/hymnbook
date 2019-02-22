@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.techbeloved.hymnbook.home.HomeFragment"
+        android:label="Hymnbook"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_hymnListingFragment"
+            app:destination="@id/hymnListingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/hymnListingFragment"
+        android:name="com.techbeloved.hymnbook.hymnlisting.HymnListingFragment"
+        android:label="Watchman Hymns"
+        tools:layout="@layout/fragment_song_listing">
+        <action
+            android:id="@+id/action_hymnListingFragment_to_detailPagerFragment"
+            app:destination="@id/detailPagerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailPagerFragment"
+        android:name="com.techbeloved.hymnbook.hymndetail.DetailPagerFragment">
+        <argument
+            android:name="hymnId"
+            app:argType="integer"
+            android:defaultValue="1" />
+    </fragment>
+</navigation>
