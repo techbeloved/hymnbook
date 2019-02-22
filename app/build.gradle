@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: "androidx.navigation.safeargs.kotlin"
 
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 
@@ -79,9 +80,16 @@ dependencies {
     // optional - RxJava support for Room
     implementation "androidx.room:room-rxjava2:$room_version"
 
+    // Navigation
+    def nav_version = "1.0.0-rc01"
+
+    implementation "android.arch.navigation:navigation-fragment-ktx:$nav_version" // For Kotlin use navigation-fragment-ktx
+    implementation "android.arch.navigation:navigation-ui-ktx:$nav_version" // For Kotlin use navigation-ui-ktx
+
     // Test helpers
     testImplementation "androidx.room:room-testing:$room_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation 'androidx.core:core-ktx:1.0.1'
 
     // Mockito kotlin
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
