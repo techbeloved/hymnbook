@@ -14,6 +14,7 @@
             android:id="@+id/appbar_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusableInTouchMode="true"
             android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar">
 
             <androidx.appcompat.widget.Toolbar
@@ -23,6 +24,18 @@
                 app:layout_scrollFlags="scroll|enterAlways"
                 android:background="?colorPrimary"
                 app:title="Hymnbook" />
+            <EditText
+                android:id="@+id/edittext_filter_hymns"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:hint="@string/text_hint_filter_hymns"
+                android:inputType="number"
+                android:background="@color/primary_white"
+                android:textColorHint="@color/deactivated_text"
+                android:textColor="@color/primary_text"
+                android:padding="16dp"
+                android:drawableEnd="@drawable/ic_sort_black_24dp"
+                app:layout_scrollFlags="snap" />
         </com.google.android.material.appbar.AppBarLayout>
 
         <fragment

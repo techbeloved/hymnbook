@@ -85,4 +85,5 @@
     <string name="children_category_image_description">Children Category Image</string>
     <string name="label_children">Children</string>
     <string name="detailPagerLabel">Hymn {hymnId}</string>
+    <string name="text_hint_filter_hymns">Filter Hymns</string>
 </resources>

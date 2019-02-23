@@ -39,6 +39,12 @@ class HymnbookActivity : AppCompatActivity() {
             } else {
                 if (!binding.bottomNavigationMain.isVisible) binding.bottomNavigationMain.visibility = View.VISIBLE
             }
+
+            if (destination.id == R.id.hymnListingFragment) {
+                if (!binding.edittextFilterHymns.isVisible) binding.edittextFilterHymns.visibility = View.VISIBLE
+            } else {
+                binding.edittextFilterHymns.visibility = View.GONE
+            }
         }
 
         // setup the shared viewmodel
