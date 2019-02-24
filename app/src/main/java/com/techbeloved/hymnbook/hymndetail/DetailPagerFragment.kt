@@ -11,6 +11,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
 import com.techbeloved.hymnbook.HymnbookViewModel
 
 import com.techbeloved.hymnbook.R
@@ -36,6 +38,7 @@ class DetailPagerFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail_pager, container, false)
         binding.lifecycleOwner = this
+        NavigationUI.setupWithNavController(binding.toolbarDetail, findNavController())
 
         detailPagerAdapter = DetailPagerAdapter(childFragmentManager)
         binding.viewpagerHymnDetail.adapter = detailPagerAdapter
@@ -123,7 +126,7 @@ class DetailPagerFragment : Fragment() {
     private fun updateToolbarWithCurrentItem(hymnIndex: Int) {
         if (hymnIndex == currentItemIndex) return
         currentItemIndex = hymnIndex
-        mainViewModel.updateToolbarTitle("Hymn, $currentItemIndex")
+        binding.toolbarDetail.title = "Hymn, $currentItemIndex"
     }
 
 }

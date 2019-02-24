@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
 
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.FragmentHomeBinding
@@ -28,6 +29,7 @@ class HomeFragment : Fragment() {
             findNavController()
                     .navigate(HomeFragmentDirections.actionHomeFragmentToHymnListingFragment())
         }
+        NavigationUI.setupWithNavController(binding.toolbarHome, findNavController())
         return binding.root
     }
 

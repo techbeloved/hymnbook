@@ -96,4 +96,10 @@
         <item name="android:textColor">@color/primary</item>
     </style>
 
+    <style name="Hymnbook.SearchView" parent="Widget.AppCompat.Light.SearchView">
+        <item name="queryBackground">@color/colorSearchView</item>
+        <item name="submitBackground">@color/colorSearchView</item>
+        <item name="android:background">@color/colorSearchView</item>
+        <item name="searchHintIcon">@null</item>
+    </style>
 </resources>

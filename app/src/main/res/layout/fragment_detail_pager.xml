@@ -12,6 +12,20 @@
         android:layout_height="match_parent"
         android:id="@+id/coordinatorLayout_hymn_detail"
         android:background="@android:color/white">
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="true"
+            android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar">
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar_detail"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                app:layout_scrollFlags="scroll|enterAlways"
+                android:background="?colorPrimary"
+                app:title="Hymnbook" />
+        </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/viewpager_hymn_detail"

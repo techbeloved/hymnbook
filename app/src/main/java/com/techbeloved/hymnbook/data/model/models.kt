@@ -1,8 +1,6 @@
 package com.techbeloved.hymnbook.data.model
 
-import androidx.room.ColumnInfo
-import androidx.room.DatabaseView
-import androidx.room.Embedded
+import androidx.room.*
 
 @DatabaseView("SELECT num, title FROM hymns", viewName = "hymn_titles")
 data class HymnTitle(@ColumnInfo(name = "num") val id: Int, val title: String)
@@ -21,3 +19,9 @@ data class HymnDetail(var id: String, var num: Int, var title: String, var verse
     @Embedded
     var attribution: Hymn.Attribution? = null
 }
+
+@Entity(tableName = "hymnSearchFts")
+@Fts4(contentEntity = Hymn::class  )
+data class HymnSearch(val title: String, val verses: List<String>, val chorus: String?)
+
+data class SearchResult(val num: Int, val title: String, val verses: List<String>, val chorus: String?)

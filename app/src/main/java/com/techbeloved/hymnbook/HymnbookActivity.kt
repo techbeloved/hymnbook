@@ -2,6 +2,8 @@ package com.techbeloved.hymnbook
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -22,6 +24,7 @@ class HymnbookActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHymnbookBinding
     private lateinit var navController: NavController
 
+    private lateinit var viewModel: HymnbookViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_hymnbook)
@@ -30,7 +33,7 @@ class HymnbookActivity : AppCompatActivity() {
 
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         binding.bottomNavigationMain.setupWithNavController(navController)
-        binding.toolbarMain.setupWithNavController(navController, appBarConfiguration)
+        //binding.toolbarMain.setupWithNavController(navController, appBarConfiguration)
 
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
             // Hide the bottom navigation in detail view
@@ -39,17 +42,11 @@ class HymnbookActivity : AppCompatActivity() {
             } else {
                 if (!binding.bottomNavigationMain.isVisible) binding.bottomNavigationMain.visibility = View.VISIBLE
             }
-
-            if (destination.id == R.id.hymnListingFragment) {
-                if (!binding.edittextFilterHymns.isVisible) binding.edittextFilterHymns.visibility = View.VISIBLE
-            } else {
-                binding.edittextFilterHymns.visibility = View.GONE
-            }
         }
 
         // setup the shared viewmodel
-        val viewModel = ViewModelProviders.of(this).get(HymnbookViewModel::class.java)
-        viewModel.toolbarTitle.observe(this, Observer { binding.toolbarMain.title = it })
+        viewModel = ViewModelProviders.of(this).get(HymnbookViewModel::class.java)
+        viewModel.toolbarTitle.observe(this, Observer { updateToolbarTitle(it) })
 
     }
 
@@ -62,7 +59,7 @@ class HymnbookActivity : AppCompatActivity() {
         return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
     }
 
-    fun updateToolbarTitle(title: String) {
-        binding.toolbarMain.title = title
+    private fun updateToolbarTitle(title: String) {
+        //binding.toolbarMain.title = title
     }
 }

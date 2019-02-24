@@ -8,7 +8,7 @@
     <string name="html_body_template" translatable="false"><![CDATA[<body> <header> <h2 class=\"hymn_no\">%1$d</h2> <h2 class=\"title\">%2$s</h2> </header> %3$s </body>]]></string>
     <string name="css_link" translatable="false"><![CDATA[<link rel=\"stylesheet\" href=\"style.css\">]]></string>
     <string name="search_title">Search Hymns</string>
-    <string name="search_hint">Enter search term</string>
+    <string name="search_hint">Search Hymns</string>
     <string name="search_result">Search Results</string>
     <string name="no_results">Sorry! No results found</string>
     <string name="try_another">Please try searching another keyword!</string>
@@ -86,4 +86,6 @@
     <string name="label_children">Children</string>
     <string name="detailPagerLabel">Hymn {hymnId}</string>
     <string name="text_hint_filter_hymns">Filter Hymns</string>
+
+    <string name="hymn_no_temp">Hymn, %1$d</string>
 </resources>

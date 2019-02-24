@@ -4,9 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import com.techbeloved.hymnbook.data.model.Hymn
-import com.techbeloved.hymnbook.data.model.HymnDetail
-import com.techbeloved.hymnbook.data.model.HymnTitle
+import com.techbeloved.hymnbook.data.model.*
 import io.reactivex.Flowable
 
 @Dao
@@ -43,4 +41,7 @@ interface HymnDao {
 
     @Query("SELECT num FROM hymns ORDER BY title ASC")
     fun getIndicesByTitle(): Flowable<List<Int>>
+
+    @Query("SELECT hymns.num, hymns.title, hymns.verses, hymns.chorus FROM hymns JOIN hymnSearchFts ON (hymns.rowid = hymnSearchFts.docid) WHERE hymnSearchFts MATCH :query")
+    fun searchHymns(query: String): Flowable<List<SearchResult>>
 }

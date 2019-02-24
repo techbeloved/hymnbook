@@ -31,4 +31,13 @@
             app:argType="integer"
             android:defaultValue="1" />
     </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.techbeloved.hymnbook.search.SearchFragment"
+        android:label="@string/search_hint"
+        tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/action_searchFragment_to_detailPagerFragment"
+            app:destination="@id/detailPagerFragment" />
+    </fragment>
 </navigation>

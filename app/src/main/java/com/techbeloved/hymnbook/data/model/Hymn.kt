@@ -1,17 +1,16 @@
 package com.techbeloved.hymnbook.data.model
 
 import androidx.annotation.StringDef
-import androidx.room.Embedded
+import androidx.room.*
 import com.google.gson.annotations.SerializedName
-import androidx.room.Entity
-import androidx.room.Ignore
-import androidx.room.PrimaryKey
 import java.io.Serializable
 
 @Entity(tableName = "hymns")
-data class Hymn(@field:PrimaryKey
-           var id: String, var num: Int, var title: String, var verses: List<String>): Serializable {
+data class Hymn(var id: String, @PrimaryKey var num: Int, var title: String, var verses: List<String>): Serializable {
 
+//    @PrimaryKey(autoGenerate = true)
+//    @ColumnInfo(name = "rowid")
+//    var rowId: Int = 1
     var chorus: String? = null
     @SerializedName("topic")
     var topicId: Int = 0

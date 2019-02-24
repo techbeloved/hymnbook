@@ -16,7 +16,7 @@
         android:title="@string/text_playlist_label"
         android:icon="@drawable/ic_queue_music_black_24dp"
         app:showAsAction="ifRoom"/>
-    <item android:id="@+id/action_search"
+    <item android:id="@+id/searchFragment"
         android:enabled="true"
         android:title="@string/text_search_label"
         android:icon="@drawable/ic_search_black_24dp"

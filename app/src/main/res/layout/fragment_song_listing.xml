@@ -12,6 +12,31 @@
         android:layout_height="match_parent"
         android:id="@+id/coordinatorLayout"
         android:background="@android:color/white">
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar_song_listing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="true"
+            android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar">
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar_song_listing"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                app:layout_scrollFlags="scroll|enterAlways"
+                android:background="?colorPrimary" />
+            <EditText
+                android:id="@+id/edittext_filter_hymns"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:hint="@string/text_hint_filter_hymns"
+                android:inputType="number"
+                android:background="@color/primary_white"
+                android:textColorHint="@color/deactivated_text"
+                android:textColor="@color/primary_text"
+                android:padding="16dp"
+                android:drawableEnd="@drawable/ic_sort_black_24dp"
+                app:layout_scrollFlags="snap" />
+        </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview_song_list"
