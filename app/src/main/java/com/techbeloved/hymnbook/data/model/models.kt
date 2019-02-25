@@ -22,6 +22,6 @@ data class HymnDetail(var id: String, var num: Int, var title: String, var verse
 
 @Entity(tableName = "hymnSearchFts")
 @Fts4(contentEntity = Hymn::class  )
-data class HymnSearch(val title: String, val verses: List<String>, val chorus: String?)
+data class HymnSearch(val title: String, val first: String, val chorus: String?)
 
 data class SearchResult(val num: Int, val title: String, val verses: List<String>, val chorus: String?)

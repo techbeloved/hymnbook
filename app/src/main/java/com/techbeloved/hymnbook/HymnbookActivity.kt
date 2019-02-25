@@ -46,7 +46,7 @@ class HymnbookActivity : AppCompatActivity() {
 
         // setup the shared viewmodel
         viewModel = ViewModelProviders.of(this).get(HymnbookViewModel::class.java)
-        viewModel.toolbarTitle.observe(this, Observer { updateToolbarTitle(it) })
+        //viewModel.toolbarTitle.observe(this, Observer { updateToolbarTitle(it) })
 
     }
 

@@ -7,11 +7,7 @@ import com.techbeloved.hymnbook.data.repo.local.HymnDao
 import com.techbeloved.hymnbook.data.repo.local.HymnsDatabase
 import com.techbeloved.hymnbook.hymndetail.BY_NUMBER
 import com.techbeloved.hymnbook.hymndetail.BY_TITLE
-import io.reactivex.Flowable
 import io.reactivex.subscribers.TestSubscriber
-import org.hamcrest.CoreMatchers.`is`
-import org.hamcrest.CoreMatchers.instanceOf
-import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -45,7 +41,7 @@ class HymnsRepositoryImpShould {
     @Test
     fun getHymnDetailByNumber_loads_only_the_required_hymn_item_with_topic_info() {
         // Setup
-        val hymn = Hymn("hymn_1", 1, "hymn1", listOf("verse1", "verse2"))
+        val hymn = Hymn("hymn_1", 1, "hymn1", listOf("verse1", "verse2"), "verse1")
         //Execute
         hymnsRepository.getHymnDetailByNumber(hymn.num)
         // Verify
@@ -75,5 +71,13 @@ class HymnsRepositoryImpShould {
         testSubscriber.assertSubscribed()
         testSubscriber.assertError(Throwable::class.java)
         testSubscriber.dispose()
+    }
+
+    @Test
+    fun searchHymns_by_querying_database() {
+        // Setup
+        val searchTerm = "glo"
+        hymnsRepository.searchHymns(searchTerm)
+        verify(db.hymnDao()).searchHymns("$searchTerm*")
     }
 }

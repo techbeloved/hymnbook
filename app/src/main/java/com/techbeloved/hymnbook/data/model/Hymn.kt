@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 @Entity(tableName = "hymns")
-data class Hymn(var id: String, @PrimaryKey var num: Int, var title: String, var verses: List<String>): Serializable {
+data class Hymn(var id: String, @PrimaryKey var num: Int, var title: String, var verses: List<String>, var first: String): Serializable {
 
 //    @PrimaryKey(autoGenerate = true)
 //    @ColumnInfo(name = "rowid")
