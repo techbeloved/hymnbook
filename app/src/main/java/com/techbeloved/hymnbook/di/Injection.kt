@@ -11,6 +11,6 @@ object Injection {
     }
 
     fun provideRepository(): HymnsRepository {
-        return HymnsRepositoryImp(HymnbookApp.database)
+        return HymnsRepositoryImp.getInstance(HymnbookApp.database)
     }
 }

@@ -2,12 +2,16 @@ package com.techbeloved.hymnbook.data.repo
 
 import com.techbeloved.hymnbook.data.model.*
 import com.techbeloved.hymnbook.data.repo.local.HymnsDatabase
+import com.techbeloved.hymnbook.di.SingletonHolder
 import com.techbeloved.hymnbook.hymndetail.BY_FAVORITE
 import com.techbeloved.hymnbook.hymndetail.BY_NUMBER
 import com.techbeloved.hymnbook.hymndetail.BY_TITLE
 import io.reactivex.Flowable
 
-class HymnsRepositoryImp(private val hymnDatabase: HymnsDatabase) : HymnsRepository {
+class HymnsRepositoryImp private constructor(private val hymnDatabase: HymnsDatabase) : HymnsRepository {
+
+    companion object: SingletonHolder<HymnsRepository, HymnsDatabase>(::HymnsRepositoryImp);
+
     override fun searchHymns(searchTerm: String): Flowable<List<SearchResult>> {
         return hymnDatabase.hymnDao().searchHymns("$searchTerm*")
     }

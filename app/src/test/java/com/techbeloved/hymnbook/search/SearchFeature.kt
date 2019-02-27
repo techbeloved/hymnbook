@@ -38,7 +38,7 @@ class SearchFeature {
 
     @Before
     fun setUp() {
-        repository = HymnsRepositoryImp(hymnDatabase)
+        repository = HymnsRepositoryImp.getInstance(hymnDatabase)
         searchViewModel = SearchViewModel(repository)
 
         whenever(hymnDatabase.hymnDao()).thenReturn(hymnDao)

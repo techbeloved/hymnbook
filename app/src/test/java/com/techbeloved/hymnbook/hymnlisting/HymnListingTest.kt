@@ -55,7 +55,7 @@ class HymnListingTest {
     @Before
     fun setup() {
 
-        hymnsRepository = HymnsRepositoryImp(hymnDatabase)
+        hymnsRepository = HymnsRepositoryImp.getInstance(hymnDatabase)
         hymnListingViewModel = HymnListingViewModel(hymnsRepository)
     }
     // https://stackoverflow.com/questions/43356314/android-rxjava-2-junit-test-getmainlooper-in-android-os-looper-not-mocked-runt

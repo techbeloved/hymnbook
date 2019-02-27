@@ -27,7 +27,7 @@ class HymnsRepositoryImpShould {
 
     @Before
     fun setUp() {
-        hymnsRepository = HymnsRepositoryImp(db)
+        hymnsRepository = HymnsRepositoryImp.getInstance(db)
         given(db.hymnDao()).willReturn(hymnDao)
     }
 

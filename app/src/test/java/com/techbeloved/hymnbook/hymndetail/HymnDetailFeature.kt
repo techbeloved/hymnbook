@@ -56,7 +56,7 @@ class HymnDetailFeature {
 
     @Before
     fun setUp() {
-        hymnsRepository = HymnsRepositoryImp(hymnDatabase)
+        hymnsRepository = HymnsRepositoryImp.getInstance(hymnDatabase)
         detailViewModel = HymnDetailViewModel(app, hymnsRepository)
 
         detailPagerViewModel = HymnPagerViewModel(hymnsRepository)

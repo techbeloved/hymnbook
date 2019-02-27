@@ -26,7 +26,7 @@ class HymnbookApp : Application() {
         instance = this
         executors = AppExecutors()
 
-        // TODO: Enable when ready for proper implementation
+        // DONE: Enable when ready for proper implementation
         buildDatabase(this, executors)
 
         if (BuildConfig.DEBUG) {
