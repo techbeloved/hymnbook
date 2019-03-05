@@ -1,10 +1,12 @@
 package com.techbeloved.hymnbook.hymndetail
 
+import android.text.SpannableStringBuilder
+import android.text.Spanned
 import android.text.TextUtils
 import com.techbeloved.hymnbook.data.model.HymnDetail
 import java.lang.StringBuilder
 
-data class HymnDetailItem(val num: Int, val title: String, val subtitle: String, val content: String)
+data class HymnDetailItem(val num: Int, val title: String, val subtitle: String, val content: CharSequence)
 
 const val baseHtml = """<!DOCTYPE html>
 <html lang="en">
@@ -63,6 +65,7 @@ val HymnDetail.htmlContent: String
                 .replace("\n", "")
     }
 
+
 private val String.spannedLines: String
     get() {
         val lines = this.split("\n")
@@ -72,3 +75,21 @@ private val String.spannedLines: String
         }
         return spanBuilder.toString()
     }
+
+
+private fun firstLine(verse: String): String {
+    return verse.substring(0, verse.indexOf("\n"))
+}
+
+
+
+/*inline fun SpannableStringBuilder.withSpan(span: Any, action: SpannableStringBuilder.() -> Unit): SpannableStringBuilder {
+    val from = length
+    action()
+    setSpan(span, from, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+    return this
+}*/
+
+
+
+

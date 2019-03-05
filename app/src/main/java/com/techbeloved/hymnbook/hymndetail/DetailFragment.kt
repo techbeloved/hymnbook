@@ -65,8 +65,7 @@ class DetailFragment : Fragment() {
     private fun showContentDetail(content: HymnDetailItem) {
         Timber.i("About to display details: ${content.title}")
         showProgressLoading(false)
-        binding.detailWebview.loadDataWithBaseURL(activity?.getString(R.string.assest_base_url),
-                content.content, "text/html", "UTF-8", null);
+        binding.textviewDetail.text = content.content
     }
 
     private fun showProgressLoading(loading: Boolean) {

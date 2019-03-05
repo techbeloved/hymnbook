@@ -5,4 +5,6 @@
     <dimen name="list_item_text_size">22sp</dimen>
     <dimen name="settings_item_text_size">20sp</dimen>
     <dimen name="about_title_text_size">28sp</dimen>
+    <dimen name="text_hymn_text_size">24sp</dimen>
+    <dimen name="text_hymnbook_large">28sp</dimen>
 </resources>
