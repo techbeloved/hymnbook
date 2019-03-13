@@ -6,9 +6,10 @@ import com.techbeloved.hymnbook.di.SingletonHolder
 import com.techbeloved.hymnbook.hymndetail.BY_FAVORITE
 import com.techbeloved.hymnbook.hymndetail.BY_NUMBER
 import com.techbeloved.hymnbook.hymndetail.BY_TITLE
+import com.techbeloved.hymnbook.hymndetail.SortBy
 import io.reactivex.Flowable
 
-class HymnsRepositoryImp private constructor(private val hymnDatabase: HymnsDatabase) : HymnsRepository {
+class HymnsRepositoryImp (private val hymnDatabase: HymnsDatabase) : HymnsRepository {
 
     companion object: SingletonHolder<HymnsRepository, HymnsDatabase>(::HymnsRepositoryImp);
 
@@ -32,8 +33,11 @@ class HymnsRepositoryImp private constructor(private val hymnDatabase: HymnsData
         return hymnDatabase.hymnDao().getHymnDetail(hymnNo)
     }
 
-    override fun loadHymnTitles(): Flowable<List<HymnTitle>> {
-        return hymnDatabase.hymnDao().getAllHymnTitles()
+    override fun loadHymnTitles(@SortBy sortBy: Int): Flowable<List<HymnTitle>> {
+        return when(sortBy) {
+            BY_TITLE -> hymnDatabase.hymnDao().getAllHymnTitlesSortedByTitles()
+            else -> hymnDatabase.hymnDao().getAllHymnTitles()
+        }
     }
 
 }

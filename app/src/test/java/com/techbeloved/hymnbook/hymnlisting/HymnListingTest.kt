@@ -10,6 +10,7 @@ import com.techbeloved.hymnbook.data.repo.HymnsRepository
 import com.techbeloved.hymnbook.data.repo.HymnsRepositoryImp
 import com.techbeloved.hymnbook.data.repo.local.HymnDao
 import com.techbeloved.hymnbook.data.repo.local.HymnsDatabase
+import com.techbeloved.hymnbook.hymndetail.BY_NUMBER
 import com.techbeloved.hymnbook.usecases.Lce
 import io.reactivex.Flowable
 import io.reactivex.Scheduler
@@ -94,7 +95,7 @@ class HymnListingTest {
         whenever(hymnDao.getAllHymnTitles()).thenReturn(titlesFlow)
 
         hymnListingViewModel.hymnTitlesLiveData.observeForever(mHymnsStateObserver)
-        hymnListingViewModel.loadHymnTitles()
+        hymnListingViewModel.loadHymnTitles(BY_NUMBER)
 
         val inOrder = inOrder(mHymnsStateObserver)
 

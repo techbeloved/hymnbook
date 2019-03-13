@@ -24,17 +24,16 @@
                 android:layout_height="?actionBarSize"
                 app:layout_scrollFlags="scroll|enterAlways"
                 android:background="?colorPrimary" />
-            <EditText
+            <com.techbeloved.edittextwithsortby.SortByEditText
                 android:id="@+id/edittext_filter_hymns"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:hint="@string/text_hint_filter_hymns"
-                android:inputType="number"
+                android:inputType="text"
                 android:background="@color/primary_white"
                 android:textColorHint="@color/deactivated_text"
                 android:textColor="@color/primary_text"
                 android:padding="16dp"
-                android:drawableEnd="@drawable/ic_sort_black_24dp"
                 app:layout_scrollFlags="snap" />
         </com.google.android.material.appbar.AppBarLayout>
 

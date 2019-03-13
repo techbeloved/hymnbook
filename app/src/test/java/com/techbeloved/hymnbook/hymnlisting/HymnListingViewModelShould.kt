@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.techbeloved.hymnbook.data.model.HymnTitle
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
+import com.techbeloved.hymnbook.hymndetail.BY_NUMBER
 import com.techbeloved.hymnbook.usecases.Lce
 import io.reactivex.Flowable
 import io.reactivex.subscribers.TestSubscriber
@@ -21,6 +22,7 @@ import io.reactivex.internal.schedulers.ExecutorScheduler
 import io.reactivex.disposables.Disposable
 import io.reactivex.Scheduler
 import org.junit.BeforeClass
+import org.mockito.ArgumentMatchers.anyInt
 import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
 
@@ -74,13 +76,13 @@ class HymnListingViewModelShould {
     fun load_hymn_titles() {
         // Setup
         val titlesFlow = Flowable.just(hymnTitlesFromRepo)
-        whenever(hymnsRepository.loadHymnTitles()).thenReturn(titlesFlow)
+        whenever(hymnsRepository.loadHymnTitles(anyInt())).thenReturn(titlesFlow)
 
         // Execute
-        hymnListingViewModel.loadHymnTitles()
+        hymnListingViewModel.loadHymnTitles(BY_NUMBER)
 
         // Verify
-        verify(hymnsRepository).loadHymnTitles()
+        verify(hymnsRepository).loadHymnTitles(BY_NUMBER)
     }
 
     @Test

@@ -88,4 +88,5 @@
     <string name="text_hint_filter_hymns">Filter Hymns</string>
 
     <string name="hymn_no_temp">Hymn, %1$d</string>
+    <string name="pref_key_sort_by">filter_by</string>
 </resources>

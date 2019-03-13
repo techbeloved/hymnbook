@@ -18,6 +18,9 @@ interface HymnDao {
     @Query("SELECT * FROM hymn_titles ORDER BY num ASC")
     fun getAllHymnTitles(): Flowable<List<HymnTitle>>
 
+    @Query("SELECT * FROM hymn_titles ORDER BY title ASC")
+    fun getAllHymnTitlesSortedByTitles(): Flowable<List<HymnTitle>>
+
     @Query("SELECT * FROM hymn_with_topics WHERE num = :hymnNo")
     fun getHymnDetail(hymnNo: Int): Flowable<HymnDetail>
 

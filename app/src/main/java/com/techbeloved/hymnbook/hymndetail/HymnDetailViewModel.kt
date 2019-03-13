@@ -34,7 +34,6 @@ class HymnDetailViewModel(private val app: Application, private val hymnReposito
         get() = hymnDetailData
 
     private val hymnDetailStateConsumer: Consumer<Lce<HymnDetailItem>> = Consumer {
-        Timber.i("Received: $this, $it")
         hymnDetailData.value = it
     }
 

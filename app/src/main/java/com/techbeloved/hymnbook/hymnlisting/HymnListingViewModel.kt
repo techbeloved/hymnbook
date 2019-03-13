@@ -7,11 +7,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.techbeloved.hymnbook.data.model.HymnTitle
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
+import com.techbeloved.hymnbook.hymndetail.BY_NUMBER
+import com.techbeloved.hymnbook.hymndetail.SortBy
 import com.techbeloved.hymnbook.usecases.Lce
 import io.reactivex.Flowable
 import io.reactivex.FlowableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.processors.PublishProcessor
 import io.reactivex.schedulers.Schedulers
 
 
@@ -23,8 +26,27 @@ class HymnListingViewModel(private val hymnsRepository: HymnsRepository) : ViewM
     val hymnTitlesLiveData: LiveData<Lce<List<TitleItem>>>
         get() = hymnTitlesLiveData_
 
-    fun loadHymnTitles() {
-        val disposable = hymnsRepository.loadHymnTitles()
+    private val sortByProcessor: PublishProcessor<Int> = PublishProcessor.create()
+
+    init {
+        loadHymnsFromDatabase()
+    }
+
+    /**
+     * Loads hymn titles sorted by the specified term. This is usually called from the fragment
+     * at start and each time the sorting criteria changes
+     */
+    fun loadHymnTitles(@SortBy sortBy: Int) {
+        sortByProcessor.onNext(sortBy)
+    }
+
+    private fun loadHymnsFromDatabase() {
+        val disposable = sortByProcessor
+                .distinctUntilChanged()
+                .startWith(BY_NUMBER)
+                .switchMap { sortBy ->
+                    hymnsRepository.loadHymnTitles(sortBy)
+                }
                 .compose(getHymnTitleUiModels())
                 .compose(getViewState())
                 .startWith(Lce.Loading(true))
@@ -65,7 +87,7 @@ class HymnListingViewModel(private val hymnsRepository: HymnsRepository) : ViewM
         }
     }
 
-    class Factory(private val repository: HymnsRepository): ViewModelProvider.Factory {
+    class Factory(private val repository: HymnsRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             return HymnListingViewModel(repository) as T
         }

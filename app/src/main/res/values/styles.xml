@@ -19,6 +19,8 @@
         <!--Setup fast scroll-->
         <item name="android:fastScrollThumbDrawable">@drawable/fastscroll_thumb</item>
         <item name="android:fastScrollTrackDrawable">@drawable/scrollbar_vertical_track</item>
+
+        <item name="android:windowSoftInputMode">adjustPan</item>
     </style>
 
     <!--&lt;!&ndash; App bar style &ndash;&gt;-->

@@ -27,14 +27,14 @@ class HymnsRepositoryImpShould {
 
     @Before
     fun setUp() {
-        hymnsRepository = HymnsRepositoryImp.getInstance(db)
+        hymnsRepository = HymnsRepositoryImp(db)
         given(db.hymnDao()).willReturn(hymnDao)
     }
 
 
     @Test
     fun get_hymn_titles_from_database() {
-        hymnsRepository.loadHymnTitles()
+        hymnsRepository.loadHymnTitles(BY_NUMBER)
         verify(db.hymnDao()).getAllHymnTitles()
     }
 

@@ -1,22 +1,20 @@
 package com.techbeloved.hymnbook.search
 
-import androidx.lifecycle.ViewModelProviders
+import android.app.Activity
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.techbeloved.hymnbook.Event
-import com.techbeloved.hymnbook.HymnbookViewModel
-
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.FragmentSearchBinding
 import com.techbeloved.hymnbook.di.Injection
@@ -58,6 +56,7 @@ class SearchFragment : Fragment() {
         NavigationUI.setupWithNavController(binding.toolbarSearch, findNavController())
 
         binding.searchviewSearch.setOnQueryTextListener(searchQueryListener)
+        binding.searchviewSearch.setOnFocusChangeListener { view, hasFocus -> if (!hasFocus) hideKeyboard(view) }
 
         searchResultsAdapter = SearchResultsAdapter(clickListener)
 
@@ -103,6 +102,13 @@ class SearchFragment : Fragment() {
     private fun showLoadingProgress(loading: Boolean) {
         if (loading) binding.progressbarSearchLoading.visibility = View.VISIBLE
         else binding.progressbarSearchLoading.visibility = View.GONE
+    }
+
+    private fun hideKeyboard(view: View) {
+        if (activity != null) {
+            val inputMethodManager = activity!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+        }
     }
 
 }
