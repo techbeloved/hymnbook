@@ -89,4 +89,6 @@
 
     <string name="hymn_no_temp">Hymn, %1$d</string>
     <string name="pref_key_sort_by">filter_by</string>
+    <string name="label_sort_by_number">Sort by number</string>
+    <string name="label_sort_by_title">Sort by title</string>
 </resources>

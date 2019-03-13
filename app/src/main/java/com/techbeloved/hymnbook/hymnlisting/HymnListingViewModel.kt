@@ -14,6 +14,7 @@ import io.reactivex.Flowable
 import io.reactivex.FlowableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.processors.BehaviorProcessor
 import io.reactivex.processors.PublishProcessor
 import io.reactivex.schedulers.Schedulers
 
@@ -26,7 +27,7 @@ class HymnListingViewModel(private val hymnsRepository: HymnsRepository) : ViewM
     val hymnTitlesLiveData: LiveData<Lce<List<TitleItem>>>
         get() = hymnTitlesLiveData_
 
-    private val sortByProcessor: PublishProcessor<Int> = PublishProcessor.create()
+    private val sortByProcessor: BehaviorProcessor<Int> = BehaviorProcessor.create()
 
     init {
         loadHymnsFromDatabase()
@@ -43,7 +44,6 @@ class HymnListingViewModel(private val hymnsRepository: HymnsRepository) : ViewM
     private fun loadHymnsFromDatabase() {
         val disposable = sortByProcessor
                 .distinctUntilChanged()
-                .startWith(BY_NUMBER)
                 .switchMap { sortBy ->
                     hymnsRepository.loadHymnTitles(sortBy)
                 }

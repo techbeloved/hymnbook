@@ -5,11 +5,10 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.widget.PopupMenu
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -18,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.techbeloved.edittextwithsortby.FilterByEditText
@@ -27,6 +27,7 @@ import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.FragmentSongListingBinding
 import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.hymndetail.BY_NUMBER
+import com.techbeloved.hymnbook.hymndetail.BY_TITLE
 import com.techbeloved.hymnbook.usecases.Lce
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -35,7 +36,8 @@ import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-class HymnListingFragment : Fragment() {
+class HymnListingFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
+
     private lateinit var binding: FragmentSongListingBinding
     private lateinit var viewModel: HymnListingViewModel
     private lateinit var hymnListAdapter: HymnListAdapter
@@ -70,10 +72,10 @@ class HymnListingFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        preferences = PreferenceManager.getDefaultSharedPreferences(context)
+        preferences = PreferenceManager.getDefaultSharedPreferences(activity!!.applicationContext)
         rxPreferences = RxSharedPreferences.create(preferences)
 
-        sortByPref = rxPreferences.getInteger(getString(R.string.pref_key_sort_by), BY_NUMBER)
+        sortByPref = rxPreferences.getInteger(getString(R.string.pref_key_sort_by))
 
     }
 
@@ -88,12 +90,37 @@ class HymnListingFragment : Fragment() {
             layoutManager = LinearLayoutManager(activity)
         }
         binding.edittextFilterHymns.addTextChangedListener(filterHymnTextWatcher)
-        binding.edittextFilterHymns.setSortByClickListener { Toast.makeText(context, "Sort by icon clicked!", Toast.LENGTH_SHORT).show() }
+        binding.edittextFilterHymns.setSortByClickListener {
+            showSortByPopup(it)
+        }
         binding.edittextFilterHymns.setOnFocusChangeListener { view, hasFocus -> if (!hasFocus) hideKeyboard(view) }
 
         setupFilterObserver()
 
         return binding.root
+    }
+
+    private var currentSortKey = R.id.action_sort_by_number
+    private fun showSortByPopup(view: View) {
+        val sortByPopup = PopupMenu(context!!, view, Gravity.END)
+        sortByPopup.inflate(R.menu.filter_menu)
+        sortByPopup.menu.findItem(currentSortKey).isChecked = true
+        sortByPopup.show()
+        sortByPopup.setOnMenuItemClickListener(this)
+    }
+
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        val itemId = item.itemId
+        if (itemId == R.id.action_sort_by_number) {
+            sortByPref.set(BY_NUMBER)
+        } else if (itemId == R.id.action_sort_by_title) {
+            sortByPref.set(BY_TITLE)
+        } else {
+            return false
+        }
+        // Finally set checked the item
+        item.isChecked = true
+        return true
     }
 
     override fun onResume() {
@@ -113,6 +140,7 @@ class HymnListingFragment : Fragment() {
         mainViewModel = ViewModelProviders.of(activity!!).get(HymnbookViewModel::class.java)
         // Monitor data
         viewModel.hymnTitlesLiveData.observe(this, Observer {
+            Timber.i("Receiving items")
             when (it) {
                 is Lce.Loading -> showLoadingProgress(it.loading)
                 is Lce.Content -> displayContent(it.content)
@@ -121,7 +149,14 @@ class HymnListingFragment : Fragment() {
         })
 
         val disposable = sortByPref.asObservable().subscribe(
-                { viewModel.loadHymnTitles(it) }, { Timber.e(it) })
+                {
+                    Timber.i("Current settings: %s", it)
+                    currentSortKey = when (it) {
+                        BY_TITLE -> R.id.action_sort_by_title
+                        else -> R.id.action_sort_by_number
+                    }
+                    viewModel.loadHymnTitles(it)
+                }, { Timber.e(it) })
         disposables.add(disposable)
 
     }
