@@ -2,6 +2,7 @@ package com.techbeloved.hymnbook.hymndetail
 
 
 import android.os.Bundle
+import android.view.GestureDetector
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +21,7 @@ import com.techbeloved.hymnbook.databinding.FragmentDetailPagerBinding
 import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.usecases.Lce
 import com.techbeloved.hymnbook.utils.DepthPageTransformer
+import com.techbeloved.hymnbook.viewgroup.TouchableFrameWrapper
 import timber.log.Timber
 
 
@@ -38,6 +40,9 @@ class DetailPagerFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail_pager, container, false)
         binding.lifecycleOwner = this
+
+        setupImmersiveMode() // Immersive mode
+
         NavigationUI.setupWithNavController(binding.toolbarDetail, findNavController())
 
         detailPagerAdapter = DetailPagerAdapter(childFragmentManager)
@@ -72,6 +77,11 @@ class DetailPagerFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         mainViewModel = ViewModelProviders.of(activity!!).get(HymnbookViewModel::class.java)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        showStatusBar()
     }
 
     private fun showContentError(error: String) {
@@ -127,6 +137,67 @@ class DetailPagerFragment : Fragment() {
         if (hymnIndex == currentItemIndex) return
         currentItemIndex = hymnIndex
         binding.toolbarDetail.title = "Hymn, $currentItemIndex"
+    }
+
+    private fun setupImmersiveMode() {
+        // Setup the gesture listener to listen for single tap and toggle fullscreen
+        val mainView = binding.touchableFrameHymnDetail
+        val gestureListener = GestureListener {
+            toggleHideyBar()
+            false
+        }
+        val gd = GestureDetector(activity, gestureListener)
+        mainView.setGestureDetector(gd)
+    }
+
+    /**
+     * Detects and toggles immersive mode (also known as "hidey bar" mode).
+     */
+    private fun toggleHideyBar() {
+
+        // BEGIN_INCLUDE (get_current_ui_flags)
+        // The UI options currently enabled are represented by a bitfield.
+        // getSystemUiVisibility() gives us that bitfield.
+        var newUiOptions = activity!!.window.decorView.systemUiVisibility
+        // END_INCLUDE (get_current_ui_flags)
+        // Hide or show toolbar accordingly
+        val isImmersiveModeEnabled = newUiOptions or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY == newUiOptions
+        if (isImmersiveModeEnabled) {
+            binding.toolbarDetail.visibility = View.VISIBLE
+        } else {
+            binding.toolbarDetail.visibility = View.GONE
+        }
+
+        // BEGIN_INCLUDE (toggle_ui_flags)
+        newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+        newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_FULLSCREEN
+
+
+        // Immersive mode: Backward compatible to KitKat.
+        // Note that this flag doesn't do anything by itself, it only augments the behavior
+        // of HIDE_NAVIGATION and FLAG_FULLSCREEN.  For the purposes of this sample
+        // all three flags are being toggled together.
+        // Note that there are two immersive mode UI flags, one of which is referred to as "sticky".
+        // Sticky immersive mode differs in that it makes the navigation and status bars
+        // semi-transparent, and the UI flag does not get cleared when the user interacts with
+        // the screen.
+        newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+
+        activity!!.window.decorView.systemUiVisibility = newUiOptions
+        //END_INCLUDE (set_ui_flags)
+    }
+
+    private fun showStatusBar() {
+        var newUiOptions = activity!!.window.decorView.systemUiVisibility
+        val isImmersiveModeEnabled = newUiOptions or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY == newUiOptions
+        if (isImmersiveModeEnabled) {
+
+            newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+            newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_FULLSCREEN
+
+            newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+            activity!!.window.decorView.systemUiVisibility = newUiOptions
+        }
     }
 
 }

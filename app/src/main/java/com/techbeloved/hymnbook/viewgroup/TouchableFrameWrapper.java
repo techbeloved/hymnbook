@@ -34,12 +34,20 @@ public class TouchableFrameWrapper extends FrameLayout {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        gestureDetector.onTouchEvent(ev);
+        if (gestureDetector != null) {
+            gestureDetector.onTouchEvent(ev);
+        }
         return super.dispatchTouchEvent(ev);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        performClick();
         return true;//super.onTouchEvent(event);
+    }
+
+    @Override
+    public boolean performClick() {
+        return super.performClick();
     }
 }

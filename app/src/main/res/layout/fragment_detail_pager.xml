@@ -17,6 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusableInTouchMode="true"
+            android:animateLayoutChanges="true"
             android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar">
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar_detail"
@@ -27,11 +28,17 @@
                 app:title="Hymnbook" />
         </com.google.android.material.appbar.AppBarLayout>
 
+        <com.techbeloved.hymnbook.viewgroup.TouchableFrameWrapper
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/touchable_frame_hymn_detail"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/viewpager_hymn_detail"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            android:layout_height="wrap_content"/>
+        </com.techbeloved.hymnbook.viewgroup.TouchableFrameWrapper>
 
         <ProgressBar
             android:id="@+id/progressBar_hymn_detail_loading"
