@@ -77,6 +77,7 @@ dependencies {
     androidTestImplementation "androidx.arch.core:core-testing:$lifecycle_version"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.palette:palette:1.0.0"
 
     // For Kotlin use kapt instead of annotationProcessor
 
