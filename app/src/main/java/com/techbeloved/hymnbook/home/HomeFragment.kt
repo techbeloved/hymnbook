@@ -1,5 +1,6 @@
 package com.techbeloved.hymnbook.home
 
+import android.graphics.BitmapFactory
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
+import androidx.palette.graphics.Palette
 
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.FragmentHomeBinding
@@ -30,13 +32,21 @@ class HomeFragment : Fragment() {
                     .navigate(HomeFragmentDirections.actionHomeFragmentToHymnListingFragment())
         }
         NavigationUI.setupWithNavController(binding.toolbarHome, findNavController())
+
+        val wccrmPalette =
+                Palette.from(BitmapFactory.decodeResource(resources,
+                        R.drawable.wccrm_logo)).generate()
+        val mutedColor = wccrmPalette.getLightMutedColor(
+                resources.getColor(R.color.primary_white))
+
+        binding.cardviewHymns.setCardBackgroundColor(mutedColor)
+
         return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
-        // TODO: Use the ViewModel
     }
 
 }
