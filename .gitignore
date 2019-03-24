@@ -9,3 +9,6 @@
 .externalNativeBuild
 keystore.properties
 .idea/caches/
+src/main/assets/all_hymns_v5.json
+src/main/java/com/techbeloved/hymnbook/topics/
+src/main/res/menu-night/

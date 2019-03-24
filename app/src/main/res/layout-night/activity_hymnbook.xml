@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <fragment
+            android:id="@+id/mainNavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/navigation"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation_main"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:layout_gravity="bottom"
+            app:itemBackground="?attr/colorSurface"
+            app:labelVisibilityMode="labeled"
+            app:itemIconTint="@drawable/bottom_bar_selector"
+            app:itemTextColor="@drawable/bottom_bar_selector"
+            app:itemTextAppearanceInactive="@style/TextAppearance.Hymnbook.BottomNav.Deactivated"
+            app:itemTextAppearanceActive="@style/TextAppearance.Hymnbook.BottomNav"
+            android:background="?attr/colorSurface"
+            app:menu="@menu/bottom_nav"/>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

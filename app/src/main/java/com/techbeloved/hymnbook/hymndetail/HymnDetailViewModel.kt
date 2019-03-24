@@ -6,6 +6,8 @@ import android.text.style.AbsoluteSizeSpan
 import android.text.style.LeadingMarginSpan
 import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
+import android.util.TypedValue
+import androidx.annotation.ColorInt
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.*
 import com.fueled.snippety.core.Snippety
@@ -105,6 +107,11 @@ class HymnDetailViewModel(private val app: Application, private val hymnReposito
             val gapWidth = app.resources.getDimensionPixelOffset(R.dimen.space_xlarge)
             val largeTextSize = app.resources.getDimensionPixelSize(R.dimen.text_hymnbook_large)
 
+            val typedValue = TypedValue()
+            val theme = app.theme
+            theme.resolveAttribute(R.attr.colorOnSurface, typedValue, true)
+
+
             val truss = Truss()
 
             // Add title and hymn number
@@ -128,10 +135,10 @@ class HymnDetailViewModel(private val app: Application, private val hymnReposito
 
                 if (chorus != null) {
                     truss.pushSpan(Snippety().fontStyle(Snippety.FontStyle.ITALIC))
-                            .pushSpan(Snippety().textColor(app.resources.getColor(R.color.colorFadedText)))
+                            //.pushSpan(Snippety().textColor(app.resources.getColor(R.color.colorFadedText)))
                             .appendln(chorus)
                             .appendln()
-                            .popSpan()
+                            //.popSpan()
                             .popSpan()
                 }
                 truss.popSpan()
@@ -142,20 +149,20 @@ class HymnDetailViewModel(private val app: Application, private val hymnReposito
                 if (this.attribution!!.lyricsBy != null) {
 
                     truss.pushSpan(RelativeSizeSpan(0.7f))
-                            .pushSpan(Snippety().textColor(app.resources.getColor(R.color.colorFadedText)))
+                            //.pushSpan(Snippety().textColor(app.resources.getColor(R.color.colorFadedText)))
                             .append("Lyrics by:  ", StyleSpan(Typeface.BOLD_ITALIC))
                             .appendln(attribution?.lyricsBy)
                             .newLine()
                             .append("Music by:  ", StyleSpan(Typeface.BOLD_ITALIC))
                             .appendln(attribution?.musicBy)
-                            .popSpan()
+                            //.popSpan()
                             .popSpan()
                 } else if (this.attribution!!.credits != null) {
                     truss.pushSpan(RelativeSizeSpan(0.7f))
-                            .pushSpan(Snippety().textColor(app.resources.getColor(R.color.colorFadedText)))
+                            //.pushSpan(Snippety().textColor(app.resources.getColor(R.color.colorFadedText)))
                             .append("Credits:  ", StyleSpan(Typeface.BOLD_ITALIC))
                             .appendln(attribution?.credits)
-                            .popSpan()
+                            //.popSpan()
                             .popSpan()
                 }
             }

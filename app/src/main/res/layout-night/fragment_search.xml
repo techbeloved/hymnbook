@@ -17,8 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusableInTouchMode="true"
-            android:background="@color/primary_white"
-            android:theme="@style/ThemeOverlay.MaterialComponents.Light">
+            android:background="?attr/colorSurface"
+            android:theme="@style/ThemeOverlay.MaterialComponents.Dark">
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar_search"
                 android:layout_width="match_parent"

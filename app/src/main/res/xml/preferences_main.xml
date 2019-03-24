@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        app:key="@string/pref_key_category_app_theme"
+        app:title="App theme"
+        app:iconSpaceReserved="false">
+        <SwitchPreference
+            app:key="@string/pref_key_enable_night_mode"
+            app:title="Enable Night Mode"
+            app:icon="@drawable/ic_brightness_24dp"
+            app:summary="For comfort reading in the night" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

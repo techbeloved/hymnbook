@@ -107,12 +107,15 @@ class DetailPagerFragment : Fragment() {
 
     inner class DetailPagerAdapter(private val fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
         private val hymnIndices = mutableListOf<Int>()
-        override fun getItem(position: Int): Fragment? {
+        override fun getItem(position: Int): Fragment {
+            val detailFragment = DetailFragment()
             return if (position < hymnIndices.size) {
-                val detailFragment = DetailFragment()
                 detailFragment.init(hymnIndices[position])
                 detailFragment
-            } else null
+            } else {
+                detailFragment.init(1)
+                detailFragment
+            }
         }
 
         override fun setPrimaryItem(container: ViewGroup, position: Int, `object`: Any) {

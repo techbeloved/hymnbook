@@ -91,4 +91,6 @@
     <string name="pref_key_sort_by">filter_by</string>
     <string name="label_sort_by_number">Sort by number</string>
     <string name="label_sort_by_title">Sort by title</string>
+    <string name="pref_key_enable_night_mode">night_mode_switch</string>
+    <string name="pref_key_category_app_theme">pref_category_app_theme</string>
 </resources>

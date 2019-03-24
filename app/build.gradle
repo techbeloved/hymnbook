@@ -46,6 +46,10 @@ android {
     }
 }
 
+kapt {
+    generateStubs = true
+}
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.0.2'
@@ -57,7 +61,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.google.android.material:material:1.1.0-alpha04'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'net.sourceforge.htmlcleaner:htmlcleaner:2.21'
     implementation 'com.readystatesoftware.sqliteasset:sqliteassethelper:2.0.1'
@@ -109,11 +113,20 @@ dependencies {
     implementation 'com.github.fueled:snippety:1.1.1'
 
     // Preferences
-    implementation 'androidx.preference:preference:1.0.0'
+    implementation 'androidx.preference:preference:1.1.0-alpha04'
     implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
+    implementation 'androidx.preference:preference-ktx:1.1.0-alpha04'
 
     // Custom views
     implementation project(':edittextwithsortby')
+
+    // Dagger
+    implementation 'com.google.dagger:dagger:2.21'
+    kapt 'com.google.dagger:dagger-compiler:2.21'
+    implementation 'com.google.dagger:dagger-android:2.21'
+    implementation 'com.google.dagger:dagger-android-support:2.21'
+    // if you use the support libraries
+    kapt 'com.google.dagger:dagger-android-processor:2.21'
 }
 repositories {
     mavenCentral()

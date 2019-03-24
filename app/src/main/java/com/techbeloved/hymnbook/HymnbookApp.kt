@@ -2,14 +2,22 @@ package com.techbeloved.hymnbook
 
 import android.app.Application
 import android.content.Context
+import android.os.Build
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.preference.PreferenceManager
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.f2prateek.rx.preferences2.Preference
+import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.techbeloved.hymnbook.data.model.Hymn
 import com.techbeloved.hymnbook.data.model.Topic
 import com.techbeloved.hymnbook.data.repo.local.HymnsDatabase
 import com.techbeloved.hymnbook.data.repo.local.util.AppExecutors
 import com.techbeloved.hymnbook.data.repo.local.util.DataGenerator
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
 class HymnbookApp : Application() {
@@ -26,12 +34,16 @@ class HymnbookApp : Application() {
         instance = this
         executors = AppExecutors()
 
+        setupNightMode()
+
         // DONE: Enable when ready for proper implementation
         buildDatabase(this, executors)
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
+
+        //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
     }
 
@@ -58,5 +70,22 @@ class HymnbookApp : Application() {
 
             Timber.i("Successfully inserted ${hymns.size} hymns\nand ${topics.size} topics, into the database")
         }
+    }
+
+    private fun setupNightMode() {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val rxPreferences = RxSharedPreferences.create(sharedPreferences)
+
+        val nightModePreference: Preference<Boolean> = rxPreferences.getBoolean(getString(R.string.pref_key_enable_night_mode), false)
+        val enableNightMode = nightModePreference.get()
+        if (enableNightMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
+        }
+
     }
 }

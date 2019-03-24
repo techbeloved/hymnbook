@@ -27,7 +27,7 @@ object DataGenerator {
     fun loadHymnJsonFromAsset(): String? {
         val json: String?
         try {
-            val inputStream = HymnbookApp.instance.assets.open("all_hymns_v4.json")
+            val inputStream = HymnbookApp.instance.assets.open("all_hymns_v5.json")
             val size = inputStream.available()
             val buffer = ByteArray(size)
             inputStream.read(buffer)

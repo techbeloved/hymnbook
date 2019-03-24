@@ -24,7 +24,7 @@
                 android:id="@+id/toolbar_home"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
-                android:background="?colorPrimary"
+                android:background="?attr/colorPrimary"
                 app:layout_scrollFlags="snap"
                 app:title="Hymnbook" />
         </com.google.android.material.appbar.AppBarLayout>
@@ -32,7 +32,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/white"
+            android:background="?attr/colorSurface"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:context=".home.HomeFragment">
 

@@ -6,7 +6,8 @@
         android:icon="@drawable/ic_home_black_24dp"
         android:title="@string/text_home_label"
         app:showAsAction="ifRoom"/>
-    <item android:id="@+id/action_topics"
+    <!--TODO: replace this-->
+    <item android:id="@+id/settingsFragment"
         android:enabled="true"
         android:title="@string/text_topics_label"
         android:icon="@drawable/ic_title_black_24dp"

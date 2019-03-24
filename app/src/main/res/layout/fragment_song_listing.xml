@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:paddingBottom="?actionBarSize"
         android:id="@+id/coordinatorLayout"
-        android:background="@android:color/white">
+        android:background="?android:attr/colorBackground">
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar_song_listing"
             android:layout_width="match_parent"
@@ -24,16 +24,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
                 app:layout_scrollFlags="scroll|enterAlways"
-                android:background="?colorPrimary" />
+                android:background="?attr/colorPrimary" />
             <com.techbeloved.edittextwithsortby.SortByEditText
                 android:id="@+id/edittext_filter_hymns"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:hint="@string/text_hint_filter_hymns"
                 android:inputType="text"
-                android:background="@color/primary_white"
+                android:background="?attr/colorSurface"
                 android:textColorHint="@color/deactivated_text"
-                android:textColor="@color/primary_text"
+                android:textColor="?attr/colorOnSurface"
                 android:padding="16dp"
                 app:layout_scrollFlags="snap" />
         </com.google.android.material.appbar.AppBarLayout>
