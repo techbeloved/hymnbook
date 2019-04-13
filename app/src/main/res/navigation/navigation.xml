@@ -15,6 +15,7 @@
             app:destination="@id/hymnListingFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
+            app:launchSingleTop="true"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
@@ -55,5 +56,19 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.techbeloved.hymnbook.SettingsFragment"
-        android:label="SettingsFragment" />
+        android:label="SettingsFragment"/>
+    <fragment
+        android:id="@+id/moreFragment"
+        android:name="com.techbeloved.hymnbook.more.MoreFragment"
+        android:label="MoreFragment"
+        tools:layout="@layout/fragment_more">
+        <action
+            android:id="@+id/action_moreFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:launchSingleTop="true" />
+    </fragment>
 </navigation>
