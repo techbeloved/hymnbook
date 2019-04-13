@@ -1,21 +1,17 @@
 package com.techbeloved.hymnbook
 
 import android.content.res.Configuration
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import androidx.navigation.get
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
@@ -40,9 +36,13 @@ class HymnbookActivity : AppCompatActivity() {
 
         navController = findNavController(R.id.mainNavHostFragment)
 
-        val appBarConfiguration = AppBarConfiguration(navController.graph)
         binding.bottomNavigationMain.setupWithNavController(navController)
-        //binding.toolbarMain.setupWithNavController(navController, appBarConfiguration)
+        binding.bottomNavigationMain.setOnNavigationItemSelectedListener { item ->
+            if (navController.currentDestination?.id != item.itemId) {
+                item.onNavDestinationSelected(navController)
+                true
+            } else false
+        }
 
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
             // Hide the bottom navigation in detail view
@@ -65,7 +65,8 @@ class HymnbookActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
+        return (navController.currentDestination?.id != item.itemId && item.onNavDestinationSelected(navController))
+                || super.onOptionsItemSelected(item)
     }
 
     private fun updateToolbarTitle(title: String) {

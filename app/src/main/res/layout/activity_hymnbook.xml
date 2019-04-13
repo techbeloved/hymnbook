@@ -25,11 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             android:layout_gravity="bottom"
-            app:itemBackground="@android:color/white"
-            app:labelVisibilityMode="labeled"
-            app:itemTextAppearanceInactive="@style/TextAppearance.Hymnbook.BottomNav.Deactivated"
-            app:itemTextAppearanceActive="@style/TextAppearance.Hymnbook.BottomNav"
-            android:background="@android:color/white"
+            app:labelVisibilityMode="selected"
             app:menu="@menu/bottom_nav"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

@@ -94,4 +94,7 @@
     <string name="pref_key_enable_night_mode">night_mode_switch</string>
     <string name="pref_key_category_app_theme">pref_category_app_theme</string>
     <string name="pref_key_detail_font_size">detail_font_size</string>
+    <string name="title_more">More</string>
+    <string name="text_hymn_of_the_day">Hymn of the day</string>
+    <string name="text_share">Share</string>
 </resources>

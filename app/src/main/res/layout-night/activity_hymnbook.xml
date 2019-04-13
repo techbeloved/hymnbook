@@ -26,7 +26,7 @@
             android:layout_height="?actionBarSize"
             android:layout_gravity="bottom"
             app:itemBackground="?attr/colorSurface"
-            app:labelVisibilityMode="labeled"
+            app:labelVisibilityMode="auto"
             app:itemIconTint="@drawable/bottom_bar_selector"
             app:itemTextColor="@drawable/bottom_bar_selector"
             app:itemTextAppearanceInactive="@style/TextAppearance.Hymnbook.BottomNav.Deactivated"
