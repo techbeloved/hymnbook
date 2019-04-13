@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintlayout_quick_settings"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:paddingBottom="16dp"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="0dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        android:background="?colorSurface"
+        android:clickable="true"
+        android:focusable="true">
+
+        <Button
+            android:id="@+id/button_quick_settings_font_decrease"
+            style="@style/Widget.Hymnbook.Button"
+            android:layout_width="104dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
+            android:text="A"
+            android:textColor="?colorOnSurface"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/button_quick_settings_font_increase"
+            app:layout_constraintEnd_toStartOf="@+id/button_quick_settings_font_increase"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/button_quick_settings_font_increase" />
+
+        <Button
+            android:id="@+id/button_quick_settings_font_increase"
+            style="@style/Widget.Hymnbook.Button"
+            android:layout_width="104dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="A"
+            android:textColor="?colorOnSurface"
+            android:textSize="28sp"
+            app:layout_constraintBottom_toTopOf="@+id/radiogroup_quick_settings_theme_selector"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/button_quick_settings_font_decrease"
+            app:layout_constraintTop_toBottomOf="@+id/imageview_quick_settings_drag_arrow"
+            app:layout_constraintVertical_chainStyle="spread" />
+
+        <RadioGroup
+            android:id="@+id/radiogroup_quick_settings_theme_selector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/button_quick_settings_font_increase"
+            app:layout_constraintStart_toStartOf="@+id/button_quick_settings_font_decrease"
+            app:layout_constraintTop_toBottomOf="@+id/button_quick_settings_font_increase">
+
+            <com.techbeloved.hymnbook.customviews.CenteredRadioButton
+                android:id="@+id/radiobutton_quick_settings_light_theme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/bg_circle_white"
+                android:button="@drawable/selector_radio_button_black_tick" />
+
+            <com.techbeloved.hymnbook.customviews.CenteredRadioButton
+                android:id="@+id/radiobutton_quick_settings_dark_theme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/bg_circle_dark"
+                android:button="@drawable/selector_radio_button_white_tick" />
+        </RadioGroup>
+
+        <ImageView
+            android:id="@+id/imageview_quick_settings_drag_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_caret_arrow_down" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

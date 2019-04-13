@@ -12,7 +12,6 @@ import androidx.navigation.ui.NavigationUI
 import androidx.palette.graphics.Palette
 
 import com.techbeloved.hymnbook.R
-import com.techbeloved.hymnbook.SettingsActivity
 import com.techbeloved.hymnbook.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -53,17 +52,6 @@ class HomeFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.options_menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_settings -> {
-                val settingsIntent = Intent(activity, SettingsActivity::class.java)
-                startActivity(settingsIntent)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 
 }

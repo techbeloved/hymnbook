@@ -14,7 +14,8 @@ and subsequently help in autohiding the FAB on scroll-->
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:scrollbars="none">
             <TextView
                 android:id="@+id/textview_detail"
                 android:layout_width="match_parent"

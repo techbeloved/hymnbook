@@ -5,7 +5,7 @@
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
-        <item name="android:textColor">@color/primary_text</item>
+        <item name="android:textColorPrimary">@color/primary_text</item>
         <item name="android:textColorSecondary">@color/colorFadedText</item>
         <item name="android:colorBackground">@color/primary_white</item>
         <!--<item name="android:textColorPrimary">@color/primary_white</item>-->
@@ -105,5 +105,22 @@
         <item name="android:background">@color/colorSearchView</item>
         <item name="searchHintIcon">@null</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="Widget.Hymnbook.BottomSheet" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bg_bottom_sheet</item>
+    </style>
+
+    <style name="BaseBottomSheetDialog" parent="Theme.Design.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="bottomSheetStyle">@style/Widget.Hymnbook.BottomSheet</item>
+    </style>
+
+    <style name="BottomSheetDialogTheme" parent="BaseBottomSheetDialog" />
+
+    <style name="Widget.Hymnbook.Button" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="backgroundTint">?colorButtonNormal</item>
+        <item name="cornerRadius">0dp</item>
+        <item name="rippleColor">#7FEEEEEE</item>
     </style>
 </resources>

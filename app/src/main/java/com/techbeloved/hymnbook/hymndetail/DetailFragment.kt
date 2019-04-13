@@ -2,6 +2,9 @@ package com.techbeloved.hymnbook.hymndetail
 
 
 import android.os.Bundle
+import android.text.style.AbsoluteSizeSpan
+import android.text.style.RelativeSizeSpan
+import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,11 +12,18 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.preference.PreferenceManager
+import com.f2prateek.rx.preferences2.Preference
+import com.f2prateek.rx.preferences2.RxSharedPreferences
+import com.fueled.snippety.core.Truss
 
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.FragmentDetailBinding
 import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.usecases.Lce
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import xdroid.toaster.Toaster.toast
 
@@ -30,9 +40,10 @@ class DetailFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false)
         binding.lifecycleOwner = this
+        configureSettings()
 
         viewModel.hymnDetailLiveData.observe(this, Observer {
-            when(it) {
+            when (it) {
                 is Lce.Loading -> showProgressLoading(it.loading)
                 is Lce.Content -> showContentDetail(it.content)
                 is Lce.Error -> showContentError(it.error)
@@ -47,6 +58,36 @@ class DetailFragment : Fragment() {
             showContentError("No hymn index supplied")
         }
         return binding.root
+    }
+
+    private val disposables = CompositeDisposable()
+    private var currentTextSize: Float = 1.0f
+
+    private fun configureSettings() {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity)
+        val rxPreferences = RxSharedPreferences.create(sharedPreferences)
+
+        val defaultTextSize = resources.getInteger(R.integer.normal_detail_text_size).toFloat()
+        val fontSizePreference: Preference<Float> = rxPreferences.getFloat(
+                getString(R.string.pref_key_detail_font_size), defaultTextSize)
+
+        fontSizePreference.asObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ currentSize ->
+                    updateDetailTextSize(currentSize)
+                    currentTextSize = currentSize
+                }, { throwable ->
+                    Timber.w(throwable, "Some error occurred")
+                })
+                .run { disposables.add(this) }
+    }
+
+    private fun updateDetailTextSize(currentSize: Float) {
+        val calculatedSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, currentSize, resources.displayMetrics)
+        binding.textviewDetail.apply {
+            textSize = calculatedSize
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,6 +122,11 @@ class DetailFragment : Fragment() {
         val args = Bundle()
         args.putInt(ARG_HYMN_INDEX, hymnNo)
         this.arguments = args
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (!disposables.isDisposed) disposables.dispose()
     }
 
     companion object {

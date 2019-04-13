@@ -44,6 +44,7 @@
             android:paddingBottom="12dp"
             android:paddingTop="12dp"
             android:textSize="@dimen/list_item_text_size"
+            android:textColor="?colorOnSurface"
             android:text="@{item.title}"
             tools:text="To God be the Glory" />
     </LinearLayout>

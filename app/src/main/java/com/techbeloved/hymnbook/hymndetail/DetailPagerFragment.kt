@@ -2,11 +2,10 @@ package com.techbeloved.hymnbook.hymndetail
 
 
 import android.os.Bundle
-import android.view.GestureDetector
+import android.util.TypedValue
+import android.view.*
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
@@ -14,6 +13,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
+import androidx.preference.PreferenceManager
+import com.f2prateek.rx.preferences2.Preference
+import com.f2prateek.rx.preferences2.RxSharedPreferences
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.techbeloved.hymnbook.HymnbookViewModel
 
 import com.techbeloved.hymnbook.R
@@ -35,6 +39,7 @@ class DetailPagerFragment : Fragment() {
 
     private lateinit var viewModel: HymnPagerViewModel
     private lateinit var binding: FragmentDetailPagerBinding
+    private lateinit var quickSettingsSheet: BottomSheetBehavior<ConstraintLayout>
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -44,6 +49,22 @@ class DetailPagerFragment : Fragment() {
         setupImmersiveMode() // Immersive mode
 
         NavigationUI.setupWithNavController(binding.toolbarDetail, findNavController())
+        binding.toolbarDetail.inflateMenu(R.menu.detail)
+        binding.toolbarDetail.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.menu_detail_quick_settings -> {
+                    showQuickSettingsBottomSheet()
+                    true
+                }
+                else -> false
+
+            }
+        }
+
+        quickSettingsSheet = BottomSheetBehavior.from(
+                binding.bottomsheetQuickSettings.constraintlayoutQuickSettings)
+        setupQuickSettings()
+
 
         detailPagerAdapter = DetailPagerAdapter(childFragmentManager)
         binding.viewpagerHymnDetail.adapter = detailPagerAdapter
@@ -51,8 +72,55 @@ class DetailPagerFragment : Fragment() {
 
         val args = arguments?.let { DetailPagerFragmentArgs.fromBundle(it) }
         initialIndex = args?.hymnId ?: 1
-
         return binding.root
+    }
+
+    /**
+     * Configure the quick settings found in the bottomsheet
+     */
+    private fun setupQuickSettings() {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity)
+        val rxPreferences = RxSharedPreferences.create(sharedPreferences)
+        val defaultTextSize = resources.getInteger(R.integer.normal_detail_text_size).toFloat()
+        val fontSizePreference: Preference<Float> = rxPreferences.getFloat(
+                getString(R.string.pref_key_detail_font_size), defaultTextSize)
+
+        // Example, max_text_size = 6, maxIncrement = 6/20 = 0.3. So we cannot add more than 0.3 to original text size
+        val maxTextIncrement = resources.getInteger(R.integer.max_text_size)
+        val minTextIncrement = resources.getInteger(R.integer.min_text_size)
+        Timber.i("minTextSize: %s", minTextIncrement)
+
+        binding.bottomsheetQuickSettings.buttonQuickSettingsFontIncrease.setOnClickListener { v ->
+            val currentSize = fontSizePreference.get()
+            if (currentSize - defaultTextSize < maxTextIncrement) {
+                Timber.i("Current: %s", currentSize)
+                fontSizePreference.set(currentSize + 1f)
+            }
+        }
+
+        binding.bottomsheetQuickSettings.buttonQuickSettingsFontDecrease.setOnClickListener { v ->
+            val currentSize = fontSizePreference.get()
+            if (currentSize - defaultTextSize > minTextIncrement) {
+                fontSizePreference.set(currentSize - 1f)
+                Timber.i("Current: %s", currentSize)
+            }
+        }
+
+        // night Mode
+        val nightModePreference: Preference<Boolean> = rxPreferences.getBoolean(getString(R.string.pref_key_enable_night_mode), false)
+        val darkModeEnabled = nightModePreference.get()
+        if (darkModeEnabled) {
+            binding.bottomsheetQuickSettings.radiobuttonQuickSettingsDarkTheme.isChecked = true
+        } else {
+            binding.bottomsheetQuickSettings.radiobuttonQuickSettingsLightTheme.isChecked = true
+        }
+        binding.bottomsheetQuickSettings.radiogroupQuickSettingsThemeSelector.setOnCheckedChangeListener { group, checkedId ->
+            if (checkedId == R.id.radiobutton_quick_settings_dark_theme) {
+                nightModePreference.set(true)
+            } else if (checkedId == R.id.radiobutton_quick_settings_light_theme) {
+                nightModePreference.set(false)
+            }
+        }
     }
 
     private var initialIndex: Int = 1
@@ -203,4 +271,11 @@ class DetailPagerFragment : Fragment() {
         }
     }
 
+    private fun showQuickSettingsBottomSheet() {
+        //val quickSettingsFragment = QuickSettingsFragment()
+        //fragmentManager?.let { quickSettingsFragment.show(it, quickSettingsFragment.tag) }
+        if (quickSettingsSheet.state != BottomSheetBehavior.STATE_EXPANDED) {
+            quickSettingsSheet.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+    }
 }

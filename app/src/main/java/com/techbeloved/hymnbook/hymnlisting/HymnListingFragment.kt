@@ -25,7 +25,6 @@ import com.techbeloved.edittextwithsortby.FilterByEditText
 import com.techbeloved.edittextwithsortby.SortByEditText
 import com.techbeloved.hymnbook.HymnbookViewModel
 import com.techbeloved.hymnbook.R
-import com.techbeloved.hymnbook.SettingsActivity
 import com.techbeloved.hymnbook.databinding.FragmentSongListingBinding
 import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.hymndetail.BY_NUMBER
@@ -208,17 +207,6 @@ class HymnListingFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.options_menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_settings -> {
-                val settingsIntent = Intent(activity, SettingsActivity::class.java)
-                startActivity(settingsIntent)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 
 }
