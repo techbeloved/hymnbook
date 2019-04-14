@@ -54,21 +54,17 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.techbeloved.hymnbook.SettingsFragment"
-        android:label="SettingsFragment"/>
-    <fragment
         android:id="@+id/moreFragment"
         android:name="com.techbeloved.hymnbook.more.MoreFragment"
-        android:label="MoreFragment"
+        android:label="@string/title_more"
         tools:layout="@layout/fragment_more">
         <action
-            android:id="@+id/action_moreFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:launchSingleTop="true" />
+            android:id="@+id/action_moreFragment_to_settingsActivity"
+            app:destination="@id/settingsActivity" />
     </fragment>
+    <activity
+        android:id="@+id/settingsActivity"
+        android:name="com.techbeloved.hymnbook.SettingsActivity"
+        android:label="@string/action_settings"
+        tools:layout="@layout/activity_settings_main"/>
 </navigation>

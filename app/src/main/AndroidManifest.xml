@@ -13,7 +13,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SettingsActivity"></activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:parentActivityName=".HymnbookActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HymnbookActivity" />
+        </activity>
         <activity android:name=".HymnbookActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

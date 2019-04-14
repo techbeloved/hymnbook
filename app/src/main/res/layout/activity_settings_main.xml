@@ -1,31 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout android:id="@+id/coordinatorLayout_home"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".search.SearchFragment"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appbar_settings_main"
+    <data>
+
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinatorLayout_home"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar">
+        android:layout_height="match_parent"
+        tools:context=".search.SearchFragment">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_settings_main"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar_settings_main"
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:layout_scrollFlags="snap"
-            app:title="Settings" />
-    </com.google.android.material.appbar.AppBarLayout>
-   <FrameLayout
-       android:id="@+id/settingsContainer"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent"
-       android:background="?attr/colorSurface"
-       app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar">
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar_settings_main"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:layout_scrollFlags="snap"
+                app:title="Settings" />
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <fragment
+            android:id="@+id/settingsNavHostFrament"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:background="?attr/colorSurface"
+            app:navGraph="@navigation/settings"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

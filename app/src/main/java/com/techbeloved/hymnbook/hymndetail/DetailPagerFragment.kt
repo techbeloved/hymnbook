@@ -2,11 +2,13 @@ package com.techbeloved.hymnbook.hymndetail
 
 
 import android.os.Bundle
-import android.util.TypedValue
-import android.view.*
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.Fragment
+import android.view.GestureDetector
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.cardview.widget.CardView
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.Observer
@@ -17,15 +19,12 @@ import androidx.preference.PreferenceManager
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.techbeloved.hymnbook.HymnbookViewModel
-
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.FragmentDetailPagerBinding
 import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.usecases.Lce
 import com.techbeloved.hymnbook.utils.DepthPageTransformer
-import com.techbeloved.hymnbook.viewgroup.TouchableFrameWrapper
 import timber.log.Timber
 
 
@@ -39,7 +38,7 @@ class DetailPagerFragment : Fragment() {
 
     private lateinit var viewModel: HymnPagerViewModel
     private lateinit var binding: FragmentDetailPagerBinding
-    private lateinit var quickSettingsSheet: BottomSheetBehavior<ConstraintLayout>
+    private lateinit var quickSettingsSheet: BottomSheetBehavior<CardView>
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -62,7 +61,7 @@ class DetailPagerFragment : Fragment() {
         }
 
         quickSettingsSheet = BottomSheetBehavior.from(
-                binding.bottomsheetQuickSettings.constraintlayoutQuickSettings)
+                binding.bottomsheetQuickSettings.cardviewQuickSettings)
         setupQuickSettings()
 
 

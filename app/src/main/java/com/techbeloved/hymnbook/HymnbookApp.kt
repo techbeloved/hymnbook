@@ -2,6 +2,7 @@ package com.techbeloved.hymnbook
 
 import android.app.Application
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
@@ -72,19 +73,35 @@ class HymnbookApp : Application() {
         }
     }
 
+    private val disposables = CompositeDisposable()
     private fun setupNightMode() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         val rxPreferences = RxSharedPreferences.create(sharedPreferences)
 
         val nightModePreference: Preference<Boolean> = rxPreferences.getBoolean(getString(R.string.pref_key_enable_night_mode), false)
-        val enableNightMode = nightModePreference.get()
-        if (enableNightMode) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            nightModePreference.asObservable()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            { enabled ->
+                                val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+                                // If already in night mode, do nothing, and otherwise
+                                when (currentNightMode) {
+                                    Configuration.UI_MODE_NIGHT_NO -> {
+                                        if (enabled) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
+                                    }
+                                    Configuration.UI_MODE_NIGHT_YES, Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+                                        if (!enabled) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
+                                    }
+                                }
+                            },
+                            { throwable -> Timber.e(throwable, "Failed to toggle night mode") })
+                    .run { disposables.add(this) }
         }
 
     }

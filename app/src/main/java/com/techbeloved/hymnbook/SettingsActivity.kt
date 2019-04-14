@@ -2,64 +2,36 @@ package com.techbeloved.hymnbook
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
-import com.techbeloved.hymnbook.databinding.ActivityHymnbookBinding
+import com.techbeloved.hymnbook.databinding.ActivitySettingsMainBinding
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-class HymnbookActivity : AppCompatActivity() {
+class SettingsActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityHymnbookBinding
+    private lateinit var binding: ActivitySettingsMainBinding
     private lateinit var navController: NavController
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_hymnbook)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_settings_main)
         setupNightMode()
 
-        navController = findNavController(R.id.mainNavHostFragment)
+        navController = findNavController(R.id.settingsNavHostFrament)
 
-        binding.bottomNavigationMain.setupWithNavController(navController)
-        binding.bottomNavigationMain.setOnNavigationItemSelectedListener { item ->
-            if (navController.currentDestination?.id != item.itemId) {
-                item.onNavDestinationSelected(navController)
-                true
-            } else false
-        }
+        binding.toolbarSettingsMain.setupWithNavController(navController)
 
-        navController.addOnDestinationChangedListener { controller, destination, arguments ->
-            // Hide the bottom navigation in detail view
-            if (destination.id == R.id.detailPagerFragment) {
-                if (binding.bottomNavigationMain.isVisible) binding.bottomNavigationMain.visibility = View.INVISIBLE
-            } else {
-                if (!binding.bottomNavigationMain.isVisible) binding.bottomNavigationMain.visibility = View.VISIBLE
-            }
-        }
-    }
+        setSupportActionBar(binding.toolbarSettingsMain)
 
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.bottom_nav, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return (navController.currentDestination?.id != item.itemId && item.onNavDestinationSelected(navController))
-                || super.onOptionsItemSelected(item)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     private val disposables: CompositeDisposable = CompositeDisposable()
