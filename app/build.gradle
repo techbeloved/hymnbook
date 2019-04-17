@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: "androidx.navigation.safeargs.kotlin"
+apply plugin: 'com.google.gms.google-services'
 
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 
@@ -58,6 +59,7 @@ dependencies {
     implementation 'androidx.preference:preference:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0-alpha04'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
@@ -121,12 +123,12 @@ dependencies {
     implementation project(':edittextwithsortby')
 
     // Dagger
-    implementation 'com.google.dagger:dagger:2.21'
-    kapt 'com.google.dagger:dagger-compiler:2.21'
-    implementation 'com.google.dagger:dagger-android:2.21'
-    implementation 'com.google.dagger:dagger-android-support:2.21'
-    // if you use the support libraries
-    kapt 'com.google.dagger:dagger-android-processor:2.21'
+//    implementation 'com.google.dagger:dagger:2.21'
+//    kapt 'com.google.dagger:dagger-compiler:2.21'
+//    implementation 'com.google.dagger:dagger-android:2.21'
+//    implementation 'com.google.dagger:dagger-android-support:2.21'
+//    // if you use the support libraries
+//    kapt 'com.google.dagger:dagger-android-processor:2.21'
 
     // RxBinding
     implementation 'com.jakewharton.rxbinding3:rxbinding:3.0.0-alpha2'
@@ -135,6 +137,10 @@ dependencies {
     implementation 'com.jakewharton.rxbinding3:rxbinding-recyclerview:3.0.0-alpha2'
     implementation 'com.jakewharton.rxbinding3:rxbinding-viewpager:3.0.0-alpha2'
     implementation 'com.jakewharton.rxbinding3:rxbinding-material:3.0.0-alpha2'
+
+    // Firebase
+    implementation 'com.google.firebase:firebase-core:16.0.8'
+    implementation 'com.google.firebase:firebase-firestore:18.2.0'
 }
 repositories {
     mavenCentral()
