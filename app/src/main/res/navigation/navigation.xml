@@ -18,6 +18,9 @@
             app:launchSingleTop="true"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_homeFragment_to_sheetMusicListing"
+            app:destination="@id/sheetMusicListing" />
     </fragment>
     <fragment
         android:id="@+id/hymnListingFragment"
@@ -67,4 +70,9 @@
         android:name="com.techbeloved.hymnbook.SettingsActivity"
         android:label="@string/action_settings"
         tools:layout="@layout/activity_settings_main"/>
+    <fragment
+        android:id="@+id/sheetMusicListing"
+        android:name="com.techbeloved.hymnbook.sheetmusic.SheetMusicListingFragment"
+        android:label="Sheet Music"
+        tools:layout="@layout/fragment_song_listing"/>
 </navigation>

@@ -1,16 +1,14 @@
 package com.techbeloved.hymnbook.home
 
-import android.content.Intent
 import android.graphics.BitmapFactory
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.view.*
-import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.palette.graphics.Palette
-
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.FragmentHomeBinding
 
@@ -29,6 +27,10 @@ class HomeFragment : Fragment() {
         binding.cardviewHymns.setOnClickListener {
             findNavController()
                     .navigate(HomeFragmentDirections.actionHomeFragmentToHymnListingFragment())
+        }
+        binding.cardviewSheetMusic.setOnClickListener {
+            findNavController()
+                    .navigate(HomeFragmentDirections.actionHomeFragmentToSheetMusicListing())
         }
         NavigationUI.setupWithNavController(binding.toolbarHome, findNavController())
 

@@ -11,6 +11,7 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
+import com.google.firebase.FirebaseApp
 import com.techbeloved.hymnbook.data.model.Hymn
 import com.techbeloved.hymnbook.data.model.Topic
 import com.techbeloved.hymnbook.data.repo.local.HymnsDatabase
@@ -43,6 +44,8 @@ class HymnbookApp : Application() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
+
+        FirebaseApp.initializeApp(this)
 
         //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 

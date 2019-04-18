@@ -27,6 +27,7 @@ android {
         versionCode 5
         versionName "2.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -75,6 +76,8 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.2.8'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
     implementation 'com.f2prateek.rx.preferences2:rx-preferences:2.0.0'
+    implementation 'com.jakewharton.rxrelay2:rxrelay:2.1.0'
+
     def lifecycle_version = "2.1.0-alpha04"
     def room_version = "2.1.0-alpha06"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
@@ -141,6 +144,10 @@ dependencies {
     // Firebase
     implementation 'com.google.firebase:firebase-core:16.0.8'
     implementation 'com.google.firebase:firebase-firestore:18.2.0'
+
+    // Multidex
+    implementation 'com.android.support:multidex:1.0.3'
+
 }
 repositories {
     mavenCentral()

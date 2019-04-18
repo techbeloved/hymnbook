@@ -37,7 +37,7 @@
             tools:context=".home.HomeFragment">
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardview_children"
+                android:id="@+id/cardview_sheet_music"
                 android:layout_width="0dp"
                 android:layout_height="196dp"
                 android:layout_marginStart="8dp"
@@ -67,7 +67,7 @@
                         android:id="@+id/textView_category_children_label"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/label_children"
+                        android:text="@string/label_sheet_music"
                         android:textAlignment="center"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:textSize="18sp" />
