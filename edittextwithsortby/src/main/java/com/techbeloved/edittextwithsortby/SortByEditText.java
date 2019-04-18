@@ -7,8 +7,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import java.util.Timer;
-
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.res.ResourcesCompat;
 
@@ -72,7 +70,9 @@ public class SortByEditText extends AppCompatEditText {
 
                     if (event.getAction() == MotionEvent.ACTION_UP) {
                         Log.i(TAG, "actionUp: clicked sort icon");
-                        mSortByClickListener.onClick(view);
+                        if (mSortByClickListener != null) {
+                            mSortByClickListener.onClick(view);
+                        }
                         return true;
                     }
 
