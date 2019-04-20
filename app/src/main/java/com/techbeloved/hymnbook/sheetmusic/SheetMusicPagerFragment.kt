@@ -1,5 +1,4 @@
-package com.techbeloved.hymnbook.hymndetail
-
+package com.techbeloved.hymnbook.sheetmusic
 
 import android.os.Bundle
 import android.view.GestureDetector
@@ -12,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
@@ -22,28 +22,48 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.FragmentDetailPagerBinding
 import com.techbeloved.hymnbook.di.Injection
+import com.techbeloved.hymnbook.hymndetail.GestureListener
 import com.techbeloved.hymnbook.usecases.Lce
 import com.techbeloved.hymnbook.utils.DepthPageTransformer
 import timber.log.Timber
 
+class SheetMusicPagerFragment : Fragment() {
 
-private val CURRENT_ITEM_ID = "currentItemId"
-
-/**
- * A simple [Fragment] subclass.
- *
- */
-class DetailPagerFragment : Fragment() {
-
-    private lateinit var detailPagerAdapter: DetailPagerAdapter
-
-    private lateinit var viewModel: HymnPagerViewModel
     private lateinit var binding: FragmentDetailPagerBinding
+    private lateinit var viewModel: SheetMusicPagerViewModel
+    private lateinit var detailPagerAdapter: DetailPagerAdapter
     private lateinit var quickSettingsSheet: BottomSheetBehavior<CardView>
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // Restore current index
+        savedInstanceState?.let {
+            currentItemIndex = it.getInt(CURRENT_ITEM_ID, -1)
+        }
+
+        val args = arguments?.let { SheetMusicPagerFragmentArgs.fromBundle(it) }
+        initialIndex = args?.hymnId ?: 1
+
+        val factory: ViewModelProvider.Factory = SheetMusicPagerViewModel.Factory(Injection.provideOnlineRepo().value)
+        viewModel = ViewModelProviders.of(this, factory)[SheetMusicPagerViewModel::class.java]
+        viewModel.hymnIndicesLive.observe(this, Observer {
+            val indexToLoad = if (currentItemIndex != -1) currentItemIndex else initialIndex
+            when (it) {
+                is Lce.Loading -> showProgressLoading(it.loading)
+                is Lce.Content -> initializeViewPager(it.content, indexToLoad)
+                is Lce.Error -> showContentError(it.error)
+            }
+        })
+        viewModel.loadIndices()
+    }
+
+    private var initialIndex: Int = 1
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
+
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail_pager, container, false)
+
         binding.lifecycleOwner = this
 
         setupImmersiveMode() // Immersive mode
@@ -69,15 +89,33 @@ class DetailPagerFragment : Fragment() {
         detailPagerAdapter = DetailPagerAdapter(childFragmentManager)
         binding.viewpagerHymnDetail.adapter = detailPagerAdapter
         binding.viewpagerHymnDetail.setPageTransformer(true, DepthPageTransformer())
-
-        val args = arguments?.let { DetailPagerFragmentArgs.fromBundle(it) }
-        initialIndex = args?.hymnId ?: 1
         return binding.root
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt(CURRENT_ITEM_ID, currentItemIndex)
-        super.onSaveInstanceState(outState)
+    override fun onDestroy() {
+        super.onDestroy()
+        showStatusBar()
+    }
+
+    private fun showContentError(error: String) {
+        // TODO: Implement error screen and show it here
+    }
+
+    private fun initializeViewPager(hymnIndices: List<Int>, initialIndex: Int) {
+        Timber.i("Initializing viewPager with index: $initialIndex")
+        showProgressLoading(false)
+        detailPagerAdapter.submitList(hymnIndices)
+        // initialIndex represents the hymn number, where as the adapter uses a zero based index
+        // Which implies that when the indices is sorted by titles, the correct detail won't be shown.
+        // So we just need to find the index from the list of hymn indices
+
+        val indexToLoad = hymnIndices.indexOf(initialIndex)
+        binding.viewpagerHymnDetail.currentItem = indexToLoad
+    }
+
+    private fun showProgressLoading(loading: Boolean) {
+        //if (loading) binding.progressBarHymnDetailLoading.visibility = View.VISIBLE
+        //else binding.progressBarHymnDetailLoading.visibility = View.GONE
     }
 
     /**
@@ -128,58 +166,11 @@ class DetailPagerFragment : Fragment() {
         }
     }
 
-    private var initialIndex: Int = 1
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // Restore current index
-        savedInstanceState?.let {
-            currentItemIndex = it.getInt(CURRENT_ITEM_ID, -1)
-        }
-        val factory = HymnPagerViewModel.Factory(Injection.provideRepository().value)
-        viewModel = ViewModelProviders.of(this, factory).get(HymnPagerViewModel::class.java)
-        viewModel.hymnIndicesLiveData.observe(this, Observer {
-            val indexToLoad = if (currentItemIndex != -1) currentItemIndex else initialIndex
-            when (it) {
-                is Lce.Loading -> showProgressLoading(it.loading)
-                is Lce.Content -> initializeViewPager(it.content, indexToLoad)
-                is Lce.Error -> showContentError(it.error)
-            }
-        })
-
-        viewModel.loadHymnIndices()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        showStatusBar()
-    }
-
-    private fun showContentError(error: String) {
-        // TODO: Implement error screen and show it here
-    }
-
-    private fun initializeViewPager(hymnIndices: List<Int>, initialIndex: Int) {
-        Timber.i("Initializing viewPager with index: $initialIndex")
-        showProgressLoading(false)
-        detailPagerAdapter.submitList(hymnIndices)
-        // initialIndex represents the hymn number, where as the adapter uses a zero based index
-        // Which implies that when the indices is sorted by titles, the correct detail won't be shown.
-        // So we just need to find the index from the list of hymn indices
-
-        val indexToLoad = hymnIndices.indexOf(initialIndex)
-        binding.viewpagerHymnDetail.currentItem = indexToLoad
-    }
-
-    private fun showProgressLoading(loading: Boolean) {
-        //if (loading) binding.progressBarHymnDetailLoading.visibility = View.VISIBLE
-        //else binding.progressBarHymnDetailLoading.visibility = View.GONE
-    }
 
     inner class DetailPagerAdapter(private val fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
         private val hymnIndices = mutableListOf<Int>()
         override fun getItem(position: Int): Fragment {
-            val detailFragment = DetailFragment()
+            val detailFragment = SheetMusicDetailFragment()
             return if (position < hymnIndices.size) {
                 detailFragment.init(hymnIndices[position])
                 detailFragment
@@ -282,3 +273,5 @@ class DetailPagerFragment : Fragment() {
         }
     }
 }
+
+private const val CURRENT_ITEM_ID = "currentItemId"

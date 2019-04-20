@@ -72,7 +72,7 @@ class SearchFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val factory = SearchViewModel.Factory(Injection.provideRepository())
+        val factory = SearchViewModel.Factory(Injection.provideRepository().value)
         viewModel = ViewModelProviders.of(this, factory).get(SearchViewModel::class.java)
         viewModel.monitorSearch()
 

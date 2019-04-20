@@ -1,14 +1,12 @@
 package com.techbeloved.hymnbook.hymnlisting
 
 import android.app.Activity
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -18,11 +16,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
-import com.techbeloved.edittextwithsortby.FilterByEditText
-import com.techbeloved.edittextwithsortby.SortByEditText
 import com.techbeloved.hymnbook.HymnbookViewModel
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.FragmentSongListingBinding
@@ -154,7 +149,7 @@ class HymnListingFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun doInOnCreate() {
-        val factory = HymnListingViewModel.Factory(Injection.provideRepository())
+        val factory = HymnListingViewModel.Factory(Injection.provideRepository().value)
         viewModel = ViewModelProviders.of(this, factory).get(HymnListingViewModel::class.java)
 
         mainViewModel = ViewModelProviders.of(activity!!).get(HymnbookViewModel::class.java)

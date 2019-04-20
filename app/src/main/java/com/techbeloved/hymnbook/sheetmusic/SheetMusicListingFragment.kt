@@ -4,13 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.f2prateek.rx.preferences2.Preference
+import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.FragmentSongListingBinding
 import com.techbeloved.hymnbook.di.Injection
@@ -18,10 +21,14 @@ import com.techbeloved.hymnbook.hymnlisting.HymnItemModel
 import com.techbeloved.hymnbook.hymnlisting.HymnListAdapter
 import com.techbeloved.hymnbook.hymnlisting.TitleItem
 import com.techbeloved.hymnbook.usecases.Lce
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
 class SheetMusicListingFragment : Fragment() {
 
+    private val disposables: CompositeDisposable = CompositeDisposable()
     private lateinit var hymnListAdapter: HymnListAdapter
 
     private val clickListener = object : HymnItemModel.ClickListener<HymnItemModel> {
@@ -34,9 +41,35 @@ class SheetMusicListingFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val factory: ViewModelProvider.Factory =
-                SheetMusicListingViewModel.Factory(Injection.provideOnlineRepo().value)
+                SheetMusicListingViewModel.Factory(Injection.provideOnlineRepo().value, Injection.provideAppContext())
         viewModel = ViewModelProviders.of(this, factory)[SheetMusicListingViewModel::class.java]
         viewModel.loadHymnTitlesFromRepo()
+
+        shouldDownloadCatalogIfFirstStart()
+    }
+
+    private fun shouldDownloadCatalogIfFirstStart() {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity)
+        val rxPreferences = RxSharedPreferences.create(sharedPreferences)
+
+        val isFirstStart: Preference<Boolean> = rxPreferences.getBoolean(getString(R.string.pref_key_first_start), true)
+        isFirstStart.asObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ isFirst ->
+                    if (isFirst) {
+                        scheduleCatalogDownload()
+                    }
+                }, { Timber.w("Some error occurred")}).run { disposables.add(this) }
+    }
+
+    private fun scheduleCatalogDownload() {
+        viewModel.getLatestCatalogue()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (!disposables.isDisposed) disposables.dispose()
     }
 
     private lateinit var binding: FragmentSongListingBinding
@@ -49,6 +82,8 @@ class SheetMusicListingFragment : Fragment() {
             adapter = hymnListAdapter
             layoutManager = LinearLayoutManager(activity)
         }
+
+        binding.toolbarSongListing.setTitle(R.string.label_hymns)
 
         setupViewModel()
 
@@ -78,6 +113,6 @@ class SheetMusicListingFragment : Fragment() {
     }
 
     private fun navigateToHymnDetail(hymnId: Int) {
-        Toast.makeText(activity, "Item clicked: $hymnId", Toast.LENGTH_SHORT).show()
+        findNavController().navigate(SheetMusicListingFragmentDirections.actionSheetMusicListingToSheetMusicPagerFragment(hymnId))
     }
 }

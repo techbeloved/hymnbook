@@ -36,7 +36,6 @@ and subsequently help in autohiding the FAB on scroll-->
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"/>
-
         <ProgressBar
             android:id="@+id/progressBar_hymn_detail_loading"
             android:layout_width="wrap_content"

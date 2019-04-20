@@ -74,5 +74,18 @@
         android:id="@+id/sheetMusicListing"
         android:name="com.techbeloved.hymnbook.sheetmusic.SheetMusicListingFragment"
         android:label="Sheet Music"
-        tools:layout="@layout/fragment_song_listing"/>
+        tools:layout="@layout/fragment_song_listing">
+        <action
+            android:id="@+id/action_sheetMusicListing_to_sheetMusicPagerFragment"
+            app:destination="@id/sheetMusicPagerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/sheetMusicPagerFragment"
+        android:name="com.techbeloved.hymnbook.sheetmusic.SheetMusicPagerFragment"
+        android:label="SheetMusicPagerFragment" >
+        <argument
+            android:name="hymnId"
+            app:argType="integer"
+            android:defaultValue="1" />
+    </fragment>
 </navigation>

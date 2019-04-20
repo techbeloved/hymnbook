@@ -4,7 +4,6 @@ import android.app.Application
 import com.google.firebase.firestore.FirebaseFirestore
 import com.techbeloved.hymnbook.HymnbookApp
 import com.techbeloved.hymnbook.data.repo.FirebaseRepo
-import com.techbeloved.hymnbook.data.repo.HymnsRepository
 import com.techbeloved.hymnbook.data.repo.HymnsRepositoryImp
 import com.techbeloved.hymnbook.data.repo.OnlineRepo
 import java.util.concurrent.Executors
@@ -15,8 +14,8 @@ object Injection {
         return HymnbookApp.instance
     }
 
-    fun provideRepository(): HymnsRepository {
-        return HymnsRepositoryImp.getInstance(HymnbookApp.database)
+    fun provideRepository() = lazy{
+         HymnsRepositoryImp.getInstance(HymnbookApp.database)
     }
 
     fun provideOnlineRepo() = lazy<OnlineRepo> {
