@@ -8,6 +8,7 @@
         <item name="android:textColorPrimary">@color/primary_text</item>
         <item name="android:textColorSecondary">@color/colorFadedText</item>
         <item name="android:colorBackground">@color/primary_white</item>
+        <item name="colorOnPrimary">@android:color/white</item>
         <!--<item name="android:textColorPrimary">@color/primary_white</item>-->
         <!-- actionMode overlay -->
         <item name="windowActionModeOverlay">true</item>
