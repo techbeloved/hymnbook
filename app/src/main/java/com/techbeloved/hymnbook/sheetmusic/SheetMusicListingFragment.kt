@@ -41,7 +41,7 @@ class SheetMusicListingFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val factory: ViewModelProvider.Factory =
-                SheetMusicListingViewModel.Factory(Injection.provideOnlineRepo().value, Injection.provideAppContext())
+                SheetMusicListingViewModel.Factory(Injection.provideOnlineRepo().value, Injection.provideAppContext(), Injection.provideMediaAssetUseCases)
         viewModel = ViewModelProviders.of(this, factory)[SheetMusicListingViewModel::class.java]
         viewModel.loadHymnTitlesFromRepo()
 

@@ -9,6 +9,7 @@ import androidx.preference.PreferenceManager
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.techbeloved.hymnbook.R
+import com.techbeloved.hymnbook.data.MediaAssetUseCases
 import com.techbeloved.hymnbook.data.repo.OnlineHymn
 import com.techbeloved.hymnbook.data.repo.OnlineRepo
 import com.techbeloved.hymnbook.hymnlisting.TitleItem
@@ -19,7 +20,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
-class SheetMusicListingViewModel(private val repo: OnlineRepo, private val app: Application) : AndroidViewModel(app) {
+class SheetMusicListingViewModel(private val repo: OnlineRepo, private val app: Application, private val assetUseCases: MediaAssetUseCases) : AndroidViewModel(app) {
 
     private val disposables: CompositeDisposable = CompositeDisposable()
     private val hymnTitlesDataLce: MutableLiveData<Lce<List<TitleItem>>> = MutableLiveData()
@@ -42,6 +43,9 @@ class SheetMusicListingViewModel(private val repo: OnlineRepo, private val app: 
                 .subscribeOn(Schedulers.io())
                 .subscribe({ catalogUrl -> enqueueDownload(catalogUrl) }, { Timber.w(it) })
                 .run { disposables.add(this) }
+
+        assetUseCases.processMusicCatalog()
+
     }
 
     private fun enqueueDownload(catalogUrl: String) {
@@ -82,9 +86,9 @@ class SheetMusicListingViewModel(private val repo: OnlineRepo, private val app: 
         upstream.map { Lce.Content(it) }
     }
 
-    class Factory(private val repository: OnlineRepo, val app: Application) : ViewModelProvider.Factory {
+    class Factory(private val repository: OnlineRepo, private val app: Application, private val mediaAssetUseCase: MediaAssetUseCases) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return SheetMusicListingViewModel(repository, app) as T
+            return SheetMusicListingViewModel(repository, app, mediaAssetUseCase) as T
         }
 
     }

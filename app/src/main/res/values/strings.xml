@@ -105,4 +105,6 @@
     <string name="file_path_downloads">downloads</string>
     <string name="pref_key_hymn_catalog_ready">hymn_catalog_ready</string>
     <string name="pref_key_hymn_midi_files_ready">hymn_midi_files_ready</string>
+    <string name="pref_key_hymn_catalog_download_status">hymn_catalog_download_status</string>
+    <string name="pref_key_hymn_catalog_download_id">hymn_catalog_download_id</string>
 </resources>
