@@ -29,7 +29,7 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <fragment
-            android:id="@+id/settingsNavHostFrament"
+            android:id="@+id/settingsNavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:name="androidx.navigation.fragment.NavHostFragment"

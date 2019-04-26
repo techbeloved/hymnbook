@@ -5,7 +5,6 @@ import androidx.annotation.NonNull
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import com.techbeloved.hymnbook.data.model.Hymn
 import com.techbeloved.hymnbook.data.model.HymnDetail
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
 import com.techbeloved.hymnbook.usecases.Lce
@@ -16,17 +15,11 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.internal.schedulers.ExecutorScheduler
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.subscribers.TestSubscriber
-import org.hamcrest.CoreMatchers
-import org.hamcrest.CoreMatchers.*
 import org.junit.Before
-
-import org.junit.Assert.*
 import org.junit.BeforeClass
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import java.util.concurrent.Executor

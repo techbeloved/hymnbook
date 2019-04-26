@@ -5,14 +5,13 @@ import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.HymnListItemBinding
 
 class HymnListAdapterNoDiff(private val clickListener: HymnItemModel.ClickListener<HymnItemModel>)
     : RecyclerView.Adapter<HymnListAdapterNoDiff.ViewHolder>(), Filterable {
-    private val hymns: MutableList<HymnItemModel> = ArrayList<HymnItemModel>()
+    private val hymns: MutableList<HymnItemModel> = ArrayList()
 
     override fun getItemCount(): Int {
         return hymns.size
@@ -67,7 +66,7 @@ class HymnListAdapterNoDiff(private val clickListener: HymnItemModel.ClickListen
         notifyDataSetChanged()
     }
 
-    private val hymnList: MutableList<HymnItemModel> = ArrayList<HymnItemModel>()
+    private val hymnList: MutableList<HymnItemModel> = ArrayList()
 
     /**
      * Use to submit data to the adapter from fragment. This enables us to save the original list so we can run filtering on it

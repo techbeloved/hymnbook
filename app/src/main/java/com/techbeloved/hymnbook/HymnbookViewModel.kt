@@ -5,14 +5,10 @@ import androidx.lifecycle.ViewModel
 /**
  * A [ViewModel] shared by the fragments in order to update the main activity with their states, mostly the toolbar title
  */
-class HymnbookViewModel : ViewModel() {
-
-}
+class HymnbookViewModel : ViewModel()
 
 /**
  * Holds all the events that can happen on the screen. It is used to broadcast them to the screens that need them
  */
 sealed class Event {
-    data class Search(val query: String): Event()
-    data class Filter(val filterBy: Int): Event()
 }

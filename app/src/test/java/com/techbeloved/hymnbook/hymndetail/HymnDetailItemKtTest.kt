@@ -4,9 +4,8 @@ import com.techbeloved.hymnbook.data.model.Hymn
 import com.techbeloved.hymnbook.data.model.HymnDetail
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.equalTo
-import org.junit.Assert.*
+import org.junit.Assert.assertThat
 import org.junit.Test
-import org.junit.runner.RunWith
 
 class HymnDetailItemKtTest {
 

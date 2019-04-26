@@ -154,9 +154,8 @@ class HymnbookActivity : AppCompatActivity() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { enable ->
 
-                    val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
                     // If already in night mode, do nothing, and otherwise
-                    when (currentNightMode) {
+                    when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
                         Configuration.UI_MODE_NIGHT_NO -> {
                             if (enable) delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
@@ -175,6 +174,6 @@ class HymnbookActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         if (!disposables.isDisposed) disposables.dispose()
-        onDownloadComplete?.let { unregisterReceiver(it) }
+        unregisterReceiver(onDownloadComplete)
     }
 }

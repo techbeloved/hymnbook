@@ -5,9 +5,7 @@ import androidx.annotation.IntDef
 
 @IntDef(DOWNLOADED, DOWNLOAD_FAILED, DOWNLOAD_IN_PROGRESS, READY, NONE)
 @Retention(AnnotationRetention.SOURCE)
-annotation class CatalogStatus {
-
-}
+annotation class CatalogStatus
 
 const val DOWNLOADED = 10
 const val READY = 11

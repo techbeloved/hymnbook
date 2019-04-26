@@ -9,12 +9,10 @@ import com.techbeloved.hymnbook.data.repo.HymnsRepository
 import com.techbeloved.hymnbook.data.repo.HymnsRepositoryImp
 import com.techbeloved.hymnbook.data.repo.local.HymnDao
 import com.techbeloved.hymnbook.data.repo.local.HymnsDatabase
-import com.techbeloved.hymnbook.hymnlisting.HymnItemModel
 import com.techbeloved.hymnbook.usecases.Lce
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Rule
-
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock

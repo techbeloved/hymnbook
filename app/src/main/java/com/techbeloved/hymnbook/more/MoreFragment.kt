@@ -21,7 +21,7 @@ class MoreFragment : Fragment() {
         binding.textviewMoreSettings.setOnClickListener {
             findNavController().navigate(MoreFragmentDirections.actionMoreFragmentToSettingsActivity())
         }
-        binding.textviewMoreAbout.setOnClickListener { _ ->
+        binding.textviewMoreAbout.setOnClickListener {
             Snackbar.make(binding.coordinatorLayoutMore.rootView, "About hymnbook app", Snackbar.LENGTH_SHORT).show()
         }
 

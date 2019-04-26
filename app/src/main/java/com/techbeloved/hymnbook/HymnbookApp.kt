@@ -52,7 +52,7 @@ class HymnbookApp : Application() {
     }
 
     private fun buildDatabase(context: Context, executors: AppExecutors) {
-        HymnbookApp.database = Room.databaseBuilder(context,
+        database = Room.databaseBuilder(context,
                 HymnsDatabase::class.java, "hymns.db")
                 .addCallback(object : RoomDatabase.Callback() {
                     override fun onCreate(db: SupportSQLiteDatabase) {
@@ -60,7 +60,7 @@ class HymnbookApp : Application() {
                         executors.diskIO().execute {
                             val hymns: List<Hymn> = DataGenerator.generateHymns()
                             val topics = DataGenerator.generateTopics()
-                            insertInitialData(HymnbookApp.database, hymns, topics)
+                            insertInitialData(database, hymns, topics)
                         }
                     }
                 })

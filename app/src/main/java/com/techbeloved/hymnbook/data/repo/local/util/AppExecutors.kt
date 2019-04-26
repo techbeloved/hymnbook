@@ -8,8 +8,7 @@ import java.util.concurrent.Executors
 class AppExecutors private constructor(private val mDiskIO: Executor, private val mNetworkIO: Executor, private val mMainThread: Executor) {
 
     constructor() : this(Executors.newSingleThreadExecutor(), Executors.newFixedThreadPool(3),
-            MainThreadExecutor()) {
-    }
+            MainThreadExecutor())
 
     fun diskIO(): Executor {
         return mDiskIO

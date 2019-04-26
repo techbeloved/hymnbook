@@ -14,17 +14,17 @@ import io.reactivex.schedulers.Schedulers
 
 class HymnPagerViewModel(private val repository: HymnsRepository) : ViewModel() {
 
-    private val hymnIndicesLiveData_: MutableLiveData<Lce<List<Int>>> = MutableLiveData()
+    private val _hymnIndicesLiveData: MutableLiveData<Lce<List<Int>>> = MutableLiveData()
 
     val hymnIndicesLiveData: MutableLiveData<Lce<List<Int>>>
-        get() = hymnIndicesLiveData_
+        get() = _hymnIndicesLiveData
 
     private val indicesConsumer: Consumer<in Lce<List<Int>>>? = Consumer {
-        hymnIndicesLiveData_.value = it
+        _hymnIndicesLiveData.value = it
     }
 
     private val errorConsumer: Consumer<in Throwable>? = Consumer {
-        hymnIndicesLiveData_.value = Lce.Error("Failed to load indices of hymns")
+        _hymnIndicesLiveData.value = Lce.Error("Failed to load indices of hymns")
     }
 
     private val compositeDisposable = CompositeDisposable()

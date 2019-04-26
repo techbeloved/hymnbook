@@ -25,7 +25,7 @@ class SettingsActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_settings_main)
         setupNightMode()
 
-        navController = findNavController(R.id.settingsNavHostFrament)
+        navController = findNavController(R.id.settingsNavHostFragment)
 
         binding.toolbarSettingsMain.setupWithNavController(navController)
 
@@ -45,9 +45,8 @@ class SettingsActivity : AppCompatActivity() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { enable ->
 
-                    val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
                     // If already in night mode, do nothing, and otherwise
-                    when (currentNightMode) {
+                    when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
                         Configuration.UI_MODE_NIGHT_NO -> {
                             if (enable) delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 

@@ -109,13 +109,10 @@ class HymnListingFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
-        val itemId = item.itemId
-        if (itemId == R.id.action_sort_by_number) {
-            sortByPref.set(BY_NUMBER)
-        } else if (itemId == R.id.action_sort_by_title) {
-            sortByPref.set(BY_TITLE)
-        } else {
-            return false
+        when (item.itemId) {
+            R.id.action_sort_by_number -> sortByPref.set(BY_NUMBER)
+            R.id.action_sort_by_title -> sortByPref.set(BY_TITLE)
+            else -> return false
         }
         // Finally set checked the item
         item.isChecked = true

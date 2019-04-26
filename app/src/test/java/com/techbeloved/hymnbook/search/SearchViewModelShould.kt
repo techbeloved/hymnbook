@@ -1,15 +1,10 @@
 package com.techbeloved.hymnbook.search
 
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import com.techbeloved.hymnbook.data.model.Hymn
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
 import org.junit.Before
 import org.junit.Test
-
-import org.junit.Assert.*
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 

@@ -25,38 +25,6 @@
         <item name="android:windowSoftInputMode">adjustPan</item>
     </style>
 
-    <!--&lt;!&ndash; App bar style &ndash;&gt;-->
-    <!--<style name="MiwokAppBarStyle" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">-->
-    <!--&lt;!&ndash; Remove the shadow below the app bar &ndash;&gt;-->
-    <!--<item name="elevation">0dp</item>-->
-    <!--</style>-->
-
-    <!-- Style for a tab that displays a category name -->
-    <style name="CategoryTab" parent="Widget.Design.TabLayout">
-        <item name="tabBackground">@color/primary</item>
-        <item name="tabIndicatorColor">@android:color/white</item>
-        <item name="tabSelectedTextColor">@android:color/white</item>
-        <item name="tabTextAppearance">@style/CategoryTabTextAppearance</item>
-    </style>
-
-    <!-- Text appearance style for a category tab -->
-    <style name="CategoryTabTextAppearance" parent="TextAppearance.Design.Tab">
-        <!--<item name="android:textColor">@color/primary_light</item>-->
-    </style>
-
-
-    <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-        <!-- android:textColorPrimary is the color of the title text in the Toolbar  -->
-        <item name="android:textColorPrimary">@android:color/white</item>
-        <!-- Applies to views in their normal state. -->
-        <item name="colorControlNormal">@color/icons</item>
-
-        <!-- Enable these below if you want clicking icons to trigger a ripple effect -->
-        <!--
-        <item name="selectableItemBackground">?android:selectableItemBackground</item>
-        <item name="selectableItemBackgroundBorderless">?android:selectableItemBackground</item>
-        -->
-    </style>
 
     <style name="SelectableItemTheme">
         <item name="colorControlActivated">@color/primary_light</item>
@@ -66,31 +34,6 @@
     <style name="SelectableItemBackground">
         <item name="android:theme">@style/SelectableItemTheme</item>
         <item name="android:background">?android:activatedBackgroundIndicator</item>
-    </style>
-
-    <!--About Ministry styles-->
-    <style name="MinistryTextItemStyle">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:paddingTop">4dp</item>
-        <item name="android:paddingBottom">4dp</item>
-        <item name="android:paddingStart">16dp</item>
-        <item name="android:paddingEnd">8dp</item>
-        <item name="android:drawablePadding">16dp</item>
-        <item name="android:textSize">@dimen/settings_item_text_size</item>
-        <item name="android:fontFamily">@font/crimson_text</item>
-    </style>
-
-    <style name="MinistryTextHeaderStyle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingTop">16dp</item>
-        <item name="android:paddingBottom">4dp</item>
-        <item name="android:paddingStart">16dp</item>
-        <item name="android:paddingEnd">8dp</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:fontFamily">@font/cormorant_garamond</item>
-        <item name="android:textSize">@dimen/about_title_text_size</item>
     </style>
 
     <style name="TextAppearance.Hymnbook.BottomNav.Deactivated" parent="TextAppearance.MaterialComponents.Chip">
@@ -107,17 +50,6 @@
         <item name="searchHintIcon">@null</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
-
-    <style name="Widget.Hymnbook.BottomSheet" parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@drawable/bg_bottom_sheet</item>
-    </style>
-
-    <style name="BaseBottomSheetDialog" parent="Theme.Design.BottomSheetDialog">
-        <item name="android:windowIsFloating">false</item>
-        <item name="bottomSheetStyle">@style/Widget.Hymnbook.BottomSheet</item>
-    </style>
-
-    <style name="BottomSheetDialogTheme" parent="BaseBottomSheetDialog" />
 
     <style name="Widget.Hymnbook.Button" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="backgroundTint">?colorButtonNormal</item>

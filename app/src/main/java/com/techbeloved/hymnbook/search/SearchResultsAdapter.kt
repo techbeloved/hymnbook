@@ -9,7 +9,7 @@ import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.ItemSearchResultBinding
 import com.techbeloved.hymnbook.hymnlisting.HymnItemModel
 
-class SearchResultsAdapter(private val clickListener: HymnItemModel.ClickListener<HymnItemModel>) : ListAdapter<HymnItemModel, SearchResultsAdapter.ViewHolder>(HymnItemModel.diffCallback) {
+class SearchResultsAdapter(private val clickListener: HymnItemModel.ClickListener<HymnItemModel>) : ListAdapter<HymnItemModel, SearchResultsAdapter.ViewHolder>(HymnItemModel.HymnItemDiffCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
 

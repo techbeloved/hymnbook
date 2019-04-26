@@ -6,7 +6,6 @@ import com.techbeloved.hymnbook.HymnbookApp
 import com.techbeloved.hymnbook.data.model.Hymn
 import com.techbeloved.hymnbook.data.model.Topic
 import java.io.IOException
-import java.io.Serializable
 import java.nio.charset.Charset
 
 object DataGenerator {
@@ -14,8 +13,7 @@ object DataGenerator {
     fun generateHymns(): List<Hymn> {
         val typeOfHymnList = object : TypeToken<List<Hymn>>() {}.type
 
-        val hymns = GsonBuilder().create().fromJson<List<Hymn>>(loadHymnJsonFromAsset(), typeOfHymnList)
-        return hymns
+        return GsonBuilder().create().fromJson(loadHymnJsonFromAsset(), typeOfHymnList)
     }
 
     fun generateTopics(): List<Topic> {

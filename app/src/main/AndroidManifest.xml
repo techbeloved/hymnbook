@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.techbeloved.hymnbook">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".HymnbookApp"
@@ -12,7 +12,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
         <service
             android:name=".services.FileManagerService"
             android:exported="false"></service>
@@ -31,72 +32,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".hymns.MainActivity">
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value=".hymnsearch.SearchResultsActivity" />
-        </activity>
-        <activity
-            android:name=".hymndetail.HymnDetailActivity"
-            android:label="@string/title_activity_hymn_detail"
-            android:parentActivityName=".hymns.MainActivity"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".hymns.MainActivity" />
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value=".hymnsearch.SearchResultsActivity" />
 
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".hymns.TopicHymnListActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".hymns.MainActivity" />
-        </activity>
-        <activity
-            android:name=".hymnsearch.SearchResultsActivity"
-            android:launchMode="singleTop">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".hymns.MainActivity" />
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-        </activity>
-
-        <provider
-            android:name=".data.HymnProvider"
-            android:authorities="com.techbeloved.hymnbook"
-            android:exported="false" />
-
-        <service android:name=".services.AssetManagerService" />
-
-        <activity
-            android:name=".settings.SettingsActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName=".hymns.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".hymns.MainActivity" />
-        </activity>
-        <activity
-            android:name=".about.AboutActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName=".settings.SettingsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".settings.SettingsActivity" />
-        </activity>
-        <activity android:name=".about.AboutWccrmActivity" />
-        <activity android:name=".about.AcknowledgementsActivity" />
     </application>
 
 </manifest>

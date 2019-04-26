@@ -7,12 +7,12 @@
         android:title="@string/text_home_label"
         app:showAsAction="ifRoom"/>
     <!--TODO: replace this-->
-    <item android:id="@+id/topicsFragment"
+    <item
         android:enabled="false"
         android:title="@string/text_topics_label"
         android:icon="@drawable/ic_topics"
         app:showAsAction="ifRoom"/>
-    <item android:id="@+id/action_playlist"
+    <item
         android:enabled="false"
         android:title="@string/text_playlist_label"
         android:icon="@drawable/ic_queue_music_black_24dp"

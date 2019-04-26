@@ -27,7 +27,7 @@ import com.techbeloved.hymnbook.utils.DepthPageTransformer
 import timber.log.Timber
 
 
-private val CURRENT_ITEM_ID = "currentItemId"
+private const val CURRENT_ITEM_ID = "currentItemId"
 
 /**
  * A simple [Fragment] subclass.
@@ -176,7 +176,7 @@ class DetailPagerFragment : Fragment() {
         //else binding.progressBarHymnDetailLoading.visibility = View.GONE
     }
 
-    inner class DetailPagerAdapter(private val fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
+    inner class DetailPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
         private val hymnIndices = mutableListOf<Int>()
         override fun getItem(position: Int): Fragment {
             val detailFragment = DetailFragment()

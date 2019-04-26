@@ -7,7 +7,6 @@ import android.text.style.LeadingMarginSpan
 import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
 import android.util.TypedValue
-import androidx.annotation.ColorInt
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.*
 import com.fueled.snippety.core.Snippety
@@ -16,7 +15,6 @@ import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.data.model.HymnDetail
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
 import com.techbeloved.hymnbook.usecases.Lce
-import io.reactivex.Flowable
 import io.reactivex.FlowableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -82,18 +80,6 @@ class HymnDetailViewModel(private val app: Application, private val hymnReposito
     @VisibleForTesting
     fun getDetailUiState(): FlowableTransformer<HymnDetailItem, Lce<HymnDetailItem>> = FlowableTransformer { upstream ->
         upstream.map { Lce.Content(it) }
-    }
-
-    @VisibleForTesting
-    fun sendLoadingCompleteSignal() = FlowableTransformer<Lce<HymnDetailItem>, Lce<HymnDetailItem>> { upstream ->
-        upstream.flatMap { detailLce ->
-            when (detailLce) {
-                is Lce.Content -> {
-                    Flowable.just(detailLce, Lce.Loading(false))
-                }
-                else -> Flowable.just(detailLce)
-            }
-        }
     }
 
     /**

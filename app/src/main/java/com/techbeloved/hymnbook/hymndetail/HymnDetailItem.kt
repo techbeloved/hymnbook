@@ -1,10 +1,6 @@
 package com.techbeloved.hymnbook.hymndetail
 
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.TextUtils
 import com.techbeloved.hymnbook.data.model.HymnDetail
-import java.lang.StringBuilder
 
 data class HymnDetailItem(val num: Int, val title: String, val subtitle: String, val content: CharSequence)
 

@@ -9,20 +9,20 @@ import com.techbeloved.hymnbook.data.repo.HymnsRepository
 import com.techbeloved.hymnbook.hymndetail.BY_NUMBER
 import com.techbeloved.hymnbook.usecases.Lce
 import io.reactivex.Flowable
+import io.reactivex.Scheduler
+import io.reactivex.android.plugins.RxAndroidPlugins
+import io.reactivex.disposables.Disposable
+import io.reactivex.internal.schedulers.ExecutorScheduler
+import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.subscribers.TestSubscriber
 import org.junit.Before
+import org.junit.BeforeClass
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import io.reactivex.android.plugins.RxAndroidPlugins
-import io.reactivex.plugins.RxJavaPlugins
-import io.reactivex.internal.schedulers.ExecutorScheduler
-import io.reactivex.disposables.Disposable
-import io.reactivex.Scheduler
-import org.junit.BeforeClass
-import org.mockito.ArgumentMatchers.anyInt
 import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
 
@@ -88,7 +88,7 @@ class HymnListingViewModelShould {
     @Test
     fun getHymnTitleUiModels_from_hymn_titles() {
         // Setup
-        val hymnTitles = listOf<HymnTitle>(HymnTitle(1, "title1"), HymnTitle(2, "title2"))
+        val hymnTitles = listOf(HymnTitle(1, "title1"), HymnTitle(2, "title2"))
         val result = listOf(TitleItem(1, "title1"), TitleItem(2, "title2"))
 
         val titlesFlow = Flowable.just(hymnTitles)

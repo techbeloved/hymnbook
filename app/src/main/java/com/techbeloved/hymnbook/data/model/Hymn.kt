@@ -1,7 +1,10 @@
 package com.techbeloved.hymnbook.data.model
 
 import androidx.annotation.StringDef
-import androidx.room.*
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
@@ -33,9 +36,7 @@ data class Hymn(var id: String, @PrimaryKey var num: Int, var title: String, var
             this.mp3 = mp3
         }
 
-        constructor() {
-
-        }
+        constructor()
 
     }
 

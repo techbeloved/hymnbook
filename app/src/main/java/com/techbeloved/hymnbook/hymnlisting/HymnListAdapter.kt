@@ -11,7 +11,7 @@ import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.HymnListItemBinding
 
 class HymnListAdapter(private val clickListener: HymnItemModel.ClickListener<HymnItemModel>)
-    : ListAdapter<HymnItemModel, HymnListAdapter.ViewHolder>(HymnItemModel.diffCallback), Filterable {
+    : ListAdapter<HymnItemModel, HymnListAdapter.ViewHolder>(HymnItemModel.HymnItemDiffCallback), Filterable {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -52,7 +52,7 @@ class HymnListAdapter(private val clickListener: HymnItemModel.ClickListener<Hym
         }
     }
 
-    private val hymnList: MutableList<HymnItemModel> = ArrayList<HymnItemModel>()
+    private val hymnList: MutableList<HymnItemModel> = ArrayList()
 
     /**
      * Use to submit data to the adapter from fragment. This enables us to save the original list so we can run filtering on it
