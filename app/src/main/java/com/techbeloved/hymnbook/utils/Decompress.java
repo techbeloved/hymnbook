@@ -1,6 +1,7 @@
 package com.techbeloved.hymnbook.utils;
 
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -42,11 +43,15 @@ public class Decompress {
                     _dirChecker(ze.getName());
                 } else {
                     FileOutputStream fout = new FileOutputStream(_location + ze.getName());
-                    for (int c = zin.read(); c != -1; c = zin.read()) {
-                        fout.write(c);
+                    BufferedOutputStream bufout = new BufferedOutputStream(fout);
+                    byte[] buffer = new byte[1024];
+                    int n;
+                    while ((n = zin.read(buffer)) != -1) {
+                        bufout.write(buffer, 0, n);
                     }
 
                     zin.closeEntry();
+                    bufout.close();
                     fout.close();
                 }
 
