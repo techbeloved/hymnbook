@@ -1,9 +1,13 @@
 package com.techbeloved.hymnbook.di
 
 import android.app.Application
+import androidx.preference.PreferenceManager
+import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.techbeloved.hymnbook.HymnbookApp
+import com.techbeloved.hymnbook.data.SharedPreferencesRepo
+import com.techbeloved.hymnbook.data.SharedPreferencesRepoImp
 import com.techbeloved.hymnbook.data.download.Downloader
 import com.techbeloved.hymnbook.data.download.DownloaderImp
 import com.techbeloved.hymnbook.data.repo.FirebaseRepo
@@ -32,11 +36,20 @@ object Injection {
         FirebaseRepo(Executors.newSingleThreadExecutor(), FirebaseFirestore.getInstance(), WCCRM_HYMNS_COLLECTION)
     }
 
+    val provideSharePrefsRepo: SharedPreferencesRepo by lazy {
+        SharedPreferencesRepoImp(
+                RxSharedPreferences.create(PreferenceManager
+                        .getDefaultSharedPreferences(HymnbookApp.instance)),
+                HymnbookApp.instance.resources
+        )
+    }
+
     val provideHymnUsesCases: HymnUseCases by lazy {
         HymnsUseCasesImp(provideRepository().value,
                 provideOnlineRepo().value,
                 provideSchedulers,
-                provideDownloader)
+                provideDownloader,
+                provideSharePrefsRepo)
     }
 
     val provideDownloader: Downloader by lazy {

@@ -89,7 +89,7 @@ class SheetMusicDetailFragment : Fragment() {
                         .autoSpacing(false)
                         .pageSnap(true)
                         .enableAntialiasing(true)
-                        .nightMode(true)
+                        .nightMode(content.darkMode)
                         .enableDoubletap(true)
                         .load()
                 showProgress(show = false)
