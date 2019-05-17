@@ -69,9 +69,6 @@ class DetailPagerFragment : Fragment() {
         detailPagerAdapter = DetailPagerAdapter(childFragmentManager)
         binding.viewpagerHymnDetail.adapter = detailPagerAdapter
         binding.viewpagerHymnDetail.setPageTransformer(true, DepthPageTransformer())
-
-        val args = arguments?.let { DetailPagerFragmentArgs.fromBundle(it) }
-        initialIndex = args?.hymnId ?: 1
         return binding.root
     }
 
@@ -128,21 +125,25 @@ class DetailPagerFragment : Fragment() {
         }
     }
 
-    private var initialIndex: Int = 1
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Restore current index
-        savedInstanceState?.let {
-            currentItemIndex = it.getInt(CURRENT_ITEM_ID, -1)
+        if (savedInstanceState != null) {
+            currentItemIndex = savedInstanceState.getInt(CURRENT_ITEM_ID, 1)
+        } else {
+            val args = arguments?.let { DetailPagerFragmentArgs.fromBundle(it) }
+            currentItemIndex = args?.hymnId ?: 1
         }
         val factory = HymnPagerViewModel.Factory(Injection.provideRepository().value)
         viewModel = ViewModelProviders.of(this, factory).get(HymnPagerViewModel::class.java)
         viewModel.hymnIndicesLiveData.observe(this, Observer {
-            val indexToLoad = if (currentItemIndex != -1) currentItemIndex else initialIndex
+            val indexToLoad = currentItemIndex
             when (it) {
                 is Lce.Loading -> showProgressLoading(it.loading)
-                is Lce.Content -> initializeViewPager(it.content, indexToLoad)
+                is Lce.Content -> {
+                    initializeViewPager(it.content, indexToLoad)
+                    updateToolbarWithCurrentItem(indexToLoad)
+                }
                 is Lce.Error -> showContentError(it.error)
             }
         })
@@ -206,9 +207,8 @@ class DetailPagerFragment : Fragment() {
 
     }
 
-    private var currentItemIndex = -1
+    private var currentItemIndex = 1
     private fun updateToolbarWithCurrentItem(hymnIndex: Int) {
-        if (hymnIndex == currentItemIndex) return
         currentItemIndex = hymnIndex
         binding.toolbarDetail.title = "Hymn, $currentItemIndex"
     }

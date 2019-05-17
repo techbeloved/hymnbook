@@ -47,7 +47,7 @@ class DownloadServiceImp(val context: Context, val sharedPreferences: SharedPref
             val downloadId = downloadManager.enqueue(request)
 
             // Save download id in shared preferences
-            sharedPreferences.addCurrentDownloadId(downloadId.toString())
+            //sharedPreferences.addCurrentDownloadId(downloadId.toString())
 
             emitter.onNext(downloadId)
         }
