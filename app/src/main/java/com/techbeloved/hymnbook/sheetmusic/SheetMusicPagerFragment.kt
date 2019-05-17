@@ -38,27 +38,25 @@ class SheetMusicPagerFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         // Restore current index
-        savedInstanceState?.let {
-            currentItemIndex = it.getInt(CURRENT_ITEM_ID, -1)
+        if (savedInstanceState != null) {
+            currentItemIndex = savedInstanceState.getInt(CURRENT_ITEM_ID, 1)
+        } else {
+            val args = arguments?.let { SheetMusicPagerFragmentArgs.fromBundle(it) }
+            currentItemIndex = args?.hymnId ?: 1
         }
-
-        val args = arguments?.let { SheetMusicPagerFragmentArgs.fromBundle(it) }
-        initialIndex = args?.hymnId ?: 1
 
         val factory: ViewModelProvider.Factory = SheetMusicPagerViewModel.Factory(Injection.provideOnlineRepo().value)
         viewModel = ViewModelProviders.of(this, factory)[SheetMusicPagerViewModel::class.java]
         viewModel.hymnIndicesLive.observe(this, Observer {
-            val indexToLoad = if (currentItemIndex != -1) currentItemIndex else initialIndex
             when (it) {
                 is Lce.Loading -> showProgressLoading(it.loading)
-                is Lce.Content -> initializeViewPager(it.content, indexToLoad)
+                is Lce.Content -> initializeViewPager(it.content, currentItemIndex)
                 is Lce.Error -> showContentError(it.error)
             }
         })
         viewModel.loadIndices()
     }
 
-    private var initialIndex: Int = 1
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
 
@@ -92,6 +90,11 @@ class SheetMusicPagerFragment : Fragment() {
         return binding.root
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(CURRENT_ITEM_ID, currentItemIndex)
+        super.onSaveInstanceState(outState)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         showStatusBar()
@@ -111,6 +114,7 @@ class SheetMusicPagerFragment : Fragment() {
 
         val indexToLoad = hymnIndices.indexOf(initialIndex)
         binding.viewpagerHymnDetail.currentItem = indexToLoad
+        updateToolbarWithCurrentItem(initialIndex)
     }
 
     private fun showProgressLoading(loading: Boolean) {
@@ -199,7 +203,6 @@ class SheetMusicPagerFragment : Fragment() {
 
     private var currentItemIndex = -1
     private fun updateToolbarWithCurrentItem(hymnIndex: Int) {
-        if (hymnIndex == currentItemIndex) return
         currentItemIndex = hymnIndex
         binding.toolbarDetail.title = "Hymn, $currentItemIndex"
     }

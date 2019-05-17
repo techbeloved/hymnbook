@@ -13,10 +13,10 @@ interface DownloadService {
      *
      * @return download id to identify this particular download
      */
-    fun enqueueDownload(sourceUrl: String, destinationSubPath: String = "downloads/", showNotification: Boolean = true): Observable<Long>
+    fun enqueueDownload(sourceUrl: String, destinationFileName: String, destinationSubPath: String = "downloads/", showNotification: Boolean = true): Observable<Long>
 
     /**
-     * Returns the progress of the download given by the id
+     * Returns the progress in percentage of the download given by the id
      */
     fun downloadProgress(downloadId: Long): Observable<Long>
 
@@ -37,5 +37,9 @@ interface DownloadService {
     fun deleteAllDownloads(vararg ids: Long)
 
     fun downloadStatus(downloadId: Long): Observable<out DownloadStatus>
+
+    fun listenForCompletedDownloads(): Observable<out DownloadStatus.Success>
+
+    fun cancelDownloadReceivers()
 
 }

@@ -60,7 +60,7 @@ class HymnListingViewModelShould {
                 }
 
                 override fun createWorker(): Worker {
-                    return ExecutorScheduler.ExecutorWorker(Executor { it.run() })
+                    return ExecutorScheduler.ExecutorWorker(Executor { it.run() }, false)
                 }
             }
 

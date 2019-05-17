@@ -1,25 +1,19 @@
 package com.techbeloved.hymnbook.sheetmusic
 
-import android.app.Application
-import androidx.lifecycle.*
-import androidx.preference.PreferenceManager
-import com.f2prateek.rx.preferences2.RxSharedPreferences
-import com.techbeloved.hymnbook.R
-import com.techbeloved.hymnbook.data.repo.OnlineHymn
-import com.techbeloved.hymnbook.data.repo.OnlineRepo
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.techbeloved.hymnbook.usecases.Lce
 import io.reactivex.ObservableTransformer
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
-import java.io.File
 
-class SheetMusicDetailViewModel(private val repo: OnlineRepo, val app: Application) : AndroidViewModel(app) {
+class SheetMusicDetailViewModel(private val hymnUseCases: HymnUseCases) : ViewModel() {
     private var disposables: CompositeDisposable? = CompositeDisposable()
-    private val hymnDetailLce: MutableLiveData<Lce<OnlineHymn>> = MutableLiveData()
+    private val hymnDetailLce: MutableLiveData<Lce<SheetMusicState>> = MutableLiveData()
 
-    val hymnDetail: LiveData<Lce<OnlineHymn>>
+    val hymnDetail: LiveData<Lce<SheetMusicState>>
         get() = hymnDetailLce
 
     fun loadHymnDetail(hymnNo: Int) {
@@ -27,37 +21,17 @@ class SheetMusicDetailViewModel(private val repo: OnlineRepo, val app: Applicati
         disposables?.dispose()
         disposables = CompositeDisposable()
 
-
-        val preferences = PreferenceManager.getDefaultSharedPreferences(app)
-        val rxPreferences = RxSharedPreferences.create(preferences)
-        val hymnCatalogReadyPref = rxPreferences.getBoolean(app.getString(R.string.pref_key_hymn_catalog_ready), false)
-
-        hymnCatalogReadyPref.asObservable()
-                .filter { it } // Only Proceed when catalog has been downloaded and unzipped
-                .switchMap { repo.getHymnById(hymnNo) }
-                .compose(getLocalFilesUrls())
+        hymnUseCases.hymnSheetMusicDetail(hymnNo)
                 .compose(contentToLceMapper())
-                .startWith(Lce.Loading(true))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ hymnDetailLce.value = it }, { error ->
-                    Timber.w(error, "Error getting hymn detail")
-                    hymnDetailLce.value = Lce.Error("Error loading hymn detail! Touch to retry")
-                })
-                .run { disposables?.add(this) }
+                .distinctUntilChanged()
+                .subscribe({ state -> hymnDetailLce.value = state },
+                        { throwable ->
+                            Timber.w(throwable, "Error getting sheet music detail")
+                            hymnDetailLce.value = Lce.Error(throwable.localizedMessage)
+                        })
+                .run { disposables!!.add(this) }
     }
 
-
-    private fun getLocalFilesUrls(): ObservableTransformer<OnlineHymn, OnlineHymn> = ObservableTransformer { upstream ->
-        upstream.map { hymn ->
-            val localFileUrl = File(app.getExternalFilesDir(null), app.getString(R.string.file_path_catalogs) + "hymn_${hymn.id}.pdf")
-            if (localFileUrl.exists()) {
-                OnlineHymn(hymn.id, hymn.title, localFileUrl.absolutePath, isDownloaded = true)
-            } else {
-                OnlineHymn(hymn.id, hymn.title, hymn.sheetMusicUrl)
-            }
-        }
-    }
 
     private fun <T> contentToLceMapper(): ObservableTransformer<T, Lce<T>> = ObservableTransformer { upstream ->
         upstream.map { Lce.Content(it) }
@@ -69,9 +43,13 @@ class SheetMusicDetailViewModel(private val repo: OnlineRepo, val app: Applicati
         disposables = null
     }
 
-    class Factory(private val repository: OnlineRepo, private val application: Application) : ViewModelProvider.Factory {
+    fun download(hymnId: Int) {
+        hymnUseCases.downloadSheetMusic(hymnId)
+    }
+
+    class Factory(private val hymnUseCases: HymnUseCases) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return SheetMusicDetailViewModel(repository, application) as T
+            return SheetMusicDetailViewModel(hymnUseCases) as T
         }
 
     }

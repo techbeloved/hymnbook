@@ -1,33 +1,32 @@
 package com.techbeloved.hymnbook.sheetmusic
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.github.barteksc.pdfviewer.util.FitPolicy
 import com.techbeloved.hymnbook.R
-import com.techbeloved.hymnbook.data.repo.OnlineHymn
 import com.techbeloved.hymnbook.databinding.FragmentSheetMusicDetailBinding
 import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.usecases.Lce
-import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
+import java.io.File
 
 class SheetMusicDetailFragment : Fragment() {
 
-    private val disposables: CompositeDisposable = CompositeDisposable()
     private var hymnId: Int = 1
     private lateinit var binding: FragmentSheetMusicDetailBinding
     private lateinit var viewModel: SheetMusicDetailViewModel
 
-    private val hymnDetailObserver: Observer<Lce<OnlineHymn>> = Observer { hymnLce ->
+    private val hymnDetailObserver: Observer<Lce<SheetMusicState>> = Observer { hymnLce ->
         when (hymnLce) {
             is Lce.Loading -> showContentLoading(true)
-            is Lce.Error -> showError(hymnLce.error)
+            is Lce.Error -> showError(hymnLce.error, true)
             is Lce.Content -> showContentDetail(hymnLce.content)
         }
     }
@@ -36,11 +35,11 @@ class SheetMusicDetailFragment : Fragment() {
         super.onCreateView(inflater, container, savedInstanceState)
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_sheet_music_detail, container, false)
 
-        binding.textviewErrorLoadingDetail.setOnClickListener { v ->
-            loadHymnDetail(hymnId)
+        binding.textviewErrorLoadingDetail.setOnClickListener {
+            viewModel.download(hymnId)
         }
 
-        viewModel.hymnDetail.observe(this, hymnDetailObserver)
+        viewModel.hymnDetail.observe(viewLifecycleOwner, hymnDetailObserver)
 
 
         if (arguments != null && arguments?.containsKey(ARG_HYMN_INDEX) != null) {
@@ -61,30 +60,61 @@ class SheetMusicDetailFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val factory = SheetMusicDetailViewModel.Factory(Injection.provideOnlineRepo().value, Injection.provideAppContext())
+        val factory = SheetMusicDetailViewModel.Factory(Injection.provideHymnUsesCases)
         viewModel = ViewModelProviders.of(this, factory)[SheetMusicDetailViewModel::class.java]
     }
 
-    private fun showContentDetail(content: OnlineHymn) {
-        binding.pdfViewSheetMusicDetail.fromUri(Uri.parse(content.sheetMusicUrl))
-                .onError { error ->
-                    Timber.w(error, "Error loading document")
-                    showError("Error loading document. Tap to retry. ${error.message}")
-                }
-                .onPageError { page, t ->
-                    Timber.w(t, "Error loading page")
-                    showError("Error loading page. Tap to retry. ${t.message}")
-                }
-                .pageSnap(true)
-                .enableDoubletap(true)
-                .load()
+    private fun showContentDetail(content: SheetMusicState) {
+        Timber.i("$content")
+        showContentLoading(false)
+        showError(show = false) // Hide any error that might be there before
+        when (content) {
+            is SheetMusicState.NotDownloaded -> viewModel.download(content.id)
+            is SheetMusicState.DownloadFailed -> showError("Download failed. Tap to retry", true)
+            is SheetMusicState.Downloading -> {
+                showProgress(content.downloadProgress)
+            }
+            is SheetMusicState.Ready -> {
+                binding.pdfViewSheetMusicDetail.fromFile(File(content.localUri))
+                        .onError { error ->
+                            Timber.w(error, "Error loading document")
+                            showError("Error loading document. Tap to retry. ${error.message}", true)
+                        }
+                        .onPageError { page, t ->
+                            Timber.w(t, "Error loading page")
+                            showError("Error loading page. Tap to retry. ${t.message}", true)
+                        }
+                        .pageSnap(true)
+                        .pageFitPolicy(FitPolicy.WIDTH)
+                        .autoSpacing(false)
+                        .pageSnap(true)
+                        .enableAntialiasing(true)
+                        .nightMode(true)
+                        .enableDoubletap(true)
+                        .load()
+                showProgress(show = false)
+            }
+        }
+
     }
 
-    private fun showError(error: String, show: Boolean = true) {
+    private fun showProgress(progress: Int = 0, show: Boolean = true) {
+        if (show) {
+            if (!binding.progressBarSheetMusicDownloading.isVisible) binding.progressBarSheetMusicDownloading.visibility = View.VISIBLE
+            binding.progressBarSheetMusicDownloading.progress = progress
+        } else {
+            binding.progressBarSheetMusicDownloading.visibility = View.GONE
+        }
+    }
+
+    private fun showError(error: String = "", show: Boolean = false) {
+        Timber.w(error)
+        showProgress(show = false)
+        showContentLoading(false)
         if (show) {
             binding.textviewErrorLoadingDetail.text = error
             binding.textviewErrorLoadingDetail.visibility = View.VISIBLE
-        } else {
+        } else if (binding.textviewErrorLoadingDetail.isVisible) {
             binding.textviewErrorLoadingDetail.visibility = View.GONE
         }
     }

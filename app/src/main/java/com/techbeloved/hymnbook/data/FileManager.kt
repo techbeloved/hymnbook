@@ -27,4 +27,15 @@ interface FileManager {
      */
     fun copyFile(source: String, destination: String, newFileName: String = ""): Observable<Boolean>
 
+    /**
+     * Handles unzipping of the files. Actually, it should call an intent service to do it in the background
+     * It then monitors the status of the job maybe through a shared preference which is updated when the intent services completes its job
+     */
+    fun processDownloadZipFiles(vararg zipFiles: String): Observable<ProcessZipStatus>
+
+}
+
+sealed class ProcessZipStatus {
+    object Success : ProcessZipStatus()
+    data class Failure(val error: Throwable) : ProcessZipStatus()
 }

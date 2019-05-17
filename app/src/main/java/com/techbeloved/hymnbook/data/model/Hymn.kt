@@ -1,5 +1,6 @@
 package com.techbeloved.hymnbook.data.model
 
+import androidx.annotation.IntDef
 import androidx.annotation.StringDef
 import androidx.room.Embedded
 import androidx.room.Entity
@@ -19,12 +20,18 @@ data class Hymn(var id: String, @PrimaryKey var num: Int, var title: String, var
     var topicId: Int = 0
     @Embedded
     var audio: Audio? = null
-    @SerializedName("sheet_music")
-    var sheetMusic: String? = null
+
+    @Embedded
+    var sheetMusic: SheetMusic? = null
     @SerializedName("video")
     var videoUrl: String? = null
     @Embedded
     var attribution: Attribution? = null
+
+    data class SheetMusic(@Status val downloadStatus: Int,
+                          val downloadProgress: Int = 0,
+                          val remoteUri: String? = null,
+                          val localUri: String? = null)
 
     class Audio: Serializable {
         lateinit var midi: String
@@ -81,6 +88,11 @@ data class Hymn(var id: String, @PrimaryKey var num: Int, var title: String, var
         annotation class ColumnName
     }
 }
+
+@IntDef(DOWNLOADED, DOWNLOAD_IN_PROGRESS, DOWNLOAD_FAILED, NONE)
+@Retention(AnnotationRetention.SOURCE)
+annotation class Status
+
 
 /*
 {

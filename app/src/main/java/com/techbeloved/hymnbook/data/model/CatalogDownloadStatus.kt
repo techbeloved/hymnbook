@@ -10,25 +10,25 @@ sealed class CatalogDownloadStatus {
     /**
      * Downloaded but may not be processed yet
      */
-    object Downloaded : CatalogDownloadStatus()
+    data class Downloaded(val downloadId: Long, val downloadPath: String) : CatalogDownloadStatus()
 
     /**
      * @param progress is percentage downloaded
      */
-    data class DownloadInProgress(val progress: Double) : CatalogDownloadStatus()
+    data class DownloadInProgress(val downloadId: Long, val progress: Long = 0, val paused: Boolean = false) : CatalogDownloadStatus()
 
     /**
      * Download has been enqueued
      * @param downloadId id of the download
      */
-    data class DownloadEnqueued(val downloadId: Long): CatalogDownloadStatus()
+    //data class DownloadEnqueued(val downloadId: Long): CatalogDownloadStatus()
 
     /**
      * There is some kind of failure
      */
     data class Failure(val error: Throwable) : CatalogDownloadStatus()
 
-    data class Paused(val reason: String) : CatalogDownloadStatus()
+    //data class Paused(val reason: String) : CatalogDownloadStatus()
 
     /**
      * New update is available from the server

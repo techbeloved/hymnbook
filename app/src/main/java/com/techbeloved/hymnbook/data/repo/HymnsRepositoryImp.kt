@@ -10,8 +10,12 @@ import com.techbeloved.hymnbook.hymndetail.BY_NUMBER
 import com.techbeloved.hymnbook.hymndetail.BY_TITLE
 import com.techbeloved.hymnbook.hymndetail.SortBy
 import io.reactivex.Flowable
+import io.reactivex.Observable
 
 class HymnsRepositoryImp (private val hymnDatabase: HymnsDatabase) : HymnsRepository {
+    override fun loadHymnTitlesForIndices(indices: List<Int>): Observable<List<HymnTitle>> {
+        return hymnDatabase.hymnDao().getHymnTitlesForIndices(indices).toObservable()
+    }
 
     companion object: SingletonHolder<HymnsRepository, HymnsDatabase>(::HymnsRepositoryImp);
 
@@ -40,6 +44,19 @@ class HymnsRepositoryImp (private val hymnDatabase: HymnsDatabase) : HymnsReposi
             BY_TITLE -> hymnDatabase.hymnDao().getAllHymnTitlesSortedByTitles()
             else -> hymnDatabase.hymnDao().getAllHymnTitles()
         }
+    }
+
+    override fun updateHymnDownloadProgress(hymnId: Int, progress: Int, downloadStatus: Int) {
+        hymnDatabase.hymnDao().updateSheetMusicDownloadProgress(hymnId, downloadStatus, progress)
+    }
+
+    override fun updateHymnDownloadStatus(hymnId: Int,
+                                          progress: Int,
+                                          downloadStatus: Int,
+                                          remoteUri: String?,
+                                          localUri: String?) {
+
+        hymnDatabase.hymnDao().updateSheetMusicStatus(hymnId, remoteUri, localUri, downloadStatus, progress)
     }
 
 }

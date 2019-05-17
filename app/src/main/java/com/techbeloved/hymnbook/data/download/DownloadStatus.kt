@@ -7,18 +7,18 @@ sealed class DownloadStatus {
     /**
      * Download failed and will not be retried
      */
-    data class Failure(val reason: DownloadErrorReason) : DownloadStatus()
+    data class Failure(val reason: String) : DownloadStatus()
 
     /**
      * when the download has successfully completed.
      */
-    object Success : DownloadStatus()
+    data class Success(val downloadId: Long, val downloadPath: String) : DownloadStatus()
 
     /**
      * Download is ongoing
      * @param progress percentage progress
      */
-    data class Running(val progress: Double) : DownloadStatus()
+    data class Running(val progress: Long) : DownloadStatus()
 
     /**
      * when the download is waiting to start.
@@ -28,7 +28,7 @@ sealed class DownloadStatus {
     /**
      * when the download is waiting to retry or resume.
      */
-    data class Paused(val reason: DownloadPauseReason) : DownloadStatus()
+    data class Paused(val progress: Long) : DownloadStatus()
 }
 
 /**

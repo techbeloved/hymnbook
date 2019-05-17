@@ -4,7 +4,8 @@
     <data>
         <variable
             name="isLoading"
-            type="Boolean" />
+            type="boolean" />
+
         <import type="android.view.View" />
     </data>
 
@@ -29,9 +30,24 @@
             android:gravity="center"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
+            android:clickable="true"
+            android:focusable="true"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
             android:visibility="gone"
             tools:visibility="visible"
             tools:text="Error loading content. Tap to try again"/>
+
+        <ProgressBar
+            android:id="@+id/progressBar_sheet_music_downloading"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:indeterminate="false"
+            android:max="100"
+            android:visibility="gone"
+            tools:visibility="visible" />
     </FrameLayout>
 </layout>

@@ -48,16 +48,18 @@ class HymnbookActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
             // Hide the bottom navigation in detail view
-            if (destination.id == R.id.detailPagerFragment) {
-                if (binding.bottomNavigationMain.isVisible) binding.bottomNavigationMain.visibility = View.INVISIBLE
-            } else {
-                if (!binding.bottomNavigationMain.isVisible) binding.bottomNavigationMain.visibility = View.VISIBLE
+            when (destination.id) {
+                R.id.detailPagerFragment,
+                R.id.sheetMusicPagerFragment -> if (binding.bottomNavigationMain.isVisible) {
+                    binding.bottomNavigationMain.visibility = View.INVISIBLE
+                }
+                else -> if (!binding.bottomNavigationMain.isVisible) binding.bottomNavigationMain.visibility = View.VISIBLE
             }
         }
 
-        setupSharePreferences()
+        //setupSharePreferences()
 
-        checkIfAnyDownloadIsOngoing()
+        //checkIfAnyDownloadIsOngoing()
     }
 
     private fun setupSharePreferences() {
@@ -174,6 +176,6 @@ class HymnbookActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         if (!disposables.isDisposed) disposables.dispose()
-        unregisterReceiver(onDownloadComplete)
+        //unregisterReceiver(onDownloadComplete)
     }
 }
