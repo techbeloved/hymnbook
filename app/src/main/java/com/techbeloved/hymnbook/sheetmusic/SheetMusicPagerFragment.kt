@@ -128,30 +128,10 @@ class SheetMusicPagerFragment : Fragment() {
     private fun setupQuickSettings() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity)
         val rxPreferences = RxSharedPreferences.create(sharedPreferences)
-        val defaultTextSize = resources.getInteger(R.integer.normal_detail_text_size).toFloat()
-        val fontSizePreference: Preference<Float> = rxPreferences.getFloat(
-                getString(R.string.pref_key_detail_font_size), defaultTextSize)
 
-        // Example, max_text_size = 6, maxIncrement = 6/20 = 0.3. So we cannot add more than 0.3 to original text size
-        val maxTextIncrement = resources.getInteger(R.integer.max_text_size)
-        val minTextIncrement = resources.getInteger(R.integer.min_text_size)
-        Timber.i("minTextSize: %s", minTextIncrement)
-
-        binding.bottomsheetQuickSettings.buttonQuickSettingsFontIncrease.setOnClickListener { v ->
-            val currentSize = fontSizePreference.get()
-            if (currentSize - defaultTextSize < maxTextIncrement) {
-                Timber.i("Current: %s", currentSize)
-                fontSizePreference.set(currentSize + 1f)
-            }
-        }
-
-        binding.bottomsheetQuickSettings.buttonQuickSettingsFontDecrease.setOnClickListener { v ->
-            val currentSize = fontSizePreference.get()
-            if (currentSize - defaultTextSize > minTextIncrement) {
-                fontSizePreference.set(currentSize - 1f)
-                Timber.i("Current: %s", currentSize)
-            }
-        }
+        // We don't need this font size button here in sheet music
+        binding.bottomsheetQuickSettings.buttonQuickSettingsFontIncrease.isEnabled = false
+        binding.bottomsheetQuickSettings.buttonQuickSettingsFontDecrease.isEnabled = false
 
         // night Mode
         val nightModePreference: Preference<Boolean> = rxPreferences.getBoolean(getString(R.string.pref_key_enable_night_mode), false)

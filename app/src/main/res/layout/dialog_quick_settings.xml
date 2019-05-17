@@ -35,6 +35,7 @@
                 android:layout_width="104dp"
                 android:layout_height="0dp"
                 android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:text="A"
                 android:textColor="?colorOnSurface"
                 android:textSize="12sp"
@@ -79,8 +80,8 @@
                     android:id="@+id/radiobutton_quick_settings_light_theme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
+                    android:layout_marginLeft="@dimen/radio_button_widget_margin"
+                    android:layout_marginRight="@dimen/radio_button_widget_margin"
                     android:background="@drawable/bg_circle_white"
                     android:button="@drawable/selector_radio_button_black_tick" />
 
@@ -88,8 +89,8 @@
                     android:id="@+id/radiobutton_quick_settings_dark_theme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
+                    android:layout_marginLeft="@dimen/radio_button_widget_margin"
+                    android:layout_marginRight="@dimen/radio_button_widget_margin"
                     android:background="@drawable/bg_circle_dark"
                     android:button="@drawable/selector_radio_button_white_tick" />
             </RadioGroup>
@@ -101,6 +102,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
+                android:contentDescription="@string/description_bottom_sheet_drag_button"
                 android:src="@drawable/ic_caret_arrow_down"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

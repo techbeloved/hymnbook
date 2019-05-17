@@ -4,4 +4,7 @@
     <dimen name="list_item_text_size">22sp</dimen>
     <dimen name="text_hymn_text_size">24sp</dimen>
     <dimen name="text_hymnbook_large">28sp</dimen>
+    <dimen name="radio_button_widget_margin">24dp</dimen>
+
+    <integer name="normal_detail_text_size">16</integer>
 </resources>

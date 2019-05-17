@@ -4,6 +4,7 @@
     <dimen name="list_item_text_size">18sp</dimen>
     <dimen name="text_hymn_text_size">20sp</dimen>
     <dimen name="text_hymnbook_large">24sp</dimen>
+    <dimen name="radio_button_widget_margin">16dp</dimen>
 
     <integer name="max_text_size">6</integer>
     <integer name="min_text_size">-6</integer>
