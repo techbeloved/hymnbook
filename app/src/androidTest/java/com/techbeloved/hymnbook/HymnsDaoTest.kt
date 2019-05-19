@@ -189,12 +189,12 @@ class HymnsDaoTest {
         // Setup
         val searchQuery = "glo"
 
-        val searchResultSubscriber = TestSubscriber<List<HymnSearch>>()
+        val searchResultSubscriber = TestSubscriber<List<SearchResult>>()
         val expected = hymnList.filter {
             it.title.contains(searchQuery, true)
                     || it.verses[0].contains(searchQuery, true)
                     || it.chorus?.contains(searchQuery, true) ?: false
-        }.map { HymnSearch(it.title, it.verses, it.chorus) }
+        }.map { SearchResult(it.num, it.title, it.verses, it.chorus) }
 
         // Execute
         hymnDao.searchHymns(searchQuery).subscribe(searchResultSubscriber)

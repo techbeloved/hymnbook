@@ -18,4 +18,6 @@ interface HymnsRepository {
      * Update the hymn download status such as on successful downloda
      */
     fun updateHymnDownloadStatus(hymnId: Int, progress: Int, downloadStatus: Int, remoteUri: String?, localUri: String?)
+
+    fun updateHymnMidiPath(hymnId: Int, midiPath: String)
 }

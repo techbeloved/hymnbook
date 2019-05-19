@@ -4,11 +4,12 @@ import android.content.res.Resources
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.techbeloved.hymnbook.R
 import io.reactivex.Observable
+import io.reactivex.Single
 
 class SharedPreferencesRepoImp(private val rxPreferences: RxSharedPreferences,
                                private val resources: Resources) : SharedPreferencesRepo {
     override fun isFirstStart(): Observable<Boolean> {
-        val firstStartPref = rxPreferences.getBoolean(resources.getString(R.string.pref_key_first_start))
+        val firstStartPref = rxPreferences.getBoolean(resources.getString(R.string.pref_key_first_start), true)
         return firstStartPref.asObservable()
     }
 
@@ -46,4 +47,16 @@ class SharedPreferencesRepoImp(private val rxPreferences: RxSharedPreferences,
         val midiFilesReadyPref = rxPreferences.getBoolean(resources.getString(R.string.pref_key_hymn_midi_files_ready))
         midiFilesReadyPref.set(value)
     }
+
+    override fun midiArchiveVersion(version: Int) {
+        val midiArchiveVersionPref = rxPreferences.getInteger(resources.getString(R.string.pref_key_saved_midi_version))
+        midiArchiveVersionPref.set(version)
+    }
+
+    override fun midiArchiveVersion(): Single<Int> {
+        val midiArchiveVersionPref = rxPreferences.getInteger(resources.getString(R.string.pref_key_saved_midi_version), 0)
+        return midiArchiveVersionPref.asObservable().firstOrError()
+    }
 }
+
+const val DEFAULT_PREFERENCE_NAME = "hymnbook_preferences"

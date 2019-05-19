@@ -134,7 +134,7 @@ class DetailPagerFragment : Fragment() {
             val args = arguments?.let { DetailPagerFragmentArgs.fromBundle(it) }
             currentItemIndex = args?.hymnId ?: 1
         }
-        val factory = HymnPagerViewModel.Factory(Injection.provideRepository().value)
+        val factory = HymnPagerViewModel.Factory(Injection.provideRepository)
         viewModel = ViewModelProviders.of(this, factory).get(HymnPagerViewModel::class.java)
         viewModel.hymnIndicesLiveData.observe(this, Observer {
             val indexToLoad = currentItemIndex

@@ -45,7 +45,7 @@ class SheetMusicPagerFragment : Fragment() {
             currentItemIndex = args?.hymnId ?: 1
         }
 
-        val factory: ViewModelProvider.Factory = SheetMusicPagerViewModel.Factory(Injection.provideOnlineRepo().value)
+        val factory: ViewModelProvider.Factory = SheetMusicPagerViewModel.Factory(Injection.provideOnlineRepo)
         viewModel = ViewModelProviders.of(this, factory)[SheetMusicPagerViewModel::class.java]
         viewModel.hymnIndicesLive.observe(this, Observer {
             when (it) {

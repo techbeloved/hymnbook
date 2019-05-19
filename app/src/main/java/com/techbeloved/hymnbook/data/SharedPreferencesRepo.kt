@@ -1,6 +1,7 @@
 package com.techbeloved.hymnbook.data
 
 import io.reactivex.Observable
+import io.reactivex.Single
 
 interface SharedPreferencesRepo {
     /**
@@ -44,5 +45,14 @@ interface SharedPreferencesRepo {
      */
     fun updateMidiFilesReady(value: Boolean)
 
+    /**
+     * Returns the currently saved midi archive version. Can be used to check with online version to determine if new download is required
+     */
+    fun midiArchiveVersion(): Single<Int>
+
+    /**
+     * Use to save the latest midi archive version
+     */
+    fun midiArchiveVersion(version: Int)
 
 }

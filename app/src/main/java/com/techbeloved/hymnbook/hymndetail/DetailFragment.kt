@@ -89,7 +89,7 @@ class DetailFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val factory = HymnDetailViewModel.Factory(Injection.provideAppContext(),
-                Injection.provideRepository().value)
+                Injection.provideRepository)
         viewModel = ViewModelProviders.of(this, factory).get(HymnDetailViewModel::class.java)
     }
 

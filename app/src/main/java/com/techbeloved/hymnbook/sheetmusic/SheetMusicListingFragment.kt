@@ -36,7 +36,7 @@ class SheetMusicListingFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val factory: ViewModelProvider.Factory =
-                SheetMusicListingViewModel.Factory(Injection.provideHymnUsesCases, Injection.provideSchedulers)
+                SheetMusicListingViewModel.Factory(Injection.provideHymnListingUseCases, Injection.provideSchedulers)
         viewModel = ViewModelProviders.of(this, factory)[SheetMusicListingViewModel::class.java]
         viewModel.loadHymnTitlesFromRepo()
 

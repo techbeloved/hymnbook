@@ -1,6 +1,8 @@
 package com.techbeloved.hymnbook.data
 
 import io.reactivex.Observable
+import io.reactivex.Single
+import java.io.File
 
 interface FileManager {
 
@@ -10,13 +12,13 @@ interface FileManager {
      * @param destinationDir destination folder where the contents will be put
      * @return number of files in the archive
      */
-    fun unzipFile(source: String, destinationDir: String): Observable<Long>
+    fun unzipFile(source: String, destinationDir: String): Single<String>
 
     /**
      * Deletes all files in the given directory
      * @return number of files deleted
      */
-    fun deleteAllFilesInDir(dir: String): Observable<Long>
+    fun deleteAllFilesInDir(dir: File): Observable<Long>
 
     /**
      * Copy file from the specified source to the destination

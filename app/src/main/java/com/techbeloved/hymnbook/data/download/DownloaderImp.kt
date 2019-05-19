@@ -13,6 +13,7 @@ import com.techbeloved.hymnbook.data.repo.HymnsRepository
 import com.techbeloved.hymnbook.data.repo.OnlineRepo
 import com.techbeloved.hymnbook.utils.SchedulerProvider
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 import java.io.File
@@ -78,6 +79,22 @@ class DownloaderImp(private val storage: FirebaseStorage,
                 }).run { disposables.add(this) }
     }
 
+    override fun downloadFirebaseArchive(archivePath: String, destination: File): Single<String> {
+        return Single.create { emitter ->
+            val storageRef = storage.getReference(archivePath)
+            val downloadTask = storageRef.getFile(destination)
+                    .addOnSuccessListener { taskSnapshot ->
+                        if (!emitter.isDisposed) {
+                            emitter.onSuccess(destination.absolutePath)
+                        }
+                    }
+                    .addOnFailureListener { exception -> emitter.tryOnError(exception) }
+                    .addOnCanceledListener { emitter.tryOnError(Throwable("Download was canceled!")) }
+
+            emitter.setCancellable { downloadTask.cancel() }
+        }
+    }
+
     override fun clear() {
         if (!disposables.isDisposed) disposables.dispose()
         currentDownloads.clear()
@@ -110,6 +127,7 @@ class DownloaderImp(private val storage: FirebaseStorage,
             emitter.setCancellable { downloadTask.cancel() }
         }
     }
+
 
 }
 

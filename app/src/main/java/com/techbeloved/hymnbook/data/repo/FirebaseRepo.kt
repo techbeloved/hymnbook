@@ -8,6 +8,7 @@ import com.techbeloved.hymnbook.hymndetail.BY_TITLE
 import com.techbeloved.hymnbook.hymndetail.SortBy
 import io.reactivex.Observable
 import io.reactivex.Observable.create
+import timber.log.Timber
 import java.util.concurrent.ExecutorService
 
 
@@ -104,8 +105,9 @@ class FirebaseRepo(private val executor: ExecutorService,
                 if (firestoreException == null && querySnapshot != null) {
                     val latest = querySnapshot.documents.first { doc -> doc.id.contains("wccrm") }
                     val docUrl = latest?.get("url") as String?
-
-                    docUrl?.let { emitter.onNext(it) }
+                    if (!emitter.isDisposed) {
+                        docUrl?.let { emitter.onNext(it) }
+                    }
                 } else {
                     emitter.tryOnError(Throwable("Error getting catalog!", firestoreException))
                 }
@@ -115,4 +117,28 @@ class FirebaseRepo(private val executor: ExecutorService,
         }
     }
 
+    override fun latestMidiArchive(): Observable<OnlineMidi> {
+        return create { emitter ->
+            val midiArchiveRef = firestore.document(WCCRM_MIDI_ARCHIVE_DOC_REF)
+            val documentRegistration = midiArchiveRef.addSnapshotListener { snapshot, exception ->
+                if (exception == null && snapshot != null) {
+                    val midi = snapshot.toObject(OnlineMidi::class.java)
+                    Timber.i("Got something: %s", midi)
+                    if (!emitter.isDisposed) {
+                        midi?.let { emitter.onNext(it) }
+                        emitter.onComplete()
+                    }
+                } else if (snapshot == null) {
+                    emitter.tryOnError(Throwable("Nothing received from firebase! snapshot: $snapshot"))
+                } else {
+                    emitter.tryOnError(Throwable("Error getting midi archive!", exception))
+                }
+            }
+            emitter.setCancellable { documentRegistration.remove() }
+
+        }
+    }
+
 }
+
+const val WCCRM_MIDI_ARCHIVE_DOC_REF = "tunes/wccrm_midi"

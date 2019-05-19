@@ -18,7 +18,6 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
-import com.techbeloved.hymnbook.HymnbookViewModel
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.FragmentSongListingBinding
 import com.techbeloved.hymnbook.di.Injection
@@ -130,7 +129,6 @@ class HymnListingFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
     }
 
-    private lateinit var mainViewModel: HymnbookViewModel
     private val disposables = CompositeDisposable()
 
     private fun setupViewModel() {
@@ -146,10 +144,9 @@ class HymnListingFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun doInOnCreate() {
-        val factory = HymnListingViewModel.Factory(Injection.provideRepository().value)
+        val factory = HymnListingViewModel.Factory(Injection.provideRepository)
         viewModel = ViewModelProviders.of(this, factory).get(HymnListingViewModel::class.java)
 
-        mainViewModel = ViewModelProviders.of(activity!!).get(HymnbookViewModel::class.java)
         val disposable = sortByPref.asObservable().subscribe(
                 {
                     Timber.i("Current settings: %s", it)

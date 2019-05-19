@@ -6,15 +6,27 @@ import android.os.Looper
 import android.support.v4.os.ResultReceiver
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.services.FileManagerService
+import com.techbeloved.hymnbook.utils.Decompress
 import io.reactivex.Observable
+import io.reactivex.Single
 import java.io.File
 
 class FileManagerImp(val context: Context, val sharedPreferences: SharedPreferencesRepo) : FileManager {
-    override fun unzipFile(source: String, destinationDir: String): Observable<Long> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun unzipFile(source: String, destinationDir: String): Single<String> {
+        return Single.create { emitter ->
+            val destination = File(destinationDir)
+            destination.mkdir()
+            val decompress = Decompress(source, destination.absolutePath)
+            try {
+                decompress.unzip()
+                if (!emitter.isDisposed) emitter.onSuccess(destinationDir)
+            } catch (e: Exception) {
+                emitter.tryOnError(Throwable("Error unzipping files!", e))
+            }
+        }
     }
 
-    override fun deleteAllFilesInDir(dir: String): Observable<Long> {
+    override fun deleteAllFilesInDir(dir: File): Observable<Long> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

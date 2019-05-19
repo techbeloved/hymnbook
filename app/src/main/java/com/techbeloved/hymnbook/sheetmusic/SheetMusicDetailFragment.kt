@@ -60,7 +60,7 @@ class SheetMusicDetailFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val factory = SheetMusicDetailViewModel.Factory(Injection.provideHymnUsesCases)
+        val factory = SheetMusicDetailViewModel.Factory(Injection.provideHymnListingUseCases)
         viewModel = ViewModelProviders.of(this, factory)[SheetMusicDetailViewModel::class.java]
     }
 

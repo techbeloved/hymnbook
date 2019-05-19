@@ -59,4 +59,8 @@ class HymnsRepositoryImp (private val hymnDatabase: HymnsDatabase) : HymnsReposi
         hymnDatabase.hymnDao().updateSheetMusicStatus(hymnId, remoteUri, localUri, downloadStatus, progress)
     }
 
+    override fun updateHymnMidiPath(hymnId: Int, midiPath: String) {
+        hymnDatabase.hymnDao().updateHymnMidiPath(hymnId, midiPath)
+    }
+
 }

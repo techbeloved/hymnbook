@@ -69,4 +69,7 @@ interface HymnDao {
 
     @Query("SELECT hymns.num, hymns.title, hymns.verses, hymns.chorus FROM hymns JOIN hymnSearchFts ON (hymns.rowid = hymnSearchFts.docid) WHERE hymnSearchFts MATCH :query")
     fun searchHymns(query: String): Flowable<List<SearchResult>>
+
+    @Query("UPDATE hymns SET midi = :midiPath WHERE num = :hymnId")
+    fun updateHymnMidiPath(hymnId: Int, midiPath: String)
 }
