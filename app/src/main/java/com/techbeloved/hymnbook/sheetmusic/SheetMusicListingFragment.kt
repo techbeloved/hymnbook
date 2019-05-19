@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.FragmentSongListingBinding
@@ -53,14 +54,13 @@ class SheetMusicListingFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_song_listing, container, false)
+        NavigationUI.setupWithNavController(binding.toolbarSongListing, findNavController())
 
         hymnListAdapter = HymnListAdapter(clickListener)
         binding.recyclerviewSongList.apply {
             adapter = hymnListAdapter
             layoutManager = LinearLayoutManager(activity)
         }
-
-        binding.toolbarSongListing.setTitle(R.string.label_hymns)
 
         setupViewModel()
 

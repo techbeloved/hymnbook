@@ -29,4 +29,9 @@ interface HymnUseCases {
      * Downloads sheet music for a hymn given the id
      */
     fun downloadSheetMusic(hymnId: Int)
+
+    /**
+     * Should download new update if there is an update
+     */
+    fun shouldDownloadUpdatedSheetMusic(hymnId: Int): Observable<Boolean>
 }

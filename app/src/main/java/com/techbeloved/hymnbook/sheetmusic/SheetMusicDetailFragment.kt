@@ -41,6 +41,19 @@ class SheetMusicDetailFragment : Fragment() {
 
         viewModel.hymnDetail.observe(viewLifecycleOwner, hymnDetailObserver)
 
+        return binding.root
+    }
+
+    private fun loadHymnDetail(indexToBeLoaded: Int) {
+        viewModel.loadHymnDetail(indexToBeLoaded)
+        viewModel.checkForNewUpdate(indexToBeLoaded) // Check for update
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val factory = SheetMusicDetailViewModel.Factory(Injection.provideHymnListingUseCases)
+        viewModel = ViewModelProviders.of(this, factory)[SheetMusicDetailViewModel::class.java]
 
         if (arguments != null && arguments?.containsKey(ARG_HYMN_INDEX) != null) {
             val hymnIndexToBeLoaded = arguments!!.getInt(ARG_HYMN_INDEX)
@@ -50,18 +63,6 @@ class SheetMusicDetailFragment : Fragment() {
         } else {
             showError("No hymn index supplied")
         }
-        return binding.root
-    }
-
-    private fun loadHymnDetail(indexToBeLoaded: Int) {
-        viewModel.loadHymnDetail(indexToBeLoaded)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val factory = SheetMusicDetailViewModel.Factory(Injection.provideHymnListingUseCases)
-        viewModel = ViewModelProviders.of(this, factory)[SheetMusicDetailViewModel::class.java]
     }
 
     private fun showContentDetail(content: SheetMusicState) {

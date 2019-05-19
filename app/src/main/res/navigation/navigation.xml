@@ -82,7 +82,7 @@
     <fragment
         android:id="@+id/sheetMusicPagerFragment"
         android:name="com.techbeloved.hymnbook.sheetmusic.SheetMusicPagerFragment"
-        android:label="SheetMusicPagerFragment" >
+        android:label="Sheet Music">
         <argument
             android:name="hymnId"
             app:argType="integer"

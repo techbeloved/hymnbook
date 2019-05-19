@@ -10,16 +10,18 @@ import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 
 class SheetMusicDetailViewModel(private val hymnUseCases: HymnUseCases) : ViewModel() {
-    private var disposables: CompositeDisposable? = CompositeDisposable()
+    private var disposableLoadHymn: CompositeDisposable? = CompositeDisposable()
     private val hymnDetailLce: MutableLiveData<Lce<SheetMusicState>> = MutableLiveData()
+
+    private val disposables = CompositeDisposable()
 
     val hymnDetail: LiveData<Lce<SheetMusicState>>
         get() = hymnDetailLce
 
     fun loadHymnDetail(hymnNo: Int) {
         // We want to cancel previous subscriptions
-        disposables?.dispose()
-        disposables = CompositeDisposable()
+        disposableLoadHymn?.dispose()
+        disposableLoadHymn = CompositeDisposable()
 
         hymnUseCases.hymnSheetMusicDetail(hymnNo)
                 .compose(contentToLceMapper())
@@ -29,7 +31,17 @@ class SheetMusicDetailViewModel(private val hymnUseCases: HymnUseCases) : ViewMo
                             Timber.w(throwable, "Error getting sheet music detail")
                             hymnDetailLce.value = Lce.Error(throwable.localizedMessage)
                         })
-                .run { disposables!!.add(this) }
+                .run { disposableLoadHymn!!.add(this) }
+    }
+
+    fun checkForNewUpdate(hymnNo: Int) {
+        hymnUseCases.shouldDownloadUpdatedSheetMusic(hymnNo)
+                .subscribe({ updateAvailable ->
+                    if (updateAvailable) {
+                        hymnUseCases.downloadSheetMusic(hymnNo)
+                    }
+                }, { Timber.w(it, "Failed to get updates") })
+                .let { disposables.add(it) }
     }
 
 
@@ -39,8 +51,8 @@ class SheetMusicDetailViewModel(private val hymnUseCases: HymnUseCases) : ViewMo
 
     override fun onCleared() {
         super.onCleared()
-        disposables?.let { if (!it.isDisposed) it.dispose() }
-        disposables = null
+        disposableLoadHymn?.let { if (!it.isDisposed) it.dispose() }
+        disposableLoadHymn = null
     }
 
     fun download(hymnId: Int) {

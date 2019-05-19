@@ -53,6 +53,21 @@ class HymnsUseCasesImp(private val hymnsRepository: HymnsRepository,
         downloader.enqueueDownloadForHymn(hymnId)
     }
 
+    /**
+     * Returns true if music has been downloaded previously but the remote uri has changed
+     */
+    override fun shouldDownloadUpdatedSheetMusic(hymnId: Int): Observable<Boolean> {
+        return hymnsRepository.getHymnById(hymnId)
+                .toObservable()
+                .flatMap { hymn ->
+                    onlineRepo.getHymnById(hymnId)
+                            .map { onlineHymn ->
+                                (hymn.sheetMusic?.downloadStatus == READY)
+                                        && (hymn.sheetMusic?.remoteUri != onlineHymn.sheetMusicUrl)
+                            }
+                }.subscribeOn(schedulerProvider.io())
+    }
+
     private fun resolveSheetMusicState(): FlowableTransformer<Hymn, SheetMusicState> = FlowableTransformer { upstream ->
         upstream.map { hymn ->
             val sheetMusicState: SheetMusicState = hymn.sheetMusic?.let { sheetMusic ->
