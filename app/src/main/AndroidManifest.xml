@@ -16,7 +16,16 @@
         tools:ignore="GoogleAppIndexingWarning">
         <service
             android:name=".services.FileManagerService"
-            android:exported="false"></service>
+            android:exported="false" />
+
+        <service
+            android:name=".tunesplayback.TunesPlayerService"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.media.browse.MediaBrowserService" />
+            </intent-filter>
+        </service>
 
         <activity
             android:name=".SettingsActivity"
