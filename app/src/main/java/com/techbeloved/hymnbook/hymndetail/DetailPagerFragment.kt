@@ -22,6 +22,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.FragmentDetailPagerBinding
 import com.techbeloved.hymnbook.di.Injection
+import com.techbeloved.hymnbook.tunesplayback.isPlaying
 import com.techbeloved.hymnbook.usecases.Lce
 import com.techbeloved.hymnbook.utils.DepthPageTransformer
 import timber.log.Timber
@@ -65,6 +66,7 @@ class DetailPagerFragment : Fragment() {
                 binding.bottomsheetQuickSettings.cardviewQuickSettings)
         setupQuickSettings()
 
+        setupMediaPlaybackControls()
 
         detailPagerAdapter = DetailPagerAdapter(childFragmentManager)
         binding.viewpagerHymnDetail.adapter = detailPagerAdapter
@@ -75,6 +77,12 @@ class DetailPagerFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putInt(CURRENT_ITEM_ID, currentItemIndex)
         super.onSaveInstanceState(outState)
+    }
+
+    private fun setupMediaPlaybackControls() {
+        binding.bottomsheetQuickSettings.buttonPlay.setOnClickListener {
+            viewModel.playMedia(currentItemIndex.toString())
+        }
     }
 
     /**
@@ -134,7 +142,8 @@ class DetailPagerFragment : Fragment() {
             val args = arguments?.let { DetailPagerFragmentArgs.fromBundle(it) }
             currentItemIndex = args?.hymnId ?: 1
         }
-        val factory = HymnPagerViewModel.Factory(Injection.provideRepository)
+        val factory = HymnPagerViewModel.Factory(Injection.provideRepository,
+                Injection.provideMediaSessionConnection)
         viewModel = ViewModelProviders.of(this, factory).get(HymnPagerViewModel::class.java)
         viewModel.hymnIndicesLiveData.observe(this, Observer {
             val indexToLoad = currentItemIndex
@@ -149,6 +158,20 @@ class DetailPagerFragment : Fragment() {
         })
 
         viewModel.loadHymnIndices()
+
+        viewModel.playbackState.observe(this, Observer { playbackState ->
+            Timber.i("PlaybackState changed: %s", playbackState)
+            if (playbackState.isPlaying) {
+                binding.bottomsheetQuickSettings.buttonPlay.setText(R.string.pause)
+            } else {
+                binding.bottomsheetQuickSettings.buttonPlay.setText(R.string.play)
+            }
+        })
+
+        // Only enable play button when music service is connected
+        viewModel.isConnected.observe(this, Observer { connected ->
+            binding.bottomsheetQuickSettings.buttonPlay.isEnabled = connected
+        })
     }
 
     override fun onDestroy() {

@@ -48,4 +48,6 @@
     <string name="notification_pause">Pause</string>
     <string name="notification_channel">Now Playing</string>
     <string name="notification_channel_description">Shows what tune is playing in Hymnbook app</string>
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
 </resources>

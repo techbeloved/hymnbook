@@ -1,6 +1,7 @@
 package com.techbeloved.hymnbook.di
 
 import android.app.Application
+import android.content.ComponentName
 import androidx.preference.PreferenceManager
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -12,6 +13,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.techbeloved.hymnbook.HymnbookApp
 import com.techbeloved.hymnbook.HymnbookUseCases
 import com.techbeloved.hymnbook.HymnbookUseCasesImp
+import com.techbeloved.hymnbook.MediaSessionConnection
 import com.techbeloved.hymnbook.data.FileManager
 import com.techbeloved.hymnbook.data.FileManagerImp
 import com.techbeloved.hymnbook.data.SharedPreferencesRepo
@@ -29,6 +31,7 @@ import com.techbeloved.hymnbook.data.repo.local.util.AppExecutors
 import com.techbeloved.hymnbook.data.repo.local.util.DataGenerator
 import com.techbeloved.hymnbook.sheetmusic.HymnUseCases
 import com.techbeloved.hymnbook.sheetmusic.HymnsUseCasesImp
+import com.techbeloved.hymnbook.tunesplayback.TunesPlayerService
 import com.techbeloved.hymnbook.utils.SchedulerProvider
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -131,6 +134,11 @@ object Injection {
 
             override fun ui(): Scheduler = AndroidSchedulers.mainThread()
         }
+    }
+
+    val provideMediaSessionConnection: MediaSessionConnection by lazy {
+        MediaSessionConnection.getInstance(provideAppContext(),
+                ComponentName(provideAppContext(), TunesPlayerService::class.java))
     }
 
 
