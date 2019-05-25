@@ -36,7 +36,7 @@
                 android:layout_height="0dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
-                android:text="A"
+                android:text="@string/a_small_text"
                 android:textColor="?colorOnSurface"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="@+id/button_quick_settings_font_increase"
@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
-                android:text="A"
+                android:text="@string/a_big_text"
                 android:textColor="?colorOnSurface"
                 android:textSize="28sp"
                 app:layout_constraintBottom_toTopOf="@+id/radiogroup_quick_settings_theme_selector"
@@ -103,22 +103,9 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:contentDescription="@string/description_bottom_sheet_drag_button"
-                android:src="@drawable/ic_caret_arrow_down"
+                app:srcCompat="@drawable/ic_caret_arrow_down"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Button
-                android:id="@+id/button_play"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="64dp"
-                android:layout_marginRight="64dp"
-                android:layout_marginBottom="8dp"
-                android:text="Play"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
 

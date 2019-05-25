@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -50,6 +49,10 @@
             android:visibility="gone"
             app:layout_anchor="@id/viewpager_hymn_detail"
             app:layout_anchorGravity="center" />
+
+        <include
+            android:id="@+id/bottomsheet_play_controls"
+            layout="@layout/partial_bottom_play_controls" />
 
         <include
             android:id="@+id/bottomsheet_quick_settings"

@@ -50,4 +50,13 @@
     <string name="notification_channel_description">Shows what tune is playing in Hymnbook app</string>
     <string name="play">Play</string>
     <string name="pause">Pause</string>
+    <string name="playback_speed">%f\u00D7</string>
+    <string name="play_pause_description">Play Pause</string>
+    <string name="repeat_toggle_description">Repeat toggle</string>
+    <string name="previous_icon_description">Previous</string>
+    <string name="next_icon_description">Next</string>
+    <string name="a_big_text">A</string>
+    <string name="a_small_text">A</string>
+    <string name="tempo_1x">1×</string>
+    <string name="tempo_x">%1$f×</string>
 </resources>

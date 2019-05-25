@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="auto"
+        app:cardBackgroundColor="?colorSurface"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="8dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout_play_controls"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize">
+
+            <ImageView
+                android:id="@+id/imageView_controls_next"
+                android:layout_width="@dimen/width_play_controls_normal"
+                android:layout_height="@dimen/height_play_controls_normal"
+                android:background="@drawable/control_selector"
+                android:clickable="true"
+                android:contentDescription="@string/next_icon_description"
+                android:focusable="true"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView_controls_play_pause"
+                app:layout_constraintEnd_toStartOf="@+id/imageView_controls_repeat_toggle"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/imageView_controls_play_pause"
+                app:layout_constraintTop_toTopOf="@+id/imageView_controls_play_pause"
+                app:srcCompat="@drawable/ic_navigate_next" />
+
+            <ImageView
+                android:id="@+id/imageView_controls_previous"
+                android:layout_width="@dimen/width_play_controls_normal"
+                android:layout_height="@dimen/height_play_controls_normal"
+                android:background="@drawable/control_selector"
+                android:clickable="true"
+                android:contentDescription="@string/previous_icon_description"
+                android:focusable="true"
+                app:layout_constraintBottom_toBottomOf="@+id/text_controls_tempo"
+                app:layout_constraintEnd_toStartOf="@+id/imageView_controls_play_pause"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/text_controls_tempo"
+                app:layout_constraintTop_toTopOf="@+id/text_controls_tempo"
+                app:srcCompat="@drawable/ic_navigate_before" />
+
+            <ImageView
+                android:id="@+id/imageView_controls_repeat_toggle"
+                android:layout_width="@dimen/width_play_controls_normal"
+                android:layout_height="@dimen/height_play_controls_normal"
+                android:background="@drawable/control_selector"
+                android:clickable="true"
+                android:contentDescription="@string/repeat_toggle_description"
+                android:focusable="true"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView_controls_next"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/imageView_controls_next"
+                app:layout_constraintTop_toTopOf="@+id/imageView_controls_next"
+                app:srcCompat="@drawable/ic_times_all" />
+
+            <TextView
+                android:id="@+id/text_controls_tempo"
+                android:layout_width="@dimen/width_play_controls_normal"
+                android:layout_height="@dimen/height_play_controls_normal"
+                android:background="@drawable/control_selector"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="@string/tempo_1x"
+                android:textColor="?colorOnSurface"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/imageView_controls_previous"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.budiyev.android.circularprogressbar.CircularProgressBar
+                android:id="@+id/progressbar_controls_progress"
+                android:layout_width="@dimen/width_play_controls_progress"
+                android:layout_height="@dimen/height_play_controls_progress"
+                app:foregroundStrokeColor="?colorSecondaryVariant"
+                app:indeterminate="false"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView_controls_play_pause"
+                app:layout_constraintEnd_toEndOf="@+id/imageView_controls_play_pause"
+                app:layout_constraintStart_toStartOf="@+id/imageView_controls_play_pause"
+                app:layout_constraintTop_toTopOf="@+id/imageView_controls_play_pause"
+                tools:indeterminate="true" />
+
+            <ImageView
+                android:id="@+id/imageView_controls_play_pause"
+                android:layout_width="@dimen/width_play_controls_play_pause"
+                android:layout_height="@dimen/height_play_controls_play_pause"
+                android:background="@drawable/control_selector"
+                android:clickable="true"
+                android:contentDescription="@string/play_pause_description"
+                android:focusable="true"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView_controls_previous"
+                app:layout_constraintEnd_toStartOf="@+id/imageView_controls_next"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/imageView_controls_previous"
+                app:layout_constraintTop_toTopOf="@+id/imageView_controls_previous"
+                app:srcCompat="@drawable/ic_play" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+</layout>

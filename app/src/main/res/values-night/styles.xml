@@ -8,6 +8,7 @@
         <item name="android:textColorPrimary">@color/primary_white</item>
         <item name="android:textColorSecondary">@color/secondary_white</item>
         <item name="android:colorBackground">@android:color/black</item>
+        <item name="colorSecondaryVariant">@color/secondary_white</item>
 
         <!--<item name="android:textColorPrimary">@color/primary_white</item>-->
         <!-- actionMode overlay -->

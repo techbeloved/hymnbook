@@ -27,6 +27,8 @@ android {
         versionCode 5
         versionName "2.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        vectorDrawables.useSupportLibrary true
     }
     buildTypes {
         release {
@@ -177,6 +179,9 @@ dependencies {
     implementation "androidx.work:work-rxjava2:$work_version"
     // optional - Test helpers
     androidTestImplementation "androidx.work:work-testing:$work_version"
+
+    // Custom views
+    implementation 'com.budiyev.android:circular-progress-bar:1.2.2'
 }
 repositories {
     mavenCentral()

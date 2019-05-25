@@ -5,6 +5,13 @@
     <dimen name="text_hymn_text_size">24sp</dimen>
     <dimen name="text_hymnbook_large">28sp</dimen>
     <dimen name="radio_button_widget_margin">24dp</dimen>
+    <dimen name="width_play_controls_normal">48dp</dimen>
+    <dimen name="height_play_controls_normal">48dp</dimen>
+    <dimen name="height_play_controls_layout">80dp</dimen>
+    <dimen name="width_play_controls_progress">64dp</dimen>
+    <dimen name="height_play_controls_progress">64dp</dimen>
+    <dimen name="width_play_controls_play_pause">56dp</dimen>
+    <dimen name="height_play_controls_play_pause">56dp</dimen>
 
     <integer name="normal_detail_text_size">16</integer>
 </resources>

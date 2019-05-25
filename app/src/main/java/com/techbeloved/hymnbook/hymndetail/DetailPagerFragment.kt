@@ -80,7 +80,7 @@ class DetailPagerFragment : Fragment() {
     }
 
     private fun setupMediaPlaybackControls() {
-        binding.bottomsheetQuickSettings.buttonPlay.setOnClickListener {
+        binding.bottomsheetPlayControls.imageViewControlsPlayPause.setOnClickListener {
             viewModel.playMedia(currentItemIndex.toString())
         }
     }
@@ -162,15 +162,15 @@ class DetailPagerFragment : Fragment() {
         viewModel.playbackState.observe(this, Observer { playbackState ->
             Timber.i("PlaybackState changed: %s", playbackState)
             if (playbackState.isPlaying) {
-                binding.bottomsheetQuickSettings.buttonPlay.setText(R.string.pause)
+                // TODO
             } else {
-                binding.bottomsheetQuickSettings.buttonPlay.setText(R.string.play)
+                // TODO
             }
         })
 
         // Only enable play button when music service is connected
         viewModel.isConnected.observe(this, Observer { connected ->
-            binding.bottomsheetQuickSettings.buttonPlay.isEnabled = connected
+            // TODO
         })
     }
 
