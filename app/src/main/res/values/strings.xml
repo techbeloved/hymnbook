@@ -57,6 +57,22 @@
     <string name="next_icon_description">Next</string>
     <string name="a_big_text">A</string>
     <string name="a_small_text">A</string>
-    <string name="tempo_1x">1×</string>
+    <string name="tempo_1x">1.0×</string>
     <string name="tempo_x">%1$f×</string>
+    <string name="change_speed_text">Tempo: change playback speed</string>
+    <string name="tempo_05">0.5×</string>
+    <string name="tempo_15">1.5×</string>
+    <string name="tempo_10">1.0×</string>
+    <string name="pref_key_playback_rate">key_playback_rate</string>
+    <string name="pref_key_repeat_mode">key_repeat_mode</string>
+
+    <string-array name="tempo_values">
+        <item>0.5×</item>
+        <item>0.7×</item>
+        <item>0.9×</item>
+        <item>1.0×</item>
+        <item>1.1×</item>
+        <item>1.3×</item>
+        <item>1.5×</item>
+    </string-array>
 </resources>

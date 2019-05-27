@@ -1,11 +1,14 @@
 package com.techbeloved.hymnbook.hymndetail
 
 
+import android.os.Build
 import android.os.Bundle
 import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
+import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -19,9 +22,12 @@ import androidx.preference.PreferenceManager
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.techbeloved.hymnbook.R
+import com.techbeloved.hymnbook.databinding.DialogTempoSelectorBinding
 import com.techbeloved.hymnbook.databinding.FragmentDetailPagerBinding
 import com.techbeloved.hymnbook.di.Injection
+import com.techbeloved.hymnbook.tunesplayback.duration
 import com.techbeloved.hymnbook.tunesplayback.isPlaying
 import com.techbeloved.hymnbook.usecases.Lce
 import com.techbeloved.hymnbook.utils.DepthPageTransformer
@@ -46,6 +52,7 @@ class DetailPagerFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail_pager, container, false)
         binding.lifecycleOwner = this
+        binding.viewModel = viewModel
 
         setupImmersiveMode() // Immersive mode
 
@@ -79,11 +86,68 @@ class DetailPagerFragment : Fragment() {
         super.onSaveInstanceState(outState)
     }
 
+
     private fun setupMediaPlaybackControls() {
         binding.bottomsheetPlayControls.imageViewControlsPlayPause.setOnClickListener {
             viewModel.playMedia(currentItemIndex.toString())
         }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            setupTempoControls()
+        }
+
+        viewModel.mediaPosition.observe(viewLifecycleOwner, Observer { position ->
+            val currentPosition = if (position < 0) 0 else position
+            binding.bottomsheetPlayControls.progressbarControlsProgress.progress = currentPosition.toFloat()
+        })
+
+        viewModel.metadata.observe(viewLifecycleOwner, Observer { metadata ->
+            val duration = metadata.duration
+            if (duration > 0) {
+                binding.bottomsheetPlayControls.progressbarControlsProgress.maximum = duration.toFloat()
+            }
+        })
+
+
     }
+
+    @RequiresApi(23)
+    private fun setupTempoControls() {
+        val tempoDialog = BottomSheetDialog(requireActivity())
+        val tempoViewBinding: DialogTempoSelectorBinding = DataBindingUtil.inflate(layoutInflater, R.layout.dialog_tempo_selector, null, false)
+        tempoDialog.setContentView(tempoViewBinding.root)
+
+        viewModel.playbackTempo.observe(viewLifecycleOwner, Observer {
+            tempoViewBinding.seekBarTempoSelector.progress = it
+        })
+
+        tempoViewBinding.seekBarTempoSelector.setOnSeekBarChangeListener(
+                object : SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                        if (fromUser) {
+                            viewModel.saveTempo(progress)
+                        }
+                    }
+
+                    override fun onStartTrackingTouch(seekBar: SeekBar?) {
+
+                    }
+
+                    override fun onStopTrackingTouch(seekBar: SeekBar?) {
+
+                    }
+
+                }
+        )
+        binding.bottomsheetPlayControls.textControlsTempo.setOnClickListener {
+            tempoDialog.show()
+        }
+
+        viewModel.playbackRate.observe(viewLifecycleOwner, Observer { rate ->
+            binding.bottomsheetPlayControls.textControlsTempo.text = getString(R.string.tempo_x, rate)
+        })
+    }
+
 
     /**
      * Configure the quick settings found in the bottomsheet

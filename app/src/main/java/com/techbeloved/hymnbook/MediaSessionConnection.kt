@@ -9,9 +9,16 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.techbeloved.hymnbook.data.PlayerPreferences
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
-class MediaSessionConnection(context: Context, serviceComponent: ComponentName) {
+class MediaSessionConnection(context: Context, serviceComponent: ComponentName, private val playerPrefs: PlayerPreferences) {
+
+    private val _playbackRate = MutableLiveData<Float>(1.0f)
+    val playbackRate: LiveData<Float>
+        get() = _playbackRate
 
     private val _isConnected = MutableLiveData<Boolean>()
             .apply { postValue(false) }
@@ -40,6 +47,9 @@ class MediaSessionConnection(context: Context, serviceComponent: ComponentName) 
             mediaBrowserConnectionCallback, null
     ).apply { connect() }
     private lateinit var mediaController: MediaControllerCompat
+    // TODO: expose this if ever needed
+    private val controller: MediaControllerCompat
+        get() = mediaController
 
     fun subscribe(parentId: String, callback: MediaBrowserCompat.SubscriptionCallback) {
         mediaBrowser.subscribe(parentId, callback)
@@ -48,6 +58,12 @@ class MediaSessionConnection(context: Context, serviceComponent: ComponentName) 
     fun unsubscribe(parentId: String, callback: MediaBrowserCompat.SubscriptionCallback) {
         mediaBrowser.unsubscribe(parentId, callback)
     }
+
+    fun updatePlaybackRate(rate: Float) {
+        playerPrefs.savePlaybackRate(rate)
+    }
+
+    private var disposables: CompositeDisposable? = null
 
     private inner class MediaBrowserConnectionCallback(private val context: Context) :
             MediaBrowserCompat.ConnectionCallback() {
@@ -58,14 +74,22 @@ class MediaSessionConnection(context: Context, serviceComponent: ComponentName) 
             }
 
             _isConnected.postValue(true)
+
+            disposables = CompositeDisposable()
+            playerPrefs.playbackRate()
+                    .subscribeOn(Schedulers.io())
+                    .subscribe({ rate -> _playbackRate.postValue(rate) }, { Timber.w(it) })
+                    .let { disposables?.add(it) }
         }
 
         override fun onConnectionSuspended() {
             _isConnected.postValue(false)
+            disposables?.dispose()
         }
 
         override fun onConnectionFailed() {
             _isConnected.postValue(false)
+            disposables?.dispose()
         }
     }
 
@@ -95,9 +119,9 @@ class MediaSessionConnection(context: Context, serviceComponent: ComponentName) 
         @Volatile
         private var instance: MediaSessionConnection? = null
 
-        fun getInstance(context: Context, serviceComponent: ComponentName) =
+        fun getInstance(context: Context, serviceComponent: ComponentName, playerPrefs: PlayerPreferences) =
                 instance ?: synchronized(this) {
-                    instance ?: MediaSessionConnection(context, serviceComponent)
+                    instance ?: MediaSessionConnection(context, serviceComponent, playerPrefs)
                             .also { instance = it }
                 }
     }

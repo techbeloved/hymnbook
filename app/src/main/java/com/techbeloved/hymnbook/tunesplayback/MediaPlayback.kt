@@ -1,6 +1,8 @@
 package com.techbeloved.hymnbook.tunesplayback
 
+import android.os.Build
 import android.support.v4.media.MediaMetadataCompat
+import androidx.annotation.RequiresApi
 import io.reactivex.Maybe
 import io.reactivex.Observable
 
@@ -33,9 +35,17 @@ interface MediaPlayback {
     /**
      * Called upon to prepare the media player for playback
      * This must be called before onPlay, for initial playback setup
+     * Should return the duration of the media
      */
-    fun prepare(metadata: MediaMetadataCompat?): Maybe<Boolean>
+    fun prepare(metadata: MediaMetadataCompat?): Maybe<Int>
 
     fun playbackStatus(): Observable<PlaybackStatus>
 
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun setPlaybackSpeed(speed: Float)
+
+    fun currentPosition(): Long
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun playbackRate(): Float
 }

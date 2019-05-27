@@ -5,6 +5,10 @@
 
     <data>
 
+        <variable
+            name="viewModel"
+            type="com.techbeloved.hymnbook.hymndetail.HymnPagerViewModel" />
+
     </data>
 
     <androidx.cardview.widget.CardView
@@ -80,7 +84,8 @@
                 android:gravity="center"
                 android:text="@string/tempo_1x"
                 android:textColor="?colorOnSurface"
-                android:textSize="20sp"
+                android:textSize="16sp"
+                app:tooltipText="Playback Speed"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/imageView_controls_previous"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -107,6 +112,7 @@
                 android:clickable="true"
                 android:contentDescription="@string/play_pause_description"
                 android:focusable="true"
+                android:src="@{viewModel.isPlaying ? @drawable/ic_pause : @drawable/ic_play}"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView_controls_previous"
                 app:layout_constraintEnd_toStartOf="@+id/imageView_controls_next"
                 app:layout_constraintHorizontal_bias="0.5"

@@ -1,7 +1,10 @@
 package com.techbeloved.hymnbook.tunesplayback
 
 import android.media.MediaPlayer
+import android.media.PlaybackParams
+import android.os.Build
 import android.support.v4.media.MediaMetadataCompat
+import androidx.annotation.RequiresApi
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
@@ -35,7 +38,7 @@ class MediaPlayerAdapter : MediaPlayback {
         player?.setVolume(0.3f, 0.3f)
     }
 
-    override fun prepare(metadata: MediaMetadataCompat?): Maybe<Boolean> {
+    override fun prepare(metadata: MediaMetadataCompat?): Maybe<Int> {
         if (player == null) {
             player = MediaPlayer()
         } else {
@@ -53,9 +56,9 @@ class MediaPlayerAdapter : MediaPlayback {
                 if (metadata != null) {
                     player?.setDataSource(metadata.mediaUri.toString())
                     player?.prepare()
-                    emitter.onSuccess(true)
+                    emitter.onSuccess(player?.duration!!)
                 } else {
-                    emitter.onSuccess(false)
+                    emitter.onSuccess(0)
                 }
             } catch (e: Exception) {
                 when (e) {
@@ -74,5 +77,15 @@ class MediaPlayerAdapter : MediaPlayback {
         player?.release()
         player = null
     }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    override fun setPlaybackSpeed(speed: Float) {
+        player?.playbackParams = PlaybackParams().setSpeed(speed)
+    }
+
+    override fun currentPosition(): Long = player?.currentPosition?.toLong() ?: -1
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    override fun playbackRate(): Float = player?.playbackParams?.speed ?: 1.0f
 
 }

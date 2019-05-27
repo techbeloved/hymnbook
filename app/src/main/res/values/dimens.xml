@@ -12,6 +12,7 @@
     <dimen name="height_play_controls_progress">56dp</dimen>
     <dimen name="width_play_controls_play_pause">48dp</dimen>
     <dimen name="height_play_controls_play_pause">48dp</dimen>
+    <dimen name="width_play_controls_long">48dp</dimen>
 
     <integer name="max_text_size">6</integer>
     <integer name="min_text_size">-6</integer>

@@ -15,9 +15,11 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import androidx.annotation.StringDef
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.media.MediaBrowserServiceCompat
+import com.techbeloved.hymnbook.data.PlayerPreferences
 import com.techbeloved.hymnbook.di.Injection
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -36,6 +38,8 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
     private lateinit var notificationManager: NotificationManagerCompat
     private lateinit var notificationBuilder: NotificationBuilder
     private lateinit var playbackStateBuilder: PlaybackStateCompat.Builder
+
+    private lateinit var playbackPrefs: PlayerPreferences
 
     private var isForegroundService = false
 
@@ -83,6 +87,7 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
 
         playback = MediaPlayerAdapter()
 
+        playbackPrefs = Injection.providePlayerPrefs
 
         val disposable = playback.playbackStatus().subscribe(
                 { status ->
@@ -102,6 +107,20 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
         )
 
         disposables.add(disposable)
+
+        playbackPrefs.playbackRate()
+                .subscribe(
+                        { rate ->
+                            if (mediaSession.isActive) {
+
+                                val args = Bundle().apply {
+                                    putFloat(ARGS_PLAYBACK_RATE, rate)
+                                }
+                                mediaController.transportControls.sendCustomAction(ACTION_PLAYBACK_RATE, args)
+                            }
+                        }, { Timber.w(it) }
+                )
+                .let { disposables.add(it) }
 
     }
 
@@ -131,20 +150,26 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
     }
 
     private fun setMediaPlaybackState(state: Int) {
+        val playbackPosition = playback.currentPosition()
+        val playbackRate = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            playback.playbackRate()
+        } else {
+            1.0f
+        }
         when (state) {
             PlaybackStateCompat.STATE_PLAYING -> {
                 playbackStateBuilder.setActions(
                         PlaybackStateCompat.ACTION_PLAY_PAUSE
                                 or PlaybackStateCompat.ACTION_PAUSE
                 )
-                playbackStateBuilder.setState(state, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 1.0f)
+                playbackStateBuilder.setState(state, playbackPosition, playbackRate)
             }
             PlaybackStateCompat.STATE_PAUSED -> {
                 playbackStateBuilder.setActions(
                         PlaybackStateCompat.ACTION_PLAY_PAUSE
                                 or PlaybackStateCompat.ACTION_PLAY
                 )
-                playbackStateBuilder.setState(state, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0.0f)
+                playbackStateBuilder.setState(state, playbackPosition, playbackRate)
             }
             PlaybackStateCompat.STATE_STOPPED -> {
                 playbackStateBuilder.setState(state, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0.0f)
@@ -168,6 +193,8 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
         private var disposable: Disposable? = null
         private var allDisposables = CompositeDisposable()
 
+        private var playbackRate: Float = 1.0f
+
         override fun onPlayFromMediaId(mediaId: String?, extras: Bundle?) {
             //TODO: get the full media info or metadata using the media id,
             // Set the session metadata
@@ -188,15 +215,16 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
                         metadataBuilder.album = "Watchman Hymnbook"
 
                         val metadata = metadataBuilder.build()
-                        // Set the session metadata
-                        mediaSession.setMetadata(metadata)
-                        val prepared = try {
-                            playback.prepare(metadata).blockingGet(false)
+                        val preparedDuration = try {
+                            playback.prepare(metadata).blockingGet(0)
                         } catch (e: Exception) {
                             Timber.w(e, "MediaPlayer cannot play file")
-                            false
+                            0
                         }
-                        if (prepared) {
+                        if (preparedDuration > 0) {
+                            // Set the session metadata
+                            metadataBuilder.duration = preparedDuration.toLong()
+                            mediaSession.setMetadata(metadataBuilder.build())
                             onPlay()
                         }
                         disposable?.dispose()
@@ -213,6 +241,9 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
                 // Likewise noisy audio receiver and notification.
                 // We just have to set the correct state here, start the player and move on
                 setMediaPlaybackState(PlaybackStateCompat.STATE_PLAYING)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    playback.setPlaybackSpeed(playbackRate)
+                }
                 // Start player
                 playback.onPlay()
             }
@@ -233,6 +264,16 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
             mediaSession.isActive = false
             playback.onStop()
             if (!allDisposables.isDisposed) allDisposables.dispose()
+        }
+
+        override fun onCustomAction(action: String?, extras: Bundle?) {
+            if (action == ACTION_PLAYBACK_RATE) {
+                val playbackRate = extras?.getFloat(ARGS_PLAYBACK_RATE) ?: 1.0f
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    playback.setPlaybackSpeed(playbackRate)
+                }
+                this.playbackRate = playbackRate // Save in property
+            }
         }
 
 
@@ -398,3 +439,11 @@ private class BecomingNoisyReceiver(
         }
     }
 }
+
+@StringDef(ACTION_PLAYBACK_RATE)
+@Retention(AnnotationRetention.SOURCE)
+annotation class MediaAction
+
+const val ACTION_PLAYBACK_RATE = "playbackTempo"
+
+const val ARGS_PLAYBACK_RATE = "argsPlaybackRate"

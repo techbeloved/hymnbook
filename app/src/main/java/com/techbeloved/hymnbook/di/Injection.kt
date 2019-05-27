@@ -14,10 +14,7 @@ import com.techbeloved.hymnbook.HymnbookApp
 import com.techbeloved.hymnbook.HymnbookUseCases
 import com.techbeloved.hymnbook.HymnbookUseCasesImp
 import com.techbeloved.hymnbook.MediaSessionConnection
-import com.techbeloved.hymnbook.data.FileManager
-import com.techbeloved.hymnbook.data.FileManagerImp
-import com.techbeloved.hymnbook.data.SharedPreferencesRepo
-import com.techbeloved.hymnbook.data.SharedPreferencesRepoImp
+import com.techbeloved.hymnbook.data.*
 import com.techbeloved.hymnbook.data.download.Downloader
 import com.techbeloved.hymnbook.data.download.DownloaderImp
 import com.techbeloved.hymnbook.data.model.Hymn
@@ -138,7 +135,16 @@ object Injection {
 
     val provideMediaSessionConnection: MediaSessionConnection by lazy {
         MediaSessionConnection.getInstance(provideAppContext(),
-                ComponentName(provideAppContext(), TunesPlayerService::class.java))
+                ComponentName(provideAppContext(), TunesPlayerService::class.java),
+                providePlayerPrefs)
+    }
+
+    val providePlayerPrefs: PlayerPreferences by lazy {
+        PlayerPreferencesImp(
+                RxSharedPreferences.create(PreferenceManager
+                        .getDefaultSharedPreferences(HymnbookApp.instance)),
+                HymnbookApp.instance.resources
+        )
     }
 
 

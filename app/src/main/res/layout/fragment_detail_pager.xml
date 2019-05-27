@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
+
+        <variable
+            name="viewModel"
+            type="com.techbeloved.hymnbook.hymndetail.HymnPagerViewModel" />
 
     </data>
 
@@ -52,10 +57,11 @@
 
         <include
             android:id="@+id/bottomsheet_play_controls"
-            layout="@layout/partial_bottom_play_controls" />
+            layout="@layout/partial_bottom_play_controls"
+            bind:viewModel="@{viewModel}" />
 
         <include
             android:id="@+id/bottomsheet_quick_settings"
-            layout="@layout/dialog_quick_settings"/>
+            layout="@layout/dialog_quick_settings" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
