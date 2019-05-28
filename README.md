@@ -41,9 +41,8 @@ Some of the technologies used in this app include
 
 #### Sheet Music
 <p align="center">
-<a href="" target="_blank" alt="Sheet Music"><img src="screenshots/hymn_listing.png" width="40%"/></a>
+<a href="" target="_blank" alt="Sheet Music"><img src="screenshots/sheet_music.png" width="40%"/></a>
 </p>
-![Hymn Listing](screenshots/sheet_music.png)
 
 ### Aknowledgment
 Thanks be to Jesus my Saviour.
