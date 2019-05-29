@@ -34,8 +34,8 @@ data class Hymn(var id: String, @PrimaryKey var num: Int, var title: String, var
                           val localUri: String? = null)
 
     class Audio: Serializable {
-        lateinit var midi: String
-        lateinit var mp3: String
+        var midi: String? = null
+        var mp3: String? = null
 
         @Ignore
         constructor(midi: String, mp3: String) {

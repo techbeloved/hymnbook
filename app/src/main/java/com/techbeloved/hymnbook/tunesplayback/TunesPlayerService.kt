@@ -22,9 +22,9 @@ import androidx.media.MediaBrowserServiceCompat
 import com.techbeloved.hymnbook.data.PlayerPreferences
 import com.techbeloved.hymnbook.di.Injection
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.processors.PublishProcessor
 import timber.log.Timber
+import java.io.File
 
 class TunesPlayerService : MediaBrowserServiceCompat() {
 
@@ -91,13 +91,14 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
 
         val disposable = playback.playbackStatus().subscribe(
                 { status ->
-                    when (status) {
-                        is PlaybackStatus.PlaybackComplete -> {
-                            if (mediaSession.isActive) {
+                    if (mediaSession.isActive) {
+                        when (status) {
+
+                            is PlaybackStatus.PlaybackComplete -> {
                                 setMediaPlaybackState(PlaybackStateCompat.STATE_PAUSED)
                             }
+                            is PlaybackStatus.PlaybackError -> setMediaPlaybackState(PlaybackStateCompat.STATE_ERROR)
                         }
-                        is PlaybackStatus.PlaybackError -> TODO()
                     }
                 },
                 {
@@ -171,7 +172,7 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
                 )
                 playbackStateBuilder.setState(state, playbackPosition, playbackRate)
             }
-            PlaybackStateCompat.STATE_STOPPED -> {
+            else -> {
                 playbackStateBuilder.setState(state, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0.0f)
             }
         }
@@ -190,22 +191,33 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
 
         private var shouldPlayOnFocusGain: Boolean = false
 
-        private var disposable: Disposable? = null
         private var allDisposables = CompositeDisposable()
 
         private var playbackRate: Float = 1.0f
 
-        override fun onPlayFromMediaId(mediaId: String?, extras: Bundle?) {
-            //TODO: get the full media info or metadata using the media id,
-            // Set the session metadata
-            // Call player.prepare()
-            // onPrepared, call start or onPlay
-            if (disposable != null && !disposable!!.isDisposed) return
+        private val playFromMediaIdSubject = PublishProcessor.create<String>()
 
-            val hymnId = mediaId?.toInt() ?: 1
-            disposable = Injection.provideRepository.getHymnById(hymnId)
-                    .subscribeOn(Schedulers.io())
+        init {
+            playFromMediaIdSubject.switchMap { mediaId ->
+                Injection.provideRepository.getHymnById(mediaId.toInt())
+            }
                     .subscribe({ hymn ->
+                        // Check that the hymn is playable.
+                        if (hymn.audio?.midi.isNullOrBlank()
+                                && hymn.audio?.mp3.isNullOrBlank()) {
+                            // Let the client know that there's an error.
+                            mediaSession.sendSessionEvent(EVENT_PLAYABLE_MEDIA_NOT_AVAILABLE,
+                                    Bundle().apply { putInt(EXTRA_HYMN_ID, hymn.num) })
+                            return@subscribe
+                        }
+
+                        val mp3 = hymn.audio?.mp3
+                        val midi = hymn?.audio?.midi
+                        if (!File(midi).exists() && !File(mp3).exists()) {
+                            mediaSession.sendSessionEvent(EVENT_MEDIA_FILE_NOT_FOUND,
+                                    Bundle().apply { putInt(EXTRA_HYMN_ID, hymn.num) })
+                            return@subscribe
+                        }
                         // Create the metadata
                         metadataBuilder.id = hymn.num.toString()
                         metadataBuilder.title = hymn.title
@@ -227,9 +239,13 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
                             mediaSession.setMetadata(metadataBuilder.build())
                             onPlay()
                         }
-                        disposable?.dispose()
 
-                    }, { Timber.w(it, "Error getting hymn of id: %s", hymnId) })
+                    }, { Timber.w(it, "Error getting hymn") })
+                    .let { disposables.add(it) }
+        }
+
+        override fun onPlayFromMediaId(mediaId: String?, extras: Bundle?) {
+            playFromMediaIdSubject.onNext(mediaId!!)
         }
 
 
@@ -240,19 +256,19 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
                 // Start service is handled in controller callback which is triggered when set state is called on session
                 // Likewise noisy audio receiver and notification.
                 // We just have to set the correct state here, start the player and move on
-                setMediaPlaybackState(PlaybackStateCompat.STATE_PLAYING)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     playback.setPlaybackSpeed(playbackRate)
                 }
                 // Start player
                 playback.onPlay()
+                setMediaPlaybackState(PlaybackStateCompat.STATE_PLAYING)
             }
         }
 
         override fun onPause() {
             // Handles notification and noisy receiver unregistering
-            setMediaPlaybackState(PlaybackStateCompat.STATE_PAUSED)
             playback.onPause()
+            setMediaPlaybackState(PlaybackStateCompat.STATE_PAUSED)
             discardAudioFocus()
         }
 
@@ -299,7 +315,7 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
 
                 result = audioManager.requestAudioFocus(audioFocusRequest)
             } else {
-                // TODO: request audio focus for lower android versions
+                // DONE: request audio focus for lower android versions
                 result = audioManager.requestAudioFocus(
                         audioFocusChangeListener,
                         AudioManager.STREAM_MUSIC,
@@ -447,3 +463,9 @@ annotation class MediaAction
 const val ACTION_PLAYBACK_RATE = "playbackTempo"
 
 const val ARGS_PLAYBACK_RATE = "argsPlaybackRate"
+
+const val EVENT_INVALID_ITEM = "eventInvalidItem"
+const val EVENT_PLAYABLE_MEDIA_NOT_AVAILABLE = "mediaNotAvailable"
+const val EVENT_MEDIA_FILE_NOT_FOUND = "mediaFileNotFound"
+
+const val EXTRA_HYMN_ID = "extraHymnId"
