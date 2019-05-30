@@ -38,8 +38,11 @@ Some of the technologies used in this app include
 <a href="" target="_blank" alt="Hymn Detail"><img src="screenshots/hymn_detail.png" width="30%"/></a>
 <a href="" target="_blank" alt="Dark Mode"><img src="screenshots/hymn_detail_dark_mode.png" width="30%"/></a>
 </p>
+
 #### Sheet Music
-![Hymn Listing](screenshots/sheet_music.png "Sheet Music")
+<p align="center">
+<a href="" target="_blank" alt="Sheet Music"><img src="screenshots/sheet_music.png" width="40%"/></a>
+</p>
 
 ### Aknowledgment
 Thanks be to Jesus my Saviour.
