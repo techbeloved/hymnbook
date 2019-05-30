@@ -21,10 +21,13 @@ import androidx.core.content.ContextCompat
 import androidx.media.MediaBrowserServiceCompat
 import com.techbeloved.hymnbook.data.PlayerPreferences
 import com.techbeloved.hymnbook.di.Injection
+import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.processors.PublishProcessor
+import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
 import java.io.File
+import java.util.concurrent.TimeUnit
 
 class TunesPlayerService : MediaBrowserServiceCompat() {
 
@@ -43,10 +46,24 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
 
     private var isForegroundService = false
 
+    private var lastPlaybackState: Int = PlaybackStateCompat.STATE_NONE
+
     private val disposables = CompositeDisposable()
+
+    /**
+     * Receives stop requests and starts a delayed timer
+     */
+    private val stopSubject = PublishSubject.create<Int>()
+
+    private val mediaControllerCallback: MediaControllerCallback by lazy {
+        MediaControllerCallback()
+    }
+
 
     override fun onCreate() {
         super.onCreate()
+
+        playbackPrefs = Injection.providePlayerPrefs
 
         val sessionActivityPendingIntent =
                 packageManager?.getLaunchIntentForPackage(packageName)?.let { sessionIntent ->
@@ -73,7 +90,7 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
         }
 
         mediaController = MediaControllerCompat(this, mediaSession).also {
-            it.registerCallback(MediaControllerCallback())
+            it.registerCallback(mediaControllerCallback)
         }
 
         becomingNoisyReceiver =
@@ -86,8 +103,6 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
         playbackStateBuilder = PlaybackStateCompat.Builder()
 
         playback = MediaPlayerAdapter()
-
-        playbackPrefs = Injection.providePlayerPrefs
 
         val disposable = playback.playbackStatus().subscribe(
                 { status ->
@@ -123,11 +138,43 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
                 )
                 .let { disposables.add(it) }
 
+        playbackPrefs.repeatMode()
+                .distinctUntilChanged()
+                .subscribe({ repeatMode ->
+                    if (mediaSession.isActive) {
+                        mediaController.transportControls.setRepeatMode(repeatMode)
+                    }
+
+                }, { Timber.w(it) })
+                .let { disposables.add(it) }
+
+        stopSubject.switchMap { request ->
+            when (request) {
+                REQUEST_DELAYED_STOP -> {
+                    Timber.i("stop request sent")
+                    Observable.timer(30, TimeUnit.SECONDS)
+                }
+                else -> {
+                    Timber.i("Stop request cancelled")
+                    Observable.empty()
+                }
+            }
+        }.subscribe({
+            Timber.i("About stopping service")
+            notificationManager.cancelAll()
+            stopForeground(true)
+            stopSelf()
+        }, { Timber.w(it) })
+                .let { disposables.add(it) }
+
     }
 
     override fun onDestroy() {
         super.onDestroy()
         if (!disposables.isDisposed) disposables.dispose()
+        mediaController.unregisterCallback(mediaControllerCallback)
+        notificationManager.cancelAll()
+        mediaSession.release()
     }
 
 
@@ -164,6 +211,7 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
                                 or PlaybackStateCompat.ACTION_PAUSE
                 )
                 playbackStateBuilder.setState(state, playbackPosition, playbackRate)
+                stopSubject.onNext(CANCEL_STOP_REQUEST)
             }
             PlaybackStateCompat.STATE_PAUSED -> {
                 playbackStateBuilder.setActions(
@@ -171,12 +219,15 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
                                 or PlaybackStateCompat.ACTION_PLAY
                 )
                 playbackStateBuilder.setState(state, playbackPosition, playbackRate)
+                stopSubject.onNext(REQUEST_DELAYED_STOP)
             }
             else -> {
                 playbackStateBuilder.setState(state, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0.0f)
+                stopSubject.onNext(REQUEST_DELAYED_STOP)
             }
         }
         mediaSession.setPlaybackState(playbackStateBuilder.build())
+        lastPlaybackState = state
     }
 
     /**
@@ -191,13 +242,20 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
 
         private var shouldPlayOnFocusGain: Boolean = false
 
-        private var allDisposables = CompositeDisposable()
-
         private var playbackRate: Float = 1.0f
+
+        private var numVerses: Int = 1
+
+        @PlaybackStateCompat.RepeatMode
+        private var repeatMode: Int = PlaybackStateCompat.REPEAT_MODE_NONE
 
         private val playFromMediaIdSubject = PublishProcessor.create<String>()
 
         init {
+            // Initialize player settings from shared preferences
+            playbackRate = playbackPrefs.playbackRate().blockingFirst()
+            repeatMode = playbackPrefs.repeatMode().blockingFirst()
+
             playFromMediaIdSubject.switchMap { mediaId ->
                 Injection.provideRepository.getHymnById(mediaId.toInt())
             }
@@ -218,6 +276,8 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
                                     Bundle().apply { putInt(EXTRA_HYMN_ID, hymn.num) })
                             return@subscribe
                         }
+
+                        numVerses = hymn.verses.size
                         // Create the metadata
                         metadataBuilder.id = hymn.num.toString()
                         metadataBuilder.title = hymn.title
@@ -259,6 +319,7 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     playback.setPlaybackSpeed(playbackRate)
                 }
+                playback.setRepeat(repeatMode, numVerses)
                 // Start player
                 playback.onPlay()
                 setMediaPlaybackState(PlaybackStateCompat.STATE_PLAYING)
@@ -279,7 +340,6 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
             stopSelf()
             mediaSession.isActive = false
             playback.onStop()
-            if (!allDisposables.isDisposed) allDisposables.dispose()
         }
 
         override fun onCustomAction(action: String?, extras: Bundle?) {
@@ -290,6 +350,15 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
                 }
                 this.playbackRate = playbackRate // Save in property
             }
+        }
+
+        override fun onSetRepeatMode(repeatMode: Int) {
+            this.repeatMode = repeatMode
+            playback.setRepeat(repeatMode, numVerses)
+            playbackPrefs.saveRepeatMode(repeatMode)
+            // Refresh the play state so progress bar updates correctly
+            setMediaPlaybackState(lastPlaybackState)
+            Timber.i("Setting repeat mode")
         }
 
 
@@ -347,7 +416,7 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
                     }
                 }
                 AudioManager.AUDIOFOCUS_GAIN -> {
-                    if (!playback.isPlaying() && shouldPlayOnFocusGain) {
+                    if (shouldPlayOnFocusGain) {
                         playback.onPlay()
                     }
                 }
@@ -469,3 +538,6 @@ const val EVENT_PLAYABLE_MEDIA_NOT_AVAILABLE = "mediaNotAvailable"
 const val EVENT_MEDIA_FILE_NOT_FOUND = "mediaFileNotFound"
 
 const val EXTRA_HYMN_ID = "extraHymnId"
+
+private const val REQUEST_DELAYED_STOP = 411
+private const val CANCEL_STOP_REQUEST = 200

@@ -57,6 +57,9 @@ class HymnPagerViewModel(private val repository: HymnsRepository, mediaSessionCo
     val playbackRate: LiveData<Float>
         get() = mediaSessionConnection.playbackRate
 
+    val repeatMode: LiveData<Int>
+        get() = mediaSessionConnection.repeatMode
+
     private val compositeDisposable = CompositeDisposable()
     fun loadHymnIndices(@SortBy sortBy: Int = BY_NUMBER) {
         val disposable = repository.loadHymnIndices(sortBy)
@@ -164,6 +167,15 @@ class HymnPagerViewModel(private val repository: HymnsRepository, mediaSessionCo
         val playbackRate = progress / 10f + 0.5f
         mediaSessionConnection.updatePlaybackRate(playbackRate)
         Timber.i("Updating playback rate: %s", playbackRate)
+    }
+
+    fun cycleRepeatMode() {
+        Timber.i("Current repeat mode: %s", mediaSessionConnection.repeatMode.value)
+        when (mediaSessionConnection.repeatMode.value) {
+            PlaybackStateCompat.REPEAT_MODE_NONE -> mediaSessionConnection.transportControls.setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ALL)
+            PlaybackStateCompat.REPEAT_MODE_ALL -> mediaSessionConnection.transportControls.setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ONE)
+            PlaybackStateCompat.REPEAT_MODE_ONE -> mediaSessionConnection.transportControls.setRepeatMode(PlaybackStateCompat.REPEAT_MODE_NONE)
+        }
     }
 
     class Factory(private val provideRepository: HymnsRepository, private val mediaSessionConnection: MediaSessionConnection) : ViewModelProvider.Factory {

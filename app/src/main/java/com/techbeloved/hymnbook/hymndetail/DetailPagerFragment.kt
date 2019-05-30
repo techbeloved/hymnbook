@@ -3,6 +3,7 @@ package com.techbeloved.hymnbook.hymndetail
 
 import android.os.Build
 import android.os.Bundle
+import android.support.v4.media.session.PlaybackStateCompat
 import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.View
@@ -108,6 +109,26 @@ class DetailPagerFragment : Fragment() {
             }
         })
 
+        viewModel.repeatMode.observe(viewLifecycleOwner, Observer { mode ->
+            Timber.i("Repeat mode changed: %s", mode)
+            when (mode) {
+                PlaybackStateCompat.REPEAT_MODE_NONE -> {
+                    binding.bottomsheetPlayControls.imageViewControlsRepeatToggle.setImageResource(R.drawable.ic_times_one)
+                    binding.bottomsheetPlayControls.progressbarControlsProgress.isIndeterminate = false
+                }
+                PlaybackStateCompat.REPEAT_MODE_ALL -> {
+                    binding.bottomsheetPlayControls.imageViewControlsRepeatToggle.setImageResource(R.drawable.ic_times_all)
+                    binding.bottomsheetPlayControls.progressbarControlsProgress.isIndeterminate = false
+                }
+                PlaybackStateCompat.REPEAT_MODE_ONE -> {
+                    binding.bottomsheetPlayControls.imageViewControlsRepeatToggle.setImageResource(R.drawable.ic_repeat_active)
+                    binding.bottomsheetPlayControls.progressbarControlsProgress.isIndeterminate = true
+                }
+            }
+        })
+
+        binding.bottomsheetPlayControls.imageViewControlsRepeatToggle.setOnClickListener { viewModel.cycleRepeatMode() }
+
 
     }
 
@@ -146,6 +167,7 @@ class DetailPagerFragment : Fragment() {
         viewModel.playbackRate.observe(viewLifecycleOwner, Observer { rate ->
             binding.bottomsheetPlayControls.textControlsTempo.text = getString(R.string.tempo_x, rate)
         })
+
     }
 
 

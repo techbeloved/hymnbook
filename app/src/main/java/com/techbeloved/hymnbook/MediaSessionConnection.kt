@@ -20,6 +20,10 @@ class MediaSessionConnection(context: Context, serviceComponent: ComponentName, 
     val playbackRate: LiveData<Float>
         get() = _playbackRate
 
+    private val _repeatMode = MutableLiveData<Int>(PlaybackStateCompat.REPEAT_MODE_NONE)
+    val repeatMode: LiveData<Int>
+        get() = _repeatMode
+
     private val _isConnected = MutableLiveData<Boolean>()
             .apply { postValue(false) }
     val isConnected: LiveData<Boolean>
@@ -48,7 +52,7 @@ class MediaSessionConnection(context: Context, serviceComponent: ComponentName, 
     ).apply { connect() }
     private lateinit var mediaController: MediaControllerCompat
     // TODO: expose this if ever needed
-    private val controller: MediaControllerCompat
+    val controller: MediaControllerCompat
         get() = mediaController
 
     fun subscribe(parentId: String, callback: MediaBrowserCompat.SubscriptionCallback) {
@@ -62,6 +66,7 @@ class MediaSessionConnection(context: Context, serviceComponent: ComponentName, 
     fun updatePlaybackRate(rate: Float) {
         playerPrefs.savePlaybackRate(rate)
     }
+
 
     private var disposables: CompositeDisposable? = null
 
@@ -79,6 +84,10 @@ class MediaSessionConnection(context: Context, serviceComponent: ComponentName, 
             playerPrefs.playbackRate()
                     .subscribeOn(Schedulers.io())
                     .subscribe({ rate -> _playbackRate.postValue(rate) }, { Timber.w(it) })
+                    .let { disposables?.add(it) }
+            playerPrefs.repeatMode()
+                    .subscribeOn(Schedulers.io())
+                    .subscribe({ mode -> _repeatMode.postValue(mode) }, { Timber.w(it) })
                     .let { disposables?.add(it) }
         }
 
