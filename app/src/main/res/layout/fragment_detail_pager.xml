@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="viewModel"
-            type="com.techbeloved.hymnbook.hymndetail.HymnPagerViewModel" />
+            name="nowPlaying"
+            type="com.techbeloved.hymnbook.nowplaying.NowPlayingViewModel" />
 
     </data>
 
@@ -58,7 +58,7 @@
         <include
             android:id="@+id/bottomsheet_play_controls"
             layout="@layout/partial_bottom_play_controls"
-            bind:viewModel="@{viewModel}" />
+            bind:nowPlaying="@{nowPlaying}" />
 
         <include
             android:id="@+id/bottomsheet_quick_settings"

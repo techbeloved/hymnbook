@@ -28,8 +28,8 @@ import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.DialogTempoSelectorBinding
 import com.techbeloved.hymnbook.databinding.FragmentDetailPagerBinding
 import com.techbeloved.hymnbook.di.Injection
+import com.techbeloved.hymnbook.nowplaying.NowPlayingViewModel
 import com.techbeloved.hymnbook.tunesplayback.duration
-import com.techbeloved.hymnbook.tunesplayback.isPlaying
 import com.techbeloved.hymnbook.usecases.Lce
 import com.techbeloved.hymnbook.utils.DepthPageTransformer
 import timber.log.Timber
@@ -45,15 +45,18 @@ class DetailPagerFragment : Fragment() {
 
     private lateinit var detailPagerAdapter: DetailPagerAdapter
 
+    private lateinit var nowPlayingViewModel: NowPlayingViewModel
+
     private lateinit var viewModel: HymnPagerViewModel
     private lateinit var binding: FragmentDetailPagerBinding
     private lateinit var quickSettingsSheet: BottomSheetBehavior<CardView>
+    private lateinit var playControlsSheet: BottomSheetBehavior<CardView>
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail_pager, container, false)
         binding.lifecycleOwner = this
-        binding.viewModel = viewModel
+        binding.nowPlaying = nowPlayingViewModel
 
         setupImmersiveMode() // Immersive mode
 
@@ -72,6 +75,8 @@ class DetailPagerFragment : Fragment() {
 
         quickSettingsSheet = BottomSheetBehavior.from(
                 binding.bottomsheetQuickSettings.cardviewQuickSettings)
+        playControlsSheet = BottomSheetBehavior.from(
+                binding.bottomsheetPlayControls.cardViewPlayControls)
         setupQuickSettings()
 
         setupMediaPlaybackControls()
@@ -89,27 +94,31 @@ class DetailPagerFragment : Fragment() {
 
 
     private fun setupMediaPlaybackControls() {
+        // Only enable play button when music service is connected
+        nowPlayingViewModel.isConnected.observe(this, Observer { connected ->
+            binding.bottomsheetPlayControls.cardViewPlayControls.isEnabled = connected
+        })
         binding.bottomsheetPlayControls.imageViewControlsPlayPause.setOnClickListener {
-            viewModel.playMedia(currentItemIndex.toString())
+            nowPlayingViewModel.playMedia(currentItemIndex.toString())
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             setupTempoControls()
         }
 
-        viewModel.mediaPosition.observe(viewLifecycleOwner, Observer { position ->
+        nowPlayingViewModel.mediaPosition.observe(viewLifecycleOwner, Observer { position ->
             val currentPosition = if (position < 0) 0 else position
             binding.bottomsheetPlayControls.progressbarControlsProgress.progress = currentPosition.toFloat()
         })
 
-        viewModel.metadata.observe(viewLifecycleOwner, Observer { metadata ->
+        nowPlayingViewModel.metadata.observe(viewLifecycleOwner, Observer { metadata ->
             val duration = metadata.duration
             if (duration > 0) {
                 binding.bottomsheetPlayControls.progressbarControlsProgress.maximum = duration.toFloat()
             }
         })
 
-        viewModel.repeatMode.observe(viewLifecycleOwner, Observer { mode ->
+        nowPlayingViewModel.repeatMode.observe(viewLifecycleOwner, Observer { mode ->
             Timber.i("Repeat mode changed: %s", mode)
             when (mode) {
                 PlaybackStateCompat.REPEAT_MODE_NONE -> {
@@ -122,12 +131,11 @@ class DetailPagerFragment : Fragment() {
                 }
                 PlaybackStateCompat.REPEAT_MODE_ONE -> {
                     binding.bottomsheetPlayControls.imageViewControlsRepeatToggle.setImageResource(R.drawable.ic_repeat_active)
-                    binding.bottomsheetPlayControls.progressbarControlsProgress.isIndeterminate = true
                 }
             }
         })
 
-        binding.bottomsheetPlayControls.imageViewControlsRepeatToggle.setOnClickListener { viewModel.cycleRepeatMode() }
+        binding.bottomsheetPlayControls.imageViewControlsRepeatToggle.setOnClickListener { nowPlayingViewModel.cycleRepeatMode() }
 
 
     }
@@ -138,7 +146,7 @@ class DetailPagerFragment : Fragment() {
         val tempoViewBinding: DialogTempoSelectorBinding = DataBindingUtil.inflate(layoutInflater, R.layout.dialog_tempo_selector, null, false)
         tempoDialog.setContentView(tempoViewBinding.root)
 
-        viewModel.playbackTempo.observe(viewLifecycleOwner, Observer {
+        nowPlayingViewModel.playbackTempo.observe(viewLifecycleOwner, Observer {
             tempoViewBinding.seekBarTempoSelector.progress = it
         })
 
@@ -146,7 +154,7 @@ class DetailPagerFragment : Fragment() {
                 object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                         if (fromUser) {
-                            viewModel.saveTempo(progress)
+                            nowPlayingViewModel.saveTempo(progress)
                         }
                     }
 
@@ -164,7 +172,7 @@ class DetailPagerFragment : Fragment() {
             tempoDialog.show()
         }
 
-        viewModel.playbackRate.observe(viewLifecycleOwner, Observer { rate ->
+        nowPlayingViewModel.playbackRate.observe(viewLifecycleOwner, Observer { rate ->
             binding.bottomsheetPlayControls.textControlsTempo.text = getString(R.string.tempo_x, rate)
         })
 
@@ -228,8 +236,7 @@ class DetailPagerFragment : Fragment() {
             val args = arguments?.let { DetailPagerFragmentArgs.fromBundle(it) }
             currentItemIndex = args?.hymnId ?: 1
         }
-        val factory = HymnPagerViewModel.Factory(Injection.provideRepository,
-                Injection.provideMediaSessionConnection)
+        val factory = HymnPagerViewModel.Factory(Injection.provideRepository)
         viewModel = ViewModelProviders.of(this, factory).get(HymnPagerViewModel::class.java)
         viewModel.hymnIndicesLiveData.observe(this, Observer {
             val indexToLoad = currentItemIndex
@@ -245,19 +252,8 @@ class DetailPagerFragment : Fragment() {
 
         viewModel.loadHymnIndices()
 
-        viewModel.playbackState.observe(this, Observer { playbackState ->
-            Timber.i("PlaybackState changed: %s", playbackState)
-            if (playbackState.isPlaying) {
-                // TODO
-            } else {
-                // TODO
-            }
-        })
-
-        // Only enable play button when music service is connected
-        viewModel.isConnected.observe(this, Observer { connected ->
-            // TODO
-        })
+        val nowPlayingFactory = NowPlayingViewModel.Factory(Injection.provideMediaSessionConnection)
+        nowPlayingViewModel = ViewModelProviders.of(this, nowPlayingFactory)[NowPlayingViewModel::class.java]
     }
 
     override fun onDestroy() {
