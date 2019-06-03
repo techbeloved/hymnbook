@@ -1,7 +1,8 @@
-package com.techbeloved.hymnbook
+package com.techbeloved.hymnbook.nowplaying
 
 import android.content.ComponentName
 import android.content.Context
+import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
@@ -10,8 +11,13 @@ import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.techbeloved.hymnbook.data.PlayerPreferences
+import com.techbeloved.hymnbook.tunesplayback.EVENT_MEDIA_FILE_NOT_FOUND
+import com.techbeloved.hymnbook.tunesplayback.EVENT_PLAYABLE_MEDIA_NOT_AVAILABLE
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class MediaSessionConnection(context: Context, serviceComponent: ComponentName, private val playerPrefs: PlayerPreferences) {
@@ -28,6 +34,10 @@ class MediaSessionConnection(context: Context, serviceComponent: ComponentName, 
             .apply { postValue(false) }
     val isConnected: LiveData<Boolean>
         get() = _isConnected
+
+    private val _playbackEvent = MutableLiveData<PlaybackEvent>(PlaybackEvent.None)
+    val playbackEvent: LiveData<PlaybackEvent>
+        get() = _playbackEvent
 
     val rootMedia: String get() = mediaBrowser.root
 
@@ -122,6 +132,22 @@ class MediaSessionConnection(context: Context, serviceComponent: ComponentName, 
         override fun onSessionDestroyed() {
             mediaBrowserConnectionCallback.onConnectionSuspended()
         }
+
+        override fun onSessionEvent(event: String?, extras: Bundle?) {
+            Timber.i("Event received: %s", event)
+            when (event) {
+                EVENT_MEDIA_FILE_NOT_FOUND,
+                EVENT_PLAYABLE_MEDIA_NOT_AVAILABLE -> {
+                    _playbackEvent.postValue(PlaybackEvent.Error("Playable media not found!"))
+                    GlobalScope.launch {
+                        delay(200)
+                        _playbackEvent.postValue(PlaybackEvent.None)
+                    }
+
+                }
+                else -> _playbackEvent.postValue(PlaybackEvent.Message("Received event: $event"))
+            }
+        }
     }
 
     companion object {
@@ -130,7 +156,8 @@ class MediaSessionConnection(context: Context, serviceComponent: ComponentName, 
 
         fun getInstance(context: Context, serviceComponent: ComponentName, playerPrefs: PlayerPreferences) =
                 instance ?: synchronized(this) {
-                    instance ?: MediaSessionConnection(context, serviceComponent, playerPrefs)
+                    instance
+                            ?: MediaSessionConnection(context, serviceComponent, playerPrefs)
                             .also { instance = it }
                 }
     }

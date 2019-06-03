@@ -282,9 +282,12 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
                         metadataBuilder.id = hymn.num.toString()
                         metadataBuilder.title = hymn.title
                         metadataBuilder.displaySubtitle = hymn.first
-                        metadataBuilder.artist = hymn.attribution?.musicBy?.substring(0, 10)
+                        metadataBuilder.artist = hymn.attribution?.musicBy?.substring(0, 24)
                         metadataBuilder.mediaUri = hymn.audio?.midi ?: hymn.audio?.mp3
                         metadataBuilder.album = "Watchman Hymnbook"
+
+                        // Set repeat mode before preparing. onPrepare uses the value set in repeat mode
+                        playback.setRepeat(repeatMode, numVerses)
 
                         val metadata = metadataBuilder.build()
                         val preparedDuration = try {
@@ -319,7 +322,6 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     playback.setPlaybackSpeed(playbackRate)
                 }
-                playback.setRepeat(repeatMode, numVerses)
                 // Start player
                 playback.onPlay()
                 setMediaPlaybackState(PlaybackStateCompat.STATE_PLAYING)

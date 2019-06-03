@@ -36,7 +36,10 @@ class SheetMusicPagerFragment : BaseDetailPagerFragment() {
         viewModel.hymnIndicesLive.observe(this, Observer {
             when (it) {
                 is Lce.Loading -> showProgressLoading(it.loading)
-                is Lce.Content -> initializeViewPager(it.content, currentHymnId)
+                is Lce.Content -> {
+                    initializeViewPager(it.content, currentHymnId)
+                    updateHymnItems(it.content)
+                }
                 is Lce.Error -> showContentError(it.error)
             }
         })

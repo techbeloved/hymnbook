@@ -13,7 +13,6 @@ import com.google.firebase.storage.FirebaseStorage
 import com.techbeloved.hymnbook.HymnbookApp
 import com.techbeloved.hymnbook.HymnbookUseCases
 import com.techbeloved.hymnbook.HymnbookUseCasesImp
-import com.techbeloved.hymnbook.MediaSessionConnection
 import com.techbeloved.hymnbook.data.*
 import com.techbeloved.hymnbook.data.download.Downloader
 import com.techbeloved.hymnbook.data.download.DownloaderImp
@@ -26,6 +25,7 @@ import com.techbeloved.hymnbook.data.repo.OnlineRepo
 import com.techbeloved.hymnbook.data.repo.local.HymnsDatabase
 import com.techbeloved.hymnbook.data.repo.local.util.AppExecutors
 import com.techbeloved.hymnbook.data.repo.local.util.DataGenerator
+import com.techbeloved.hymnbook.nowplaying.MediaSessionConnection
 import com.techbeloved.hymnbook.sheetmusic.HymnUseCases
 import com.techbeloved.hymnbook.sheetmusic.HymnsUseCasesImp
 import com.techbeloved.hymnbook.tunesplayback.TunesPlayerService

@@ -5,9 +5,6 @@ import android.os.Looper
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.*
-import com.techbeloved.hymnbook.EMPTY_PLAYBACK_STATE
-import com.techbeloved.hymnbook.MediaSessionConnection
-import com.techbeloved.hymnbook.NOTHING_PLAYING
 import com.techbeloved.hymnbook.tunesplayback.*
 import timber.log.Timber
 
@@ -16,6 +13,7 @@ import timber.log.Timber
  */
 class NowPlayingViewModel(mediaSessionConnection: MediaSessionConnection) : ViewModel() {
 
+    val hymnItems: MutableList<Int> = ArrayList()
     /**
      * Playback controls
      */
@@ -40,6 +38,10 @@ class NowPlayingViewModel(mediaSessionConnection: MediaSessionConnection) : View
 
     val repeatMode: LiveData<Int>
         get() = mediaSessionConnection.repeatMode
+
+    // Playback events
+    val playbackEvent: LiveData<PlaybackEvent>
+        get() = mediaSessionConnection.playbackEvent
 
     // Media playback stuff
     private val playbackStateObserver = Observer<PlaybackStateCompat> {
@@ -91,18 +93,29 @@ class NowPlayingViewModel(mediaSessionConnection: MediaSessionConnection) : View
     }
 
 
-    fun playMedia(mediaId: String) {
+    /**
+     * Request that a hymn identified by the id be played. The request is sent to the mediasession.
+     * However, we want to check if new item is to be played or we should play or pause
+     */
+    fun playMedia(mediaId: String, isSkipping: Boolean = false) {
         val nowPlaying = mediaSessionConnection.nowPlaying.value
         val transportControls = mediaSessionConnection.transportControls
 
         val isPrepared = mediaSessionConnection.playbackState.value?.isPrepared ?: false
         Timber.i("isPrepared: %s\nmediaId: %s\nnowplayingId: %s", isPrepared, mediaId, nowPlaying?.id)
-        if (isPrepared && mediaId == nowPlaying?.id) {
+        if (isPrepared && !isSkipping) {
             mediaSessionConnection.playbackState.value?.let { playbackState ->
                 Timber.i("State playing: %s, state: %s", playbackState.isPlaying, playbackState.state)
                 when {
                     playbackState.isPlaying -> transportControls.pause()
-                    playbackState.isPlayEnabled -> transportControls.play()
+                    playbackState.isPlayEnabled -> {
+                        if (mediaId == nowPlaying?.id) {
+                            transportControls.play()
+                        } else {
+                            // If the item or page have changed, then play the new item instead
+                            transportControls.playFromMediaId(mediaId, null)
+                        }
+                    }
                     else -> {
                         Timber.w("Cannot play media currently")
                     }
@@ -139,6 +152,24 @@ class NowPlayingViewModel(mediaSessionConnection: MediaSessionConnection) : View
         mediaSessionConnection.playbackState.removeObserver(playbackStateObserver)
         mediaSessionConnection.nowPlaying.removeObserver(mediaMetadataObserver)
         updatePosition = false
+    }
+
+    /**
+     * Hymn indices received from db are saved here for purpose of skipping to next and previous when requested
+     */
+    fun updateHymnItems(hymnItems: List<Int>) {
+        this.hymnItems.clear()
+        this.hymnItems.addAll(hymnItems)
+    }
+
+    /**
+     * Called when next button is clicked on the ui. First checks that something is playing, because it is not
+     * good to start playback when skip to next but something isn't playing.
+     */
+    fun skipTo(position: Int) {
+        if (_isPlaying.value == true && position < hymnItems.size) {
+            playMedia(hymnItems[position].toString(), true)
+        }
     }
 
     class Factory(private val mediaSessionConnection: MediaSessionConnection) : ViewModelProvider.Factory {

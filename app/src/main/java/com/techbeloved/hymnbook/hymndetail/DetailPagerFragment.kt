@@ -39,6 +39,7 @@ class DetailPagerFragment : BaseDetailPagerFragment() {
                 is Lce.Content -> {
                     initializeViewPager(it.content, indexToLoad)
                     updateCurrentItemId(indexToLoad)
+                    updateHymnItems(it.content)
                 }
                 is Lce.Error -> showContentError(it.error)
             }

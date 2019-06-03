@@ -17,15 +17,18 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.preference.PreferenceManager
+import androidx.viewpager.widget.ViewPager
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.snackbar.Snackbar
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.DialogTempoSelectorBinding
 import com.techbeloved.hymnbook.databinding.FragmentDetailPagerBinding
 import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.nowplaying.NowPlayingViewModel
+import com.techbeloved.hymnbook.nowplaying.PlaybackEvent
 import com.techbeloved.hymnbook.tunesplayback.duration
 import timber.log.Timber
 
@@ -73,7 +76,22 @@ abstract class BaseDetailPagerFragment : Fragment() {
 
         setupMediaPlaybackControls()
 
+        binding.viewpagerHymnDetail.addOnPageChangeListener(pageChangeListener)
+
         return binding.root
+    }
+
+    private val pageChangeListener: ViewPager.OnPageChangeListener = object : ViewPager.OnPageChangeListener {
+        override fun onPageScrollStateChanged(state: Int) {
+        }
+
+        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+        }
+
+        override fun onPageSelected(position: Int) {
+            nowPlayingViewModel.skipTo(position)
+        }
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -93,6 +111,28 @@ abstract class BaseDetailPagerFragment : Fragment() {
         })
         binding.bottomsheetPlayControls.imageViewControlsPlayPause.setOnClickListener {
             nowPlayingViewModel.playMedia(_currentHymnId.toString())
+        }
+
+        binding.bottomsheetPlayControls.imageViewControlsNext.setOnClickListener {
+            val currentIndex = binding.viewpagerHymnDetail.currentItem
+            val nextIndex = if (currentIndex < nowPlayingViewModel.hymnItems.size - 1) {
+                currentIndex + 1
+            } else {
+                0
+            }
+            binding.viewpagerHymnDetail.setCurrentItem(nextIndex, true)
+            nowPlayingViewModel.skipTo(nextIndex)
+        }
+
+        binding.bottomsheetPlayControls.imageViewControlsPrevious.setOnClickListener {
+            val currentIndex = binding.viewpagerHymnDetail.currentItem
+            val nextIndex = if (currentIndex > 0) {
+                currentIndex - 1
+            } else {
+                nowPlayingViewModel.hymnItems.size - 1
+            }
+            binding.viewpagerHymnDetail.setCurrentItem(nextIndex, true)
+            nowPlayingViewModel.skipTo(nextIndex)
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -130,6 +170,15 @@ abstract class BaseDetailPagerFragment : Fragment() {
 
         binding.bottomsheetPlayControls.imageViewControlsRepeatToggle.setOnClickListener { nowPlayingViewModel.cycleRepeatMode() }
 
+        nowPlayingViewModel.playbackEvent.observe(viewLifecycleOwner, Observer { event ->
+            when (event) {
+                is PlaybackEvent.Error -> Snackbar.make(binding.coordinatorLayoutHymnDetail.rootView, event.message, Snackbar.LENGTH_SHORT).show()
+                is PlaybackEvent.Message -> Snackbar.make(binding.coordinatorLayoutHymnDetail, event.message, Snackbar.LENGTH_SHORT).show()
+                PlaybackEvent.None -> { /* Do nothing */
+                    Timber.i("Nothing received!")
+                }
+            }
+        })
 
     }
 
@@ -303,6 +352,10 @@ abstract class BaseDetailPagerFragment : Fragment() {
     fun updateCurrentItemId(itemId: Int) {
         _currentHymnId = itemId
         binding.toolbarDetail.title = "Hymn, $itemId"
+    }
+
+    fun updateHymnItems(hymnItems: List<Int>) {
+        nowPlayingViewModel.updateHymnItems(hymnItems)
     }
 
     var currentHymnId
