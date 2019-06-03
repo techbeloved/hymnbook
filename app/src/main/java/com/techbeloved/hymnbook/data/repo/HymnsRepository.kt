@@ -20,4 +20,8 @@ interface HymnsRepository {
     fun updateHymnDownloadStatus(hymnId: Int, progress: Int, downloadStatus: Int, remoteUri: String?, localUri: String?)
 
     fun updateHymnMidiPath(hymnId: Int, midiPath: String)
+    /**
+     * Retrieves all topics from database
+     */
+    fun loadAllTopics(): Observable<List<Topic>>
 }

@@ -28,6 +28,8 @@ import com.techbeloved.hymnbook.data.repo.local.util.DataGenerator
 import com.techbeloved.hymnbook.nowplaying.MediaSessionConnection
 import com.techbeloved.hymnbook.sheetmusic.HymnUseCases
 import com.techbeloved.hymnbook.sheetmusic.HymnsUseCasesImp
+import com.techbeloved.hymnbook.topics.TopicsUseCases
+import com.techbeloved.hymnbook.topics.TopicsUseCasesImp
 import com.techbeloved.hymnbook.tunesplayback.TunesPlayerService
 import com.techbeloved.hymnbook.utils.SchedulerProvider
 import io.reactivex.Scheduler
@@ -41,6 +43,10 @@ const val WCCRM_HYMNS_COLLECTION = "wccrm"
 object Injection {
     fun provideAppContext(): Application {
         return HymnbookApp.instance
+    }
+
+    val provideTopicsUseCases: TopicsUseCases by lazy {
+        TopicsUseCasesImp(provideRepository, provideSchedulers)
     }
 
     val executors by lazy {

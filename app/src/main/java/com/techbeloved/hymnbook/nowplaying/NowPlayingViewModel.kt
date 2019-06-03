@@ -113,6 +113,7 @@ class NowPlayingViewModel(mediaSessionConnection: MediaSessionConnection) : View
                             transportControls.play()
                         } else {
                             // If the item or page have changed, then play the new item instead
+                            Timber.i("Should start playback of new item!")
                             transportControls.playFromMediaId(mediaId, null)
                         }
                     }

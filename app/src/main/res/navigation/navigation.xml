@@ -88,4 +88,21 @@
             app:argType="integer"
             android:defaultValue="1" />
     </fragment>
+    <fragment
+        android:id="@+id/topicsFragment"
+        android:name="com.techbeloved.hymnbook.topics.TopicsFragment"
+        android:label="Topics"
+        tools:layout="@layout/topics_fragment">
+        <action
+            android:id="@+id/action_topicsFragment_to_hymnListingFragment"
+            app:destination="@id/hymnListingFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <argument
+            android:name="topicId"
+            android:defaultValue="0"
+            app:argType="integer" />
+    </fragment>
 </navigation>
