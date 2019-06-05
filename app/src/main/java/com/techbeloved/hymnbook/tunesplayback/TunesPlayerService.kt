@@ -19,11 +19,11 @@ import androidx.annotation.StringDef
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.media.MediaBrowserServiceCompat
+import com.jakewharton.rxrelay2.PublishRelay
 import com.techbeloved.hymnbook.data.PlayerPreferences
 import com.techbeloved.hymnbook.di.Injection
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.processors.PublishProcessor
 import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
 import java.io.File
@@ -249,7 +249,7 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
         @PlaybackStateCompat.RepeatMode
         private var repeatMode: Int = PlaybackStateCompat.REPEAT_MODE_NONE
 
-        private val playFromMediaIdSubject = PublishProcessor.create<String>()
+        private val playFromMediaIdSubject = PublishRelay.create<String>()
 
         init {
             // Initialize player settings from shared preferences
@@ -258,6 +258,7 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
 
             playFromMediaIdSubject.switchMap { mediaId ->
                 Injection.provideRepository.getHymnById(mediaId.toInt())
+                        .toObservable()
             }
                     .subscribe({ hymn ->
                         // Check that the hymn is playable.
@@ -282,7 +283,7 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
                         metadataBuilder.id = hymn.num.toString()
                         metadataBuilder.title = hymn.title
                         metadataBuilder.displaySubtitle = hymn.first
-                        metadataBuilder.artist = hymn.attribution?.musicBy?.substring(0, 24)
+                        metadataBuilder.artist = hymn.attribution?.musicBy
                         metadataBuilder.mediaUri = hymn.audio?.midi ?: hymn.audio?.mp3
                         metadataBuilder.album = "Watchman Hymnbook"
 
@@ -308,7 +309,7 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
         }
 
         override fun onPlayFromMediaId(mediaId: String?, extras: Bundle?) {
-            playFromMediaIdSubject.onNext(mediaId!!)
+            playFromMediaIdSubject.accept(mediaId)
         }
 
 
