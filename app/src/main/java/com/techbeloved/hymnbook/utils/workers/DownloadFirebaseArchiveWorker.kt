@@ -29,7 +29,7 @@ class DownloadFirebaseArchiveWorker(context: Context, params: WorkerParameters) 
                 }
                 .onErrorReturn {
                     Timber.w(it)
-                    Result.failure()
+                    Result.retry()
                 }
     }
 
