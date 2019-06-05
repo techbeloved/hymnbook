@@ -37,6 +37,8 @@ class HymnListingFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     private lateinit var viewModel: HymnListingViewModel
     private lateinit var hymnListAdapter: HymnListAdapterNoDiff
 
+    private lateinit var title: String
+
     private val clickListener = object : HymnItemModel.ClickListener<HymnItemModel> {
         override fun onItemClick(item: HymnItemModel) {
             navigateToHymnDetail(item.id)
@@ -79,6 +81,7 @@ class HymnListingFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_song_listing, container, false)
         binding.lifecycleOwner = this
         NavigationUI.setupWithNavController(binding.toolbarSongListing, findNavController())
+        binding.toolbarSongListing.title = title
 
         hymnListAdapter = HymnListAdapterNoDiff(clickListener)
         binding.recyclerviewSongList.apply {
@@ -144,7 +147,12 @@ class HymnListingFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun doInOnCreate() {
-        val factory = HymnListingViewModel.Factory(Injection.provideRepository)
+        // Get the topic id from arguments
+        val args = arguments?.let { HymnListingFragmentArgs.fromBundle(it) }
+        val topicId: Int = args?.topicId ?: 0
+        title = args?.title.toString()
+        Timber.i("Topic id received: %s", topicId)
+        val factory = HymnListingViewModel.Factory(Injection.provideRepository, topicId)
         viewModel = ViewModelProviders.of(this, factory).get(HymnListingViewModel::class.java)
 
         val disposable = sortByPref.asObservable().subscribe(

@@ -24,10 +24,22 @@ class HymnsRepositoryImp (private val hymnDatabase: HymnsDatabase) : HymnsReposi
         return hymnDatabase.hymnDao().getHymnByNumber(hymnNo)
     }
 
-    override fun loadHymnIndices(sortBy: Int): Flowable<List<Int>> {
+    override fun loadHymnIndices(sortBy: Int, topicId: Int): Flowable<List<Int>> {
         return when (sortBy) {
-            BY_TITLE -> hymnDatabase.hymnDao().getIndicesByTitle()
-            BY_NUMBER -> hymnDatabase.hymnDao().getIndicesByNumber()
+            BY_TITLE -> {
+                if (topicId == 0) {
+                    hymnDatabase.hymnDao().getIndicesByTitle()
+                } else {
+                    hymnDatabase.hymnDao().getIndicesByTitleForTopic(topicId)
+                }
+            }
+            BY_NUMBER -> {
+                if (topicId == 0) {
+                    hymnDatabase.hymnDao().getIndicesByNumber()
+                } else {
+                    hymnDatabase.hymnDao().getIndicesByNumberForTopic(topicId)
+                }
+            }
             else -> Flowable.error(Throwable("Unsupported sort type"))
         }
     }
@@ -36,10 +48,22 @@ class HymnsRepositoryImp (private val hymnDatabase: HymnsDatabase) : HymnsReposi
         return hymnDatabase.hymnDao().getHymnDetail(hymnNo)
     }
 
-    override fun loadHymnTitles(@SortBy sortBy: Int): Flowable<List<HymnTitle>> {
+    override fun loadHymnTitles(@SortBy sortBy: Int, topicId: Int): Flowable<List<HymnTitle>> {
         return when(sortBy) {
-            BY_TITLE -> hymnDatabase.hymnDao().getAllHymnTitlesSortedByTitles()
-            else -> hymnDatabase.hymnDao().getAllHymnTitles()
+            BY_TITLE -> {
+                if (topicId == 0) {
+                    hymnDatabase.hymnDao().getAllHymnTitlesSortedByTitles()
+                } else {
+                    hymnDatabase.hymnDao().getAllHymnTitlesSortedByTitlesForTopic(topicId)
+                }
+            }
+            else -> {
+                if (topicId == 0) {
+                    hymnDatabase.hymnDao().getAllHymnTitles()
+                } else {
+                    hymnDatabase.hymnDao().getAllHymnTitlesForTopic(topicId)
+                }
+            }
         }
     }
 

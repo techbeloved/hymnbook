@@ -58,7 +58,7 @@
     <string name="a_big_text">A</string>
     <string name="a_small_text">A</string>
     <string name="tempo_1x">1.0×</string>
-    <string name="tempo_x">%1$f×</string>
+    <string name="tempo_x">%1$.1f×</string>
     <string name="change_speed_text">Tempo: change playback speed</string>
     <string name="tempo_05">0.5×</string>
     <string name="tempo_15">1.5×</string>

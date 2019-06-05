@@ -6,9 +6,16 @@ import io.reactivex.Flowable
 import io.reactivex.Observable
 
 interface HymnsRepository {
-    fun loadHymnTitles(@SortBy sortBy: Int): Flowable<List<HymnTitle>>
+    /**
+     * Loads all hymn titles for given topicId if any. If no topic id is given (-1), then load all hymns
+     */
+    fun loadHymnTitles(@SortBy sortBy: Int, topicId: Int = 0): Flowable<List<HymnTitle>>
     fun getHymnDetailByNumber(hymnNo: Int): Flowable<HymnDetail>
-    fun loadHymnIndices(sortBy: Int): Flowable<List<Int>>
+
+    /**
+     * Load hymn numbers for given topicId. If topic id is not specified, then load all hymn numbers
+     */
+    fun loadHymnIndices(sortBy: Int, topicId: Int = 0): Flowable<List<Int>>
     fun getHymnById(hymnNo: Int): Flowable<Hymn>
     fun searchHymns(searchTerm: String): Flowable<List<SearchResult>>
     fun loadHymnTitlesForIndices(indices: List<Int>): Observable<List<HymnTitle>>

@@ -16,7 +16,7 @@ import io.reactivex.processors.BehaviorProcessor
 import io.reactivex.schedulers.Schedulers
 
 
-class HymnListingViewModel(private val hymnsRepository: HymnsRepository) : ViewModel() {
+class HymnListingViewModel(private val hymnsRepository: HymnsRepository, private val topicId: Int) : ViewModel() {
 
     private val disposables = CompositeDisposable()
 
@@ -42,7 +42,7 @@ class HymnListingViewModel(private val hymnsRepository: HymnsRepository) : ViewM
         val disposable = sortByProcessor
                 .distinctUntilChanged()
                 .switchMap { sortBy ->
-                    hymnsRepository.loadHymnTitles(sortBy)
+                    hymnsRepository.loadHymnTitles(sortBy, topicId)
                 }
                 .compose(getHymnTitleUiModels())
                 .compose(getViewState())
@@ -74,9 +74,9 @@ class HymnListingViewModel(private val hymnsRepository: HymnsRepository) : ViewM
         upstream.map { Lce.Content(it) }
     }
 
-    class Factory(private val repository: HymnsRepository) : ViewModelProvider.Factory {
+    class Factory(private val repository: HymnsRepository, val topicId: Int) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return HymnListingViewModel(repository) as T
+            return HymnListingViewModel(repository, topicId) as T
         }
 
     }

@@ -6,7 +6,7 @@ import androidx.room.TypeConverters
 import com.techbeloved.hymnbook.data.model.*
 
 
-@Database(entities = [Hymn::class, Topic::class, HymnSearch::class], views = [HymnTitle::class, HymnDetail::class], version = 3)
+@Database(entities = [Hymn::class, Topic::class, HymnSearch::class], views = [HymnTitle::class, HymnDetail::class], version = 4)
 @TypeConverters(ListConverter::class)
 abstract class HymnsDatabase: RoomDatabase() {
     abstract fun hymnDao(): HymnDao

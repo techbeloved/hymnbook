@@ -2,8 +2,8 @@ package com.techbeloved.hymnbook.data.model
 
 import androidx.room.*
 
-@DatabaseView("SELECT num, title FROM hymns", viewName = "hymn_titles")
-data class HymnTitle(@ColumnInfo(name = "num") val id: Int, val title: String)
+@DatabaseView("SELECT num, title, topicId FROM hymns", viewName = "hymn_titles")
+data class HymnTitle(@ColumnInfo(name = "num") val id: Int, val title: String, val topicId: Int = 0)
 
 @DatabaseView("SELECT *, topic FROM hymns AS h, topics AS t WHERE h.topicId=t.id", viewName = "hymn_with_topics")
 data class HymnDetail(var id: String, var num: Int, var title: String, var verses: List<String>, val topic: String) {
