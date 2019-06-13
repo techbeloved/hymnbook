@@ -26,6 +26,8 @@ import com.techbeloved.hymnbook.data.repo.local.HymnsDatabase
 import com.techbeloved.hymnbook.data.repo.local.util.AppExecutors
 import com.techbeloved.hymnbook.data.repo.local.util.DataGenerator
 import com.techbeloved.hymnbook.nowplaying.MediaSessionConnection
+import com.techbeloved.hymnbook.playlists.PlaylistsRepo
+import com.techbeloved.hymnbook.playlists.PlaylistsRepoImp
 import com.techbeloved.hymnbook.sheetmusic.HymnUseCases
 import com.techbeloved.hymnbook.sheetmusic.HymnsUseCasesImp
 import com.techbeloved.hymnbook.topics.TopicsUseCases
@@ -126,6 +128,10 @@ object Injection {
                 provideSharePrefsRepo,
                 WorkManager.getInstance(HymnbookApp.instance)
         )
+    }
+
+    val providePlaylistRepo: PlaylistsRepo by lazy {
+        PlaylistsRepoImp(database)
     }
 
     /**

@@ -57,4 +57,18 @@
         <item name="cornerRadius">0dp</item>
         <item name="rippleColor">#7FEEEEEE</item>
     </style>
+
+    <style name="TextAppearance.Hymnbook.Title" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Widget.Hymnbook.Button.Normal" parent="Widget.MaterialComponents.Button">
+        <item name="cornerRadius">16dp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="Widget.Hymnbook.Button.Unelevated" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="cornerRadius">16dp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
 </resources>

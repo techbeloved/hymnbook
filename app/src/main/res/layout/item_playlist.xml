@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="item"
+            type="com.techbeloved.hymnbook.hymnlisting.HymnItemModel" />
+
+        <variable
+            name="callback"
+            type="com.techbeloved.hymnbook.hymnlisting.HymnItemModel.ClickListener" />
+    </data>
+
+    <LinearLayout
+        style="@style/SelectableItemBackground"
+        android:layout_width="match_parent"
+        android:layout_height="?listPreferredItemHeight"
+        android:background="?selectableItemBackground"
+        android:gravity="center_vertical"
+        android:onClick="@{() -> callback.onItemClick(item)}"
+        android:orientation="vertical"
+        android:paddingStart="?listPreferredItemPaddingLeft"
+        android:paddingLeft="?listPreferredItemPaddingLeft"
+        android:paddingEnd="?listPreferredItemPaddingRight"
+        android:paddingRight="?listPreferredItemPaddingRight">
+
+        <TextView
+            android:id="@+id/textView_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            tools:text="Title of playlist" />
+
+        <TextView
+            android:id="@+id/textView_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-light"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+            tools:text="subtitle of the playlist" />
+    </LinearLayout>
+</layout>

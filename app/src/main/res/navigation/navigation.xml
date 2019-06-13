@@ -109,4 +109,13 @@
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
+    <fragment
+        android:id="@+id/playlistsFragment"
+        android:name="com.techbeloved.hymnbook.playlists.PlaylistsFragment"
+        android:label="PlaylistsFragment"
+        tools:layout="@layout/fragment_playlists">
+        <action
+            android:id="@+id/action_playlistsFragment_to_hymnListingFragment"
+            app:destination="@id/hymnListingFragment" />
+    </fragment>
 </navigation>
