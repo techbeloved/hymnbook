@@ -12,6 +12,7 @@
     </data>
 
     <LinearLayout
+        android:id="@+id/linearlayout_hymn_list_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/SelectableItemBackground"
@@ -19,7 +20,7 @@
         android:paddingEnd="?listPreferredItemPaddingRight"
         android:paddingStart="?listPreferredItemPaddingLeft"
         android:background="?selectableItemBackground"
-        android:onClick="@{() -> callback.onItemClick(item)}"
+        android:onClick="@{(v) -> callback.onItemClick(v, item)}"
         android:paddingLeft="?listPreferredItemPaddingLeft"
         android:paddingRight="?listPreferredItemPaddingRight">
 

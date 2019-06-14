@@ -19,7 +19,7 @@
         android:layout_height="?listPreferredItemHeight"
         android:background="?selectableItemBackground"
         android:gravity="center_vertical"
-        android:onClick="@{() -> callback.onItemClick(item)}"
+        android:onClick="@{(v) -> callback.onItemClick(v, item)}"
         android:orientation="vertical"
         android:paddingStart="?listPreferredItemPaddingLeft"
         android:paddingLeft="?listPreferredItemPaddingLeft"

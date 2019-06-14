@@ -40,13 +40,14 @@ class HymnListingFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     private lateinit var title: String
 
     private val clickListener = object : HymnItemModel.ClickListener<HymnItemModel> {
-        override fun onItemClick(item: HymnItemModel) {
-            navigateToHymnDetail(item.id)
+        override fun onItemClick(view: View, item: HymnItemModel) {
+            navigateToHymnDetail(view, item)
         }
     }
 
-    private fun navigateToHymnDetail(hymnIndex: Int) {
-        findNavController().navigate(HymnListingFragmentDirections.actionHymnListingFragmentToDetailPagerFragment(hymnIndex))
+    private fun navigateToHymnDetail(view: View, item: HymnItemModel) {
+        findNavController().navigate(HymnListingFragmentDirections
+                .actionHymnListingFragmentToDetailPagerFragment(item.id))
     }
 
     private val filterHymnTextWatcher = object : TextWatcher {

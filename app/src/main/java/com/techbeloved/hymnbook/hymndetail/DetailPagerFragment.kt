@@ -70,7 +70,7 @@ class DetailPagerFragment : BaseDetailPagerFragment() {
         binding.viewpagerHymnDetail.currentItem = indexToLoad
     }
 
-    inner class DetailPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
+    inner class DetailPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         private val hymnIndices = mutableListOf<Int>()
         override fun getItem(position: Int): Fragment {
             val detailFragment = DetailFragment()

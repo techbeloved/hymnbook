@@ -28,7 +28,7 @@ class SheetMusicListingFragment : Fragment() {
     private lateinit var hymnListAdapter: HymnListAdapter
 
     private val clickListener = object : HymnItemModel.ClickListener<HymnItemModel> {
-        override fun onItemClick(item: HymnItemModel) {
+        override fun onItemClick(view: View, item: HymnItemModel) {
             navigateToHymnDetail(item.id)
         }
     }

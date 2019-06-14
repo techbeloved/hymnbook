@@ -1,5 +1,6 @@
 package com.techbeloved.hymnbook.hymnlisting
 
+import android.view.View
 import androidx.recyclerview.widget.DiffUtil
 
 interface HymnItemModel {
@@ -21,7 +22,7 @@ interface HymnItemModel {
     }
 
     interface ClickListener<T> {
-        fun onItemClick(item: T)
+        fun onItemClick(view: View, item: T)
     }
 }
 

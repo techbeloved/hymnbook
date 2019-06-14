@@ -1,5 +1,6 @@
 package com.techbeloved.hymnbook.hymndetail
 
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat
@@ -138,6 +139,26 @@ abstract class BaseDetailPagerFragment : Fragment() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             setupTempoControls()
         }
+
+        nowPlayingViewModel.isPlaying.observe(viewLifecycleOwner, Observer { playing ->
+            if (playing) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    val playToPause = requireContext().getDrawable(R.drawable.avd_play_to_pause) as AnimatedVectorDrawable
+                    binding.bottomsheetPlayControls.imageViewControlsPlayPause.setImageDrawable(playToPause)
+                    playToPause.start()
+                } else {
+                    binding.bottomsheetPlayControls.imageViewControlsPlayPause.setImageResource(R.drawable.ic_pause)
+                }
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    val pauseToPlay = requireContext().getDrawable(R.drawable.avd_pause_to_play) as AnimatedVectorDrawable
+                    binding.bottomsheetPlayControls.imageViewControlsPlayPause.setImageDrawable(pauseToPlay)
+                    pauseToPlay.start()
+                } else {
+                    binding.bottomsheetPlayControls.imageViewControlsPlayPause.setImageResource(R.drawable.ic_play)
+                }
+            }
+        })
 
         nowPlayingViewModel.mediaPosition.observe(viewLifecycleOwner, Observer { position ->
             val currentPosition = if (position < 0) 0 else position

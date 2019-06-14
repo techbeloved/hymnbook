@@ -21,7 +21,7 @@ class PlaylistsFragment : Fragment() {
     private lateinit var viewModel: PlaylistsViewModel
 
     private val clickListener: HymnItemModel.ClickListener<HymnItemModel> = object : HymnItemModel.ClickListener<HymnItemModel> {
-        override fun onItemClick(item: HymnItemModel) {
+        override fun onItemClick(view: View, item: HymnItemModel) {
 
         }
     }

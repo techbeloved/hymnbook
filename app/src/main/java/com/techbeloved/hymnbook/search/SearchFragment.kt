@@ -25,7 +25,7 @@ import timber.log.Timber
 class SearchFragment : Fragment() {
 
     private val clickListener: HymnItemModel.ClickListener<HymnItemModel> = object : HymnItemModel.ClickListener<HymnItemModel> {
-        override fun onItemClick(item: HymnItemModel) {
+        override fun onItemClick(view: View, item: HymnItemModel) {
             findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToDetailPagerFragment(item.id))
         }
 

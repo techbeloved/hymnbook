@@ -23,7 +23,7 @@ import com.techbeloved.hymnbook.usecases.Lce
 class TopicsFragment : Fragment() {
 
     private val topicClickListener: HymnItemModel.ClickListener<HymnItemModel> = object : HymnItemModel.ClickListener<HymnItemModel> {
-        override fun onItemClick(item: HymnItemModel) {
+        override fun onItemClick(view: View, item: HymnItemModel) {
             findNavController().navigate(TopicsFragmentDirections.actionTopicsFragmentToHymnListingFragment(item.id, item.title))
         }
     }
