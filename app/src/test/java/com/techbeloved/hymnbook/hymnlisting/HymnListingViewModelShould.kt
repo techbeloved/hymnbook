@@ -44,7 +44,7 @@ class HymnListingViewModelShould {
 
     @Before
     fun setUp() {
-        hymnListingViewModel = HymnListingViewModel(hymnsRepository)
+        hymnListingViewModel = HymnListingViewModel(hymnsRepository, 0)
     }
 
     // https://stackoverflow.com/questions/43356314/android-rxjava-2-junit-test-getmainlooper-in-android-os-looper-not-mocked-runt
