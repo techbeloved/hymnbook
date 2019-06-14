@@ -19,7 +19,7 @@ class NowPlayingViewModel(mediaSessionConnection: MediaSessionConnection) : View
      */
     private val _isPlaying = MutableLiveData<Boolean>(true)
     val isPlaying: LiveData<Boolean>
-        get() = _isPlaying
+        get() = Transformations.distinctUntilChanged(_isPlaying)
     val playbackState: LiveData<PlaybackStateCompat>
         get() = mediaSessionConnection.playbackState
     val metadata: LiveData<MediaMetadataCompat>

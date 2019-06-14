@@ -18,6 +18,8 @@ class MediaPlayerAdapter : MediaPlayback {
     private var repeatTimes = 1
     private var playCount = 0
 
+    private var playerReady = false
+
     private val playbackStatusSubject = PublishSubject.create<PlaybackStatus>()
 
     override fun onPlay() {
@@ -77,8 +79,10 @@ class MediaPlayerAdapter : MediaPlayback {
                     player?.prepare()
                     playCount = 0
                     emitter.onSuccess(player?.duration!! * repeatTimes)
+                    playerReady = true
                 } else {
                     emitter.onSuccess(0)
+                    release()
                 }
             } catch (e: Exception) {
                 when (e) {
@@ -87,6 +91,7 @@ class MediaPlayerAdapter : MediaPlayback {
                     is IllegalArgumentException -> emitter.onError(Throwable("Invalid argument!  ${metadata?.mediaUri}", e))
                     else -> emitter.onError(Throwable("Error preparing media for playback", e))
                 }
+                release()
             }
         }
     }
@@ -96,6 +101,7 @@ class MediaPlayerAdapter : MediaPlayback {
     private fun release() {
         player?.release()
         player = null
+        playerReady = false
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -121,7 +127,12 @@ class MediaPlayerAdapter : MediaPlayback {
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
-    override fun playbackRate(): Float = player?.playbackParams?.speed ?: 1.0f
+    override fun playbackRate(): Float {
+        return when {
+            playerReady -> player?.playbackParams?.speed ?: 1.0f
+            else -> 1.0f
+        }
+    }
 
     override fun setRepeat(@PlaybackStateCompat.RepeatMode repeatMode: Int, repeatTimes: Int) {
 
