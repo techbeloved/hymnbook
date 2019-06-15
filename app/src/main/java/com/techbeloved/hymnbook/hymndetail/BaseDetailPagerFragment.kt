@@ -131,7 +131,6 @@ abstract class BaseDetailPagerFragment : Fragment() {
                 0
             }
             binding.viewpagerHymnDetail.setCurrentItem(nextIndex, true)
-            nowPlayingViewModel.skipTo(nextIndex)
         }
 
         binding.bottomsheetPlayControls.imageViewControlsPrevious.setOnClickListener {
@@ -142,7 +141,6 @@ abstract class BaseDetailPagerFragment : Fragment() {
                 nowPlayingViewModel.hymnItems.size - 1
             }
             binding.viewpagerHymnDetail.setCurrentItem(nextIndex, true)
-            nowPlayingViewModel.skipTo(nextIndex)
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

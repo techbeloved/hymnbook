@@ -256,9 +256,9 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
             playbackRate = playbackPrefs.playbackRate().blockingFirst()
             repeatMode = playbackPrefs.repeatMode().blockingFirst()
 
-            playFromMediaIdSubject.switchMap { mediaId ->
+            playFromMediaIdSubject.switchMapSingle { mediaId ->
                 Injection.provideRepository.getHymnById(mediaId.toInt())
-                        .toObservable()
+                        .firstOrError()
             }
                     .subscribe({ hymn ->
                         // Check that the hymn is playable.

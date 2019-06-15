@@ -1,9 +1,6 @@
 package com.techbeloved.hymnbook.sheetmusic
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import com.techbeloved.hymnbook.data.repo.OnlineHymn
 import com.techbeloved.hymnbook.data.repo.OnlineRepo
 import com.techbeloved.hymnbook.hymndetail.BY_NUMBER
@@ -21,7 +18,7 @@ class SheetMusicPagerViewModel(private val repo: OnlineRepo) : ViewModel() {
     private val hymnIndicesLiveData: MutableLiveData<Lce<List<Int>>> = MutableLiveData()
 
     val hymnIndicesLive: LiveData<Lce<List<Int>>>
-        get() = hymnIndicesLiveData
+        get() = Transformations.distinctUntilChanged(hymnIndicesLiveData)
 
     fun loadIndices(@SortBy sortBy: Int = BY_NUMBER) {
         repo.getAllHymns()

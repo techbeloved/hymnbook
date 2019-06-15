@@ -1,9 +1,7 @@
 package com.techbeloved.hymnbook.hymndetail
 
 import androidx.annotation.IntDef
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
 import com.techbeloved.hymnbook.usecases.Lce
 import io.reactivex.FlowableTransformer
@@ -17,8 +15,8 @@ class HymnPagerViewModel(private val repository: HymnsRepository) : ViewModel() 
 
     private val _hymnIndicesLiveData: MutableLiveData<Lce<List<Int>>> = MutableLiveData()
 
-    val hymnIndicesLiveData: MutableLiveData<Lce<List<Int>>>
-        get() = _hymnIndicesLiveData
+    val hymnIndicesLiveData: LiveData<Lce<List<Int>>>
+        get() = Transformations.distinctUntilChanged(_hymnIndicesLiveData)
 
     private val indicesConsumer: Consumer<in Lce<List<Int>>>? = Consumer {
         _hymnIndicesLiveData.value = it

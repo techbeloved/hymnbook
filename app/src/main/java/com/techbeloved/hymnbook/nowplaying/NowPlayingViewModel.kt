@@ -98,6 +98,7 @@ class NowPlayingViewModel(mediaSessionConnection: MediaSessionConnection) : View
      * However, we want to check if new item is to be played or we should play or pause
      */
     fun playMedia(mediaId: String, isSkipping: Boolean = false) {
+        Timber.i("Play media: %s, skipping: %s", mediaId, isSkipping)
         val nowPlaying = mediaSessionConnection.nowPlaying.value
         val transportControls = mediaSessionConnection.transportControls
 
