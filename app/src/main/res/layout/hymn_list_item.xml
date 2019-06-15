@@ -15,7 +15,6 @@
         android:id="@+id/linearlayout_hymn_list_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/SelectableItemBackground"
         android:orientation="horizontal"
         android:paddingEnd="?listPreferredItemPaddingRight"
         android:paddingStart="?listPreferredItemPaddingLeft"

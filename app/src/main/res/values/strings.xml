@@ -71,6 +71,12 @@
     <string name="cancel_text">Cancel</string>
     <string name="title_text">Title</string>
     <string name="description_text">Description</string>
+    <string name="add_to_playlist">Add to playlist</string>
+    <string name="hint_playlist_title">Playlist name</string>
+    <string name="hint_playlist_description">Description</string>
+    <string name="save">Save</string>
+    <string name="success_adding_to_playlist">Hymn added successfully to playlist!</string>
+    <string name="error_hymn_already_exist">Hymn Already exist in playlist</string>
 
     <string-array name="tempo_values">
         <item>0.5×</item>

@@ -13,7 +13,8 @@
         android:icon="@drawable/ic_topics"
         app:showAsAction="ifRoom"/>
     <item
-        android:enabled="false"
+        android:id="@+id/playlistsFragment"
+        android:enabled="true"
         android:title="@string/text_playlist_label"
         android:icon="@drawable/ic_queue_music_black_24dp"
         app:showAsAction="ifRoom"/>

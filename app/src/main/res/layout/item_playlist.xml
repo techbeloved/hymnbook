@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -16,7 +17,7 @@
     <LinearLayout
         style="@style/SelectableItemBackground"
         android:layout_width="match_parent"
-        android:layout_height="?listPreferredItemHeight"
+        android:layout_height="?listPreferredItemHeightSmall"
         android:background="?selectableItemBackground"
         android:gravity="center_vertical"
         android:onClick="@{(v) -> callback.onItemClick(v, item)}"
@@ -33,6 +34,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            android:text="@{item.title}"
             tools:text="Title of playlist" />
 
         <TextView
@@ -43,6 +45,8 @@
             android:fontFamily="sans-serif-light"
             android:maxLines="1"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+            android:text="@{item.subtitle}"
+            app:visibleGone="@{!item.subtitle.isEmpty()}"
             tools:text="subtitle of the playlist" />
     </LinearLayout>
 </layout>

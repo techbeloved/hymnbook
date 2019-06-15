@@ -7,7 +7,7 @@ import java.util.*
  * centrally in one place. Using RxBus to communicate things
  */
 sealed class PlaylistEvent {
-    data class Create(val title: String, val description: String, val created: Date) : PlaylistEvent()
+    data class Create(val title: String, val description: String?, val created: Date) : PlaylistEvent()
     data class Update(val id: Int, val title: String, val description: String) : PlaylistEvent()
     data class Delete(val id: Int) : PlaylistEvent()
     data class SaveFavorite(val playlistId: Int, val hymnId: Int) : PlaylistEvent()

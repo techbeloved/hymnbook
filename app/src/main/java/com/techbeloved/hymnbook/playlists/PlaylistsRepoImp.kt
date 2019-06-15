@@ -6,6 +6,7 @@ import com.techbeloved.hymnbook.data.model.Playlist
 import com.techbeloved.hymnbook.data.repo.local.HymnsDatabase
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 
 class PlaylistsRepoImp(
         val hymnsDatabase: HymnsDatabase
@@ -22,8 +23,12 @@ class PlaylistsRepoImp(
         return hymnsDatabase.playlistsDao().getPlaylist(playlistId).toObservable()
     }
 
-    override fun savePlaylist(playlist: Playlist): Completable {
+    override fun savePlaylist(playlist: Playlist): Single<Int> {
         return hymnsDatabase.playlistsDao().savePlaylist(playlist)
+                .andThen(hymnsDatabase.playlistsDao()
+                        .getPlaylistByTitle(playlist.title)
+                        .map { it.id }
+                        .firstOrError())
     }
 
     override fun savePlaylist(playlistId: Int, title: String, description: String): Completable {

@@ -41,4 +41,7 @@ interface PlaylistsDao {
 
     @Query("DELETE FROM playlists")
     fun deleteAllPlaylists(): Completable
+
+    @Query("SELECT * FROM playlists WHERE title LIKE :title")
+    fun getPlaylistByTitle(title: String): Flowable<Playlist>
 }

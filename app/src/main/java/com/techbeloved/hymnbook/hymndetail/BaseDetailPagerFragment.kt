@@ -30,6 +30,8 @@ import com.techbeloved.hymnbook.databinding.FragmentDetailPagerBinding
 import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.nowplaying.NowPlayingViewModel
 import com.techbeloved.hymnbook.nowplaying.PlaybackEvent
+import com.techbeloved.hymnbook.playlists.AddToPlaylistDialogFragment
+import com.techbeloved.hymnbook.playlists.EXTRA_SELECTED_HYMN_ID
 import com.techbeloved.hymnbook.tunesplayback.duration
 import timber.log.Timber
 
@@ -62,6 +64,13 @@ abstract class BaseDetailPagerFragment : Fragment() {
             when (item.itemId) {
                 R.id.menu_detail_quick_settings -> {
                     showQuickSettingsBottomSheet()
+                    true
+                }
+                R.id.menu_detail_add_to_playlist -> {
+                    val playlistDialog = AddToPlaylistDialogFragment().apply {
+                        arguments = Bundle().apply { putInt(EXTRA_SELECTED_HYMN_ID, currentHymnId) }
+                    }
+                    playlistDialog.show(requireFragmentManager(), null)
                     true
                 }
                 else -> false
