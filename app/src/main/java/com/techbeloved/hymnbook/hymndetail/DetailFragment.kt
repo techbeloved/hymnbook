@@ -80,7 +80,7 @@ class DetailFragment : Fragment() {
     }
 
     private fun updateDetailTextSize(currentSize: Float) {
-        val calculatedSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, currentSize, resources.displayMetrics)
+        val calculatedSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, currentSize, resources.displayMetrics)
         binding.textviewDetail.apply {
             textSize = calculatedSize
         }
