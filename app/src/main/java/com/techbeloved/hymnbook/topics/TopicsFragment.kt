@@ -1,5 +1,6 @@
 package com.techbeloved.hymnbook.topics
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,14 +20,27 @@ import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.hymnlisting.HymnItemModel
 import com.techbeloved.hymnbook.hymnlisting.HymnListAdapter
 import com.techbeloved.hymnbook.usecases.Lce
+import com.techbeloved.hymnbook.utils.AUTHORITY
+import com.techbeloved.hymnbook.utils.CATEGORY_TOPICS
+import com.techbeloved.hymnbook.utils.SCHEME_NORMAL
+import timber.log.Timber
 
 class TopicsFragment : Fragment() {
 
-    private val topicClickListener: HymnItemModel.ClickListener<HymnItemModel> = object : HymnItemModel.ClickListener<HymnItemModel> {
-        override fun onItemClick(view: View, item: HymnItemModel) {
-            findNavController().navigate(TopicsFragmentDirections.actionTopicsFragmentToHymnListingFragment(item.id, item.title))
-        }
-    }
+    private val topicClickListener: HymnItemModel.ClickListener<HymnItemModel> =
+            object : HymnItemModel.ClickListener<HymnItemModel> {
+                override fun onItemClick(view: View, item: HymnItemModel) {
+                    val navUri = Uri.Builder()
+                            .authority(AUTHORITY)
+                            .scheme(SCHEME_NORMAL)
+                            .appendEncodedPath(CATEGORY_TOPICS)
+                            .appendEncodedPath(item.id.toString())
+                            .build()
+                    Timber.i("navUri: %s", navUri)
+                    findNavController().navigate(TopicsFragmentDirections
+                            .actionTopicsFragmentToHymnListingFragment(item.title, navUri.toString()))
+                }
+            }
 
     private lateinit var viewModel: TopicsViewModel
 

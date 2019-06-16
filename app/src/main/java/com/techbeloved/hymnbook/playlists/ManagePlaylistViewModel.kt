@@ -20,14 +20,17 @@ import kotlin.properties.Delegates
  */
 class ManagePlaylistViewModel(private val playlistsRepo: PlaylistsRepo, private val schedulerProvider: SchedulerProvider) : ViewModel() {
 
+    private val _playlistSaved = MutableLiveData<SaveStatus>()
+    val playlistSaved: LiveData<SaveStatus> get() = _playlistSaved
+
     private var disposables: CompositeDisposable = CompositeDisposable()
 
     init {
         loadPlaylists()
     }
 
-    private val _favoriteSaved: MutableLiveData<FavoriteState> = MutableLiveData()
-    val favoriteSaved: LiveData<FavoriteState>
+    private val _favoriteSaved: MutableLiveData<SaveStatus> = MutableLiveData()
+    val favoriteSaved: LiveData<SaveStatus>
         get() = _favoriteSaved
 
     private var selectedHymnId: Int by Delegates.notNull()
@@ -55,13 +58,13 @@ class ManagePlaylistViewModel(private val playlistsRepo: PlaylistsRepo, private 
     fun addSelectedHymnToPlaylist(playlistId: Int) {
         playlistsRepo.saveFavorite(Favorite(playlistId = playlistId, hymnId = selectedHymnId))
                 .andThen(Observable.timer(2, TimeUnit.SECONDS)
-                        .map<FavoriteState> { FavoriteState.Dismiss }
-                        .startWith(FavoriteState.Saved)
+                        .map<SaveStatus> { SaveStatus.Dismiss }
+                        .startWith(SaveStatus.Saved)
                 )
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .subscribe({ _favoriteSaved.value = it }, { error ->
-                    _favoriteSaved.value = FavoriteState.SaveFailed(error)
+                    _favoriteSaved.value = SaveStatus.SaveFailed(error)
                     Timber.i(error)
                 })
                 .let { disposables.add(it) }
@@ -83,15 +86,38 @@ class ManagePlaylistViewModel(private val playlistsRepo: PlaylistsRepo, private 
                 created = playlistCreate.created))
                 .flatMapCompletable { playlistId -> playlistsRepo.saveFavorite(Favorite(playlistId = playlistId, hymnId = selectedHymnId)) }
                 .andThen(Observable.timer(2, TimeUnit.SECONDS)
-                        .map<FavoriteState> { FavoriteState.Dismiss }
-                        .startWith(FavoriteState.Saved)
+                        .map<SaveStatus> { SaveStatus.Dismiss }
+                        .startWith(SaveStatus.Saved)
                 )
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
                 .subscribe({ _favoriteSaved.value = it }, { error ->
-                    _favoriteSaved.value = FavoriteState.SaveFailed(error)
+                    _favoriteSaved.value = SaveStatus.SaveFailed(error)
                     Timber.w(error)
                 })
+                .let { disposables.add(it) }
+    }
+
+    /**
+     * Saves new playlist to database
+     */
+    fun saveNewPlaylist(playlistCreate: PlaylistEvent.Create) {
+        playlistsRepo.savePlaylist(Playlist(
+                title = playlistCreate.title,
+                description = playlistCreate.description,
+                created = playlistCreate.created))
+                .flatMapObservable {
+                    Observable.timer(2, TimeUnit.SECONDS)
+                            .map<SaveStatus> { SaveStatus.Dismiss }
+                            .startWith(SaveStatus.Saved)
+                }
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+                .subscribe({ _playlistSaved.value = it },
+                        { error ->
+                            _playlistSaved.value = SaveStatus.SaveFailed(error)
+                            Timber.w(error)
+                        })
                 .let { disposables.add(it) }
     }
 
@@ -101,9 +127,9 @@ class ManagePlaylistViewModel(private val playlistsRepo: PlaylistsRepo, private 
         }
     }
 
-    sealed class FavoriteState {
-        object Saved : FavoriteState()
-        data class SaveFailed(val error: Throwable) : FavoriteState()
-        object Dismiss : FavoriteState()
+    sealed class SaveStatus {
+        object Saved : SaveStatus()
+        data class SaveFailed(val error: Throwable) : SaveStatus()
+        object Dismiss : SaveStatus()
     }
 }

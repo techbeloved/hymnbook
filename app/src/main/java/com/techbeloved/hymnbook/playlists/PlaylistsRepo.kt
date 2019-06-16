@@ -10,7 +10,7 @@ import io.reactivex.Single
 interface PlaylistsRepo {
     fun getPlaylists(): Observable<List<Playlist>>
 
-    fun getHymnsInPlaylist(playlistId: Int): Observable<List<Hymn>>
+    fun getHymnsInPlaylist(playlistId: Int, sortBy: Int): Observable<List<Hymn>>
 
     fun getPlaylistById(playlistId: Int): Observable<Playlist>
 

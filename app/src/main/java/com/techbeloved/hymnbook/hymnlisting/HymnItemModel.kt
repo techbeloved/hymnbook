@@ -23,6 +23,7 @@ interface HymnItemModel {
 
     interface ClickListener<T> {
         fun onItemClick(view: View, item: T)
+        fun onItemLongClick(view: View, item: T): Boolean = false
     }
 }
 

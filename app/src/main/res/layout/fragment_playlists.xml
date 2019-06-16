@@ -43,5 +43,7 @@
             android:layout_height="wrap_content"
             app:layout_anchor="@id/recyclerview_playlists"
             app:layout_anchorGravity="center" />
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 </layout>

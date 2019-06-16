@@ -24,6 +24,9 @@ import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.hymndetail.BY_NUMBER
 import com.techbeloved.hymnbook.hymndetail.BY_TITLE
 import com.techbeloved.hymnbook.usecases.Lce
+import com.techbeloved.hymnbook.utils.CATEGORY_PLAYLISTS
+import com.techbeloved.hymnbook.utils.CATEGORY_REGEX
+import com.techbeloved.hymnbook.utils.CATEGORY_TOPICS
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -148,13 +151,26 @@ class HymnListingFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun doInOnCreate() {
+        val factory = HymnListingViewModel.Factory(Injection.provideRepository, Injection.providePlaylistRepo)
+        viewModel = ViewModelProviders.of(this, factory).get(HymnListingViewModel::class.java)
         // Get the topic id from arguments
         val args = arguments?.let { HymnListingFragmentArgs.fromBundle(it) }
-        val topicId: Int = args?.topicId ?: 0
         title = args?.title.toString()
-        Timber.i("Topic id received: %s", topicId)
-        val factory = HymnListingViewModel.Factory(Injection.provideRepository, topicId)
-        viewModel = ViewModelProviders.of(this, factory).get(HymnListingViewModel::class.java)
+        val incomingUri = args?.navUri!!
+        Timber.i("incoming Uri: %s", incomingUri)
+        val categoryRegex = CATEGORY_REGEX.toRegex()
+
+        if (categoryRegex matches incomingUri) {
+            val matchResult = categoryRegex.find(incomingUri)
+            val category = matchResult?.groupValues?.get(2)
+            val categoryId = matchResult?.groupValues?.get(3)
+            Timber.i("Matched category, %s", category)
+            when (category) {
+                CATEGORY_PLAYLISTS -> viewModel.loadHymnsForPlaylist(categoryId?.toInt() ?: 1)
+                CATEGORY_TOPICS -> viewModel.loadHymnsForTopic(categoryId?.toInt() ?: 0)
+                else -> viewModel.loadHymnsForTopic()
+            }
+        }
 
         val disposable = sortByPref.asObservable().subscribe(
                 {

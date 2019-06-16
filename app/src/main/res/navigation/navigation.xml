@@ -31,12 +31,11 @@
             android:id="@+id/action_hymnListingFragment_to_detailPagerFragment"
             app:destination="@id/detailPagerFragment" />
         <argument
-            android:name="topicId"
-            android:defaultValue="0"
-            app:argType="integer" />
-        <argument
             android:name="title"
             android:defaultValue="Hymns"
+            app:argType="string" />
+        <argument
+            android:name="navUri"
             app:argType="string" />
     </fragment>
     <fragment
@@ -108,7 +107,7 @@
     <fragment
         android:id="@+id/playlistsFragment"
         android:name="com.techbeloved.hymnbook.playlists.PlaylistsFragment"
-        android:label="PlaylistsFragment"
+        android:label="@string/text_playlist_label"
         tools:layout="@layout/fragment_playlists">
         <action
             android:id="@+id/action_playlistsFragment_to_hymnListingFragment"

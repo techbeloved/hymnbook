@@ -4,6 +4,7 @@ import com.techbeloved.hymnbook.data.model.Favorite
 import com.techbeloved.hymnbook.data.model.Hymn
 import com.techbeloved.hymnbook.data.model.Playlist
 import com.techbeloved.hymnbook.data.repo.local.HymnsDatabase
+import com.techbeloved.hymnbook.hymndetail.BY_TITLE
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -15,8 +16,11 @@ class PlaylistsRepoImp(
         return hymnsDatabase.playlistsDao().getAllPlaylists().toObservable()
     }
 
-    override fun getHymnsInPlaylist(playlistId: Int): Observable<List<Hymn>> {
-        return hymnsDatabase.playlistsDao().getHymnsInPlaylist(playlistId).toObservable()
+    override fun getHymnsInPlaylist(playlistId: Int, sortBy: Int): Observable<List<Hymn>> {
+        return when (sortBy) {
+            BY_TITLE -> hymnsDatabase.playlistsDao().getHymnsInPlaylistSortByTitle(playlistId).toObservable()
+            else -> hymnsDatabase.playlistsDao().getHymnsInPlaylist(playlistId).toObservable()
+        }
     }
 
     override fun getPlaylistById(playlistId: Int): Observable<Playlist> {

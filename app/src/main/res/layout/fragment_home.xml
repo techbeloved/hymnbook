@@ -47,6 +47,8 @@
                 app:cardPreventCornerOverlap="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="16dp"
                 app:layout_constraintTop_toTopOf="@+id/cardview_hymns">
 
                 <LinearLayout
@@ -61,7 +63,7 @@
                         android:layout_height="160dp"
                         android:contentDescription="@string/children_category_image_description"
                         android:scaleType="centerInside"
-                        android:src="@drawable/ic_music_note_black_24dp" />
+                        app:srcCompat="@drawable/ic_music_note_black_24dp" />
 
                     <TextView
                         android:id="@+id/textView_category_children_label"
@@ -86,6 +88,8 @@
                 app:cardPreventCornerOverlap="true"
                 app:layout_constraintEnd_toStartOf="@+id/guideline"
                 app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="8dp"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <LinearLayout

@@ -178,11 +178,6 @@ dependencies {
 
     // Custom views
     implementation 'com.budiyev.android:circular-progress-bar:1.2.2'
-
-    // Verbal expressions
-    implementation 'co.zsmb:kotlinverbalexpressions:0.1'
-
-    implementation "ru.lanwen.verbalregex:java-verbal-expressions:1.5"
 }
 repositories {
     mavenCentral()

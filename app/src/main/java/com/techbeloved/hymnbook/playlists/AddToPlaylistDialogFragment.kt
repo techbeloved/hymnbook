@@ -105,22 +105,22 @@ class AddToPlaylistDialogFragment : BottomSheetDialogFragment() {
         })
     }
 
-    private fun showFavoriteSavedSnackbar(favoriteState: ManagePlaylistViewModel.FavoriteState) {
-        when (favoriteState) {
-            ManagePlaylistViewModel.FavoriteState.Saved -> {
+    private fun showFavoriteSavedSnackbar(favoriteStatus: ManagePlaylistViewModel.SaveStatus) {
+        when (favoriteStatus) {
+            ManagePlaylistViewModel.SaveStatus.Saved -> {
                 Snackbar.make(requireView().rootView, R.string.success_adding_to_playlist, Snackbar.LENGTH_SHORT)
                         .show()
             }
-            is ManagePlaylistViewModel.FavoriteState.SaveFailed -> {
-                if (favoriteState.error is SQLiteConstraintException) {
+            is ManagePlaylistViewModel.SaveStatus.SaveFailed -> {
+                if (favoriteStatus.error is SQLiteConstraintException) {
                     Snackbar.make(requireView().rootView, R.string.error_hymn_already_exist, Snackbar.LENGTH_SHORT)
                             .show()
                 }
-                Timber.w(favoriteState.error)
+                Timber.w(favoriteStatus.error)
             }
-            ManagePlaylistViewModel.FavoriteState.Dismiss -> dismiss()
+            ManagePlaylistViewModel.SaveStatus.Dismiss -> dismiss()
         }
-        Timber.i("Added: %s", favoriteState)
+        Timber.i("Added: %s", favoriteStatus)
     }
 
     override fun onDestroy() {

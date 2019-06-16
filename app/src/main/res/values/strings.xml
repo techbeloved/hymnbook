@@ -77,6 +77,9 @@
     <string name="save">Save</string>
     <string name="success_adding_to_playlist">Hymn added successfully to playlist!</string>
     <string name="error_hymn_already_exist">Hymn Already exist in playlist</string>
+    <string name="success_creating_playlist">Playlist Saved!</string>
+    <string name="error_playlist_already_exist">Playlist with same name exists</string>
+    <string name="delete">Delete</string>
 
     <string-array name="tempo_values">
         <item>0.5×</item>

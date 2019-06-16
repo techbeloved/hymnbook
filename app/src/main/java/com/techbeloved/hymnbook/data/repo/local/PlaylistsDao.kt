@@ -18,8 +18,11 @@ interface PlaylistsDao {
     @Query("SELECT * FROM playlists WHERE id = :playlistId")
     fun getPlaylist(playlistId: Int): Flowable<Playlist>
 
-    @Query("SELECT *, *, * FROM hymns AS h, favorites AS f, playlists AS p WHERE h.num=f.hymnId AND f.playlistId =:playlistId ORDER BY f.id ASC")
+    @Query("SELECT *, playlistId FROM playlists AS p, hymns AS h, favorites AS f WHERE h.num=f.hymnId AND f.playlistId =:playlistId ORDER BY f.id ASC")
     fun getHymnsInPlaylist(playlistId: Int): Flowable<List<Hymn>>
+
+    @Query("SELECT *, playlistId FROM playlists AS p, hymns AS h, favorites AS f WHERE h.num=f.hymnId AND f.playlistId =:playlistId ORDER BY h.title ASC")
+    fun getHymnsInPlaylistSortByTitle(playlistId: Int): Flowable<List<Hymn>>
 
     @Insert
     fun savePlaylist(playlist: Playlist): Completable
