@@ -10,7 +10,6 @@
         android:id="@+id/scene_add_to_playlist_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_rounded_top"
         android:orientation="vertical">
 
         <TextView
