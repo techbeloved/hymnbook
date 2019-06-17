@@ -80,6 +80,13 @@
     <string name="success_creating_playlist">Playlist Saved!</string>
     <string name="error_playlist_already_exist">Playlist with same name exists</string>
     <string name="delete">Delete</string>
+    <string name="create_new_playlist">Create new playlist</string>
+    <string name="options_menu_button_description">Options menu button</string>
+    <string name="playlist_deleted">Playlist Deleted</string>
+    <string name="error_deleting_playlist">Error deleting playlist!</string>
+    <string name="no_playlist_explanation">You have not created any playlist yet. You can create one by clicking on the icon on the toolbar</string>
+    <string name="rename">Rename</string>
+    <string name="edit_playlist">Edit playlist</string>
 
     <string-array name="tempo_values">
         <item>0.5×</item>

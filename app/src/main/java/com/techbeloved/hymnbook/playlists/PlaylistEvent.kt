@@ -1,5 +1,7 @@
 package com.techbeloved.hymnbook.playlists
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import java.util.*
 
 /**
@@ -8,7 +10,8 @@ import java.util.*
  */
 sealed class PlaylistEvent {
     data class Create(val title: String, val description: String?, val created: Date) : PlaylistEvent()
-    data class Update(val id: Int, val title: String, val description: String) : PlaylistEvent()
+    @Parcelize
+    data class Update(val id: Int, val title: String, val description: String) : PlaylistEvent(), Parcelable
     data class Delete(val id: Int) : PlaylistEvent()
     data class SaveFavorite(val playlistId: Int, val hymnId: Int) : PlaylistEvent()
     data class DeleteFavorite(val playlistId: Int, val hymnId: Int) : PlaylistEvent()

@@ -62,7 +62,7 @@ class HymnListingViewModel(private val hymnsRepository: HymnsRepository, private
                 .switchMap { sortBy ->
                     playlistsRepo.getHymnsInPlaylist(playlistId, sortBy).toFlowable(BackpressureStrategy.LATEST)
                 }
-                .compose(convertToTitleUiModels())
+                .compose(getHymnTitleUiModels())
                 .compose(getViewState())
                 .startWith(Lce.Loading(true))
                 .subscribeOn(Schedulers.io())

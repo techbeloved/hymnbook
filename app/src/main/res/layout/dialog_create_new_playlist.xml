@@ -10,6 +10,7 @@
         android:id="@+id/scene_add_to_playlist_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/bg_rounded_top"
         android:orientation="vertical">
 
         <TextView
@@ -21,11 +22,11 @@
             android:layout_marginRight="16dp"
             android:gravity="center"
             android:text="Create new playlist"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textinputlayout_create_new_playlist_title"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
@@ -36,7 +37,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edittext_create_new_playlist_title"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="@string/hint_playlist_title"
                 android:inputType="text"
                 android:maxLength="50"
@@ -45,7 +46,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textinputlayout_create_new_playlist_description"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
@@ -56,7 +57,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edittext_create_new_playlist_description"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="@string/hint_playlist_description"
                 android:inputType="text"
                 android:maxLength="100"

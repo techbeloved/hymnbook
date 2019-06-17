@@ -20,6 +20,12 @@ import kotlin.properties.Delegates
  */
 class ManagePlaylistViewModel(private val playlistsRepo: PlaylistsRepo, private val schedulerProvider: SchedulerProvider) : ViewModel() {
 
+    private var _editing = false
+    val editing get() = _editing
+
+    private var _editPlaylistId by Delegates.notNull<Int>()
+    val editPlaylistId get() = _editPlaylistId
+
     private val _playlistSaved = MutableLiveData<SaveStatus>()
     val playlistSaved: LiveData<SaveStatus> get() = _playlistSaved
 
@@ -119,6 +125,29 @@ class ManagePlaylistViewModel(private val playlistsRepo: PlaylistsRepo, private 
                             Timber.w(error)
                         })
                 .let { disposables.add(it) }
+    }
+
+    fun savePlaylist(playlistUpdate: PlaylistEvent.Update) {
+        playlistsRepo.savePlaylist(playlistUpdate.id, playlistUpdate.title, playlistUpdate.description)
+                .andThen(Observable.timer(2, TimeUnit.SECONDS)
+                        .map<SaveStatus> { SaveStatus.Dismiss }
+                        .startWith(SaveStatus.Saved))
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
+                .subscribe({ _playlistSaved.value = it },
+                        { error ->
+                            _playlistSaved.value = SaveStatus.SaveFailed(error)
+                            Timber.w(error)
+                        })
+                .let { disposables.add(it) }
+    }
+
+    fun setEditing(editing: Boolean) {
+        _editing = editing
+    }
+
+    fun setPlaylistId(playlistId: Int) {
+        _editPlaylistId = playlistId
     }
 
     class Factory(private val playlistsRepo: PlaylistsRepo, private val schedulerProvider: SchedulerProvider) : ViewModelProvider.Factory {

@@ -1,7 +1,7 @@
 package com.techbeloved.hymnbook.playlists
 
 import com.techbeloved.hymnbook.data.model.Favorite
-import com.techbeloved.hymnbook.data.model.Hymn
+import com.techbeloved.hymnbook.data.model.HymnTitle
 import com.techbeloved.hymnbook.data.model.Playlist
 import com.techbeloved.hymnbook.data.repo.local.HymnsDatabase
 import com.techbeloved.hymnbook.hymndetail.BY_TITLE
@@ -16,7 +16,7 @@ class PlaylistsRepoImp(
         return hymnsDatabase.playlistsDao().getAllPlaylists().toObservable()
     }
 
-    override fun getHymnsInPlaylist(playlistId: Int, sortBy: Int): Observable<List<Hymn>> {
+    override fun getHymnsInPlaylist(playlistId: Int, sortBy: Int): Observable<List<HymnTitle>> {
         return when (sortBy) {
             BY_TITLE -> hymnsDatabase.playlistsDao().getHymnsInPlaylistSortByTitle(playlistId).toObservable()
             else -> hymnsDatabase.playlistsDao().getHymnsInPlaylist(playlistId).toObservable()
@@ -41,5 +41,9 @@ class PlaylistsRepoImp(
 
     override fun saveFavorite(favorite: Favorite): Completable {
         return hymnsDatabase.playlistsDao().saveFavorite(favorite)
+    }
+
+    override fun deletePlaylistById(playlistId: Int): Completable {
+        return hymnsDatabase.playlistsDao().deletePlaylistById(playlistId)
     }
 }

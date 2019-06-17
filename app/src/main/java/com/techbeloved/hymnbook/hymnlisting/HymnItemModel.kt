@@ -1,7 +1,9 @@
 package com.techbeloved.hymnbook.hymnlisting
 
+import android.os.Parcelable
 import android.view.View
 import androidx.recyclerview.widget.DiffUtil
+import kotlinx.android.parcel.Parcelize
 
 interface HymnItemModel {
 
@@ -24,10 +26,14 @@ interface HymnItemModel {
     interface ClickListener<T> {
         fun onItemClick(view: View, item: T)
         fun onItemLongClick(view: View, item: T): Boolean = false
+        fun onOptionsMenuClicked(view: View, item: T) {
+
+        }
     }
 }
 
+@Parcelize
 data class TitleItem(override val id: Int,
                      override val title: String,
                      override val subtitle: String? = null,
-                     override val description: String? = null): HymnItemModel
+                     override val description: String? = null) : HymnItemModel, Parcelable

@@ -18,6 +18,11 @@ import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 import java.util.*
 
+const val EXTRA_PLAYLIST_UPDATE_EVENT = "extraPlaylistRequest"
+
+/**
+ * Bottomsheet dialog used for creating and editing playlist. Unfortunately, the name says create new, but it does edit existing playlist as well
+ */
 class CreateNewPlaylistDialogFragment : BottomSheetDialogFragment() {
 
     private val disposables = CompositeDisposable()
@@ -48,10 +53,29 @@ class CreateNewPlaylistDialogFragment : BottomSheetDialogFragment() {
                 .let { disposables.add(it) }
         saveButton.setOnClickListener {
             if (titleEdittext.text != null) {
-                val playlistCreate = PlaylistEvent.Create(
-                        titleEdittext.text.toString(),
-                        descriptionEditText.text?.toString(), Date())
-                viewModel.saveNewPlaylist(playlistCreate)
+                if (!viewModel.editing) {
+                    val playlistCreate = PlaylistEvent.Create(
+                            titleEdittext.text.toString(),
+                            descriptionEditText.text?.toString(), Date())
+                    viewModel.saveNewPlaylist(playlistCreate)
+                } else {
+                    val playlistUpdate = PlaylistEvent.Update(
+                            viewModel.editPlaylistId,
+                            titleEdittext.text.toString(),
+                            descriptionEditText.text.toString()
+                    )
+                    viewModel.savePlaylist(playlistUpdate)
+                }
+            }
+        }
+        if (arguments != null) {
+            val playlistUpdateEvent = requireArguments().getParcelable<PlaylistEvent.Update>(EXTRA_PLAYLIST_UPDATE_EVENT)
+            if (playlistUpdateEvent != null) {
+                titleEdittext.setText(playlistUpdateEvent.title)
+                descriptionEditText.setText(playlistUpdateEvent.description)
+                viewModel.setPlaylistId(playlistUpdateEvent.id)
+                viewModel.setEditing(true)
+                binding.textviewCreateNewPlaylistHeader.setText(R.string.edit_playlist)
             }
         }
 

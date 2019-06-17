@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import com.techbeloved.hymnbook.data.model.Favorite
-import com.techbeloved.hymnbook.data.model.Hymn
+import com.techbeloved.hymnbook.data.model.HymnTitle
 import com.techbeloved.hymnbook.data.model.Playlist
 import io.reactivex.Completable
 import io.reactivex.Flowable
@@ -18,11 +18,12 @@ interface PlaylistsDao {
     @Query("SELECT * FROM playlists WHERE id = :playlistId")
     fun getPlaylist(playlistId: Int): Flowable<Playlist>
 
-    @Query("SELECT *, playlistId FROM playlists AS p, hymns AS h, favorites AS f WHERE h.num=f.hymnId AND f.playlistId =:playlistId ORDER BY f.id ASC")
-    fun getHymnsInPlaylist(playlistId: Int): Flowable<List<Hymn>>
+    // The following two queries does the same thing except ordering, one uses INNER JOIN while the other uses only WHERE clauses
+    @Query("SELECT *, playlistId FROM playlists AS p INNER JOIN favorites AS f ON p.id=f.playlistId INNER JOIN hymn_titles AS t ON f.hymnId=t.num WHERE f.playlistId =:playlistId ORDER BY f.id ASC")
+    fun getHymnsInPlaylist(playlistId: Int): Flowable<List<HymnTitle>>
 
-    @Query("SELECT *, playlistId FROM playlists AS p, hymns AS h, favorites AS f WHERE h.num=f.hymnId AND f.playlistId =:playlistId ORDER BY h.title ASC")
-    fun getHymnsInPlaylistSortByTitle(playlistId: Int): Flowable<List<Hymn>>
+    @Query("SELECT *, playlistId FROM playlists AS p, favorites AS f, hymn_titles AS t WHERE p.id=f.playlistId  AND f.hymnId=t.num AND f.playlistId =:playlistId ORDER BY t.title ASC")
+    fun getHymnsInPlaylistSortByTitle(playlistId: Int): Flowable<List<HymnTitle>>
 
     @Insert
     fun savePlaylist(playlist: Playlist): Completable

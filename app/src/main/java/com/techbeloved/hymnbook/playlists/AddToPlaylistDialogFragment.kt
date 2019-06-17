@@ -10,7 +10,9 @@ import android.widget.Button
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Scene
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
@@ -47,7 +49,7 @@ class AddToPlaylistDialogFragment : BottomSheetDialogFragment() {
         viewModel.updateSelectedHymnId(selectedHymnId)
     }
 
-    private lateinit var playlistAdapter: PlaylistsAdapter
+    private lateinit var playlistAdapter: SimplePlaylistsAdapter
     private lateinit var binding: DialogFragmentAddToPlaylistBinding
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.dialog_fragment_add_to_playlist, container, false)
@@ -87,10 +89,11 @@ class AddToPlaylistDialogFragment : BottomSheetDialogFragment() {
             if (!disposables.isDisposed) disposables.dispose()
         }
 
-        playlistAdapter = PlaylistsAdapter(clickListener)
+        playlistAdapter = SimplePlaylistsAdapter(clickListener)
         binding.dialogSelectPlaylist.recyclerviewSelectPlaylist.apply {
             adapter = playlistAdapter
             layoutManager = LinearLayoutManager(requireContext())
+            addItemDecoration(DividerItemDecoration(requireContext(), RecyclerView.VERTICAL))
         }
         return binding.root
     }
@@ -113,7 +116,7 @@ class AddToPlaylistDialogFragment : BottomSheetDialogFragment() {
             }
             is ManagePlaylistViewModel.SaveStatus.SaveFailed -> {
                 if (favoriteStatus.error is SQLiteConstraintException) {
-                    Snackbar.make(requireView().rootView, R.string.error_hymn_already_exist, Snackbar.LENGTH_SHORT)
+                    Snackbar.make(binding.sceneRootAddToPlaylist, R.string.error_hymn_already_exist, Snackbar.LENGTH_SHORT)
                             .show()
                 }
                 Timber.w(favoriteStatus.error)

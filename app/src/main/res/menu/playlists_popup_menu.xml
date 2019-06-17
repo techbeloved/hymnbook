@@ -5,4 +5,8 @@
         android:id="@+id/action_delete_playlist"
         android:enabled="true"
         android:title="@string/delete" />
+    <item
+        android:id="@+id/action_playlist_rename"
+        android:enabled="true"
+        android:title="@string/rename" />
 </menu>

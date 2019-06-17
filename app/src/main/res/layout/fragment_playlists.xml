@@ -5,6 +5,9 @@
 
     <data>
 
+        <variable
+            name="isEmpty"
+            type="boolean" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -34,8 +37,24 @@
             android:id="@+id/recyclerview_playlists"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:listitem="@layout/item_playlist" />
+
+        <TextView
+            android:id="@+id/textView_playlists_empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="@string/no_playlist_explanation"
+            android:visibility="gone"
+            app:drawableTopCompat="@drawable/ic_playlist_add_black_24dp"
+            app:visibleGone="@{isEmpty}" />
 
         <ProgressBar
             android:id="@+id/progressBar_playlists_loading"
