@@ -91,15 +91,25 @@ abstract class BaseDetailPagerFragment : Fragment() {
         return binding.root
     }
 
+    private var previousState = ViewPager.SCROLL_STATE_IDLE
+    private var userScrollChange = false
     private val pageChangeListener: ViewPager.OnPageChangeListener = object : ViewPager.OnPageChangeListener {
         override fun onPageScrollStateChanged(state: Int) {
+            if (previousState == ViewPager.SCROLL_STATE_DRAGGING
+                    && state == ViewPager.SCROLL_STATE_SETTLING)
+                userScrollChange = true
+            else if (previousState == ViewPager.SCROLL_STATE_SETTLING
+                    && state == ViewPager.SCROLL_STATE_IDLE)
+                userScrollChange = false
+
+            previousState = state
         }
 
         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
         }
 
         override fun onPageSelected(position: Int) {
-            nowPlayingViewModel.skipTo(position)
+            if (userScrollChange) nowPlayingViewModel.skipTo(position)
         }
 
     }
