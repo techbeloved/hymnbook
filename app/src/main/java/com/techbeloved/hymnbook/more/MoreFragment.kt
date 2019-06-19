@@ -22,7 +22,7 @@ class MoreFragment : Fragment() {
             findNavController().navigate(MoreFragmentDirections.actionMoreFragmentToSettingsActivity())
         }
         binding.textviewMoreAbout.setOnClickListener {
-            Snackbar.make(binding.coordinatorLayoutMore.rootView, "About hymnbook app", Snackbar.LENGTH_SHORT).show()
+            findNavController().navigate(MoreFragmentDirections.actionMoreFragmentToAboutFragment())
         }
 
         binding.textviewMoreHymnOfTheDay.setOnClickListener {

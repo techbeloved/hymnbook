@@ -67,6 +67,9 @@
         <action
             android:id="@+id/action_moreFragment_to_settingsActivity"
             app:destination="@id/settingsActivity" />
+        <action
+            android:id="@+id/action_moreFragment_to_aboutFragment"
+            app:destination="@id/aboutFragment" />
     </fragment>
     <activity
         android:id="@+id/settingsActivity"
@@ -113,4 +116,18 @@
             android:id="@+id/action_playlistsFragment_to_hymnListingFragment"
             app:destination="@id/hymnListingFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.techbeloved.hymnbook.more.AboutFragment"
+        android:label="About"
+        tools:layout="@layout/fragment_about">
+        <action
+            android:id="@+id/action_aboutFragment_to_openSourceLicensesFragment"
+            app:destination="@id/openSourceLicensesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/openSourceLicensesFragment"
+        android:name="com.techbeloved.hymnbook.more.OpenSourceLicensesFragment"
+        android:label="Open Source Licenses"
+        tools:layout="@layout/fragment_open_source_licenses" />
 </navigation>

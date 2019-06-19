@@ -62,8 +62,7 @@
                         android:layout_width="160dp"
                         android:layout_height="160dp"
                         android:contentDescription="@string/children_category_image_description"
-                        android:scaleType="centerInside"
-                        app:srcCompat="@drawable/ic_music_note_black_24dp" />
+                        app:srcCompat="@drawable/ic_stave" />
 
                     <TextView
                         android:id="@+id/textView_category_children_label"
@@ -86,6 +85,7 @@
                 app:cardCornerRadius="4dp"
                 app:cardElevation="4dp"
                 app:cardPreventCornerOverlap="true"
+                android:background="?selectableItemBackgroundBorderless"
                 app:layout_constraintEnd_toStartOf="@+id/guideline"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginLeft="16dp"
@@ -102,6 +102,7 @@
                         android:id="@+id/imageview_category_hymns"
                         android:layout_width="160dp"
                         android:layout_height="160dp"
+                        android:padding="8dp"
                         android:contentDescription="@string/hymn_category_image_description"
                         android:scaleType="centerInside"
                         android:src="@drawable/wccrm_logo" />

@@ -21,7 +21,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
-import xdroid.toaster.Toaster.toast
 
 /**
  * A simple [Fragment] subclass.
@@ -96,7 +95,6 @@ class DetailFragment : Fragment() {
     private fun showContentError(error: String) {
         showProgressLoading(false)
         Timber.e(error)
-        toast(error)
     }
 
     private fun showContentDetail(content: HymnDetailItem) {

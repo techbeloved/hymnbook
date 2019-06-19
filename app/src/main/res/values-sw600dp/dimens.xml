@@ -14,5 +14,7 @@
     <dimen name="height_play_controls_play_pause">56dp</dimen>
     <dimen name="width_play_controls_long">48dp</dimen>
 
+    <dimen name="margin_standard_layout">24dp</dimen>
+
     <integer name="normal_detail_text_size">20</integer>
 </resources>

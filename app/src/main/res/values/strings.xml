@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Watchman Hymnbook</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="action_settings">Settings</string>
 
     <string name="search_title">Search Hymns</string>
@@ -10,7 +9,6 @@
 
     <string name="tunes_copied_success">Tunes copied successfully</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="text_home_label">Home</string>
     <string name="text_topics_label">Topics</string>
     <string name="text_playlist_label">Playlists</string>
@@ -87,6 +85,14 @@
     <string name="no_playlist_explanation">You have not created any playlist yet. You can create one by clicking on the icon on the toolbar</string>
     <string name="rename">Rename</string>
     <string name="edit_playlist">Edit playlist</string>
+    <string name="hymnbook_title">Hymnbook App</string>
+
+    <string name="about_text">The Watchman Hymnbook is a collection of 300 selected Hymns and Songs for Christian Fellowship as found in the Hymnal of The Watchman Catholic Charismatic Renewal Movement (WCCRM). The Watchman Hymnbook app contains above 250 midi tunes which will help anyone sing along easily.</string>
+    <string name="about_wccrm">A Christian Organisation divinely raised to be a channel of blessings to all peoples of the world, who are seeking God sincerely and who will come in contact with her.</string>
+    <string name="open_source_licenses">Open Source Licenses</string>
+
+    <string name="app_version">Version %s</string>
+    <string name="wccrm_name">Watchman Catholic Charismatic Renewal Movement</string>
 
     <string-array name="tempo_values">
         <item>0.5×</item>

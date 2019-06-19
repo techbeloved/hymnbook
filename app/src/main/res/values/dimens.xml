@@ -15,6 +15,8 @@
     <dimen name="width_play_controls_long">48dp</dimen>
     <dimen name="add_to_playlist_dialog_height">240dp</dimen>
 
+    <dimen name="margin_standard_layout">16dp</dimen>
+
     <integer name="max_text_size">8</integer>
     <integer name="min_text_size">-4</integer>
 
