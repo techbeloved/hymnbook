@@ -116,7 +116,7 @@ class AddToPlaylistDialogFragment : BottomSheetDialogFragment() {
             }
             is ManagePlaylistViewModel.SaveStatus.SaveFailed -> {
                 if (favoriteStatus.error is SQLiteConstraintException) {
-                    Snackbar.make(binding.sceneRootAddToPlaylist, R.string.error_hymn_already_exist, Snackbar.LENGTH_SHORT)
+                    Snackbar.make(requireView().rootView, R.string.error_hymn_already_exist, Snackbar.LENGTH_SHORT)
                             .show()
                 }
                 Timber.w(favoriteStatus.error)

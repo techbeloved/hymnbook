@@ -17,7 +17,7 @@
         android:id="@+id/textview_simple_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?selectableItemBackgroundBorderless"
+        android:background="?selectableItemBackground"
         android:onClick="@{(v) -> callback.onItemClick(v, item)}"
         android:orientation="vertical"
         android:paddingLeft="16dp"
