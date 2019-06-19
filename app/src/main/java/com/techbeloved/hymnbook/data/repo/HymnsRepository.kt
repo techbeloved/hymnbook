@@ -18,7 +18,7 @@ interface HymnsRepository {
     fun loadHymnIndices(sortBy: Int, topicId: Int = 0): Flowable<List<Int>>
     fun getHymnById(hymnNo: Int): Flowable<Hymn>
     fun searchHymns(searchTerm: String): Flowable<List<SearchResult>>
-    fun loadHymnTitlesForIndices(indices: List<Int>): Observable<List<HymnTitle>>
+    fun loadHymnTitlesForIndices(indices: List<Int>, sortBy: Int): Observable<List<HymnTitle>>
     fun updateHymnDownloadProgress(hymnId: Int, progress: Int, downloadStatus: Int = DOWNLOAD_IN_PROGRESS)
 
     /**

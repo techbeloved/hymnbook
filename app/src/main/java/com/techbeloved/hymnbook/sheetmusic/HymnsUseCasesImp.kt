@@ -40,7 +40,7 @@ class HymnsUseCasesImp(private val hymnsRepository: HymnsRepository,
 
     override fun hymnSheetMusicTitles(sortBy: Int): Observable<List<TitleItem>> {
         return onlineRepo.hymnIds(sortBy)
-                .flatMap { ids -> hymnsRepository.loadHymnTitlesForIndices(ids) }
+                .flatMap { ids -> hymnsRepository.loadHymnTitlesForIndices(ids, sortBy) }
                 .map { titles -> titles.map { it.toTitleItem() } }
                 .subscribeOn(schedulerProvider.io())
     }

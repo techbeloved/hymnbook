@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.techbeloved.hymnbook.data.model.Hymn
 import com.techbeloved.hymnbook.data.model.HymnTitle
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
 import com.techbeloved.hymnbook.hymndetail.SortBy
@@ -73,10 +72,6 @@ class HymnListingViewModel(private val hymnsRepository: HymnsRepository, private
                         })
 
         disposables.add(disposable)
-    }
-
-    private fun convertToTitleUiModels(): FlowableTransformer<List<Hymn>, List<TitleItem>> = FlowableTransformer { upstream ->
-        upstream.map { hymns -> hymns.map { TitleItem(it.num, it.title) } }
     }
 
     override fun onCleared() {

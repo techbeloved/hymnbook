@@ -10,8 +10,12 @@ import io.reactivex.Flowable
 import io.reactivex.Observable
 
 class HymnsRepositoryImp (private val hymnDatabase: HymnsDatabase) : HymnsRepository {
-    override fun loadHymnTitlesForIndices(indices: List<Int>): Observable<List<HymnTitle>> {
-        return hymnDatabase.hymnDao().getHymnTitlesForIndices(indices).toObservable()
+    override fun loadHymnTitlesForIndices(indices: List<Int>, sortBy: Int): Observable<List<HymnTitle>> {
+        return when (sortBy) {
+            BY_NUMBER -> hymnDatabase.hymnDao().getHymnTitlesForIndices(indices).toObservable()
+            else -> hymnDatabase.hymnDao().getHymnTitlesForIndicesByTitle(indices).toObservable()
+        }
+
     }
 
     companion object: SingletonHolder<HymnsRepository, HymnsDatabase>(::HymnsRepositoryImp);

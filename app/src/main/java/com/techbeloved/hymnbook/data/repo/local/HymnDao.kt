@@ -33,6 +33,10 @@ interface HymnDao {
     @Query("SELECT * FROM hymn_titles WHERE num IN (:ids)")
     fun getHymnTitlesForIndices(ids: List<Int>): Flowable<List<HymnTitle>>
 
+    @Query("SELECT * FROM hymn_titles WHERE num IN (:indices) ORDER BY title ASC")
+    fun getHymnTitlesForIndicesByTitle(indices: List<Int>): Flowable<List<HymnTitle>>
+
+
     @Query("SELECT * FROM hymn_with_topics WHERE num = :hymnNo")
     fun getHymnDetail(hymnNo: Int): Flowable<HymnDetail>
 
@@ -84,5 +88,4 @@ interface HymnDao {
 
     @Query("UPDATE hymns SET midi = :midiPath WHERE num = :hymnId")
     fun updateHymnMidiPath(hymnId: Int, midiPath: String)
-
 }

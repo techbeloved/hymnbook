@@ -11,17 +11,30 @@ import com.techbeloved.hymnbook.usecases.Lce
 import com.techbeloved.hymnbook.utils.SchedulerProvider
 import io.reactivex.ObservableTransformer
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
 
 class SheetMusicListingViewModel(private val useCases: HymnUseCases, private val schedulerProvider: SchedulerProvider) : ViewModel() {
 
+    private val sortBySubject = PublishSubject.create<Int>()
     private val disposables: CompositeDisposable = CompositeDisposable()
     private val hymnTitlesDataLce: MutableLiveData<Lce<List<TitleItem>>> = MutableLiveData()
     val hymnTitlesLce: LiveData<Lce<List<TitleItem>>>
         get() = hymnTitlesDataLce
 
+    init {
+        loadData()
+    }
+
     fun loadHymnTitlesFromRepo(@SortBy sortBy: Int = BY_NUMBER) {
-        useCases.hymnSheetMusicTitles(sortBy)
+        sortBySubject.onNext(sortBy)
+    }
+
+    private fun loadData() {
+        sortBySubject.distinctUntilChanged()
+                .switchMap { sortBy ->
+                    useCases.hymnSheetMusicTitles(sortBy)
+                }
                 .compose(getViewState())
                 .startWith(Lce.Loading(true))
                 .observeOn(schedulerProvider.ui())
@@ -40,7 +53,7 @@ class SheetMusicListingViewModel(private val useCases: HymnUseCases, private val
         upstream.map { Lce.Content(it) }
     }
 
-    class Factory(private val useCases: HymnUseCases, val schedulerProvider: SchedulerProvider) : ViewModelProvider.Factory {
+    class Factory(private val useCases: HymnUseCases, private val schedulerProvider: SchedulerProvider) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             return SheetMusicListingViewModel(useCases, schedulerProvider) as T
         }
