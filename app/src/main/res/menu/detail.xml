@@ -4,11 +4,18 @@
     <item
         android:id="@+id/menu_detail_quick_settings"
         android:icon="@drawable/ic_format_color_text"
-        android:title="Theming"
+        android:title="@string/theming"
         app:showAsAction="always" />
     <item
         android:id="@+id/menu_detail_add_to_playlist"
         android:icon="@drawable/ic_playlist_add"
         android:title="@string/add_to_playlist"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_detail_share"
+        android:icon="@drawable/ic_share_black_24dp"
+        android:title="@string/text_share"
+        app:showAsAction="ifRoom" />
+
 </menu>

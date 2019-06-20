@@ -92,4 +92,8 @@ class HymnsRepositoryImp (private val hymnDatabase: HymnsDatabase) : HymnsReposi
         return hymnDatabase.topicDao().getAllTopics().toObservable()
     }
 
+    override fun getTopicById(topicId: Int): Observable<Topic> {
+        return hymnDatabase.topicDao().getTopicById(topicId).toObservable()
+    }
+
 }

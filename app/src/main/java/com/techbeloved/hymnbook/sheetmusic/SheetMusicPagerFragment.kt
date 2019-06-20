@@ -1,5 +1,6 @@
 package com.techbeloved.hymnbook.sheetmusic
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.hymndetail.BaseDetailPagerFragment
-import com.techbeloved.hymnbook.hymndetail.CURRENT_ITEM_ID
+import com.techbeloved.hymnbook.hymndetail.EXTRA_CURRENT_ITEM_ID
 import com.techbeloved.hymnbook.usecases.Lce
 import com.techbeloved.hymnbook.utils.DepthPageTransformer
 import timber.log.Timber
@@ -25,7 +26,7 @@ class SheetMusicPagerFragment : BaseDetailPagerFragment() {
 
         // Restore current index
         if (savedInstanceState != null) {
-            currentHymnId = savedInstanceState.getInt(CURRENT_ITEM_ID, 1)
+            currentHymnId = savedInstanceState.getInt(EXTRA_CURRENT_ITEM_ID, 1)
         } else {
             val args = arguments?.let { SheetMusicPagerFragmentArgs.fromBundle(it) }
             currentHymnId = args?.hymnId ?: 1
@@ -67,7 +68,8 @@ class SheetMusicPagerFragment : BaseDetailPagerFragment() {
         binding.viewpagerHymnDetail.currentItem = indexToLoad
     }
 
-    inner class DetailPagerAdapter(private val fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
+    @SuppressLint("WrongConstant")
+    inner class DetailPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         private val hymnIndices = mutableListOf<Int>()
         override fun getItem(position: Int): Fragment {
             val detailFragment = SheetMusicDetailFragment()

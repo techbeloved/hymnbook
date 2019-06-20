@@ -149,9 +149,10 @@ dependencies {
     implementation 'com.jakewharton.rxbinding3:rxbinding-material:3.0.0-alpha2'
 
     // Firebase
-    implementation 'com.google.firebase:firebase-core:16.0.8'
-    implementation 'com.google.firebase:firebase-firestore:18.2.0'
+    implementation 'com.google.firebase:firebase-core:16.0.9'
+    implementation 'com.google.firebase:firebase-firestore:19.0.2'
     implementation 'com.google.firebase:firebase-storage:17.0.0'
+    implementation 'com.google.firebase:firebase-dynamic-links:18.0.0'
 
     // Multidex
     implementation 'com.android.support:multidex:1.0.3'

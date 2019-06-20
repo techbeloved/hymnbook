@@ -93,6 +93,7 @@
 
     <string name="app_version">Version %s</string>
     <string name="wccrm_name">Watchman Catholic Charismatic Renewal Movement</string>
+    <string name="theming">Theming</string>
 
     <string-array name="tempo_values">
         <item>0.5×</item>

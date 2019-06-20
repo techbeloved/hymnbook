@@ -36,6 +36,7 @@ import com.techbeloved.hymnbook.tunesplayback.duration
 import timber.log.Timber
 
 abstract class BaseDetailPagerFragment : Fragment() {
+    private lateinit var _currentHymnItemUri: String
     private var _currentHymnId: Int = 1
     private lateinit var nowPlayingViewModel: NowPlayingViewModel
 
@@ -71,6 +72,10 @@ abstract class BaseDetailPagerFragment : Fragment() {
                         arguments = Bundle().apply { putInt(EXTRA_SELECTED_HYMN_ID, currentHymnId) }
                     }
                     playlistDialog.show(requireFragmentManager(), null)
+                    true
+                }
+                R.id.menu_detail_share -> {
+                    showShareMenu()
                     true
                 }
                 else -> false
@@ -112,11 +117,6 @@ abstract class BaseDetailPagerFragment : Fragment() {
             if (userScrollChange) nowPlayingViewModel.skipTo(position)
         }
 
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt(CURRENT_ITEM_ID, _currentHymnId)
-        super.onSaveInstanceState(outState)
     }
 
     override fun onDestroy() {
@@ -391,7 +391,7 @@ abstract class BaseDetailPagerFragment : Fragment() {
 
     fun updateCurrentItemId(itemId: Int) {
         _currentHymnId = itemId
-        binding.toolbarDetail.title = "Hymn, $itemId"
+        binding.toolbarDetail.subtitle = "Hymn, $itemId"
     }
 
     fun updateHymnItems(hymnItems: List<Int>) {
@@ -403,6 +403,17 @@ abstract class BaseDetailPagerFragment : Fragment() {
         set(value) {
             _currentHymnId = value
         }
+
+    var currentCategoryUri
+        get() = _currentHymnItemUri
+        set(value) {
+            _currentHymnItemUri = value
+        }
+
+    private fun showShareMenu() {
+
+    }
 }
 
-const val CURRENT_ITEM_ID = "currentItemId"
+const val EXTRA_CURRENT_ITEM_ID = "currentItemId"
+const val EXTRA_CURRENT_CATEGORY_URI = "extraCurrentItemUri"

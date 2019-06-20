@@ -46,4 +46,12 @@ class PlaylistsRepoImp(
     override fun deletePlaylistById(playlistId: Int): Completable {
         return hymnsDatabase.playlistsDao().deletePlaylistById(playlistId)
     }
+
+    override fun loadHymnIndicesInPlaylist(playlistId: Int, sortBy: Int): Observable<List<Int>> {
+        return when (sortBy) {
+            BY_TITLE -> hymnsDatabase.playlistsDao().getHymnIndicesInPlaylistByTitle(playlistId).toObservable()
+            else -> hymnsDatabase.playlistsDao().getHymnIndicesInPlaylist(playlistId).toObservable()
+        }
+
+    }
 }

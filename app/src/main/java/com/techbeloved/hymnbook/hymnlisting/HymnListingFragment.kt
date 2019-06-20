@@ -10,13 +10,12 @@ import androidx.navigation.fragment.findNavController
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.usecases.Lce
-import com.techbeloved.hymnbook.utils.CATEGORY_PLAYLISTS
-import com.techbeloved.hymnbook.utils.CATEGORY_REGEX
-import com.techbeloved.hymnbook.utils.CATEGORY_TOPICS
+import com.techbeloved.hymnbook.utils.*
 import timber.log.Timber
 
 class HymnListingFragment : BaseHymnListingFragment() {
 
+    private lateinit var currentCategoryUri: String
     private lateinit var viewModel: HymnListingViewModel
 
     override lateinit var title: String
@@ -24,13 +23,18 @@ class HymnListingFragment : BaseHymnListingFragment() {
 
     override fun navigateToHymnDetail(view: View, item: HymnItemModel) {
         findNavController().navigate(HymnListingFragmentDirections
-                .actionHymnListingFragmentToDetailPagerFragment(item.id))
+                .actionHymnListingFragmentToDetailPagerFragment(currentCategoryUri.appendHymnId(item.id)!!))
     }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        doInOnCreate()
+        doInOnCreate(savedInstanceState)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString(EXTRA_CURRENT_CATEGORY_URI, currentCategoryUri)
+        super.onSaveInstanceState(outState)
     }
 
 
@@ -51,16 +55,23 @@ class HymnListingFragment : BaseHymnListingFragment() {
         })
     }
 
-    private fun doInOnCreate() {
+    private fun doInOnCreate(savedInstanceState: Bundle?) {
         // Get the topic id from arguments
+
         val args = arguments?.let { HymnListingFragmentArgs.fromBundle(it) }
+        if (savedInstanceState != null && savedInstanceState.containsKey(EXTRA_CURRENT_CATEGORY_URI)) {
+            currentCategoryUri = savedInstanceState.getString(EXTRA_CURRENT_CATEGORY_URI, DEFAULT_CATEGORY_URI)
+
+        } else {
+            currentCategoryUri = args?.navUri ?: DEFAULT_CATEGORY_URI
+        }
+
         title = args?.title.toString()
-        val incomingUri = args?.navUri!!
-        Timber.i("incoming Uri: %s", incomingUri)
+        Timber.i("incoming Uri: %s", args?.navUri)
         val categoryRegex = CATEGORY_REGEX.toRegex()
 
-        if (categoryRegex matches incomingUri) {
-            val matchResult = categoryRegex.find(incomingUri)
+        if (categoryRegex matches currentCategoryUri) {
+            val matchResult = categoryRegex.find(currentCategoryUri)
             val category = matchResult?.groupValues?.get(2)
             val categoryId = matchResult?.groupValues?.get(3)
             Timber.i("Matched category, %s", category)
@@ -82,3 +93,5 @@ class HymnListingFragment : BaseHymnListingFragment() {
     }
 
 }
+
+const val EXTRA_CURRENT_CATEGORY_URI = "currentCategoryUri"

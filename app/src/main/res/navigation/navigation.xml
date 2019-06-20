@@ -40,11 +40,11 @@
     </fragment>
     <fragment
         android:id="@+id/detailPagerFragment"
-        android:name="com.techbeloved.hymnbook.hymndetail.DetailPagerFragment">
+        android:name="com.techbeloved.hymnbook.hymndetail.DetailPagerFragment"
+        tools:layout="@layout/fragment_detail">
         <argument
-            android:name="hymnId"
-            app:argType="integer"
-            android:defaultValue="1" />
+            android:name="navUri"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -88,7 +88,8 @@
     <fragment
         android:id="@+id/sheetMusicPagerFragment"
         android:name="com.techbeloved.hymnbook.sheetmusic.SheetMusicPagerFragment"
-        android:label="Sheet Music">
+        android:label="Sheet Music"
+        tools:layout="@layout/fragment_sheet_music_detail">
         <argument
             android:name="hymnId"
             app:argType="integer"

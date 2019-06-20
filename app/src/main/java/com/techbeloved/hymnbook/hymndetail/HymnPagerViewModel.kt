@@ -3,17 +3,30 @@ package com.techbeloved.hymnbook.hymndetail
 import androidx.annotation.IntDef
 import androidx.lifecycle.*
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
+import com.techbeloved.hymnbook.playlists.PlaylistsRepo
 import com.techbeloved.hymnbook.usecases.Lce
-import io.reactivex.FlowableTransformer
-import io.reactivex.android.schedulers.AndroidSchedulers
+import com.techbeloved.hymnbook.utils.CATEGORY_PLAYLISTS
+import com.techbeloved.hymnbook.utils.SchedulerProvider
+import com.techbeloved.hymnbook.utils.category
+import com.techbeloved.hymnbook.utils.categoryId
+import io.reactivex.ObservableTransformer
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Consumer
-import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 
-class HymnPagerViewModel(private val repository: HymnsRepository) : ViewModel() {
+/**
+ * @param categoryUri holds information about the category we are currently browsing
+ */
+class HymnPagerViewModel(private val repository: HymnsRepository,
+                         private val playlistsRepo: PlaylistsRepo,
+                         private val categoryUri: String,
+                         private val schedulerProvider: SchedulerProvider) : ViewModel() {
 
 
     private val _hymnIndicesLiveData: MutableLiveData<Lce<List<Int>>> = MutableLiveData()
+
+    private val _categoryHeader: MutableLiveData<String> = MutableLiveData()
+    val header: LiveData<String> get() = _categoryHeader
 
     val hymnIndicesLiveData: LiveData<Lce<List<Int>>>
         get() = Transformations.distinctUntilChanged(_hymnIndicesLiveData)
@@ -27,18 +40,45 @@ class HymnPagerViewModel(private val repository: HymnsRepository) : ViewModel() 
     }
 
     private val compositeDisposable = CompositeDisposable()
-    fun loadHymnIndices(@SortBy sortBy: Int = BY_NUMBER) {
-        val disposable = repository.loadHymnIndices(sortBy)
-                .compose(indicesToLceMapper())
-                .startWith(Lce.Loading(true))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(indicesConsumer, errorConsumer)
 
-        compositeDisposable.add(disposable)
+    init {
+        loadHymnIndices()
+        getCategoryHeader()
     }
 
-    private fun indicesToLceMapper(): FlowableTransformer<List<Int>, Lce<List<Int>>> = FlowableTransformer { upstream ->
+    fun loadHymnIndices(@SortBy sortBy: Int = BY_NUMBER) {
+        val category = categoryUri.category()
+        val categoryId = categoryUri.categoryId()?.toInt() ?: 0
+        val indicesObservable = when (category) {
+            CATEGORY_PLAYLISTS -> playlistsRepo.loadHymnIndicesInPlaylist(categoryId, sortBy)
+            else -> repository.loadHymnIndices(sortBy,
+                    topicId = categoryId).toObservable()
+        }
+        indicesObservable.compose(indicesToLceMapper())
+                .startWith(Lce.Loading(true))
+                .observeOn(schedulerProvider.ui())
+                .subscribe(indicesConsumer, errorConsumer)
+                .let { compositeDisposable.add(it) }
+    }
+
+    private fun getCategoryHeader() {
+        val category = categoryUri.category()
+        val categoryId = categoryUri.categoryId()?.toInt() ?: 0
+
+        val titleObservable = when (category) {
+            CATEGORY_PLAYLISTS -> playlistsRepo.getPlaylistById(categoryId).map { it.title }
+            else -> repository.getTopicById(categoryId).map { it.topic }
+        }
+
+        titleObservable.observeOn(schedulerProvider.ui())
+                .subscribe({ _categoryHeader.value = it }, {
+                    Timber.w(it)
+                    _categoryHeader.value = "All Hymns"
+                })
+                .let { compositeDisposable.add(it) }
+    }
+
+    private fun indicesToLceMapper(): ObservableTransformer<List<Int>, Lce<List<Int>>> = ObservableTransformer { upstream ->
         upstream.map { Lce.Content(it) }
     }
 
@@ -48,9 +88,12 @@ class HymnPagerViewModel(private val repository: HymnsRepository) : ViewModel() 
 
     }
 
-    class Factory(private val provideRepository: HymnsRepository) : ViewModelProvider.Factory {
+    class Factory(private val provideRepository: HymnsRepository,
+                  private val playlistsRepo: PlaylistsRepo,
+                  private val categoryUri: String,
+                  private val schedulerProvider: SchedulerProvider) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return HymnPagerViewModel(provideRepository) as T
+            return HymnPagerViewModel(provideRepository, playlistsRepo, categoryUri, schedulerProvider) as T
         }
 
     }

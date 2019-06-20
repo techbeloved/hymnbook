@@ -31,4 +31,6 @@ interface HymnsRepository {
      * Retrieves all topics from database
      */
     fun loadAllTopics(): Observable<List<Topic>>
+
+    fun getTopicById(topicId: Int): Observable<Topic>
 }

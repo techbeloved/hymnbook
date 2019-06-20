@@ -19,11 +19,17 @@ interface PlaylistsDao {
     fun getPlaylist(playlistId: Int): Flowable<Playlist>
 
     // The following two queries does the same thing except ordering, one uses INNER JOIN while the other uses only WHERE clauses
-    @Query("SELECT *, playlistId FROM playlists AS p INNER JOIN favorites AS f ON p.id=f.playlistId INNER JOIN hymn_titles AS t ON f.hymnId=t.num WHERE f.playlistId =:playlistId ORDER BY f.id ASC")
+    @Query("SELECT *, playlistId FROM playlists AS p INNER JOIN favorites AS f ON p.id=f.playlistId INNER JOIN hymn_titles AS t ON f.hymnId=t.num WHERE f.playlistId =:playlistId ORDER BY t.num ASC")
     fun getHymnsInPlaylist(playlistId: Int): Flowable<List<HymnTitle>>
 
     @Query("SELECT *, playlistId FROM playlists AS p, favorites AS f, hymn_titles AS t WHERE p.id=f.playlistId  AND f.hymnId=t.num AND f.playlistId =:playlistId ORDER BY t.title ASC")
     fun getHymnsInPlaylistSortByTitle(playlistId: Int): Flowable<List<HymnTitle>>
+
+    @Query("SELECT t.num FROM playlists AS p, favorites AS f, hymn_titles AS t WHERE p.id=f.playlistId  AND f.hymnId=t.num AND f.playlistId =:playlistId ORDER BY t.title ASC")
+    fun getHymnIndicesInPlaylistByTitle(playlistId: Int): Flowable<List<Int>>
+
+    @Query("SELECT t.num FROM playlists AS p, favorites AS f, hymn_titles AS t WHERE p.id=f.playlistId  AND f.hymnId=t.num AND f.playlistId =:playlistId ORDER BY t.num ASC")
+    fun getHymnIndicesInPlaylist(playlistId: Int): Flowable<List<Int>>
 
     @Insert
     fun savePlaylist(playlist: Playlist): Completable
@@ -48,4 +54,5 @@ interface PlaylistsDao {
 
     @Query("SELECT * FROM playlists WHERE title LIKE :title")
     fun getPlaylistByTitle(title: String): Flowable<Playlist>
+
 }

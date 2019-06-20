@@ -24,4 +24,5 @@ interface PlaylistsRepo {
     fun saveFavorite(favorite: Favorite): Completable
 
     fun deletePlaylistById(playlistId: Int): Completable
+    fun loadHymnIndicesInPlaylist(playlistId: Int, sortBy: Int): Observable<List<Int>>
 }
