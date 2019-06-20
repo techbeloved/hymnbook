@@ -2,9 +2,13 @@ package com.techbeloved.hymnbook.utils
 
 import android.net.Uri
 
+const val DYNAMIC_LINK_DOMAIN = "https://hymnbook.page.link"
+const val MINIMUM_VERSION_FOR_SHARE_LINK = 5
+const val WCCRM_LOGO_URL = "https://firebasestorage.googleapis.com/v0/b/hymnbook-50b7e.appspot.com/o/wccrm_logo.png?alt=media&token=5a015fd6-122f-4acf-ab30-3373380ce553"
+
 // content://hymnbook.com/{category}/{categoryId}/{hymns}/{hymnId}
 const val AUTHORITY = "hymnbook.com"
-const val SCHEME_NORMAL = "content"
+const val SCHEME_NORMAL = "https"
 const val SCHEME_HTTP = "https"
 
 // Supported hymn listing categories
@@ -110,7 +114,7 @@ fun buildHymnbookUri(category: String, categoryId: Int, hymnId: Int? = null, sch
  * Uses string concatenation to build a simple category uri
  */
 fun buildCategoryUri(category: String, categoryId: Int): String {
-    return "$SCHEME_NORMAL://$AUTHORITY/$category/$categoryId"
+    return "$SCHEME_HTTP://$AUTHORITY/$category/$categoryId"
 }
 
 fun String.appendHymnId(hymnId: Int): String? {

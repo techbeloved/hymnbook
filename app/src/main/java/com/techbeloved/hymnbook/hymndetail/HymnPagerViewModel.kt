@@ -2,13 +2,11 @@ package com.techbeloved.hymnbook.hymndetail
 
 import androidx.annotation.IntDef
 import androidx.lifecycle.*
+import com.techbeloved.hymnbook.data.ShareLinkProvider
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
 import com.techbeloved.hymnbook.playlists.PlaylistsRepo
 import com.techbeloved.hymnbook.usecases.Lce
-import com.techbeloved.hymnbook.utils.CATEGORY_PLAYLISTS
-import com.techbeloved.hymnbook.utils.SchedulerProvider
-import com.techbeloved.hymnbook.utils.category
-import com.techbeloved.hymnbook.utils.categoryId
+import com.techbeloved.hymnbook.utils.*
 import io.reactivex.ObservableTransformer
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Consumer
@@ -20,10 +18,14 @@ import timber.log.Timber
 class HymnPagerViewModel(private val repository: HymnsRepository,
                          private val playlistsRepo: PlaylistsRepo,
                          private val categoryUri: String,
-                         private val schedulerProvider: SchedulerProvider) : ViewModel() {
+                         private val schedulerProvider: SchedulerProvider,
+                         private val shareLinkProvider: ShareLinkProvider) : ViewModel() {
 
 
     private val _hymnIndicesLiveData: MutableLiveData<Lce<List<Int>>> = MutableLiveData()
+
+    private val _shareLinkStatus: MutableLiveData<ShareStatus> = MutableLiveData()
+    val shareLinkStatus: LiveData<ShareStatus> get() = _shareLinkStatus
 
     private val _categoryHeader: MutableLiveData<String> = MutableLiveData()
     val header: LiveData<String> get() = _categoryHeader
@@ -88,12 +90,48 @@ class HymnPagerViewModel(private val repository: HymnsRepository,
 
     }
 
+    private var shareDisposable: CompositeDisposable? = null
+    fun requestShareLink(hymnId: Int, description: String, minimumVersion: Int, logoUrl: String) {
+        shareDisposable?.dispose()
+        shareDisposable = CompositeDisposable()
+
+        val category = categoryUri.category()
+
+        val browsingCategory = if (category == CATEGORY_PLAYLISTS) {
+            DEFAULT_CATEGORY_URI
+        } else {
+            categoryUri
+        }
+
+        _shareLinkStatus.value = ShareStatus.Loading
+
+        repository.getHymnById(hymnId)
+                .firstOrError()
+                .flatMap { hymn ->
+                    shareLinkProvider.getShortLinkForItem(hymn, browsingCategory, description, minimumVersion, logoUrl)
+                            .subscribeOn(schedulerProvider.io())
+                }
+                .map { ShareStatus.Success(it) }.cast(ShareStatus::class.java)
+                .observeOn(schedulerProvider.ui())
+                .subscribe({ shareStatus ->
+                    _shareLinkStatus.value = shareStatus
+                    _shareLinkStatus.value = ShareStatus.None
+                }, {
+                    _shareLinkStatus.value = ShareStatus.Error(it)
+                    _shareLinkStatus.value = ShareStatus.None
+                })
+                .let { shareDisposable?.add(it) }
+
+
+    }
+
     class Factory(private val provideRepository: HymnsRepository,
                   private val playlistsRepo: PlaylistsRepo,
                   private val categoryUri: String,
-                  private val schedulerProvider: SchedulerProvider) : ViewModelProvider.Factory {
+                  private val schedulerProvider: SchedulerProvider,
+                  private val shareLinkProvider: ShareLinkProvider) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return HymnPagerViewModel(provideRepository, playlistsRepo, categoryUri, schedulerProvider) as T
+            return HymnPagerViewModel(provideRepository, playlistsRepo, categoryUri, schedulerProvider, shareLinkProvider) as T
         }
 
     }
@@ -107,4 +145,10 @@ const val BY_FAVORITE = 14
 @Retention(AnnotationRetention.SOURCE)
 annotation class SortBy
 
-private const val POSITION_UPDATE_INTERVAL_MILLIS = 100L
+
+sealed class ShareStatus {
+    object Loading : ShareStatus()
+    data class Success(val shareLink: String) : ShareStatus()
+    data class Error(val error: Throwable) : ShareStatus()
+    object None : ShareStatus()
+}

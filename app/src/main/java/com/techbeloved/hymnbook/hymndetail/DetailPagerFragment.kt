@@ -2,20 +2,21 @@ package com.techbeloved.hymnbook.hymndetail
 
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ShareCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.snackbar.Snackbar
+import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.usecases.Lce
-import com.techbeloved.hymnbook.utils.DEFAULT_CATEGORY_URI
-import com.techbeloved.hymnbook.utils.DepthPageTransformer
-import com.techbeloved.hymnbook.utils.hymnId
-import com.techbeloved.hymnbook.utils.parentCategoryUri
+import com.techbeloved.hymnbook.utils.*
 import timber.log.Timber
 
 class DetailPagerFragment : BaseDetailPagerFragment() {
@@ -38,7 +39,7 @@ class DetailPagerFragment : BaseDetailPagerFragment() {
 
         val factory = HymnPagerViewModel.Factory(Injection.provideRepository,
                 Injection.providePlaylistRepo,
-                currentCategoryUri, Injection.provideSchedulers)
+                currentCategoryUri, Injection.provideSchedulers, Injection.shareLinkProvider)
         viewModel = ViewModelProviders.of(this, factory).get(HymnPagerViewModel::class.java)
     }
 
@@ -65,6 +66,43 @@ class DetailPagerFragment : BaseDetailPagerFragment() {
         viewModel.header.observe(viewLifecycleOwner, Observer { title ->
             binding.toolbarDetail.title = title
         })
+
+        viewModel.shareLinkStatus.observe(viewLifecycleOwner, Observer { shareStatus ->
+            when (shareStatus) {
+                ShareStatus.Loading -> showShareLoadingDialog()
+                is ShareStatus.Success -> showShareOptionsChooser(shareStatus.shareLink)
+                is ShareStatus.Error -> {
+                    showShareError(shareStatus.error)
+                }
+                ShareStatus.None -> {
+                    cancelProgressDialog()
+                }
+            }
+        })
+    }
+
+    private fun showShareError(error: Throwable) {
+        Timber.w(error)
+        Snackbar.make(requireView().rootView, "Failure creating share content", Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun showShareOptionsChooser(shareLink: String) {
+        ShareCompat.IntentBuilder.from(requireActivity()).apply {
+            setChooserTitle(getString(R.string.share_hymn))
+            setType("text/plain")
+            setText(shareLink)
+        }.startChooser()
+
+    }
+
+    private var progressDialog: ProgressDialog? = null
+    private fun showShareLoadingDialog() {
+        progressDialog = ProgressDialog.show(requireContext(), "Share hymn", "Working")
+        progressDialog?.setCancelable(true)
+    }
+
+    private fun cancelProgressDialog() {
+        progressDialog?.cancel()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -84,6 +122,13 @@ class DetailPagerFragment : BaseDetailPagerFragment() {
 
         val indexToLoad = hymnIndices.indexOf(initialIndex)
         binding.viewpagerHymnDetail.currentItem = indexToLoad
+    }
+
+    override fun initiateContentSharing() {
+        viewModel.requestShareLink(currentHymnId,
+                getString(R.string.about_app),
+                MINIMUM_VERSION_FOR_SHARE_LINK,
+                WCCRM_LOGO_URL)
     }
 
     @SuppressLint("WrongConstant")

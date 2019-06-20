@@ -36,7 +36,7 @@ import com.techbeloved.hymnbook.tunesplayback.duration
 import timber.log.Timber
 
 abstract class BaseDetailPagerFragment : Fragment() {
-    private lateinit var _currentHymnItemUri: String
+    private lateinit var _currentHymnCategoryUri: String
     private var _currentHymnId: Int = 1
     private lateinit var nowPlayingViewModel: NowPlayingViewModel
 
@@ -75,7 +75,7 @@ abstract class BaseDetailPagerFragment : Fragment() {
                     true
                 }
                 R.id.menu_detail_share -> {
-                    showShareMenu()
+                    initiateContentSharing()
                     true
                 }
                 else -> false
@@ -405,14 +405,15 @@ abstract class BaseDetailPagerFragment : Fragment() {
         }
 
     var currentCategoryUri
-        get() = _currentHymnItemUri
+        get() = _currentHymnCategoryUri
         set(value) {
-            _currentHymnItemUri = value
+            _currentHymnCategoryUri = value
         }
 
-    private fun showShareMenu() {
-
-    }
+    /**
+     * Called upon to request sharing of hymn item
+     */
+    abstract fun initiateContentSharing()
 }
 
 const val EXTRA_CURRENT_ITEM_ID = "currentItemId"

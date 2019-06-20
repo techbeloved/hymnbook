@@ -10,6 +10,8 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.snackbar.Snackbar
+import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.hymndetail.BaseDetailPagerFragment
 import com.techbeloved.hymnbook.hymndetail.EXTRA_CURRENT_ITEM_ID
@@ -53,6 +55,10 @@ class SheetMusicPagerFragment : BaseDetailPagerFragment() {
         detailPagerAdapter = DetailPagerAdapter(childFragmentManager)
         binding.viewpagerHymnDetail.adapter = detailPagerAdapter
         binding.viewpagerHymnDetail.setPageTransformer(true, DepthPageTransformer())
+    }
+
+    override fun initiateContentSharing() {
+        Snackbar.make(requireView().rootView, R.string.coming_soon, Snackbar.LENGTH_SHORT).show()
     }
 
     private fun initializeViewPager(hymnIndices: List<Int>, initialIndex: Int) {

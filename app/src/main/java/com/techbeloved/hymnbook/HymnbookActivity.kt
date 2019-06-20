@@ -1,6 +1,8 @@
 package com.techbeloved.hymnbook
 
+import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -17,11 +19,15 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.techbeloved.hymnbook.databinding.ActivityHymnbookBinding
 import com.techbeloved.hymnbook.di.Injection
+import com.techbeloved.hymnbook.home.HomeFragmentDirections
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 
 class HymnbookActivity : AppCompatActivity() {
 
@@ -58,6 +64,9 @@ class HymnbookActivity : AppCompatActivity() {
                 else -> if (!binding.bottomNavigationMain.isVisible) binding.bottomNavigationMain.visibility = View.VISIBLE
             }
         }
+
+        FirebaseAnalytics.getInstance(this.applicationContext)
+        handleDynamicLinks(intent)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -96,6 +105,26 @@ class HymnbookActivity : AppCompatActivity() {
                     }
                 }
         disposables.add(disposable)
+    }
+
+    private fun handleDynamicLinks(intent: Intent) {
+        FirebaseDynamicLinks.getInstance()
+                .getDynamicLink(intent)
+                .addOnSuccessListener(this) { pendingDynamicLinkData ->
+                    // Get deep link from result (may be null if no link is found)
+                    var deepLink: Uri? = null
+                    if (pendingDynamicLinkData != null) {
+                        deepLink = pendingDynamicLinkData.link
+                    }
+
+                    Timber.i("Deep link received: %s", deepLink)
+
+                    deepLink?.let {
+                        navController.navigate(HomeFragmentDirections.actionHomeFragmentToDetailPagerFragment(it.toString()))
+                    }
+
+                }
+                .addOnFailureListener(this) { e -> Timber.w(e, "getDynamicLink:onFailure") }
     }
 
     override fun onDestroy() {
