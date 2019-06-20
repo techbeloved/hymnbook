@@ -97,6 +97,10 @@
     <string name="share_hymn">Share Hymn</string>
     <string name="about_app">The Watchman Hymnbook provides a collection of 300 select Hymns and Songs for Christian Fellowship. The Hymnbook app contains above 250 midi tunes which will help anyone sing along easily.</string>
     <string name="coming_soon">Coming Soon</string>
+    <string name="share_app">Share Hymnbook App</string>
+
+    <string name="play_store_scheme">market://details?id=%s</string>
+    <string name="play_store_web">https://play.google.com/store/apps/details?id=%s</string>
 
     <string-array name="tempo_values">
         <item>0.5×</item>
