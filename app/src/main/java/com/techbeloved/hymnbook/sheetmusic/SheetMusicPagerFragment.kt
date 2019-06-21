@@ -57,6 +57,11 @@ class SheetMusicPagerFragment : BaseDetailPagerFragment() {
         binding.viewpagerHymnDetail.setPageTransformer(true, DepthPageTransformer())
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(EXTRA_CURRENT_ITEM_ID, currentHymnId)
+        super.onSaveInstanceState(outState)
+    }
+
     override fun initiateContentSharing() {
         Snackbar.make(requireView().rootView, R.string.coming_soon, Snackbar.LENGTH_SHORT).show()
     }
