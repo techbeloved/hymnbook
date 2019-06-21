@@ -36,6 +36,8 @@
             android:id="@+id/scrollview_about"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="?actionBarSize"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
             <LinearLayout
@@ -53,8 +55,8 @@
                     android:layout_marginRight="@dimen/margin_standard_layout"
                     android:gravity="center"
                     android:text="@string/hymnbook_title"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
-                    android:textColor="?colorOnSurface" />
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                    android:textColor="#A0A0A0" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -83,7 +85,8 @@
                     android:layout_marginRight="@dimen/margin_standard_layout"
                     android:gravity="center"
                     android:text="@string/wccrm_name"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                    android:textColor="#A0A0A0" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -97,26 +100,22 @@
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                     android:textSize="12sp" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="#EEEEEE" />
 
                 <TextView
                     android:id="@+id/textview_about_social_facebook"
                     android:layout_width="match_parent"
                     android:layout_height="?listPreferredItemHeightSmall"
+                    android:layout_marginTop="24dp"
                     android:background="?selectableItemBackground"
+                    android:clickable="true"
                     android:drawablePadding="8dp"
+                    android:focusable="true"
                     android:gravity="center_vertical"
                     android:paddingLeft="@dimen/margin_standard_layout"
                     android:paddingRight="@dimen/margin_standard_layout"
+                    android:text="@string/visit_us_on_facebook"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                    android:visibility="gone"
                     app:drawableLeftCompat="@drawable/f_logo"
-                    tools:text="Visit us on Facebook"
                     tools:visibility="visible" />
 
                 <TextView
@@ -124,14 +123,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="?listPreferredItemHeightSmall"
                     android:background="?selectableItemBackground"
+                    android:clickable="true"
                     android:drawablePadding="8dp"
+                    android:focusable="true"
                     android:gravity="center_vertical"
                     android:paddingLeft="@dimen/margin_standard_layout"
                     android:paddingRight="@dimen/margin_standard_layout"
+                    android:text="@string/follow_us_on_twitter"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                    android:visibility="gone"
                     app:drawableLeftCompat="@drawable/ic_twitter_logo"
-                    tools:text="Follow us on Twitter"
                     tools:visibility="visible" />
 
                 <TextView
@@ -139,14 +139,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="?listPreferredItemHeightSmall"
                     android:background="?selectableItemBackground"
+                    android:clickable="true"
                     android:drawablePadding="8dp"
+                    android:focusable="true"
                     android:gravity="center_vertical"
                     android:paddingLeft="@dimen/margin_standard_layout"
                     android:paddingRight="@dimen/margin_standard_layout"
+                    android:text="@string/catch_up_on_youtube"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                    android:visibility="gone"
                     app:drawableLeftCompat="@drawable/youtube"
-                    tools:text="Catch up on Youtube"
                     tools:visibility="visible" />
 
                 <View
@@ -155,14 +156,12 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="8dp"
                     android:background="#EEEEEE"
-                    android:visibility="gone"
                     tools:visibility="visible" />
 
                 <TextView
                     android:id="@+id/textview_about_open_source_licenses"
                     android:layout_width="match_parent"
                     android:layout_height="?listPreferredItemHeightSmall"
-                    android:layout_marginTop="16dp"
                     android:background="?selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
@@ -170,19 +169,19 @@
                     android:paddingLeft="@dimen/margin_standard_layout"
                     android:paddingRight="@dimen/margin_standard_layout"
                     android:text="@string/open_source_licenses"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                    android:textStyle="bold" />
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
 
                 <TextView
                     android:id="@+id/textview_about_version"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/margin_standard_layout"
                     android:layout_marginTop="@dimen/margin_standard_layout"
                     android:layout_marginRight="@dimen/margin_standard_layout"
                     android:layout_marginBottom="@dimen/margin_standard_layout"
                     android:gravity="center"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                    android:textColor="#A0A0A0"
                     android:textSize="12sp"
                     tools:text="Version 2.0.0" />
 

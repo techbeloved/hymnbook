@@ -22,9 +22,9 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.techbeloved.hymnbook"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 28
-        versionCode 5
+        versionCode 10
         versionName "2.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -33,14 +33,14 @@ android {
     buildTypes {
         release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release_config
         }
 
         debug {
             multiDexEnabled true
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             applicationIdSuffix ".debug"
         }
     }
@@ -65,6 +65,18 @@ android {
 
             include "x86", "x86_64", "armeabi-v7a", "arm64-v8a"
             universalApk false
+        }
+    }
+
+    bundle {
+        language {
+            enableSplit = true
+        }
+        density {
+            enableSplit = true
+        }
+        abi {
+            enableSplit true
         }
     }
 }
@@ -177,4 +189,3 @@ dependencies {
 repositories {
     mavenCentral()
 }
-

@@ -99,8 +99,17 @@
     <string name="coming_soon">Coming Soon</string>
     <string name="share_app">Share Hymnbook App</string>
 
-    <string name="play_store_scheme">market://details?id=%s</string>
-    <string name="play_store_web">https://play.google.com/store/apps/details?id=%s</string>
+    <string name="play_store_scheme" translatable="false">market://details?id=%s</string>
+    <string name="play_store_web" translatable="false">https://play.google.com/store/apps/details?id=%s</string>
+    <string name="wccrm_facebook_link" translatable="false">https://www.facebook.com/vowtv/</string>
+    <string name="wccrm_twitter_link" translatable="false">https://twitter.com/vowtelevision</string>
+    <string name="wccrm_youtube_link" translatable="false">https://www.youtube.com/channel/UCEtzFBHftX7zDaWqYTHqc-A</string>
+    <string name="visit_us_on_facebook">Visit us on Facebook</string>
+    <string name="follow_us_on_twitter">Follow us on Twitter</string>
+    <string name="catch_up_on_youtube">Subscribe to our Youtube Channel</string>
+    <string name="fb_page_template" translatable="false">fb://page/%s</string>
+    <string name="wccrm_vowtv_fb_id" translatable="false">1725164007769664</string>
+    <string name="facebook_package_name" translatable="false">com.facebook.katana</string>
 
     <string-array name="tempo_values">
         <item>0.5×</item>

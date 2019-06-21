@@ -3,7 +3,7 @@ package com.techbeloved.hymnbook.utils
 import android.net.Uri
 
 const val DYNAMIC_LINK_DOMAIN = "https://hymnbook.page.link"
-const val MINIMUM_VERSION_FOR_SHARE_LINK = 5
+const val MINIMUM_VERSION_FOR_SHARE_LINK = 10
 const val WCCRM_LOGO_URL = "https://firebasestorage.googleapis.com/v0/b/hymnbook-50b7e.appspot.com/o/wccrm_logo.png?alt=media&token=5a015fd6-122f-4acf-ab30-3373380ce553"
 
 // content://hymnbook.com/{category}/{categoryId}/{hymns}/{hymnId}

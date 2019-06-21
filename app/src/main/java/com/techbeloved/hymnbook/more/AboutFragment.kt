@@ -1,5 +1,7 @@
 package com.techbeloved.hymnbook.more
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +26,32 @@ class AboutFragment : Fragment() {
 
         binding.textviewAboutOpenSourceLicenses.setOnClickListener {
             findNavController().navigate(AboutFragmentDirections.actionAboutFragmentToOpenSourceLicensesFragment())
+        }
+
+        binding.textviewAboutSocialFacebook.setOnClickListener {
+            val facebookIntent = try {
+                requireContext().packageManager.getPackageInfo(getString(R.string.facebook_package_name), 0)
+                Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.fb_page_template, getString(R.string.wccrm_vowtv_fb_id))))
+            } catch (e: Exception) {
+                Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.wccrm_facebook_link)))
+            }
+            startActivity(facebookIntent)
+        }
+
+        binding.textviewAboutSocialTwitter.setOnClickListener {
+            Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.wccrm_twitter_link))).apply {
+                if (resolveActivity(requireContext().packageManager) != null) {
+                    startActivity(this)
+                }
+            }
+        }
+
+        binding.textviewAboutSocialYoutube.setOnClickListener {
+            Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.wccrm_youtube_link))).apply {
+                if (resolveActivity(requireContext().packageManager) != null) {
+                    startActivity(this)
+                }
+            }
         }
         return binding.root
     }
