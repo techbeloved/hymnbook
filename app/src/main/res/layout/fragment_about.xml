@@ -172,6 +172,33 @@
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
 
                 <TextView
+                    android:id="@+id/textview_about_privacy_policy"
+                    android:layout_width="match_parent"
+                    android:layout_height="?listPreferredItemHeightSmall"
+                    android:background="?selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/margin_standard_layout"
+                    android:paddingRight="@dimen/margin_standard_layout"
+                    android:text="@string/privacy_policy"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+
+                <TextView
+                    android:id="@+id/textview_about_terms_and_conditions"
+                    android:layout_width="match_parent"
+                    android:layout_height="?listPreferredItemHeightSmall"
+                    android:background="?selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/margin_standard_layout"
+                    android:paddingRight="@dimen/margin_standard_layout"
+                    android:text="@string/terms_and_conditions"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+
+
+                <TextView
                     android:id="@+id/textview_about_version"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

@@ -110,6 +110,11 @@
     <string name="fb_page_template" translatable="false">fb://page/%s</string>
     <string name="wccrm_vowtv_fb_id" translatable="false">1725164007769664</string>
     <string name="facebook_package_name" translatable="false">com.facebook.katana</string>
+    <string name="privacy_policy">Privacy policy</string>
+    <string name="terms_and_conditions">Terms and Conditions</string>
+
+    <string name="link_privacy_policy">https://techbeloved.github.io/hymnbook/privacy_policy.html</string>
+    <string name="link_terms_and_conditions">https://techbeloved.github.io/hymnbook/terms_and_conditions.html</string>
 
     <string-array name="tempo_values">
         <item>0.5×</item>

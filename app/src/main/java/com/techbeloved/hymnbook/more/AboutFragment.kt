@@ -53,6 +53,22 @@ class AboutFragment : Fragment() {
                 }
             }
         }
+
+        binding.textviewAboutPrivacyPolicy.setOnClickListener {
+            Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.link_privacy_policy))).apply {
+                if (resolveActivity(requireContext().packageManager) != null) {
+                    startActivity(this)
+                }
+            }
+        }
+
+        binding.textviewAboutTermsAndConditions.setOnClickListener {
+            Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.link_terms_and_conditions))).apply {
+                if (resolveActivity(requireContext().packageManager) != null) {
+                    startActivity(this)
+                }
+            }
+        }
         return binding.root
     }
 }
