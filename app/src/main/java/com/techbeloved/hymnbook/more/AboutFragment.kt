@@ -69,6 +69,10 @@ class AboutFragment : Fragment() {
                 }
             }
         }
+        binding.textviewAboutAknowledgement.setOnClickListener {
+            findNavController().navigate(AboutFragmentDirections.actionAboutFragmentToAcknowledgementFragment())
+        }
+
         return binding.root
     }
 }

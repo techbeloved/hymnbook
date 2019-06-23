@@ -115,6 +115,17 @@
 
     <string name="link_privacy_policy">https://techbeloved.github.io/hymnbook/privacy_policy.html</string>
     <string name="link_terms_and_conditions">https://techbeloved.github.io/hymnbook/terms_and_conditions.html</string>
+    <string name="acknowledgement">Acknowledgement</string>
+    <string name="aknowledgement_explanation">I hereby acknowledge the following whose invaluable resources made this app possible in the first place.</string>
+    <string name="hymnary_tagline">a comprehensive index of hymns and hymnals</string>
+    <string name="www_hymntime_com">www.hymntime.com</string>
+    <string name="cyberhymnal_logo_description">Cyberhymnal logo</string>
+    <string name="hymnary_logo_description">Hymnary Logo</string>
+    <string name="timelesstruths">Timeless Truths - free online library\nlibrary.timelesstruths.org/music</string>
+
+    <string name="link_timelesstruths">https://library.timelesstruths.org/music/</string>
+    <string name="link_cyberhymnal">http://www.hymntime.com/tch/index.htm</string>
+    <string name="link_hymnary">https://hymnary.org/</string>
 
     <string-array name="tempo_values">
         <item>0.5×</item>
