@@ -1,9 +1,11 @@
 package com.techbeloved.hymnbook.sheetmusic
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ShareCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
@@ -15,8 +17,11 @@ import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.hymndetail.BaseDetailPagerFragment
 import com.techbeloved.hymnbook.hymndetail.EXTRA_CURRENT_ITEM_ID
+import com.techbeloved.hymnbook.hymndetail.ShareStatus
 import com.techbeloved.hymnbook.usecases.Lce
 import com.techbeloved.hymnbook.utils.DepthPageTransformer
+import com.techbeloved.hymnbook.utils.MINIMUM_VERSION_FOR_SHARE_LINK
+import com.techbeloved.hymnbook.utils.WCCRM_LOGO_URL
 import timber.log.Timber
 
 class SheetMusicPagerFragment : BaseDetailPagerFragment() {
@@ -34,7 +39,11 @@ class SheetMusicPagerFragment : BaseDetailPagerFragment() {
             currentHymnId = args?.hymnId ?: 1
         }
 
-        val factory: ViewModelProvider.Factory = SheetMusicPagerViewModel.Factory(Injection.provideOnlineRepo)
+        val factory: ViewModelProvider.Factory = SheetMusicPagerViewModel.Factory(
+                Injection.provideOnlineRepo,
+                Injection.shareLinkProvider,
+                Injection.provideSchedulers)
+
         viewModel = ViewModelProviders.of(this, factory)[SheetMusicPagerViewModel::class.java]
         viewModel.hymnIndicesLive.observe(this, Observer {
             when (it) {
@@ -55,6 +64,19 @@ class SheetMusicPagerFragment : BaseDetailPagerFragment() {
         detailPagerAdapter = DetailPagerAdapter(childFragmentManager)
         binding.viewpagerHymnDetail.adapter = detailPagerAdapter
         binding.viewpagerHymnDetail.setPageTransformer(true, DepthPageTransformer())
+
+        viewModel.shareLinkStatus.observe(viewLifecycleOwner, Observer { shareStatus ->
+            when (shareStatus) {
+                ShareStatus.Loading -> showShareLoadingDialog()
+                is ShareStatus.Success -> showShareOptionsChooser(shareStatus.shareLink)
+                is ShareStatus.Error -> {
+                    showShareError(shareStatus.error)
+                }
+                ShareStatus.None -> {
+                    cancelProgressDialog()
+                }
+            }
+        })
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -63,7 +85,35 @@ class SheetMusicPagerFragment : BaseDetailPagerFragment() {
     }
 
     override fun initiateContentSharing() {
-        Snackbar.make(requireView().rootView, R.string.coming_soon, Snackbar.LENGTH_SHORT).show()
+        viewModel.requestShareLink(
+                currentHymnId,
+                getString(R.string.about_app),
+                MINIMUM_VERSION_FOR_SHARE_LINK,
+                WCCRM_LOGO_URL)
+    }
+
+    private fun showShareError(error: Throwable) {
+        Timber.w(error)
+        Snackbar.make(requireView().rootView, "Failure creating share content", Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun showShareOptionsChooser(shareLink: String) {
+        ShareCompat.IntentBuilder.from(requireActivity()).apply {
+            setChooserTitle(getString(R.string.share_hymn))
+            setType("text/plain")
+            setText(shareLink)
+        }.startChooser()
+
+    }
+
+    private var progressDialog: ProgressDialog? = null
+    private fun showShareLoadingDialog() {
+        progressDialog = ProgressDialog.show(requireContext(), "Share hymn", "Working")
+        progressDialog?.setCancelable(true)
+    }
+
+    private fun cancelProgressDialog() {
+        progressDialog?.cancel()
     }
 
     private fun initializeViewPager(hymnIndices: List<Int>, initialIndex: Int) {

@@ -4,7 +4,7 @@ import android.net.Uri
 
 const val DYNAMIC_LINK_DOMAIN = "https://hymnbook.page.link"
 const val MINIMUM_VERSION_FOR_SHARE_LINK = 10
-const val WCCRM_LOGO_URL = "https://firebasestorage.googleapis.com/v0/b/hymnbook-50b7e.appspot.com/o/wccrm_logo.png?alt=media&token=5a015fd6-122f-4acf-ab30-3373380ce553"
+const val WCCRM_LOGO_URL = "https://firebasestorage.googleapis.com/v0/b/hymnbook-50b7e.appspot.com/o/wccrm_logo.jpg?alt=media&token=8f338e20-b8e4-4ca7-8e9b-997f882ab18e"
 
 // content://hymnbook.com/{category}/{categoryId}/{hymns}/{hymnId}
 const val AUTHORITY = "hymnbook.com"
@@ -16,6 +16,11 @@ const val CATEGORY_WCCRM = "wccrm"
 const val CATEGORY_TOPICS = "topics"
 const val CATEGORY_PLAYLISTS = "playlists"
 const val CATEGORY_WCCRM_SHEET_MUSIC = "wccrm_sheet_music"
+
+// default sheet music category
+val DEFAULT_SHEET_MUSIC_CATEGORY by lazy {
+    buildCategoryUri(CATEGORY_WCCRM_SHEET_MUSIC, 0)
+}
 
 const val DEFAULT_CATEGORY_URI = "$SCHEME_NORMAL://$AUTHORITY/$CATEGORY_WCCRM/0"
 

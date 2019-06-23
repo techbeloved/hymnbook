@@ -24,6 +24,9 @@
         <action
             android:id="@+id/action_homeFragment_to_detailPagerFragment"
             app:destination="@id/detailPagerFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_sheetMusicPagerFragment"
+            app:destination="@id/sheetMusicPagerFragment" />
     </fragment>
     <fragment
         android:id="@+id/hymnListingFragment"

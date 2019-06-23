@@ -91,6 +91,10 @@ class HymnPagerViewModel(private val repository: HymnsRepository,
     }
 
     private var shareDisposable: CompositeDisposable? = null
+    /**
+     * Requests share link for given hymnId. We dispose the disposable before continuing because this can be called repeatedly
+     * by clicking the share menu button
+     */
     fun requestShareLink(hymnId: Int, description: String, minimumVersion: Int, logoUrl: String) {
         shareDisposable?.dispose()
         shareDisposable = CompositeDisposable()
