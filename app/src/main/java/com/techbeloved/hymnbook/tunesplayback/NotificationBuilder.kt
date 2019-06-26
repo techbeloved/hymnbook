@@ -47,7 +47,7 @@ class NotificationBuilder(private val context: Context) {
         val playPauseIndex = 0 // If skip previous is enabled, update it to 1
         if (playbackState.isPlaying) {
             builder.addAction(pauseAction)
-        } else if (playbackState.isPlayEnabled) {
+        } else {
             builder.addAction(playAction)
         }
 
