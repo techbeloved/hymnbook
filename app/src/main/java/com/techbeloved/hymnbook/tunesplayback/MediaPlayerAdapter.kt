@@ -106,9 +106,9 @@ class MediaPlayerAdapter : MediaPlayback {
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun setPlaybackSpeed(speed: Float) {
-        val isPlaying = player?.isPlaying ?: false
+        val wasPlaying = player?.isPlaying ?: false
         player?.playbackParams = PlaybackParams().setSpeed(speed)
-        if (!isPlaying) {
+        if (!wasPlaying && isPlaying()) {
             // When playback speed is set, the playback resumes automatically even if it was paused.
             // To ensure that doesn't happen, cache the playing state before setting the speed,
             // then pause here if it was not playing originally
