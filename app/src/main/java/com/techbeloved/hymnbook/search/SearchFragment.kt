@@ -9,8 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -76,10 +75,10 @@ class SearchFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val factory = SearchViewModel.Factory(Injection.provideRepository)
-        viewModel = ViewModelProviders.of(this, factory).get(SearchViewModel::class.java)
+        viewModel = ViewModelProvider(this, factory).get(SearchViewModel::class.java)
         viewModel.monitorSearch()
 
-        viewModel.searchResults.observe(this, Observer {
+        viewModel.searchResults.observe(viewLifecycleOwner, {
             when (it) {
                 is Lce.Loading -> showLoadingProgress(it.loading)
                 is Lce.Content -> showResults(it.content)
@@ -109,7 +108,7 @@ class SearchFragment : Fragment() {
 
     private fun hideKeyboard(view: View) {
         if (activity != null) {
-            val inputMethodManager = activity!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            val inputMethodManager = requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }

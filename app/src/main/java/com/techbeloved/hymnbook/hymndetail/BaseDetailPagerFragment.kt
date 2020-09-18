@@ -14,7 +14,7 @@ import androidx.cardview.widget.CardView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.preference.PreferenceManager
@@ -47,7 +47,7 @@ abstract class BaseDetailPagerFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val nowPlayingFactory = NowPlayingViewModel.Factory(Injection.provideMediaSessionConnection)
-        nowPlayingViewModel = ViewModelProviders.of(this, nowPlayingFactory)[NowPlayingViewModel::class.java]
+        nowPlayingViewModel = ViewModelProvider(this, nowPlayingFactory)[NowPlayingViewModel::class.java]
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -126,7 +126,7 @@ abstract class BaseDetailPagerFragment : Fragment() {
 
     private fun setupMediaPlaybackControls() {
         // Only enable play button when music service is connected
-        nowPlayingViewModel.isConnected.observe(this, Observer { connected ->
+        nowPlayingViewModel.isConnected.observe(viewLifecycleOwner, { connected ->
             binding.bottomsheetPlayControls.cardViewPlayControls.isEnabled = connected
         })
         binding.bottomsheetPlayControls.imageViewControlsPlayPause.setOnClickListener {
@@ -159,7 +159,7 @@ abstract class BaseDetailPagerFragment : Fragment() {
             setupTempoControls()
         }
 
-        nowPlayingViewModel.isPlaying.observe(viewLifecycleOwner, Observer { playing ->
+        nowPlayingViewModel.isPlaying.observe(viewLifecycleOwner, { playing ->
             if (playing) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     val playToPause = requireContext().getDrawable(R.drawable.avd_play_to_pause) as AnimatedVectorDrawable
@@ -179,19 +179,19 @@ abstract class BaseDetailPagerFragment : Fragment() {
             }
         })
 
-        nowPlayingViewModel.mediaPosition.observe(viewLifecycleOwner, Observer { position ->
+        nowPlayingViewModel.mediaPosition.observe(viewLifecycleOwner, { position ->
             val currentPosition = if (position < 0) 0 else position
             binding.bottomsheetPlayControls.progressbarControlsProgress.progress = currentPosition.toFloat()
         })
 
-        nowPlayingViewModel.metadata.observe(viewLifecycleOwner, Observer { metadata ->
+        nowPlayingViewModel.metadata.observe(viewLifecycleOwner, { metadata ->
             val duration = metadata.duration
             if (duration > 0) {
                 binding.bottomsheetPlayControls.progressbarControlsProgress.maximum = duration.toFloat()
             }
         })
 
-        nowPlayingViewModel.repeatMode.observe(viewLifecycleOwner, Observer { mode ->
+        nowPlayingViewModel.repeatMode.observe(viewLifecycleOwner, { mode ->
             Timber.i("Repeat mode changed: %s", mode)
             when (mode) {
                 PlaybackStateCompat.REPEAT_MODE_NONE -> {
@@ -210,7 +210,7 @@ abstract class BaseDetailPagerFragment : Fragment() {
 
         binding.bottomsheetPlayControls.imageViewControlsRepeatToggle.setOnClickListener { nowPlayingViewModel.cycleRepeatMode() }
 
-        nowPlayingViewModel.playbackEvent.observe(viewLifecycleOwner, Observer { event ->
+        nowPlayingViewModel.playbackEvent.observe(viewLifecycleOwner, { event ->
             when (event) {
                 is PlaybackEvent.Error -> Snackbar.make(binding.coordinatorLayoutHymnDetail.rootView, event.message, Snackbar.LENGTH_SHORT).show()
                 is PlaybackEvent.Message -> Snackbar.make(binding.coordinatorLayoutHymnDetail, event.message, Snackbar.LENGTH_SHORT).show()
@@ -338,7 +338,7 @@ abstract class BaseDetailPagerFragment : Fragment() {
         // BEGIN_INCLUDE (get_current_ui_flags)
         // The UI options currently enabled are represented by a bitfield.
         // getSystemUiVisibility() gives us that bitfield.
-        var newUiOptions = activity!!.window.decorView.systemUiVisibility
+        var newUiOptions = requireActivity().window.decorView.systemUiVisibility
         // END_INCLUDE (get_current_ui_flags)
         // Hide or show toolbar accordingly
         val isImmersiveModeEnabled = newUiOptions or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY == newUiOptions
@@ -363,12 +363,12 @@ abstract class BaseDetailPagerFragment : Fragment() {
         // the screen.
         newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
 
-        activity!!.window.decorView.systemUiVisibility = newUiOptions
+        requireActivity().window.decorView.systemUiVisibility = newUiOptions
         //END_INCLUDE (set_ui_flags)
     }
 
     private fun showStatusBar() {
-        var newUiOptions = activity!!.window.decorView.systemUiVisibility
+        var newUiOptions = requireActivity().window.decorView.systemUiVisibility
         val isImmersiveModeEnabled = newUiOptions or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY == newUiOptions
         if (isImmersiveModeEnabled) {
 
@@ -376,7 +376,7 @@ abstract class BaseDetailPagerFragment : Fragment() {
             newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_FULLSCREEN
 
             newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-            activity!!.window.decorView.systemUiVisibility = newUiOptions
+            requireActivity().window.decorView.systemUiVisibility = newUiOptions
         }
     }
 

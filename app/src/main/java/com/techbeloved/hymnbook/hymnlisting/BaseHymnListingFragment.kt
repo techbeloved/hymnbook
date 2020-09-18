@@ -104,14 +104,14 @@ abstract class BaseHymnListingFragment : Fragment(), PopupMenu.OnMenuItemClickLi
 
     protected fun hideKeyboard(view: View) {
         if (activity != null) {
-            val inputMethodManager = activity!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            val inputMethodManager = requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
 
     private var currentSortKey = R.id.action_sort_by_number
     protected fun showSortByPopup(view: View) {
-        val sortByPopup = PopupMenu(context!!, view, Gravity.END)
+        val sortByPopup = PopupMenu(requireContext(), view, Gravity.END)
         sortByPopup.inflate(R.menu.filter_menu)
         sortByPopup.menu.findItem(currentSortKey).isChecked = true
         sortByPopup.show()
@@ -131,7 +131,7 @@ abstract class BaseHymnListingFragment : Fragment(), PopupMenu.OnMenuItemClickLi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        preferences = PreferenceManager.getDefaultSharedPreferences(activity!!.applicationContext)
+        preferences = PreferenceManager.getDefaultSharedPreferences(requireActivity().applicationContext)
         rxPreferences = RxSharedPreferences.create(preferences)
 
         sortByPref = rxPreferences.getInteger(getString(R.string.pref_key_sort_by))

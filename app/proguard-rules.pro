@@ -21,10 +21,13 @@
 #-renamesourcefileattribute SourceFile
 
 # Models
+#noinspection ShrinkerUnresolvedReference
 -keep class com.techbeloved.hymnbook.data.model.** { *; }
 
 # Glide
+#noinspection ShrinkerUnresolvedReference
 -keep public class * implements com.bumptech.glide.module.GlideModule
+#noinspection ShrinkerUnresolvedReference
 -keep public class * extends com.bumptech.glide.module.AppGlideModule
 -keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
   **[] $VALUES;
@@ -33,4 +36,5 @@
 
 -keepattributes *Annotation*, Signature, Exception
 -keepattributes SourceFile, LineNumberTable
+#noinspection ShrinkerUnresolvedReference
 -keep class com.shockwave.**
