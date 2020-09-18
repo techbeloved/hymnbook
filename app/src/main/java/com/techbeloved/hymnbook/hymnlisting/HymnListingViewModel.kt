@@ -8,7 +8,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.techbeloved.hymnbook.data.model.HymnTitle
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
 import com.techbeloved.hymnbook.hymndetail.SortBy
+import com.techbeloved.hymnbook.playlists.PlaylistsRepo
 import com.techbeloved.hymnbook.usecases.Lce
+import io.reactivex.BackpressureStrategy
 import io.reactivex.FlowableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -16,7 +18,7 @@ import io.reactivex.processors.BehaviorProcessor
 import io.reactivex.schedulers.Schedulers
 
 
-class HymnListingViewModel(private val hymnsRepository: HymnsRepository) : ViewModel() {
+class HymnListingViewModel(private val hymnsRepository: HymnsRepository, private val playlistsRepo: PlaylistsRepo) : ViewModel() {
 
     private val disposables = CompositeDisposable()
 
@@ -26,10 +28,6 @@ class HymnListingViewModel(private val hymnsRepository: HymnsRepository) : ViewM
 
     private val sortByProcessor: BehaviorProcessor<Int> = BehaviorProcessor.create()
 
-    init {
-        loadHymnsFromDatabase()
-    }
-
     /**
      * Loads hymn titles sorted by the specified term. This is usually called from the fragment
      * at start and each time the sorting criteria changes
@@ -38,11 +36,30 @@ class HymnListingViewModel(private val hymnsRepository: HymnsRepository) : ViewM
         sortByProcessor.onNext(sortBy)
     }
 
-    private fun loadHymnsFromDatabase() {
+    fun loadHymnsForTopic(topicId: Int = 0) {
         val disposable = sortByProcessor
                 .distinctUntilChanged()
                 .switchMap { sortBy ->
-                    hymnsRepository.loadHymnTitles(sortBy)
+                    hymnsRepository.loadHymnTitles(sortBy, topicId)
+                }
+                .compose(getHymnTitleUiModels())
+                .compose(getViewState())
+                .startWith(Lce.Loading(true))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ result -> _hymnTitlesLiveData.value = result },
+                        { error ->
+                            _hymnTitlesLiveData.value = Lce.Error(error.message!!)
+                        })
+
+        disposables.add(disposable)
+    }
+
+    fun loadHymnsForPlaylist(playlistId: Int) {
+        val disposable = sortByProcessor
+                .distinctUntilChanged()
+                .switchMap { sortBy ->
+                    playlistsRepo.getHymnsInPlaylist(playlistId, sortBy).toFlowable(BackpressureStrategy.LATEST)
                 }
                 .compose(getHymnTitleUiModels())
                 .compose(getViewState())
@@ -74,9 +91,9 @@ class HymnListingViewModel(private val hymnsRepository: HymnsRepository) : ViewM
         upstream.map { Lce.Content(it) }
     }
 
-    class Factory(private val repository: HymnsRepository) : ViewModelProvider.Factory {
+    class Factory(private val repository: HymnsRepository, val playlistsRepo: PlaylistsRepo) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return HymnListingViewModel(repository) as T
+            return HymnListingViewModel(repository, playlistsRepo) as T
         }
 
     }

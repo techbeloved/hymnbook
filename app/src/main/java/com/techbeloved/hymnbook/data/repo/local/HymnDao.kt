@@ -21,11 +21,21 @@ interface HymnDao {
     @Query("SELECT * FROM hymn_titles ORDER BY num ASC")
     fun getAllHymnTitles(): Flowable<List<HymnTitle>>
 
+    @Query("SELECT * FROM hymn_titles  WHERE topicId = :topicId ORDER BY num ASC")
+    fun getAllHymnTitlesForTopic(topicId: Int): Flowable<List<HymnTitle>>
+
     @Query("SELECT * FROM hymn_titles ORDER BY title ASC")
     fun getAllHymnTitlesSortedByTitles(): Flowable<List<HymnTitle>>
 
+    @Query("SELECT * FROM hymn_titles WHERE topicId = :topicId ORDER BY title ASC ")
+    fun getAllHymnTitlesSortedByTitlesForTopic(topicId: Int): Flowable<List<HymnTitle>>
+
     @Query("SELECT * FROM hymn_titles WHERE num IN (:ids)")
     fun getHymnTitlesForIndices(ids: List<Int>): Flowable<List<HymnTitle>>
+
+    @Query("SELECT * FROM hymn_titles WHERE num IN (:indices) ORDER BY title ASC")
+    fun getHymnTitlesForIndicesByTitle(indices: List<Int>): Flowable<List<HymnTitle>>
+
 
     @Query("SELECT * FROM hymn_with_topics WHERE num = :hymnNo")
     fun getHymnDetail(hymnNo: Int): Flowable<HymnDetail>
@@ -64,8 +74,14 @@ interface HymnDao {
     @Query("SELECT num FROM hymns ORDER BY num ASC")
     fun getIndicesByNumber(): Flowable<List<Int>>
 
+    @Query("SELECT num FROM hymns WHERE topicId=:topicId ORDER BY num ASC")
+    fun getIndicesByNumberForTopic(topicId: Int): Flowable<List<Int>>
+
     @Query("SELECT num FROM hymns ORDER BY title ASC")
     fun getIndicesByTitle(): Flowable<List<Int>>
+
+    @Query("SELECT num FROM hymns WHERE topicId=:topicId ORDER BY title ASC")
+    fun getIndicesByTitleForTopic(topicId: Int): Flowable<List<Int>>
 
     @Query("SELECT hymns.num, hymns.title, hymns.verses, hymns.chorus FROM hymns JOIN hymnSearchFts ON (hymns.rowid = hymnSearchFts.docid) WHERE hymnSearchFts MATCH :query")
     fun searchHymns(query: String): Flowable<List<SearchResult>>

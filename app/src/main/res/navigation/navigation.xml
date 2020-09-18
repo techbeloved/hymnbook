@@ -21,6 +21,12 @@
         <action
             android:id="@+id/action_homeFragment_to_sheetMusicListing"
             app:destination="@id/sheetMusicListing" />
+        <action
+            android:id="@+id/action_homeFragment_to_detailPagerFragment"
+            app:destination="@id/detailPagerFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_sheetMusicPagerFragment"
+            app:destination="@id/sheetMusicPagerFragment" />
     </fragment>
     <fragment
         android:id="@+id/hymnListingFragment"
@@ -29,19 +35,22 @@
         tools:layout="@layout/fragment_song_listing">
         <action
             android:id="@+id/action_hymnListingFragment_to_detailPagerFragment"
-            app:destination="@id/detailPagerFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:destination="@id/detailPagerFragment" />
+        <argument
+            android:name="title"
+            android:defaultValue="Hymns"
+            app:argType="string" />
+        <argument
+            android:name="navUri"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/detailPagerFragment"
-        android:name="com.techbeloved.hymnbook.hymndetail.DetailPagerFragment">
+        android:name="com.techbeloved.hymnbook.hymndetail.DetailPagerFragment"
+        tools:layout="@layout/fragment_detail">
         <argument
-            android:name="hymnId"
-            app:argType="integer"
-            android:defaultValue="1" />
+            android:name="navUri"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -64,6 +73,9 @@
         <action
             android:id="@+id/action_moreFragment_to_settingsActivity"
             app:destination="@id/settingsActivity" />
+        <action
+            android:id="@+id/action_moreFragment_to_aboutFragment"
+            app:destination="@id/aboutFragment" />
     </fragment>
     <activity
         android:id="@+id/settingsActivity"
@@ -82,10 +94,55 @@
     <fragment
         android:id="@+id/sheetMusicPagerFragment"
         android:name="com.techbeloved.hymnbook.sheetmusic.SheetMusicPagerFragment"
-        android:label="Sheet Music">
+        android:label="Sheet Music"
+        tools:layout="@layout/fragment_sheet_music_detail">
         <argument
             android:name="hymnId"
             app:argType="integer"
             android:defaultValue="1" />
     </fragment>
+    <fragment
+        android:id="@+id/topicsFragment"
+        android:name="com.techbeloved.hymnbook.topics.TopicsFragment"
+        android:label="Topics"
+        tools:layout="@layout/topics_fragment">
+        <action
+            android:id="@+id/action_topicsFragment_to_hymnListingFragment"
+            app:destination="@id/hymnListingFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/playlistsFragment"
+        android:name="com.techbeloved.hymnbook.playlists.PlaylistsFragment"
+        android:label="@string/text_playlist_label"
+        tools:layout="@layout/fragment_playlists">
+        <action
+            android:id="@+id/action_playlistsFragment_to_hymnListingFragment"
+            app:destination="@id/hymnListingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.techbeloved.hymnbook.more.AboutFragment"
+        android:label="About"
+        tools:layout="@layout/fragment_about">
+        <action
+            android:id="@+id/action_aboutFragment_to_openSourceLicensesFragment"
+            app:destination="@id/openSourceLicensesFragment" />
+        <action
+            android:id="@+id/action_aboutFragment_to_acknowledgementFragment"
+            app:destination="@id/acknowledgementFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/openSourceLicensesFragment"
+        android:name="com.techbeloved.hymnbook.more.OpenSourceLicensesFragment"
+        android:label="Open Source Licenses"
+        tools:layout="@layout/fragment_open_source_licenses" />
+    <fragment
+        android:id="@+id/acknowledgementFragment"
+        android:name="com.techbeloved.hymnbook.more.AcknowledgementFragment"
+        android:label="Acknowledgements"
+        tools:layout="@layout/fragment_acknowledgement" />
 </navigation>

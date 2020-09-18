@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="viewModel"
-            type="com.techbeloved.hymnbook.hymndetail.HymnPagerViewModel" />
+            name="nowPlaying"
+            type="com.techbeloved.hymnbook.nowplaying.NowPlayingViewModel" />
 
     </data>
 
@@ -39,6 +39,8 @@
             android:id="@+id/touchable_frame_hymn_detail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="?actionBarSize"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <androidx.viewpager.widget.ViewPager
@@ -58,7 +60,7 @@
         <include
             android:id="@+id/bottomsheet_play_controls"
             layout="@layout/partial_bottom_play_controls"
-            bind:viewModel="@{viewModel}" />
+            bind:nowPlaying="@{nowPlaying}" />
 
         <include
             android:id="@+id/bottomsheet_quick_settings"

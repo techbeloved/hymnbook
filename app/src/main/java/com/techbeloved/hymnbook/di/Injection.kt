@@ -8,12 +8,13 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.work.WorkManager
 import com.f2prateek.rx.preferences2.RxSharedPreferences
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.techbeloved.hymnbook.BuildConfig
 import com.techbeloved.hymnbook.HymnbookApp
 import com.techbeloved.hymnbook.HymnbookUseCases
 import com.techbeloved.hymnbook.HymnbookUseCasesImp
-import com.techbeloved.hymnbook.MediaSessionConnection
 import com.techbeloved.hymnbook.data.*
 import com.techbeloved.hymnbook.data.download.Downloader
 import com.techbeloved.hymnbook.data.download.DownloaderImp
@@ -26,9 +27,15 @@ import com.techbeloved.hymnbook.data.repo.OnlineRepo
 import com.techbeloved.hymnbook.data.repo.local.HymnsDatabase
 import com.techbeloved.hymnbook.data.repo.local.util.AppExecutors
 import com.techbeloved.hymnbook.data.repo.local.util.DataGenerator
+import com.techbeloved.hymnbook.nowplaying.MediaSessionConnection
+import com.techbeloved.hymnbook.playlists.PlaylistsRepo
+import com.techbeloved.hymnbook.playlists.PlaylistsRepoImp
 import com.techbeloved.hymnbook.sheetmusic.HymnUseCases
 import com.techbeloved.hymnbook.sheetmusic.HymnsUseCasesImp
+import com.techbeloved.hymnbook.topics.TopicsUseCases
+import com.techbeloved.hymnbook.topics.TopicsUseCasesImp
 import com.techbeloved.hymnbook.tunesplayback.TunesPlayerService
+import com.techbeloved.hymnbook.utils.DYNAMIC_LINK_DOMAIN
 import com.techbeloved.hymnbook.utils.SchedulerProvider
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -41,6 +48,13 @@ const val WCCRM_HYMNS_COLLECTION = "wccrm"
 object Injection {
     fun provideAppContext(): Application {
         return HymnbookApp.instance
+    }
+
+    val shareLinkProvider: ShareLinkProvider by lazy {
+        ShareLinkProvider(FirebaseDynamicLinks.getInstance(), DYNAMIC_LINK_DOMAIN, BuildConfig.APPLICATION_ID)
+    }
+    val provideTopicsUseCases: TopicsUseCases by lazy {
+        TopicsUseCasesImp(provideRepository, provideSchedulers)
     }
 
     val executors by lazy {
@@ -120,6 +134,10 @@ object Injection {
                 provideSharePrefsRepo,
                 WorkManager.getInstance(HymnbookApp.instance)
         )
+    }
+
+    val providePlaylistRepo: PlaylistsRepo by lazy {
+        PlaylistsRepoImp(database)
     }
 
     /**

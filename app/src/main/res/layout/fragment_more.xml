@@ -37,9 +37,7 @@
             android:layout_height="wrap_content"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
@@ -60,6 +58,7 @@
                     android:paddingBottom="16dp"
                     android:text="@string/text_hymn_of_the_day"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                    android:drawableLeft="@drawable/ic_day"
                     tools:layout_editor_absoluteY="120dp" />
 
                 <TextView
@@ -77,6 +76,7 @@
                     android:paddingBottom="16dp"
                     android:text="@string/text_share"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                    android:drawableLeft="@drawable/ic_share_black_24dp"
                     tools:layout_editor_absoluteY="120dp" />
 
                 <TextView
@@ -94,6 +94,7 @@
                     android:paddingBottom="16dp"
                     android:text="@string/about"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                    android:drawableLeft="@drawable/ic_about"
                     tools:layout_editor_absoluteY="120dp" />
 
                 <TextView
@@ -111,6 +112,7 @@
                     android:paddingBottom="16dp"
                     android:text="@string/action_settings"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                    android:drawableLeft="@drawable/ic_settings_black_24dp"
                     tools:layout_editor_absoluteY="120dp" />
 
             </LinearLayout>

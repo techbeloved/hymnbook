@@ -1,277 +1,120 @@
 package com.techbeloved.hymnbook.hymndetail
 
 
-import android.os.Build
+import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.os.Bundle
-import android.support.v4.media.session.PlaybackStateCompat
-import android.view.GestureDetector
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SeekBar
-import androidx.annotation.RequiresApi
-import androidx.cardview.widget.CardView
-import androidx.databinding.DataBindingUtil
+import androidx.core.app.ShareCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI
-import androidx.preference.PreferenceManager
-import com.f2prateek.rx.preferences2.Preference
-import com.f2prateek.rx.preferences2.RxSharedPreferences
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.snackbar.Snackbar
 import com.techbeloved.hymnbook.R
-import com.techbeloved.hymnbook.databinding.DialogTempoSelectorBinding
-import com.techbeloved.hymnbook.databinding.FragmentDetailPagerBinding
 import com.techbeloved.hymnbook.di.Injection
-import com.techbeloved.hymnbook.tunesplayback.duration
-import com.techbeloved.hymnbook.tunesplayback.isPlaying
 import com.techbeloved.hymnbook.usecases.Lce
-import com.techbeloved.hymnbook.utils.DepthPageTransformer
+import com.techbeloved.hymnbook.utils.*
 import timber.log.Timber
 
-
-private const val CURRENT_ITEM_ID = "currentItemId"
-
-/**
- * A simple [Fragment] subclass.
- *
- */
-class DetailPagerFragment : Fragment() {
-
-    private lateinit var detailPagerAdapter: DetailPagerAdapter
+class DetailPagerFragment : BaseDetailPagerFragment() {
 
     private lateinit var viewModel: HymnPagerViewModel
-    private lateinit var binding: FragmentDetailPagerBinding
-    private lateinit var quickSettingsSheet: BottomSheetBehavior<CardView>
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail_pager, container, false)
-        binding.lifecycleOwner = this
-        binding.viewModel = viewModel
-
-        setupImmersiveMode() // Immersive mode
-
-        NavigationUI.setupWithNavController(binding.toolbarDetail, findNavController())
-        binding.toolbarDetail.inflateMenu(R.menu.detail)
-        binding.toolbarDetail.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.menu_detail_quick_settings -> {
-                    showQuickSettingsBottomSheet()
-                    true
-                }
-                else -> false
-
-            }
-        }
-
-        quickSettingsSheet = BottomSheetBehavior.from(
-                binding.bottomsheetQuickSettings.cardviewQuickSettings)
-        setupQuickSettings()
-
-        setupMediaPlaybackControls()
-
-        detailPagerAdapter = DetailPagerAdapter(childFragmentManager)
-        binding.viewpagerHymnDetail.adapter = detailPagerAdapter
-        binding.viewpagerHymnDetail.setPageTransformer(true, DepthPageTransformer())
-        return binding.root
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt(CURRENT_ITEM_ID, currentItemIndex)
-        super.onSaveInstanceState(outState)
-    }
-
-
-    private fun setupMediaPlaybackControls() {
-        binding.bottomsheetPlayControls.imageViewControlsPlayPause.setOnClickListener {
-            viewModel.playMedia(currentItemIndex.toString())
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            setupTempoControls()
-        }
-
-        viewModel.mediaPosition.observe(viewLifecycleOwner, Observer { position ->
-            val currentPosition = if (position < 0) 0 else position
-            binding.bottomsheetPlayControls.progressbarControlsProgress.progress = currentPosition.toFloat()
-        })
-
-        viewModel.metadata.observe(viewLifecycleOwner, Observer { metadata ->
-            val duration = metadata.duration
-            if (duration > 0) {
-                binding.bottomsheetPlayControls.progressbarControlsProgress.maximum = duration.toFloat()
-            }
-        })
-
-        viewModel.repeatMode.observe(viewLifecycleOwner, Observer { mode ->
-            Timber.i("Repeat mode changed: %s", mode)
-            when (mode) {
-                PlaybackStateCompat.REPEAT_MODE_NONE -> {
-                    binding.bottomsheetPlayControls.imageViewControlsRepeatToggle.setImageResource(R.drawable.ic_times_one)
-                    binding.bottomsheetPlayControls.progressbarControlsProgress.isIndeterminate = false
-                }
-                PlaybackStateCompat.REPEAT_MODE_ALL -> {
-                    binding.bottomsheetPlayControls.imageViewControlsRepeatToggle.setImageResource(R.drawable.ic_times_all)
-                    binding.bottomsheetPlayControls.progressbarControlsProgress.isIndeterminate = false
-                }
-                PlaybackStateCompat.REPEAT_MODE_ONE -> {
-                    binding.bottomsheetPlayControls.imageViewControlsRepeatToggle.setImageResource(R.drawable.ic_repeat_active)
-                    binding.bottomsheetPlayControls.progressbarControlsProgress.isIndeterminate = true
-                }
-            }
-        })
-
-        binding.bottomsheetPlayControls.imageViewControlsRepeatToggle.setOnClickListener { viewModel.cycleRepeatMode() }
-
-
-    }
-
-    @RequiresApi(23)
-    private fun setupTempoControls() {
-        val tempoDialog = BottomSheetDialog(requireActivity())
-        val tempoViewBinding: DialogTempoSelectorBinding = DataBindingUtil.inflate(layoutInflater, R.layout.dialog_tempo_selector, null, false)
-        tempoDialog.setContentView(tempoViewBinding.root)
-
-        viewModel.playbackTempo.observe(viewLifecycleOwner, Observer {
-            tempoViewBinding.seekBarTempoSelector.progress = it
-        })
-
-        tempoViewBinding.seekBarTempoSelector.setOnSeekBarChangeListener(
-                object : SeekBar.OnSeekBarChangeListener {
-                    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                        if (fromUser) {
-                            viewModel.saveTempo(progress)
-                        }
-                    }
-
-                    override fun onStartTrackingTouch(seekBar: SeekBar?) {
-
-                    }
-
-                    override fun onStopTrackingTouch(seekBar: SeekBar?) {
-
-                    }
-
-                }
-        )
-        binding.bottomsheetPlayControls.textControlsTempo.setOnClickListener {
-            tempoDialog.show()
-        }
-
-        viewModel.playbackRate.observe(viewLifecycleOwner, Observer { rate ->
-            binding.bottomsheetPlayControls.textControlsTempo.text = getString(R.string.tempo_x, rate)
-        })
-
-    }
-
-
-    /**
-     * Configure the quick settings found in the bottomsheet
-     */
-    private fun setupQuickSettings() {
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity)
-        val rxPreferences = RxSharedPreferences.create(sharedPreferences)
-        val defaultTextSize = resources.getInteger(R.integer.normal_detail_text_size).toFloat()
-        val fontSizePreference: Preference<Float> = rxPreferences.getFloat(
-                getString(R.string.pref_key_detail_font_size), defaultTextSize)
-
-        // Example, max_text_size = 6, maxIncrement = 6/20 = 0.3. So we cannot add more than 0.3 to original text size
-        val maxTextIncrement = resources.getInteger(R.integer.max_text_size)
-        val minTextIncrement = resources.getInteger(R.integer.min_text_size)
-        Timber.i("minTextSize: %s", minTextIncrement)
-
-        binding.bottomsheetQuickSettings.buttonQuickSettingsFontIncrease.setOnClickListener { v ->
-            val currentSize = fontSizePreference.get()
-            if (currentSize - defaultTextSize < maxTextIncrement) {
-                Timber.i("Current: %s", currentSize)
-                fontSizePreference.set(currentSize + 1f)
-            }
-        }
-
-        binding.bottomsheetQuickSettings.buttonQuickSettingsFontDecrease.setOnClickListener { v ->
-            val currentSize = fontSizePreference.get()
-            if (currentSize - defaultTextSize > minTextIncrement) {
-                fontSizePreference.set(currentSize - 1f)
-                Timber.i("Current: %s", currentSize)
-            }
-        }
-
-        // night Mode
-        val nightModePreference: Preference<Boolean> = rxPreferences.getBoolean(getString(R.string.pref_key_enable_night_mode), false)
-        val darkModeEnabled = nightModePreference.get()
-        if (darkModeEnabled) {
-            binding.bottomsheetQuickSettings.radiobuttonQuickSettingsDarkTheme.isChecked = true
-        } else {
-            binding.bottomsheetQuickSettings.radiobuttonQuickSettingsLightTheme.isChecked = true
-        }
-        binding.bottomsheetQuickSettings.radiogroupQuickSettingsThemeSelector.setOnCheckedChangeListener { group, checkedId ->
-            if (checkedId == R.id.radiobutton_quick_settings_dark_theme) {
-                nightModePreference.set(true)
-            } else if (checkedId == R.id.radiobutton_quick_settings_light_theme) {
-                nightModePreference.set(false)
-            }
-        }
-    }
+    private lateinit var detailPagerAdapter: DetailPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Restore current index
         if (savedInstanceState != null) {
-            currentItemIndex = savedInstanceState.getInt(CURRENT_ITEM_ID, 1)
+            currentHymnId = savedInstanceState.getInt(EXTRA_CURRENT_ITEM_ID, 1)
+            currentCategoryUri = savedInstanceState.getString(EXTRA_CURRENT_CATEGORY_URI, DEFAULT_CATEGORY_URI)
         } else {
             val args = arguments?.let { DetailPagerFragmentArgs.fromBundle(it) }
-            currentItemIndex = args?.hymnId ?: 1
+            val inComingItemUri = args?.navUri!!
+            currentHymnId = inComingItemUri.hymnId()?.toInt() ?: 1
+            currentCategoryUri = inComingItemUri.parentCategoryUri() ?: DEFAULT_CATEGORY_URI
         }
+
         val factory = HymnPagerViewModel.Factory(Injection.provideRepository,
-                Injection.provideMediaSessionConnection)
+                Injection.providePlaylistRepo,
+                currentCategoryUri, Injection.provideSchedulers, Injection.shareLinkProvider)
         viewModel = ViewModelProviders.of(this, factory).get(HymnPagerViewModel::class.java)
-        viewModel.hymnIndicesLiveData.observe(this, Observer {
-            val indexToLoad = currentItemIndex
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        detailPagerAdapter = DetailPagerAdapter(childFragmentManager)
+        binding.viewpagerHymnDetail.adapter = detailPagerAdapter
+        binding.viewpagerHymnDetail.setPageTransformer(true, DepthPageTransformer())
+
+        viewModel.hymnIndicesLiveData.observe(viewLifecycleOwner, Observer {
+            val indexToLoad = currentHymnId
             when (it) {
                 is Lce.Loading -> showProgressLoading(it.loading)
                 is Lce.Content -> {
                     initializeViewPager(it.content, indexToLoad)
-                    updateToolbarWithCurrentItem(indexToLoad)
+                    updateCurrentItemId(indexToLoad)
+                    updateHymnItems(it.content)
                 }
                 is Lce.Error -> showContentError(it.error)
             }
         })
 
-        viewModel.loadHymnIndices()
+        viewModel.header.observe(viewLifecycleOwner, Observer { title ->
+            binding.toolbarDetail.title = title
+        })
 
-        viewModel.playbackState.observe(this, Observer { playbackState ->
-            Timber.i("PlaybackState changed: %s", playbackState)
-            if (playbackState.isPlaying) {
-                // TODO
-            } else {
-                // TODO
+        viewModel.shareLinkStatus.observe(viewLifecycleOwner, Observer { shareStatus ->
+            when (shareStatus) {
+                ShareStatus.Loading -> showShareLoadingDialog()
+                is ShareStatus.Success -> showShareOptionsChooser(shareStatus.shareLink)
+                is ShareStatus.Error -> {
+                    showShareError(shareStatus.error)
+                }
+                ShareStatus.None -> {
+                    cancelProgressDialog()
+                }
             }
         })
-
-        // Only enable play button when music service is connected
-        viewModel.isConnected.observe(this, Observer { connected ->
-            // TODO
-        })
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        showStatusBar()
+    private fun showShareError(error: Throwable) {
+        Timber.w(error)
+        Snackbar.make(requireView().rootView, "Failure creating share content", Snackbar.LENGTH_SHORT).show()
     }
 
-    private fun showContentError(error: String) {
-        // TODO: Implement error screen and show it here
+    private fun showShareOptionsChooser(shareLink: String) {
+        ShareCompat.IntentBuilder.from(requireActivity()).apply {
+            setChooserTitle(getString(R.string.share_hymn))
+            setType("text/plain")
+            setText(shareLink)
+        }.startChooser()
+
+    }
+
+    private var progressDialog: ProgressDialog? = null
+    private fun showShareLoadingDialog() {
+        progressDialog = ProgressDialog.show(requireContext(), "Share hymn", "Working")
+        progressDialog?.setCancelable(true)
+    }
+
+    private fun cancelProgressDialog() {
+        progressDialog?.cancel()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(EXTRA_CURRENT_ITEM_ID, currentHymnId)
+        outState.putString(EXTRA_CURRENT_CATEGORY_URI, currentCategoryUri)
+        super.onSaveInstanceState(outState)
     }
 
     private fun initializeViewPager(hymnIndices: List<Int>, initialIndex: Int) {
         Timber.i("Initializing viewPager with index: $initialIndex")
-        showProgressLoading(false)
+        //showProgressLoading(false)
+
         detailPagerAdapter.submitList(hymnIndices)
         // initialIndex represents the hymn number, where as the adapter uses a zero based index
         // Which implies that when the indices is sorted by titles, the correct detail won't be shown.
@@ -281,12 +124,15 @@ class DetailPagerFragment : Fragment() {
         binding.viewpagerHymnDetail.currentItem = indexToLoad
     }
 
-    private fun showProgressLoading(loading: Boolean) {
-        //if (loading) binding.progressBarHymnDetailLoading.visibility = View.VISIBLE
-        //else binding.progressBarHymnDetailLoading.visibility = View.GONE
+    override fun initiateContentSharing() {
+        viewModel.requestShareLink(currentHymnId,
+                getString(R.string.about_app),
+                MINIMUM_VERSION_FOR_SHARE_LINK,
+                WCCRM_LOGO_URL)
     }
 
-    inner class DetailPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
+    @SuppressLint("WrongConstant")
+    inner class DetailPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         private val hymnIndices = mutableListOf<Int>()
         override fun getItem(position: Int): Fragment {
             val detailFragment = DetailFragment()
@@ -301,7 +147,7 @@ class DetailPagerFragment : Fragment() {
 
         override fun setPrimaryItem(container: ViewGroup, position: Int, `object`: Any) {
             super.setPrimaryItem(container, position, `object`)
-            updateToolbarWithCurrentItem(hymnIndices[position])
+            updateCurrentItemId(hymnIndices[position])
         }
 
         override fun getCount(): Int {
@@ -316,78 +162,4 @@ class DetailPagerFragment : Fragment() {
 
     }
 
-    private var currentItemIndex = 1
-    private fun updateToolbarWithCurrentItem(hymnIndex: Int) {
-        currentItemIndex = hymnIndex
-        binding.toolbarDetail.title = "Hymn, $currentItemIndex"
-    }
-
-    private fun setupImmersiveMode() {
-        // Setup the gesture listener to listen for single tap and toggle fullscreen
-        val mainView = binding.touchableFrameHymnDetail
-        val gestureListener = GestureListener {
-            toggleHideyBar()
-            false
-        }
-        val gd = GestureDetector(activity, gestureListener)
-        mainView.setGestureDetector(gd)
-    }
-
-    /**
-     * Detects and toggles immersive mode (also known as "hidey bar" mode).
-     */
-    private fun toggleHideyBar() {
-
-        // BEGIN_INCLUDE (get_current_ui_flags)
-        // The UI options currently enabled are represented by a bitfield.
-        // getSystemUiVisibility() gives us that bitfield.
-        var newUiOptions = activity!!.window.decorView.systemUiVisibility
-        // END_INCLUDE (get_current_ui_flags)
-        // Hide or show toolbar accordingly
-        val isImmersiveModeEnabled = newUiOptions or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY == newUiOptions
-        if (isImmersiveModeEnabled) {
-            binding.toolbarDetail.visibility = View.VISIBLE
-        } else {
-            binding.toolbarDetail.visibility = View.GONE
-        }
-
-        // BEGIN_INCLUDE (toggle_ui_flags)
-        newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-        newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_FULLSCREEN
-
-
-        // Immersive mode: Backward compatible to KitKat.
-        // Note that this flag doesn't do anything by itself, it only augments the behavior
-        // of HIDE_NAVIGATION and FLAG_FULLSCREEN.  For the purposes of this sample
-        // all three flags are being toggled together.
-        // Note that there are two immersive mode UI flags, one of which is referred to as "sticky".
-        // Sticky immersive mode differs in that it makes the navigation and status bars
-        // semi-transparent, and the UI flag does not get cleared when the user interacts with
-        // the screen.
-        newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-
-        activity!!.window.decorView.systemUiVisibility = newUiOptions
-        //END_INCLUDE (set_ui_flags)
-    }
-
-    private fun showStatusBar() {
-        var newUiOptions = activity!!.window.decorView.systemUiVisibility
-        val isImmersiveModeEnabled = newUiOptions or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY == newUiOptions
-        if (isImmersiveModeEnabled) {
-
-            newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-            newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_FULLSCREEN
-
-            newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-            activity!!.window.decorView.systemUiVisibility = newUiOptions
-        }
-    }
-
-    private fun showQuickSettingsBottomSheet() {
-        //val quickSettingsFragment = QuickSettingsFragment()
-        //fragmentManager?.let { quickSettingsFragment.show(it, quickSettingsFragment.tag) }
-        if (quickSettingsSheet.state != BottomSheetBehavior.STATE_EXPANDED) {
-            quickSettingsSheet.state = BottomSheetBehavior.STATE_EXPANDED
-        }
-    }
 }

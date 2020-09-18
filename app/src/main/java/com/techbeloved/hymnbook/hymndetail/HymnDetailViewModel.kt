@@ -135,20 +135,16 @@ class HymnDetailViewModel(private val app: Application, private val hymnReposito
                 if (this.attribution!!.lyricsBy != null) {
 
                     truss.pushSpan(RelativeSizeSpan(0.7f))
-                            //.pushSpan(Snippety().textColor(app.resources.getColor(R.color.colorFadedText)))
                             .append("Lyrics by:  ", StyleSpan(Typeface.BOLD_ITALIC))
                             .appendln(attribution?.lyricsBy)
                             .newLine()
                             .append("Music by:  ", StyleSpan(Typeface.BOLD_ITALIC))
                             .appendln(attribution?.musicBy)
-                            //.popSpan()
                             .popSpan()
                 } else if (this.attribution!!.credits != null) {
                     truss.pushSpan(RelativeSizeSpan(0.7f))
-                            //.pushSpan(Snippety().textColor(app.resources.getColor(R.color.colorFadedText)))
                             .append("Credits:  ", StyleSpan(Typeface.BOLD_ITALIC))
                             .appendln(attribution?.credits)
-                            //.popSpan()
                             .popSpan()
                 }
             }
@@ -159,13 +155,24 @@ class HymnDetailViewModel(private val app: Application, private val hymnReposito
      * Only used to get the first line of a verse or stanza of a hymn
      */
     private val String.firstLine: String
-        get() = this.substring(0, this.indexOf("\n"))
+        get() {
+            if (this.indexOf("\n") == -1) {
+                Timber.i(this)
+                return this
+            }
+            return this.substring(0, this.indexOf("\n"))
+        }
 
     /**
      * Only used to get other lines in a hymn verse apart from the first
      */
     private val String.otherLines: String
-        get() = this.substring(this.indexOf("\n"))
+        get() {
+            if (this.indexOf("\n") == -1) {
+                return this
+            }
+            return this.substring(this.indexOf("\n"))
+        }
 
 
     class Factory(private val app: Application, private val repository: HymnsRepository) : ViewModelProvider.Factory {

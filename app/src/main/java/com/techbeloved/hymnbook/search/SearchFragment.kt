@@ -20,13 +20,16 @@ import com.techbeloved.hymnbook.databinding.FragmentSearchBinding
 import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.hymnlisting.HymnItemModel
 import com.techbeloved.hymnbook.usecases.Lce
+import com.techbeloved.hymnbook.utils.DEFAULT_CATEGORY_URI
+import com.techbeloved.hymnbook.utils.appendHymnId
 import timber.log.Timber
 
 class SearchFragment : Fragment() {
 
     private val clickListener: HymnItemModel.ClickListener<HymnItemModel> = object : HymnItemModel.ClickListener<HymnItemModel> {
-        override fun onItemClick(item: HymnItemModel) {
-            findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToDetailPagerFragment(item.id))
+        override fun onItemClick(view: View, item: HymnItemModel) {
+            findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToDetailPagerFragment(
+                    DEFAULT_CATEGORY_URI.appendHymnId(item.id)!!))
         }
 
     }

@@ -1,137 +1,49 @@
 package com.techbeloved.hymnbook.hymnlisting
 
-import android.app.Activity
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.*
-import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.widget.PopupMenu
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI
-import androidx.preference.PreferenceManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.f2prateek.rx.preferences2.Preference
-import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.techbeloved.hymnbook.R
-import com.techbeloved.hymnbook.databinding.FragmentSongListingBinding
 import com.techbeloved.hymnbook.di.Injection
-import com.techbeloved.hymnbook.hymndetail.BY_NUMBER
-import com.techbeloved.hymnbook.hymndetail.BY_TITLE
 import com.techbeloved.hymnbook.usecases.Lce
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.PublishSubject
+import com.techbeloved.hymnbook.utils.*
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
 
-class HymnListingFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
+class HymnListingFragment : BaseHymnListingFragment() {
 
-    private lateinit var binding: FragmentSongListingBinding
+    private lateinit var currentCategoryUri: String
     private lateinit var viewModel: HymnListingViewModel
-    private lateinit var hymnListAdapter: HymnListAdapterNoDiff
 
-    private val clickListener = object : HymnItemModel.ClickListener<HymnItemModel> {
-        override fun onItemClick(item: HymnItemModel) {
-            navigateToHymnDetail(item.id)
-        }
+    override lateinit var title: String
+
+
+    override fun navigateToHymnDetail(view: View, item: HymnItemModel) {
+        findNavController().navigate(HymnListingFragmentDirections
+                .actionHymnListingFragmentToDetailPagerFragment(currentCategoryUri.appendHymnId(item.id)!!))
     }
 
-    private fun navigateToHymnDetail(hymnIndex: Int) {
-        findNavController().navigate(HymnListingFragmentDirections.actionHymnListingFragmentToDetailPagerFragment(hymnIndex))
-    }
 
-    private val filterHymnTextWatcher = object : TextWatcher {
-        override fun afterTextChanged(s: Editable?) {
-
-        }
-
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-        }
-
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            filterPublishSubject.onNext(s?.toString() ?: "")
-
-        }
-    }
-
-    private lateinit var preferences: SharedPreferences
-    private lateinit var rxPreferences: RxSharedPreferences
-    private lateinit var sortByPref: Preference<Int>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        preferences = PreferenceManager.getDefaultSharedPreferences(activity!!.applicationContext)
-        rxPreferences = RxSharedPreferences.create(preferences)
-
-        sortByPref = rxPreferences.getInteger(getString(R.string.pref_key_sort_by))
-        doInOnCreate()
-        setupFilterObserver()
+        doInOnCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_song_listing, container, false)
-        binding.lifecycleOwner = this
-        NavigationUI.setupWithNavController(binding.toolbarSongListing, findNavController())
-
-        hymnListAdapter = HymnListAdapterNoDiff(clickListener)
-        binding.recyclerviewSongList.apply {
-            adapter = hymnListAdapter
-            layoutManager = LinearLayoutManager(activity)
-        }
-        binding.edittextFilterHymns.addTextChangedListener(filterHymnTextWatcher)
-        binding.edittextFilterHymns.setSortByClickListener {
-            showSortByPopup(it)
-        }
-        binding.edittextFilterHymns.setOnFocusChangeListener { view, hasFocus -> if (!hasFocus) hideKeyboard(view) }
-
-        setupViewModel()
-
-        setHasOptionsMenu(true)
-
-        return binding.root
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString(EXTRA_CURRENT_CATEGORY_URI, currentCategoryUri)
+        super.onSaveInstanceState(outState)
     }
 
-    private var currentSortKey = R.id.action_sort_by_number
-    private fun showSortByPopup(view: View) {
-        val sortByPopup = PopupMenu(context!!, view, Gravity.END)
-        sortByPopup.inflate(R.menu.filter_menu)
-        sortByPopup.menu.findItem(currentSortKey).isChecked = true
-        sortByPopup.show()
-        sortByPopup.setOnMenuItemClickListener(this)
+
+    override fun initViewModel() {
+        val factory = HymnListingViewModel.Factory(Injection.provideRepository, Injection.providePlaylistRepo)
+        viewModel = ViewModelProviders.of(this, factory).get(HymnListingViewModel::class.java)
     }
 
-    override fun onMenuItemClick(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_sort_by_number -> sortByPref.set(BY_NUMBER)
-            R.id.action_sort_by_title -> sortByPref.set(BY_TITLE)
-            else -> return false
-        }
-        // Finally set checked the item
-        item.isChecked = true
-        return true
-    }
-
-    override fun onResume() {
-        super.onResume()
-        // Clear the filter
-        binding.edittextFilterHymns.text?.let {
-            if (it.isNotBlank()) {
-                binding.edittextFilterHymns.setText("")
-            }
-        }
-
-    }
-
-    private val disposables = CompositeDisposable()
-
-    private fun setupViewModel() {
+    override fun observeViewModel() {
         // Monitor data
         viewModel.hymnTitlesLiveData.observe(viewLifecycleOwner, Observer {
             Timber.i("Receiving items")
@@ -143,55 +55,37 @@ class HymnListingFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         })
     }
 
-    private fun doInOnCreate() {
-        val factory = HymnListingViewModel.Factory(Injection.provideRepository)
-        viewModel = ViewModelProviders.of(this, factory).get(HymnListingViewModel::class.java)
+    private fun doInOnCreate(savedInstanceState: Bundle?) {
+        // Get the topic id from arguments
 
-        val disposable = sortByPref.asObservable().subscribe(
-                {
-                    Timber.i("Current settings: %s", it)
-                    currentSortKey = when (it) {
-                        BY_TITLE -> R.id.action_sort_by_title
-                        else -> R.id.action_sort_by_number
-                    }
-                    viewModel.loadHymnTitles(it)
-                }, { Timber.e(it) })
-        disposables.add(disposable)
-    }
+        val args = arguments?.let { HymnListingFragmentArgs.fromBundle(it) }
+        if (savedInstanceState != null && savedInstanceState.containsKey(EXTRA_CURRENT_CATEGORY_URI)) {
+            currentCategoryUri = savedInstanceState.getString(EXTRA_CURRENT_CATEGORY_URI, DEFAULT_CATEGORY_URI)
 
-    private fun displayContent(content: List<TitleItem>) {
-        hymnListAdapter.submitData(content)
-        showLoadingProgress(false)
-    }
-
-    private fun showLoadingProgress(loading: Boolean) {
-        if (loading) binding.progressBarSongsLoading.visibility = View.VISIBLE
-        else binding.progressBarSongsLoading.visibility = View.GONE
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if (!disposables.isDisposed) disposables.dispose()
-    }
-
-    private fun hideKeyboard(view: View) {
-        if (activity != null) {
-            val inputMethodManager = activity!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+        } else {
+            currentCategoryUri = args?.navUri ?: DEFAULT_CATEGORY_URI
         }
+
+        title = args?.title.toString()
+        Timber.i("incoming Uri: %s", args?.navUri)
+        val categoryRegex = CATEGORY_REGEX.toRegex()
+
+        if (categoryRegex matches currentCategoryUri) {
+            val matchResult = categoryRegex.find(currentCategoryUri)
+            val category = matchResult?.groupValues?.get(2)
+            val categoryId = matchResult?.groupValues?.get(3)
+            Timber.i("Matched category, %s", category)
+            when (category) {
+                CATEGORY_PLAYLISTS -> viewModel.loadHymnsForPlaylist(categoryId?.toInt() ?: 1)
+                CATEGORY_TOPICS -> viewModel.loadHymnsForTopic(categoryId?.toInt() ?: 0)
+                else -> viewModel.loadHymnsForTopic()
+            }
+        }
+
     }
 
-    private val filterPublishSubject: PublishSubject<String> = PublishSubject.create()
-
-
-    private fun setupFilterObserver() {
-        val disposable = filterPublishSubject.debounce(300, TimeUnit.MILLISECONDS)
-                .skip(1)
-                .distinctUntilChanged()
-                .subscribeOn(Schedulers.single())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ keyword -> hymnListAdapter.filter.filter(keyword) }, { Timber.w(it, "Could not do filter") })
-        disposables.add(disposable)
+    override fun loadHymnTitles(sortBy: Int) {
+        viewModel.loadHymnTitles(sortBy)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -199,3 +93,5 @@ class HymnListingFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
 }
+
+const val EXTRA_CURRENT_CATEGORY_URI = "currentCategoryUri"
