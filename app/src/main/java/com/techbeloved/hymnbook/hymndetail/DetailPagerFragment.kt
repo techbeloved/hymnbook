@@ -31,8 +31,8 @@ class DetailPagerFragment : BaseDetailPagerFragment() {
             currentHymnId = savedInstanceState.getInt(EXTRA_CURRENT_ITEM_ID, 1)
             currentCategoryUri = savedInstanceState.getString(EXTRA_CURRENT_CATEGORY_URI, DEFAULT_CATEGORY_URI)
         } else {
-            val args = arguments?.let { DetailPagerFragmentArgs.fromBundle(it) }
-            val inComingItemUri = args?.navUri!!
+            val args = requireArguments().let { DetailPagerFragmentArgs.fromBundle(it) }
+            val inComingItemUri = args.navUri
             currentHymnId = inComingItemUri.hymnId()?.toInt() ?: 1
             currentCategoryUri = inComingItemUri.parentCategoryUri() ?: DEFAULT_CATEGORY_URI
         }

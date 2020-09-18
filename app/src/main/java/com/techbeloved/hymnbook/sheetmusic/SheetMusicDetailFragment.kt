@@ -56,7 +56,7 @@ class SheetMusicDetailFragment : Fragment() {
         viewModel = ViewModelProviders.of(this, factory)[SheetMusicDetailViewModel::class.java]
 
         if (arguments != null && arguments?.containsKey(ARG_HYMN_INDEX) != null) {
-            val hymnIndexToBeLoaded = arguments!!.getInt(ARG_HYMN_INDEX)
+            val hymnIndexToBeLoaded = requireArguments().getInt(ARG_HYMN_INDEX)
             Timber.i("Received an initial id: $hymnIndexToBeLoaded")
             hymnId = hymnIndexToBeLoaded
             loadHymnDetail(hymnIndexToBeLoaded)

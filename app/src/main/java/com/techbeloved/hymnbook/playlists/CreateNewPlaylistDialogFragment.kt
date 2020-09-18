@@ -6,8 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding3.widget.textChanges
@@ -31,7 +30,7 @@ class CreateNewPlaylistDialogFragment : BottomSheetDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val factory = ManagePlaylistViewModel.Factory(Injection.providePlaylistRepo, Injection.provideSchedulers)
-        viewModel = ViewModelProviders.of(this, factory)[ManagePlaylistViewModel::class.java]
+        viewModel = ViewModelProvider(this, factory)[ManagePlaylistViewModel::class.java]
     }
 
 
@@ -84,7 +83,7 @@ class CreateNewPlaylistDialogFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.playlistSaved.observe(viewLifecycleOwner, Observer { savedStatus ->
+        viewModel.playlistSaved.observe(viewLifecycleOwner, { savedStatus ->
             showFavoriteSavedSnackbar(savedStatus)
         })
     }

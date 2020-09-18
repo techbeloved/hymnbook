@@ -5,7 +5,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.di.Injection
@@ -42,7 +42,7 @@ class HymnListingFragment : BaseHymnListingFragment() {
 
     override fun initViewModel() {
         val factory = HymnListingViewModel.Factory(Injection.provideRepository, Injection.providePlaylistRepo)
-        viewModel = ViewModelProviders.of(this, factory).get(HymnListingViewModel::class.java)
+        viewModel = ViewModelProvider(this, factory).get(HymnListingViewModel::class.java)
     }
 
     override fun observeViewModel() {

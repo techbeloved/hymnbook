@@ -3,7 +3,6 @@ package com.techbeloved.hymnbook.sheetmusic
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.hymnlisting.BaseHymnListingFragment
@@ -30,7 +29,7 @@ class SheetMusicListingFragment : BaseHymnListingFragment() {
     override fun initViewModel() {
         val factory: ViewModelProvider.Factory =
                 SheetMusicListingViewModel.Factory(Injection.provideHymnListingUseCases, Injection.provideSchedulers)
-        viewModel = ViewModelProviders.of(this, factory)[SheetMusicListingViewModel::class.java]
+        viewModel = ViewModelProvider(this, factory)[SheetMusicListingViewModel::class.java]
     }
 
     override fun observeViewModel() {

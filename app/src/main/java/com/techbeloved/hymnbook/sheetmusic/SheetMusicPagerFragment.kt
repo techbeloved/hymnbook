@@ -11,7 +11,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.di.Injection
@@ -44,7 +43,7 @@ class SheetMusicPagerFragment : BaseDetailPagerFragment() {
                 Injection.shareLinkProvider,
                 Injection.provideSchedulers)
 
-        viewModel = ViewModelProviders.of(this, factory)[SheetMusicPagerViewModel::class.java]
+        viewModel = ViewModelProvider(this, factory)[SheetMusicPagerViewModel::class.java]
         viewModel.hymnIndicesLive.observe(this, Observer {
             when (it) {
                 is Lce.Loading -> showProgressLoading(it.loading)

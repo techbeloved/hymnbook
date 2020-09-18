@@ -8,8 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
@@ -37,7 +36,7 @@ class DetailFragment : Fragment() {
         binding.lifecycleOwner = this
         configureSettings()
 
-        viewModel.hymnDetailLiveData.observe(this, Observer {
+        viewModel.hymnDetailLiveData.observe(viewLifecycleOwner, {
             when (it) {
                 is Lce.Loading -> showProgressLoading(it.loading)
                 is Lce.Content -> showContentDetail(it.content)
@@ -46,7 +45,7 @@ class DetailFragment : Fragment() {
         })
 
         if (arguments != null && arguments?.containsKey(ARG_HYMN_INDEX) != null) {
-            val hymnIndexToBeLoaded = arguments!!.getInt(ARG_HYMN_INDEX)
+            val hymnIndexToBeLoaded = requireArguments().getInt(ARG_HYMN_INDEX)
             Timber.i("Received an initial id: $hymnIndexToBeLoaded")
             loadHymnDetail(hymnIndexToBeLoaded)
         } else {
@@ -89,7 +88,7 @@ class DetailFragment : Fragment() {
         super.onCreate(savedInstanceState)
         val factory = HymnDetailViewModel.Factory(Injection.provideAppContext(),
                 Injection.provideRepository)
-        viewModel = ViewModelProviders.of(this, factory).get(HymnDetailViewModel::class.java)
+        viewModel = ViewModelProvider(this, factory).get(HymnDetailViewModel::class.java)
     }
 
     private fun showContentError(error: String) {
