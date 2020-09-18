@@ -21,8 +21,10 @@ class HymnListingFragment : BaseHymnListingFragment() {
     override lateinit var title: String
 
 
+    private val navController by lazy { findNavController() }
+
     override fun navigateToHymnDetail(view: View, item: HymnItemModel) {
-        findNavController().navigate(HymnListingFragmentDirections
+        navController.safeNavigate(HymnListingFragmentDirections
                 .actionHymnListingFragmentToDetailPagerFragment(currentCategoryUri.appendHymnId(item.id)!!))
     }
 

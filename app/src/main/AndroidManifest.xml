@@ -40,7 +40,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HymnbookActivity" />
         </activity>
-        <activity android:name=".HymnbookActivity">
+        <activity
+            android:name=".HymnbookActivity"
+            android:theme="@style/AppTheme.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

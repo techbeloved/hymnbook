@@ -87,4 +87,8 @@
     <style name="Hymnbook.Modal" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/bg_rounded_top</item>
     </style>
+
+    <style name="AppTheme.Launcher" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/bg_launch_screen</item>
+    </style>
 </resources>

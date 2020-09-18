@@ -44,6 +44,7 @@ class HymnbookActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_hymnbook)
         setupNightMode()
@@ -97,14 +98,15 @@ class HymnbookActivity : AppCompatActivity() {
                     // If already in night mode, do nothing, and otherwise
                     when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
                         Configuration.UI_MODE_NIGHT_NO -> {
-                            if (enable) delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                            if (enable) delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
+                            else delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
 
                         }
                         Configuration.UI_MODE_NIGHT_YES -> {
-                            if (!enable) delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                            if (!enable) delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
                         }
                         Configuration.UI_MODE_NIGHT_UNDEFINED -> {
-                            if (!enable) delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                            if (!enable) delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
                         }
                     }
                 }

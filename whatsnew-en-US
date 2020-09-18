@@ -1,8 +1,3 @@
-* Fix critical issue that caused app crashes in some android versions
-* Enhanced audio with background playback, tempo and repeat mode
-* Sheet music - you can now view sheet music of your favorite songs right on your phone
-* Hymn share - you can now share hymn with your friends
-* Playlist - organize your favorite hymns in playlist
-* Search - Enhanced search with full text search
-* Night mode - switch to dark (night) mode for comfortable use in low light
-* Adjustable font size
+* Fix a couple of stability issues
+* App now follows the system night mode correctly when enabled
+* Little UI enhancement
