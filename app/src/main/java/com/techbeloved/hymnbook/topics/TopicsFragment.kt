@@ -23,10 +23,12 @@ import com.techbeloved.hymnbook.usecases.Lce
 import com.techbeloved.hymnbook.utils.AUTHORITY
 import com.techbeloved.hymnbook.utils.CATEGORY_TOPICS
 import com.techbeloved.hymnbook.utils.SCHEME_NORMAL
+import com.techbeloved.hymnbook.utils.safeNavigate
 import timber.log.Timber
 
 class TopicsFragment : Fragment() {
 
+    private val navController by lazy { findNavController() }
     private val topicClickListener: HymnItemModel.ClickListener<HymnItemModel> =
             object : HymnItemModel.ClickListener<HymnItemModel> {
                 override fun onItemClick(view: View, item: HymnItemModel) {
@@ -37,7 +39,7 @@ class TopicsFragment : Fragment() {
                             .appendEncodedPath(item.id.toString())
                             .build()
                     Timber.i("navUri: %s", navUri)
-                    findNavController().navigate(TopicsFragmentDirections
+                    navController.safeNavigate(TopicsFragmentDirections
                             .actionTopicsFragmentToHymnListingFragment(item.title, navUri.toString()))
                 }
             }

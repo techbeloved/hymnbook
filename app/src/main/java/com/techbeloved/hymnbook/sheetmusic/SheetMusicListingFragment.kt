@@ -9,6 +9,7 @@ import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.hymnlisting.BaseHymnListingFragment
 import com.techbeloved.hymnbook.hymnlisting.HymnItemModel
 import com.techbeloved.hymnbook.usecases.Lce
+import com.techbeloved.hymnbook.utils.safeNavigate
 import timber.log.Timber
 
 class SheetMusicListingFragment : BaseHymnListingFragment() {
@@ -16,9 +17,10 @@ class SheetMusicListingFragment : BaseHymnListingFragment() {
         get() = "Sheet Music"
         set(value) {}
 
-    override fun navigateToHymnDetail(view: View, item: HymnItemModel) {
-        findNavController().navigate(SheetMusicListingFragmentDirections.actionSheetMusicListingToSheetMusicPagerFragment(item.id))
+    private val navController by lazy { findNavController() }
 
+    override fun navigateToHymnDetail(view: View, item: HymnItemModel) {
+        navController.safeNavigate(SheetMusicListingFragmentDirections.actionSheetMusicListingToSheetMusicPagerFragment(item.id))
     }
 
 
