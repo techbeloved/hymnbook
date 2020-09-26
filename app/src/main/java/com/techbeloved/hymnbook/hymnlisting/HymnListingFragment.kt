@@ -4,22 +4,22 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.techbeloved.hymnbook.R
-import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.usecases.Lce
 import com.techbeloved.hymnbook.utils.*
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
+@AndroidEntryPoint
 class HymnListingFragment : BaseHymnListingFragment() {
 
     private lateinit var currentCategoryUri: String
-    private lateinit var viewModel: HymnListingViewModel
+    private val viewModel: HymnListingViewModel by viewModels()
 
     override lateinit var title: String
-
 
     private val navController by lazy { findNavController() }
 
@@ -37,12 +37,6 @@ class HymnListingFragment : BaseHymnListingFragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString(EXTRA_CURRENT_CATEGORY_URI, currentCategoryUri)
         super.onSaveInstanceState(outState)
-    }
-
-
-    override fun initViewModel() {
-        val factory = HymnListingViewModel.Factory(Injection.provideRepository, Injection.providePlaylistRepo)
-        viewModel = ViewModelProvider(this, factory).get(HymnListingViewModel::class.java)
     }
 
     override fun observeViewModel() {

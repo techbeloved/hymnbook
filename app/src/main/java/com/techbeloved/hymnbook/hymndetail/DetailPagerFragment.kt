@@ -10,18 +10,19 @@ import androidx.core.app.ShareCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 import com.techbeloved.hymnbook.R
-import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.usecases.Lce
 import com.techbeloved.hymnbook.utils.*
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
+@AndroidEntryPoint
 class DetailPagerFragment : BaseDetailPagerFragment() {
 
-    private lateinit var viewModel: HymnPagerViewModel
+    private val viewModel: HymnPagerViewModel by viewModels()
     private lateinit var detailPagerAdapter: DetailPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,11 +37,8 @@ class DetailPagerFragment : BaseDetailPagerFragment() {
             currentHymnId = inComingItemUri.hymnId()?.toInt() ?: 1
             currentCategoryUri = inComingItemUri.parentCategoryUri() ?: DEFAULT_CATEGORY_URI
         }
-
-        val factory = HymnPagerViewModel.Factory(Injection.provideRepository,
-                Injection.providePlaylistRepo,
-                currentCategoryUri, Injection.provideSchedulers, Injection.shareLinkProvider)
-        viewModel = ViewModelProviders.of(this, factory).get(HymnPagerViewModel::class.java)
+        // Set the category uri. This would be used by the viewModel
+        requireArguments().putString(HymnPagerViewModel.CATEGORY_URI_ARG, currentCategoryUri)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -1,6 +1,6 @@
 package com.techbeloved.hymnbook.hymndetail
 
-import android.app.Application
+import android.content.Context
 import android.graphics.Typeface
 import android.text.style.AbsoluteSizeSpan
 import android.text.style.LeadingMarginSpan
@@ -8,13 +8,17 @@ import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
 import android.util.TypedValue
 import androidx.annotation.VisibleForTesting
-import androidx.lifecycle.*
+import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.fueled.snippety.core.Snippety
 import com.fueled.snippety.core.Truss
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.data.model.HymnDetail
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
 import com.techbeloved.hymnbook.usecases.Lce
+import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.FlowableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -22,8 +26,9 @@ import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
-
-class HymnDetailViewModel(private val app: Application, private val hymnRepository: HymnsRepository) : AndroidViewModel(app) {
+class HymnDetailViewModel @ViewModelInject constructor(
+        @ApplicationContext private val context: Context,
+        private val hymnRepository: HymnsRepository) : ViewModel() {
 
     private val hymnDetailData: MutableLiveData<Lce<HymnDetailItem>> = MutableLiveData()
 
@@ -90,11 +95,11 @@ class HymnDetailViewModel(private val app: Application, private val hymnReposito
     private val HymnDetail.richContent: CharSequence
         get() {
             val leadWidth = 0/*getResources().getDimensionPixelOffset(R.dimen.space_medium)*/
-            val gapWidth = app.resources.getDimensionPixelOffset(R.dimen.space_xlarge)
-            val largeTextSize = app.resources.getDimensionPixelSize(R.dimen.text_hymnbook_large)
+            val gapWidth = context.resources.getDimensionPixelOffset(R.dimen.space_xlarge)
+            val largeTextSize = context.resources.getDimensionPixelSize(R.dimen.text_hymnbook_large)
 
             val typedValue = TypedValue()
-            val theme = app.theme
+            val theme = context.theme
             theme.resolveAttribute(R.attr.colorOnSurface, typedValue, true)
 
 
@@ -121,7 +126,7 @@ class HymnDetailViewModel(private val app: Application, private val hymnReposito
 
                 if (chorus != null) {
                     truss.pushSpan(Snippety().fontStyle(Snippety.FontStyle.ITALIC))
-                            //.pushSpan(Snippety().textColor(app.resources.getColor(R.color.colorFadedText)))
+                            //.pushSpan(Snippety().textColor(context.resources.getColor(R.color.colorFadedText)))
                             .appendln(chorus)
                             .appendln()
                             //.popSpan()
@@ -151,6 +156,7 @@ class HymnDetailViewModel(private val app: Application, private val hymnReposito
 
             return truss.build()
         }
+
     /**
      * Only used to get the first line of a verse or stanza of a hymn
      */
@@ -173,13 +179,5 @@ class HymnDetailViewModel(private val app: Application, private val hymnReposito
             }
             return this.substring(this.indexOf("\n"))
         }
-
-
-    class Factory(private val app: Application, private val repository: HymnsRepository) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return HymnDetailViewModel(app, repository) as T
-        }
-
-    }
 
 }

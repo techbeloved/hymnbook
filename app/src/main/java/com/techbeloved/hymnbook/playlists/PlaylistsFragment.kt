@@ -9,8 +9,8 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -19,17 +19,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.FragmentPlaylistsBinding
-import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.hymnlisting.HymnItemModel
 import com.techbeloved.hymnbook.usecases.Lce
 import com.techbeloved.hymnbook.utils.AUTHORITY
 import com.techbeloved.hymnbook.utils.CATEGORY_PLAYLISTS
 import com.techbeloved.hymnbook.utils.SCHEME_NORMAL
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
+@AndroidEntryPoint
 class PlaylistsFragment : Fragment() {
 
-    private lateinit var viewModel: PlaylistsViewModel
+    private val viewModel: PlaylistsViewModel by viewModels()
 
     private val clickListener: HymnItemModel.ClickListener<HymnItemModel> =
             object : HymnItemModel.ClickListener<HymnItemModel> {
@@ -69,12 +70,6 @@ class PlaylistsFragment : Fragment() {
             }
 
     private val playlistsAdapter by lazy { PlaylistsAdapter(clickListener) }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val factory = PlaylistsViewModel.Factory(Injection.providePlaylistRepo, Injection.provideSchedulers)
-        viewModel = ViewModelProviders.of(this, factory).get(PlaylistsViewModel::class.java)
-    }
 
     private lateinit var binding: FragmentPlaylistsBinding
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

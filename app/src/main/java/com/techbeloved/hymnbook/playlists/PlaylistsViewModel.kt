@@ -1,9 +1,9 @@
 package com.techbeloved.hymnbook.playlists
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.techbeloved.hymnbook.data.model.Playlist
 import com.techbeloved.hymnbook.hymnlisting.HymnItemModel
 import com.techbeloved.hymnbook.hymnlisting.TitleItem
@@ -16,8 +16,8 @@ import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-class PlaylistsViewModel(private val playlistsRepo: PlaylistsRepo,
-                         private val schedulerProvider: SchedulerProvider) : ViewModel() {
+class PlaylistsViewModel @ViewModelInject constructor(private val playlistsRepo: PlaylistsRepo,
+                                                      private val schedulerProvider: SchedulerProvider) : ViewModel() {
 
     private val playlistsLive = MutableLiveData<Lce<List<HymnItemModel>>>()
 
@@ -110,13 +110,6 @@ class PlaylistsViewModel(private val playlistsRepo: PlaylistsRepo,
         refreshSubject.onNext("undoRefresh")
     }
 
-
-    class Factory(private val playlistsRepo: PlaylistsRepo, val schedulerProvider: SchedulerProvider) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return PlaylistsViewModel(playlistsRepo, schedulerProvider) as T
-        }
-
-    }
 }
 
 sealed class PlaylistStatus {

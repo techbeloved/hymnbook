@@ -8,15 +8,14 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.TopicsFragmentBinding
-import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.hymnlisting.HymnItemModel
 import com.techbeloved.hymnbook.hymnlisting.HymnListAdapter
 import com.techbeloved.hymnbook.usecases.Lce
@@ -24,8 +23,10 @@ import com.techbeloved.hymnbook.utils.AUTHORITY
 import com.techbeloved.hymnbook.utils.CATEGORY_TOPICS
 import com.techbeloved.hymnbook.utils.SCHEME_NORMAL
 import com.techbeloved.hymnbook.utils.safeNavigate
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
+@AndroidEntryPoint
 class TopicsFragment : Fragment() {
 
     private val navController by lazy { findNavController() }
@@ -44,7 +45,7 @@ class TopicsFragment : Fragment() {
                 }
             }
 
-    private lateinit var viewModel: TopicsViewModel
+    private val viewModel: TopicsViewModel by viewModels()
 
     private lateinit var binding: TopicsFragmentBinding
 
@@ -65,12 +66,6 @@ class TopicsFragment : Fragment() {
 
 
         return binding.root
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val factory = TopicsViewModel.Factory(Injection.provideTopicsUseCases)
-        viewModel = ViewModelProviders.of(this, factory).get(TopicsViewModel::class.java)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

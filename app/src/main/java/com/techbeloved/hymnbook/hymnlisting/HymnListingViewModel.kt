@@ -1,10 +1,10 @@
 package com.techbeloved.hymnbook.hymnlisting
 
 import androidx.annotation.VisibleForTesting
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.techbeloved.hymnbook.data.model.HymnTitle
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
 import com.techbeloved.hymnbook.hymndetail.SortBy
@@ -18,7 +18,7 @@ import io.reactivex.processors.BehaviorProcessor
 import io.reactivex.schedulers.Schedulers
 
 
-class HymnListingViewModel(private val hymnsRepository: HymnsRepository, private val playlistsRepo: PlaylistsRepo) : ViewModel() {
+class HymnListingViewModel @ViewModelInject constructor(private val hymnsRepository: HymnsRepository, private val playlistsRepo: PlaylistsRepo) : ViewModel() {
 
     private val disposables = CompositeDisposable()
 
@@ -89,13 +89,6 @@ class HymnListingViewModel(private val hymnsRepository: HymnsRepository, private
     @VisibleForTesting
     fun getViewState() = FlowableTransformer<List<TitleItem>, Lce<List<TitleItem>>> { upstream ->
         upstream.map { Lce.Content(it) }
-    }
-
-    class Factory(private val repository: HymnsRepository, val playlistsRepo: PlaylistsRepo) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return HymnListingViewModel(repository, playlistsRepo) as T
-        }
-
     }
 
 }

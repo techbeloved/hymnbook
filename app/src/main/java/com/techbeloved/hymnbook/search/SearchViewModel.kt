@@ -1,5 +1,6 @@
 package com.techbeloved.hymnbook.search
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,7 +17,7 @@ import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-class SearchViewModel(private val repository: HymnsRepository) : ViewModel() {
+class SearchViewModel @ViewModelInject constructor(private val repository: HymnsRepository) : ViewModel() {
 
     private val mutableSearchResults: MutableLiveData<Lce<List<SearchResultItem>>> = MutableLiveData()
     val searchResults: LiveData<Lce<List<SearchResultItem>>>

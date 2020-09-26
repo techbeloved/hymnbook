@@ -1,16 +1,17 @@
 package com.techbeloved.hymnbook.sheetmusic
 
 import android.view.View
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.hymnlisting.BaseHymnListingFragment
 import com.techbeloved.hymnbook.hymnlisting.HymnItemModel
 import com.techbeloved.hymnbook.usecases.Lce
 import com.techbeloved.hymnbook.utils.safeNavigate
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
+@AndroidEntryPoint
 class SheetMusicListingFragment : BaseHymnListingFragment() {
     override var title: String
         get() = "Sheet Music"
@@ -23,14 +24,7 @@ class SheetMusicListingFragment : BaseHymnListingFragment() {
     }
 
 
-    private lateinit var viewModel: SheetMusicListingViewModel
-
-
-    override fun initViewModel() {
-        val factory: ViewModelProvider.Factory =
-                SheetMusicListingViewModel.Factory(Injection.provideHymnListingUseCases, Injection.provideSchedulers)
-        viewModel = ViewModelProvider(this, factory)[SheetMusicListingViewModel::class.java]
-    }
+    private val viewModel: SheetMusicListingViewModel by viewModels()
 
     override fun observeViewModel() {
         // Monitor data

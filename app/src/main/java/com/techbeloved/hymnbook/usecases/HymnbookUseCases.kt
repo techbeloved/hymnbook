@@ -1,4 +1,4 @@
-package com.techbeloved.hymnbook
+package com.techbeloved.hymnbook.usecases
 
 import io.reactivex.Observable
 

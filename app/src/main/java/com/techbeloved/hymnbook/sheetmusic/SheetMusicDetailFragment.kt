@@ -7,21 +7,22 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.github.barteksc.pdfviewer.util.FitPolicy
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.FragmentSheetMusicDetailBinding
-import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.usecases.Lce
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import java.io.File
 
+@AndroidEntryPoint
 class SheetMusicDetailFragment : Fragment() {
 
     private var hymnId: Int = 1
     private lateinit var binding: FragmentSheetMusicDetailBinding
-    private lateinit var viewModel: SheetMusicDetailViewModel
+    private val viewModel: SheetMusicDetailViewModel by viewModels()
 
     private val hymnDetailObserver: Observer<Lce<SheetMusicState>> = Observer { hymnLce ->
         when (hymnLce) {
@@ -51,9 +52,6 @@ class SheetMusicDetailFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val factory = SheetMusicDetailViewModel.Factory(Injection.provideHymnListingUseCases)
-        viewModel = ViewModelProviders.of(this, factory)[SheetMusicDetailViewModel::class.java]
 
         if (arguments != null && arguments?.containsKey(ARG_HYMN_INDEX) != null) {
             val hymnIndexToBeLoaded = requireArguments().getInt(ARG_HYMN_INDEX)

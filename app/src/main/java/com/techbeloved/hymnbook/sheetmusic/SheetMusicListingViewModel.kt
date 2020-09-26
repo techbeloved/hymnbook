@@ -1,5 +1,6 @@
 package com.techbeloved.hymnbook.sheetmusic
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,7 +15,8 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
 
-class SheetMusicListingViewModel(private val useCases: HymnUseCases, private val schedulerProvider: SchedulerProvider) : ViewModel() {
+class SheetMusicListingViewModel @ViewModelInject constructor(private val useCases: HymnUseCases,
+                                                              private val schedulerProvider: SchedulerProvider) : ViewModel() {
 
     private val sortBySubject = PublishSubject.create<Int>()
     private val disposables: CompositeDisposable = CompositeDisposable()

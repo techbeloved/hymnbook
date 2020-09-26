@@ -8,8 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,14 +21,15 @@ import com.google.android.material.textfield.TextInputEditText
 import com.jakewharton.rxbinding3.widget.textChanges
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.DialogFragmentAddToPlaylistBinding
-import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.hymnlisting.HymnItemModel
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 import java.util.*
 
 const val EXTRA_SELECTED_HYMN_ID = "selectedHymnId"
 
+@AndroidEntryPoint
 class AddToPlaylistDialogFragment : BottomSheetDialogFragment() {
 
     private val clickListener: HymnItemModel.ClickListener<HymnItemModel> = object : HymnItemModel.ClickListener<HymnItemModel> {
@@ -40,11 +40,9 @@ class AddToPlaylistDialogFragment : BottomSheetDialogFragment() {
 
     private val disposables = CompositeDisposable()
 
-    private lateinit var viewModel: ManagePlaylistViewModel
+    private val viewModel: ManagePlaylistViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val factory = ManagePlaylistViewModel.Factory(Injection.providePlaylistRepo, Injection.provideSchedulers)
-        viewModel = ViewModelProviders.of(this, factory)[ManagePlaylistViewModel::class.java]
         val selectedHymnId = requireArguments().getInt(EXTRA_SELECTED_HYMN_ID)
         viewModel.updateSelectedHymnId(selectedHymnId)
     }
@@ -100,10 +98,10 @@ class AddToPlaylistDialogFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.playlists.observe(viewLifecycleOwner, Observer { playlists ->
+        viewModel.playlists.observe(viewLifecycleOwner, { playlists ->
             playlistAdapter.submitList(playlists)
         })
-        viewModel.favoriteSaved.observe(viewLifecycleOwner, Observer { saved ->
+        viewModel.favoriteSaved.observe(viewLifecycleOwner, { saved ->
             showFavoriteSavedSnackbar(saved)
         })
     }

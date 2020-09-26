@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.palette.graphics.Palette
@@ -18,11 +17,6 @@ import com.techbeloved.hymnbook.utils.SCHEME_NORMAL
 
 class HomeFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = HomeFragment()
-    }
-
-    private lateinit var viewModel: HomeViewModel
     private lateinit var binding: FragmentHomeBinding
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -55,11 +49,6 @@ class HomeFragment : Fragment() {
         setHasOptionsMenu(true)
 
         return binding.root
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

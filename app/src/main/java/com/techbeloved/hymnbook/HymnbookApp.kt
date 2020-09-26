@@ -4,16 +4,21 @@ import android.app.Application
 import android.content.res.Configuration
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.hilt.work.HiltWorkerFactory
 import androidx.preference.PreferenceManager
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.google.firebase.FirebaseApp
+import dagger.hilt.android.HiltAndroidApp
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
+import javax.inject.Inject
+import androidx.work.Configuration as WorkerConfig
 
-class HymnbookApp : Application() {
+@HiltAndroidApp
+class HymnbookApp : Application(), WorkerConfig.Provider {
     companion object {
         lateinit var instance: HymnbookApp
     }
@@ -64,4 +69,10 @@ class HymnbookApp : Application() {
         }
 
     }
+
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
+    override fun getWorkManagerConfiguration(): WorkerConfig = WorkerConfig.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
 }

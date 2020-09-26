@@ -6,13 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding3.widget.textChanges
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.DialogCreateNewPlaylistBinding
-import com.techbeloved.hymnbook.di.Injection
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 import java.util.*
@@ -22,17 +22,12 @@ const val EXTRA_PLAYLIST_UPDATE_EVENT = "extraPlaylistRequest"
 /**
  * Bottomsheet dialog used for creating and editing playlist. Unfortunately, the name says create new, but it does edit existing playlist as well
  */
+@AndroidEntryPoint
 class CreateNewPlaylistDialogFragment : BottomSheetDialogFragment() {
 
     private val disposables = CompositeDisposable()
 
-    private lateinit var viewModel: ManagePlaylistViewModel
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val factory = ManagePlaylistViewModel.Factory(Injection.providePlaylistRepo, Injection.provideSchedulers)
-        viewModel = ViewModelProvider(this, factory)[ManagePlaylistViewModel::class.java]
-    }
-
+    private val viewModel: ManagePlaylistViewModel by viewModels()
 
     private lateinit var binding: DialogCreateNewPlaylistBinding
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

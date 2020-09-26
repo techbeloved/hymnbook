@@ -8,14 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.preference.PreferenceManager
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.FragmentDetailBinding
-import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.usecases.Lce
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -25,10 +25,11 @@ import timber.log.Timber
  * A simple [Fragment] subclass.
  *
  */
+@AndroidEntryPoint
 class DetailFragment : Fragment() {
 
     private lateinit var binding: FragmentDetailBinding
-    private lateinit var viewModel: HymnDetailViewModel
+    private val viewModel: HymnDetailViewModel by viewModels()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -82,13 +83,6 @@ class DetailFragment : Fragment() {
         binding.textviewDetail.apply {
             textSize = calculatedSize
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val factory = HymnDetailViewModel.Factory(Injection.provideAppContext(),
-                Injection.provideRepository)
-        viewModel = ViewModelProvider(this, factory).get(HymnDetailViewModel::class.java)
     }
 
     private fun showContentError(error: String) {

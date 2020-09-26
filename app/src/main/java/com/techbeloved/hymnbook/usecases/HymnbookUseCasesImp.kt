@@ -1,16 +1,19 @@
-package com.techbeloved.hymnbook
+package com.techbeloved.hymnbook.usecases
 
 import android.content.Context
 import androidx.work.*
+import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.data.SharedPreferencesRepo
 import com.techbeloved.hymnbook.utils.workers.*
+import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.Observable
 import timber.log.Timber
 import java.io.File
+import javax.inject.Inject
 
-class HymnbookUseCasesImp(private val context: Context,
-                          private val preferencesRepo: SharedPreferencesRepo,
-                          private val workManager: WorkManager) : HymnbookUseCases {
+class HymnbookUseCasesImp @Inject constructor(@ApplicationContext private val context: Context,
+                                              private val preferencesRepo: SharedPreferencesRepo,
+                                              private val workManager: WorkManager) : HymnbookUseCases {
     override fun downloadLatestHymnMidiArchive() {
         /*
         1. Schedule a work request

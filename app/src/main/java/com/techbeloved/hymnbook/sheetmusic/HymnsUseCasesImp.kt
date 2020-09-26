@@ -10,12 +10,13 @@ import com.techbeloved.hymnbook.utils.SchedulerProvider
 import io.reactivex.FlowableTransformer
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
+import javax.inject.Inject
 
-class HymnsUseCasesImp(private val hymnsRepository: HymnsRepository,
-                       private val onlineRepo: OnlineRepo,
-                       private val schedulerProvider: SchedulerProvider,
-                       private val downloader: Downloader,
-                       private val sharedPreferences: SharedPreferencesRepo) : HymnUseCases {
+class HymnsUseCasesImp @Inject constructor(private val hymnsRepository: HymnsRepository,
+                                           private val onlineRepo: OnlineRepo,
+                                           private val schedulerProvider: SchedulerProvider,
+                                           private val downloader: Downloader,
+                                           private val sharedPreferences: SharedPreferencesRepo) : HymnUseCases {
 
     override fun hymnSheetMusicDetail(hymnId: Int): Observable<SheetMusicState> {
         // We want to get the latest night mode and push it to the screen since our pdf viewer will
