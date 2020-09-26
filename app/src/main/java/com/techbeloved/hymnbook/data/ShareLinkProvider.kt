@@ -3,14 +3,22 @@ package com.techbeloved.hymnbook.data
 import android.net.Uri
 import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
+import com.techbeloved.hymnbook.BuildConfig
 import com.techbeloved.hymnbook.data.model.Hymn
+import com.techbeloved.hymnbook.utils.DYNAMIC_LINK_DOMAIN
 import com.techbeloved.hymnbook.utils.appendHymnId
 import io.reactivex.Single
 import timber.log.Timber
+import javax.inject.Inject
+import javax.inject.Named
 
-class ShareLinkProvider(private val dynamicLinks: FirebaseDynamicLinks,
-                        private val dynamicLinkDomain: String,
-                        private val appPackageName: String) {
+class ShareLinkProvider @Inject constructor(private val dynamicLinks: FirebaseDynamicLinks,
+                                            @Named("DYNAMIC_LINK_DOMAIN") private val dynamicLinkDomain: String,
+                                            @Named("APP_ID") private val appPackageName: String) {
+
+    val shareLinkProvider: ShareLinkProvider by lazy {
+        ShareLinkProvider(FirebaseDynamicLinks.getInstance(), DYNAMIC_LINK_DOMAIN, BuildConfig.APPLICATION_ID)
+    }
 
     /**
      * Builds short link for firebase sharing

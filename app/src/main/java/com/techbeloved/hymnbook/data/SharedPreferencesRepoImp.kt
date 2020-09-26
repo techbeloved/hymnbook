@@ -5,9 +5,10 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.techbeloved.hymnbook.R
 import io.reactivex.Observable
 import io.reactivex.Single
+import javax.inject.Inject
 
-class SharedPreferencesRepoImp(private val rxPreferences: RxSharedPreferences,
-                               private val resources: Resources) : SharedPreferencesRepo {
+class SharedPreferencesRepoImp @Inject constructor(private val rxPreferences: RxSharedPreferences,
+                                                   private val resources: Resources) : SharedPreferencesRepo {
     override fun isFirstStart(): Observable<Boolean> {
         val firstStartPref = rxPreferences.getBoolean(resources.getString(R.string.pref_key_first_start), true)
         return firstStartPref.asObservable()

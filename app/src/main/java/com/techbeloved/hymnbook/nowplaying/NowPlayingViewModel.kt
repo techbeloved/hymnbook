@@ -4,6 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.techbeloved.hymnbook.tunesplayback.*
 import timber.log.Timber
@@ -11,9 +12,10 @@ import timber.log.Timber
 /**
  * [ViewModel] for interacting with the Music Player, sending and receiving playback requests and updates
  */
-class NowPlayingViewModel(mediaSessionConnection: MediaSessionConnection) : ViewModel() {
+class NowPlayingViewModel @ViewModelInject constructor(mediaSessionConnection: MediaSessionConnection) : ViewModel() {
 
     val hymnItems: MutableList<Int> = ArrayList()
+
     /**
      * Playback controls
      */

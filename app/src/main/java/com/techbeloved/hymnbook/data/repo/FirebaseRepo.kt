@@ -9,12 +9,14 @@ import com.techbeloved.hymnbook.hymndetail.SortBy
 import io.reactivex.Observable
 import io.reactivex.Observable.create
 import timber.log.Timber
-import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executor
+import javax.inject.Inject
+import javax.inject.Named
 
 
-class FirebaseRepo(private val executor: ExecutorService,
-                   private val firestore: FirebaseFirestore,
-                   private val collection: String) : OnlineRepo {
+class FirebaseRepo @Inject constructor(@Named("IO") private val executor: Executor,
+                                       private val firestore: FirebaseFirestore,
+                                       @Named("FS_COLLECTION") private val collection: String) : OnlineRepo {
 
     override fun hymnIds(@SortBy orderBy: Int): Observable<List<Int>> {
         val orderCriteria = when (orderBy) {

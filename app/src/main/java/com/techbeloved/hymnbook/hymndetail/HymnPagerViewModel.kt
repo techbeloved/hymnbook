@@ -1,6 +1,8 @@
 package com.techbeloved.hymnbook.hymndetail
 
 import androidx.annotation.IntDef
+import androidx.hilt.Assisted
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.techbeloved.hymnbook.data.ShareLinkProvider
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
@@ -15,13 +17,12 @@ import timber.log.Timber
 /**
  * @param categoryUri holds information about the category we are currently browsing
  */
-class HymnPagerViewModel(private val repository: HymnsRepository,
-                         private val playlistsRepo: PlaylistsRepo,
-                         private val categoryUri: String,
-                         private val schedulerProvider: SchedulerProvider,
-                         private val shareLinkProvider: ShareLinkProvider) : ViewModel() {
-
-
+class HymnPagerViewModel @ViewModelInject constructor(private val repository: HymnsRepository,
+                                                      private val playlistsRepo: PlaylistsRepo,
+                                                      @Assisted private val savedStateHandle: SavedStateHandle,
+                                                      private val schedulerProvider: SchedulerProvider,
+                                                      private val shareLinkProvider: ShareLinkProvider) : ViewModel() {
+    private val categoryUri: String get() = savedStateHandle[CATEGORY_URI_ARG]!!
     private val _hymnIndicesLiveData: MutableLiveData<Lce<List<Int>>> = MutableLiveData()
 
     private val _shareLinkStatus: MutableLiveData<ShareStatus> = MutableLiveData()
@@ -91,6 +92,7 @@ class HymnPagerViewModel(private val repository: HymnsRepository,
     }
 
     private var shareDisposable: CompositeDisposable? = null
+
     /**
      * Requests share link for given hymnId. We dispose the disposable before continuing because this can be called repeatedly
      * by clicking the share menu button
@@ -129,15 +131,8 @@ class HymnPagerViewModel(private val repository: HymnsRepository,
 
     }
 
-    class Factory(private val provideRepository: HymnsRepository,
-                  private val playlistsRepo: PlaylistsRepo,
-                  private val categoryUri: String,
-                  private val schedulerProvider: SchedulerProvider,
-                  private val shareLinkProvider: ShareLinkProvider) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return HymnPagerViewModel(provideRepository, playlistsRepo, categoryUri, schedulerProvider, shareLinkProvider) as T
-        }
-
+    companion object {
+        const val CATEGORY_URI_ARG = "categoryUriArgument"
     }
 }
 

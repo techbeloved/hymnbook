@@ -9,11 +9,10 @@ import androidx.core.app.ShareCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.techbeloved.hymnbook.R
-import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.hymndetail.BaseDetailPagerFragment
 import com.techbeloved.hymnbook.hymndetail.EXTRA_CURRENT_ITEM_ID
 import com.techbeloved.hymnbook.hymndetail.ShareStatus
@@ -21,10 +20,12 @@ import com.techbeloved.hymnbook.usecases.Lce
 import com.techbeloved.hymnbook.utils.DepthPageTransformer
 import com.techbeloved.hymnbook.utils.MINIMUM_VERSION_FOR_SHARE_LINK
 import com.techbeloved.hymnbook.utils.WCCRM_LOGO_URL
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
+@AndroidEntryPoint
 class SheetMusicPagerFragment : BaseDetailPagerFragment() {
-    private lateinit var viewModel: SheetMusicPagerViewModel
+    private val viewModel: SheetMusicPagerViewModel by viewModels()
     private lateinit var detailPagerAdapter: DetailPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,12 +39,6 @@ class SheetMusicPagerFragment : BaseDetailPagerFragment() {
             currentHymnId = args?.hymnId ?: 1
         }
 
-        val factory: ViewModelProvider.Factory = SheetMusicPagerViewModel.Factory(
-                Injection.provideOnlineRepo,
-                Injection.shareLinkProvider,
-                Injection.provideSchedulers)
-
-        viewModel = ViewModelProvider(this, factory)[SheetMusicPagerViewModel::class.java]
         viewModel.hymnIndicesLive.observe(this, Observer {
             when (it) {
                 is Lce.Loading -> showProgressLoading(it.loading)
@@ -64,7 +59,7 @@ class SheetMusicPagerFragment : BaseDetailPagerFragment() {
         binding.viewpagerHymnDetail.adapter = detailPagerAdapter
         binding.viewpagerHymnDetail.setPageTransformer(true, DepthPageTransformer())
 
-        viewModel.shareLinkStatus.observe(viewLifecycleOwner, Observer { shareStatus ->
+        viewModel.shareLinkStatus.observe(viewLifecycleOwner, { shareStatus ->
             when (shareStatus) {
                 ShareStatus.Loading -> showShareLoadingDialog()
                 is ShareStatus.Success -> showShareOptionsChooser(shareStatus.shareLink)

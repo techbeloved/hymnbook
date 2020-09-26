@@ -6,10 +6,13 @@ import com.techbeloved.hymnbook.di.SingletonHolder
 import com.techbeloved.hymnbook.hymndetail.BY_NUMBER
 import com.techbeloved.hymnbook.hymndetail.BY_TITLE
 import com.techbeloved.hymnbook.hymndetail.SortBy
+import dagger.Reusable
 import io.reactivex.Flowable
 import io.reactivex.Observable
+import javax.inject.Inject
 
-class HymnsRepositoryImp (private val hymnDatabase: HymnsDatabase) : HymnsRepository {
+@Reusable
+class HymnsRepositoryImp @Inject constructor(private val hymnDatabase: HymnsDatabase) : HymnsRepository {
     override fun loadHymnTitlesForIndices(indices: List<Int>, sortBy: Int): Observable<List<HymnTitle>> {
         return when (sortBy) {
             BY_NUMBER -> hymnDatabase.hymnDao().getHymnTitlesForIndices(indices).toObservable()
@@ -18,7 +21,7 @@ class HymnsRepositoryImp (private val hymnDatabase: HymnsDatabase) : HymnsReposi
 
     }
 
-    companion object: SingletonHolder<HymnsRepository, HymnsDatabase>(::HymnsRepositoryImp);
+    companion object : SingletonHolder<HymnsRepository, HymnsDatabase>(::HymnsRepositoryImp);
 
     override fun searchHymns(searchTerm: String): Flowable<List<SearchResult>> {
         return hymnDatabase.hymnDao().searchHymns("$searchTerm*")

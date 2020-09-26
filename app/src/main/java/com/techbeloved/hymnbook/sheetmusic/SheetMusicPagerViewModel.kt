@@ -1,6 +1,10 @@
 package com.techbeloved.hymnbook.sheetmusic
 
-import androidx.lifecycle.*
+import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModel
 import com.techbeloved.hymnbook.data.ShareLinkProvider
 import com.techbeloved.hymnbook.data.model.Hymn
 import com.techbeloved.hymnbook.data.repo.OnlineHymn
@@ -17,9 +21,9 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
-class SheetMusicPagerViewModel(private val repo: OnlineRepo,
-                               private val shareLinkProvider: ShareLinkProvider,
-                               private val schedulerProvider: SchedulerProvider) : ViewModel() {
+class SheetMusicPagerViewModel @ViewModelInject constructor(private val repo: OnlineRepo,
+                                                            private val shareLinkProvider: ShareLinkProvider,
+                                                            private val schedulerProvider: SchedulerProvider) : ViewModel() {
 
     private val disposables: CompositeDisposable = CompositeDisposable()
     private val hymnIndicesLiveData: MutableLiveData<Lce<List<Int>>> = MutableLiveData()
@@ -93,15 +97,6 @@ class SheetMusicPagerViewModel(private val repo: OnlineRepo,
                 })
                 .let { shareDisposable?.add(it) }
 
-
-    }
-
-    class Factory(private val onlineRepo: OnlineRepo,
-                  private val shareLinkProvider: ShareLinkProvider,
-                  private val schedulerProvider: SchedulerProvider) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return SheetMusicPagerViewModel(onlineRepo, shareLinkProvider, schedulerProvider) as T
-        }
 
     }
 }

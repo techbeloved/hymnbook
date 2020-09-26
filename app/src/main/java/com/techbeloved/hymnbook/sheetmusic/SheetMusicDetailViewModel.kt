@@ -1,15 +1,15 @@
 package com.techbeloved.hymnbook.sheetmusic
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.techbeloved.hymnbook.usecases.Lce
 import io.reactivex.ObservableTransformer
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 
-class SheetMusicDetailViewModel(private val hymnUseCases: HymnUseCases) : ViewModel() {
+class SheetMusicDetailViewModel @ViewModelInject constructor(private val hymnUseCases: HymnUseCases) : ViewModel() {
     private var disposableLoadHymn: CompositeDisposable? = CompositeDisposable()
     private val hymnDetailLce: MutableLiveData<Lce<SheetMusicState>> = MutableLiveData()
 
@@ -29,7 +29,8 @@ class SheetMusicDetailViewModel(private val hymnUseCases: HymnUseCases) : ViewMo
                 .subscribe({ state -> hymnDetailLce.value = state },
                         { throwable ->
                             Timber.w(throwable, "Error getting sheet music detail")
-                            hymnDetailLce.value = Lce.Error(throwable.localizedMessage)
+                            hymnDetailLce.value = Lce.Error(throwable.localizedMessage
+                                    ?: "Error occurred")
                         })
                 .run { disposableLoadHymn!!.add(this) }
     }
@@ -57,12 +58,5 @@ class SheetMusicDetailViewModel(private val hymnUseCases: HymnUseCases) : ViewMo
 
     fun download(hymnId: Int) {
         hymnUseCases.downloadSheetMusic(hymnId)
-    }
-
-    class Factory(private val hymnUseCases: HymnUseCases) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return SheetMusicDetailViewModel(hymnUseCases) as T
-        }
-
     }
 }

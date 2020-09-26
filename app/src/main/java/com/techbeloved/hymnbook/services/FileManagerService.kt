@@ -27,8 +27,8 @@ class FileManagerService : IntentService("FileManagerService") {
     override fun onHandleIntent(intent: Intent?) {
         when (intent?.action) {
             ACTION_UNZIP_CATALOG -> {
-                val destination = intent.getStringExtra(EXTRA_DESTINATION)
-                val sourceZipFile = intent.getStringExtra(EXTRA_ZIP_FILE_NAME)
+                val destination = intent.getStringExtra(EXTRA_DESTINATION) ?: return
+                val sourceZipFile = intent.getStringExtra(EXTRA_ZIP_FILE_NAME) ?: return
                 handleActionUnzipFile(destination, sourceZipFile)
             }
         }

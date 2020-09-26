@@ -1,15 +1,15 @@
 package com.techbeloved.hymnbook.topics
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.techbeloved.hymnbook.usecases.Lce
 import io.reactivex.ObservableTransformer
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 
-class TopicsViewModel(private val topicsUseCases: TopicsUseCases) : ViewModel() {
+class TopicsViewModel @ViewModelInject constructor(private val topicsUseCases: TopicsUseCases) : ViewModel() {
 
 
     private val disposables: CompositeDisposable = CompositeDisposable()
@@ -39,12 +39,5 @@ class TopicsViewModel(private val topicsUseCases: TopicsUseCases) : ViewModel() 
     override fun onCleared() {
         super.onCleared()
         if (!disposables.isDisposed) disposables.dispose()
-    }
-
-    class Factory(private val topicsUseCases: TopicsUseCases) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return TopicsViewModel(topicsUseCases) as T
-        }
-
     }
 }

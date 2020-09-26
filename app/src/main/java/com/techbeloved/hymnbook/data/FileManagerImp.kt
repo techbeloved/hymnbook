@@ -7,11 +7,13 @@ import android.support.v4.os.ResultReceiver
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.services.FileManagerService
 import com.techbeloved.hymnbook.utils.Decompress
+import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.Observable
 import io.reactivex.Single
 import java.io.File
+import javax.inject.Inject
 
-class FileManagerImp(val context: Context, val sharedPreferences: SharedPreferencesRepo) : FileManager {
+class FileManagerImp @Inject constructor(@ApplicationContext val context: Context) : FileManager {
     override fun unzipFile(source: String, destinationDir: String): Single<String> {
         return Single.create { emitter ->
             val destination = File(destinationDir)

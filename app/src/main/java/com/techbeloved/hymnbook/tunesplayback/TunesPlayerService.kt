@@ -21,16 +21,21 @@ import androidx.core.content.ContextCompat
 import androidx.media.MediaBrowserServiceCompat
 import com.jakewharton.rxrelay2.PublishRelay
 import com.techbeloved.hymnbook.data.PlayerPreferences
-import com.techbeloved.hymnbook.di.Injection
+import com.techbeloved.hymnbook.data.repo.HymnsRepository
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
 import java.io.File
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class TunesPlayerService : MediaBrowserServiceCompat() {
 
+    @Inject
+    lateinit var repository: HymnsRepository
     private lateinit var becomingNoisyReceiver: BecomingNoisyReceiver
     private lateinit var mediaController: MediaControllerCompat
     private lateinit var mediaSession: MediaSessionCompat
@@ -42,7 +47,8 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
     private lateinit var notificationBuilder: NotificationBuilder
     private lateinit var playbackStateBuilder: PlaybackStateCompat.Builder
 
-    private lateinit var playbackPrefs: PlayerPreferences
+    @Inject
+    lateinit var playbackPrefs: PlayerPreferences
 
     private var isForegroundService = false
 
@@ -62,8 +68,6 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
 
     override fun onCreate() {
         super.onCreate()
-
-        playbackPrefs = Injection.providePlayerPrefs
 
         val sessionActivityPendingIntent =
                 packageManager?.getLaunchIntentForPackage(packageName)?.let { sessionIntent ->
@@ -257,7 +261,7 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
             repeatMode = playbackPrefs.repeatMode().blockingFirst()
 
             playFromMediaIdSubject.switchMapSingle { mediaId ->
-                Injection.provideRepository.getHymnById(mediaId.toInt())
+                repository.getHymnById(mediaId.toInt())
                         .firstOrError()
             }
                     .subscribe({ hymn ->

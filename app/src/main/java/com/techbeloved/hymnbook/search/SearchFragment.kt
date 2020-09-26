@@ -9,20 +9,21 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.FragmentSearchBinding
-import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.hymnlisting.HymnItemModel
 import com.techbeloved.hymnbook.usecases.Lce
 import com.techbeloved.hymnbook.utils.DEFAULT_CATEGORY_URI
 import com.techbeloved.hymnbook.utils.appendHymnId
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
+@AndroidEntryPoint
 class SearchFragment : Fragment() {
 
     private val clickListener: HymnItemModel.ClickListener<HymnItemModel> = object : HymnItemModel.ClickListener<HymnItemModel> {
@@ -45,7 +46,7 @@ class SearchFragment : Fragment() {
 
     }
 
-    private lateinit var viewModel: SearchViewModel
+    private val viewModel: SearchViewModel by viewModels()
 
     private lateinit var binding: FragmentSearchBinding
 
@@ -74,8 +75,6 @@ class SearchFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val factory = SearchViewModel.Factory(Injection.provideRepository)
-        viewModel = ViewModelProvider(this, factory).get(SearchViewModel::class.java)
         viewModel.monitorSearch()
 
         viewModel.searchResults.observe(viewLifecycleOwner, {

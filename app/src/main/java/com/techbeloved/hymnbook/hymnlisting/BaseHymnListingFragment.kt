@@ -33,8 +33,6 @@ abstract class BaseHymnListingFragment : Fragment(), PopupMenu.OnMenuItemClickLi
     abstract var title: String
     private lateinit var hymnListAdapter: HymnListAdapterNoDiff
 
-    abstract fun initViewModel()
-
     /**
      * Load hymn titles sorted by the key
      * @param sortBy sort key
@@ -135,8 +133,6 @@ abstract class BaseHymnListingFragment : Fragment(), PopupMenu.OnMenuItemClickLi
         rxPreferences = RxSharedPreferences.create(preferences)
 
         sortByPref = rxPreferences.getInteger(getString(R.string.pref_key_sort_by))
-
-        initViewModel()
 
         setupFilterObserver()
 

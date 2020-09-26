@@ -1,11 +1,14 @@
 package com.techbeloved.hymnbook.utils.workers
 
 import android.content.Context
+import androidx.hilt.Assisted
+import androidx.hilt.work.WorkerInject
 import androidx.work.Data
 import androidx.work.RxWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.techbeloved.hymnbook.di.Injection
+import com.techbeloved.hymnbook.data.SharedPreferencesRepo
+import com.techbeloved.hymnbook.data.repo.OnlineRepo
 import io.reactivex.Single
 import timber.log.Timber
 
@@ -13,14 +16,17 @@ import timber.log.Timber
  * Should use this to schedule hymns midi download and database sync. Periodically,
  * like once a week checks for new update. If there is any update, downloads, it, extracts it and populate the database
  */
-class MidiSyncWorker(context: Context, params: WorkerParameters) : RxWorker(context, params) {
+class MidiSyncWorker @WorkerInject constructor(@Assisted context: Context,
+                                               @Assisted params: WorkerParameters,
+                                               private val sharedPreferencesRepo: SharedPreferencesRepo,
+                                               private val onlineRepo: OnlineRepo) : RxWorker(context, params) {
 
     override fun createWork(): Single<Result> {
         Timber.i("MidiSyncWork: onGoing work")
         makeStatusNotification("Checking midi archive version", applicationContext)
-        return Injection.provideSharePrefsRepo.midiArchiveVersion()
+        return sharedPreferencesRepo.midiArchiveVersion()
                 .flatMapObservable { currentVersion ->
-                    Injection.provideOnlineRepo.latestMidiArchive()
+                    onlineRepo.latestMidiArchive()
                             .filter { onlineMidi -> onlineMidi.version > currentVersion }
                 }.firstOrError()
                 .doOnSuccess { Timber.i("New version of archive available! Proceeding with download") }
@@ -48,6 +54,7 @@ class MidiSyncWorker(context: Context, params: WorkerParameters) : RxWorker(cont
  * tests can have their own preferences file without tempering with the main app preferences
  */
 const val KEY_DEFAULT_PREFERENCE_NAME = "defaultPreferenceName"
+
 /**
  * Worker [Data] key for supplying the midiVersionPreference key
  */

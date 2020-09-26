@@ -1,14 +1,15 @@
 package com.techbeloved.hymnbook
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import com.techbeloved.hymnbook.usecases.HymnbookUseCases
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 
 /**
  * A [ViewModel] shared by the fragments in order to update the main activity with their states, mostly the toolbar title
  */
-class HymnbookViewModel(private val useCases: HymnbookUseCases) : ViewModel() {
+class HymnbookViewModel @ViewModelInject constructor(private val useCases: HymnbookUseCases) : ViewModel() {
 
     private val disposables = CompositeDisposable()
 
@@ -29,13 +30,6 @@ class HymnbookViewModel(private val useCases: HymnbookUseCases) : ViewModel() {
 
     fun updateAppFirstStart(firstStart: Boolean) {
         useCases.updateAppFirstStart(firstStart)
-    }
-
-    class Factory(private val hymnbookUseCases: HymnbookUseCases) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return HymnbookViewModel(hymnbookUseCases) as T
-        }
-
     }
 }
 

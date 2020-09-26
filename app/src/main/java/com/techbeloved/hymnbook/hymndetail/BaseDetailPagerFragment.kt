@@ -13,8 +13,8 @@ import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.preference.PreferenceManager
@@ -27,7 +27,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.DialogTempoSelectorBinding
 import com.techbeloved.hymnbook.databinding.FragmentDetailPagerBinding
-import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.nowplaying.NowPlayingViewModel
 import com.techbeloved.hymnbook.nowplaying.PlaybackEvent
 import com.techbeloved.hymnbook.playlists.AddToPlaylistDialogFragment
@@ -38,17 +37,11 @@ import timber.log.Timber
 abstract class BaseDetailPagerFragment : Fragment() {
     private lateinit var _currentHymnCategoryUri: String
     private var _currentHymnId: Int = 1
-    private lateinit var nowPlayingViewModel: NowPlayingViewModel
+    private val nowPlayingViewModel: NowPlayingViewModel by viewModels()
 
     protected lateinit var binding: FragmentDetailPagerBinding
     private lateinit var quickSettingsSheet: BottomSheetBehavior<CardView>
     private lateinit var playControlsSheet: BottomSheetBehavior<CardView>
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val nowPlayingFactory = NowPlayingViewModel.Factory(Injection.provideMediaSessionConnection)
-        nowPlayingViewModel = ViewModelProvider(this, nowPlayingFactory)[NowPlayingViewModel::class.java]
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {

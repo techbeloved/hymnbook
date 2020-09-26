@@ -5,9 +5,10 @@ import android.support.v4.media.session.PlaybackStateCompat
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.techbeloved.hymnbook.R
 import io.reactivex.Observable
+import javax.inject.Inject
 
-class PlayerPreferencesImp(private val rxPreferences: RxSharedPreferences,
-                           private val resources: Resources) : PlayerPreferences {
+class PlayerPreferencesImp @Inject constructor(private val rxPreferences: RxSharedPreferences,
+                                               private val resources: Resources) : PlayerPreferences {
 
     override fun playbackRate(): Observable<Float> {
         val ratePref = rxPreferences.getFloat(resources.getString(R.string.pref_key_playback_rate), 1.0f)

@@ -17,14 +17,16 @@ import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 import java.io.File
-import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executor
+import javax.inject.Inject
+import javax.inject.Named
 
-class DownloaderImp(private val storage: FirebaseStorage,
-                    private val cacheDir: File,
-                    private val hymnsRepository: HymnsRepository,
-                    private val onlineRepo: OnlineRepo,
-                    private val schedulerProvider: SchedulerProvider,
-                    private val executor: ExecutorService) : Downloader {
+class DownloaderImp @Inject constructor(private val storage: FirebaseStorage,
+                                        @Named("CacheDir") private val cacheDir: File,
+                                        private val hymnsRepository: HymnsRepository,
+                                        private val onlineRepo: OnlineRepo,
+                                        private val schedulerProvider: SchedulerProvider,
+                                        @Named("IO") private val executor: Executor) : Downloader {
 
     private val currentDownloads: MutableSet<Int> = mutableSetOf()
 

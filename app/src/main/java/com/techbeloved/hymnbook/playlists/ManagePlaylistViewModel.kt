@@ -1,9 +1,9 @@
 package com.techbeloved.hymnbook.playlists
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.techbeloved.hymnbook.data.model.Favorite
 import com.techbeloved.hymnbook.data.model.Playlist
 import com.techbeloved.hymnbook.hymnlisting.TitleItem
@@ -18,7 +18,7 @@ import kotlin.properties.Delegates
  * A [ViewModel] used to manage playlists. It handles things such as
  *  playlist creation, deletion, adding of songs to playlist, etc
  */
-class ManagePlaylistViewModel(private val playlistsRepo: PlaylistsRepo, private val schedulerProvider: SchedulerProvider) : ViewModel() {
+class ManagePlaylistViewModel @ViewModelInject constructor(private val playlistsRepo: PlaylistsRepo, private val schedulerProvider: SchedulerProvider) : ViewModel() {
 
     private var _editing = false
     val editing get() = _editing
@@ -149,13 +149,6 @@ class ManagePlaylistViewModel(private val playlistsRepo: PlaylistsRepo, private 
     fun setPlaylistId(playlistId: Int) {
         _editPlaylistId = playlistId
     }
-
-    class Factory(private val playlistsRepo: PlaylistsRepo, private val schedulerProvider: SchedulerProvider) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return ManagePlaylistViewModel(playlistsRepo, schedulerProvider) as T
-        }
-    }
-
     sealed class SaveStatus {
         object Saved : SaveStatus()
         data class SaveFailed(val error: Throwable) : SaveStatus()

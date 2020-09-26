@@ -7,11 +7,11 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
@@ -22,26 +22,24 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.techbeloved.hymnbook.databinding.ActivityHymnbookBinding
-import com.techbeloved.hymnbook.di.Injection
 import com.techbeloved.hymnbook.home.HomeFragmentDirections
 import com.techbeloved.hymnbook.utils.CATEGORY_WCCRM_SHEET_MUSIC
 import com.techbeloved.hymnbook.utils.category
 import com.techbeloved.hymnbook.utils.hymnId
 import com.techbeloved.hymnbook.utils.isValidHymnUri
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
+@AndroidEntryPoint
 class HymnbookActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHymnbookBinding
     private lateinit var navController: NavController
 
-    private val viewModel: HymnbookViewModel by lazy {
-        val factory = HymnbookViewModel.Factory(Injection.provideHymnbookUseCases)
-        ViewModelProviders.of(this, factory)[HymnbookViewModel::class.java]
-    }
+    private val viewModel: HymnbookViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
