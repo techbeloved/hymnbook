@@ -12,3 +12,13 @@ keystore.properties
 src/main/assets/all_hymns_v5.json
 src/main/java/com/techbeloved/hymnbook/topics/
 src/main/res/menu-night/
+/.bitrise.secrets.yml
+/bitrise.yml
+/gradle.deps
+/hs_err_pid4549.log
+/hs_err_pid4923.log
+/hs_err_pid8840.log
+/hs_err_pid10681.log
+/HymnbookActivity_robo_script.json
+/app/release/app.aab
+/app/google-services.json
