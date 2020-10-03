@@ -25,6 +25,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import com.techbeloved.hymnbook.R
+import com.techbeloved.hymnbook.data.SharedPreferencesRepo
 import com.techbeloved.hymnbook.databinding.DialogTempoSelectorBinding
 import com.techbeloved.hymnbook.databinding.FragmentDetailPagerBinding
 import com.techbeloved.hymnbook.nowplaying.NowPlayingViewModel
@@ -33,8 +34,11 @@ import com.techbeloved.hymnbook.playlists.AddToPlaylistDialogFragment
 import com.techbeloved.hymnbook.playlists.EXTRA_SELECTED_HYMN_ID
 import com.techbeloved.hymnbook.tunesplayback.duration
 import timber.log.Timber
+import javax.inject.Inject
 
 abstract class BaseDetailPagerFragment : Fragment() {
+    @Inject
+    lateinit var sharedPreferencesRepo: SharedPreferencesRepo
     private lateinit var _currentHymnCategoryUri: String
     private var _currentHymnId: Int = 1
     private val nowPlayingViewModel: NowPlayingViewModel by viewModels()
@@ -308,6 +312,16 @@ abstract class BaseDetailPagerFragment : Fragment() {
                 nightModePreference.set(true)
             } else if (checkedId == R.id.radiobutton_quick_settings_light_theme) {
                 nightModePreference.set(false)
+            }
+        }
+
+        // Display options
+        // Set the initial value before listening to further changes
+        val preferSheetMusic = rxPreferences.getBoolean(getString(R.string.pref_key_prefer_sheet_music), false).get()
+        binding.bottomsheetQuickSettings.switchQuickSettingsPreferSheetMusic.apply {
+            isChecked = preferSheetMusic
+            setOnCheckedChangeListener { _, isChecked ->
+                sharedPreferencesRepo.updatePreferSheetMusic(isChecked)
             }
         }
     }

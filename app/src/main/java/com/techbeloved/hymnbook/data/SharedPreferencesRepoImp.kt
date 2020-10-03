@@ -58,6 +58,14 @@ class SharedPreferencesRepoImp @Inject constructor(private val rxPreferences: Rx
         val midiArchiveVersionPref = rxPreferences.getInteger(resources.getString(R.string.pref_key_saved_midi_version), 0)
         return midiArchiveVersionPref.asObservable().firstOrError()
     }
-}
 
-const val DEFAULT_PREFERENCE_NAME = "hymnbook_preferences"
+    override fun preferSheetMusic(): Observable<Boolean> {
+        val preferSheetMusicPref = rxPreferences.getBoolean(resources.getString(R.string.pref_key_prefer_sheet_music), false)
+        return preferSheetMusicPref.asObservable()
+    }
+
+    override fun updatePreferSheetMusic(value: Boolean) {
+        val preferSheetMusicPref = rxPreferences.getBoolean(resources.getString(R.string.pref_key_prefer_sheet_music))
+        preferSheetMusicPref.set(value)
+    }
+}

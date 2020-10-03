@@ -5,13 +5,17 @@ import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.techbeloved.hymnbook.data.ShareLinkProvider
+import com.techbeloved.hymnbook.data.SharedPreferencesRepo
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
+import com.techbeloved.hymnbook.data.repo.OnlineRepo
 import com.techbeloved.hymnbook.playlists.PlaylistsRepo
 import com.techbeloved.hymnbook.usecases.Lce
 import com.techbeloved.hymnbook.utils.*
 import io.reactivex.ObservableTransformer
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Consumer
+import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
 /**
@@ -19,11 +23,14 @@ import timber.log.Timber
  */
 class HymnPagerViewModel @ViewModelInject constructor(private val repository: HymnsRepository,
                                                       private val playlistsRepo: PlaylistsRepo,
+                                                      private val onlineRepo: OnlineRepo,
                                                       @Assisted private val savedStateHandle: SavedStateHandle,
                                                       private val schedulerProvider: SchedulerProvider,
-                                                      private val shareLinkProvider: ShareLinkProvider) : ViewModel() {
+                                                      private val shareLinkProvider: ShareLinkProvider,
+                                                      private val preferencesRepo: SharedPreferencesRepo) : ViewModel() {
+
     private val categoryUri: String get() = savedStateHandle[CATEGORY_URI_ARG]!!
-    private val _hymnIndicesLiveData: MutableLiveData<Lce<List<Int>>> = MutableLiveData()
+    private val _hymnIndicesLiveData: MutableLiveData<Lce<List<Pair<Int, Boolean>>>> = MutableLiveData()
 
     private val _shareLinkStatus: MutableLiveData<ShareStatus> = MutableLiveData()
     val shareLinkStatus: LiveData<ShareStatus> get() = _shareLinkStatus
@@ -31,10 +38,10 @@ class HymnPagerViewModel @ViewModelInject constructor(private val repository: Hy
     private val _categoryHeader: MutableLiveData<String> = MutableLiveData()
     val header: LiveData<String> get() = _categoryHeader
 
-    val hymnIndicesLiveData: LiveData<Lce<List<Int>>>
+    val hymnIndicesLiveData: LiveData<Lce<List<Pair<Int, Boolean>>>>
         get() = Transformations.distinctUntilChanged(_hymnIndicesLiveData)
 
-    private val indicesConsumer: Consumer<in Lce<List<Int>>>? = Consumer {
+    private val indicesConsumer: Consumer<in Lce<List<Pair<Int, Boolean>>>>? = Consumer {
         _hymnIndicesLiveData.value = it
     }
 
@@ -45,6 +52,7 @@ class HymnPagerViewModel @ViewModelInject constructor(private val repository: Hy
     private val compositeDisposable = CompositeDisposable()
 
     init {
+        setupHymnDisplayPreference()
         loadHymnIndices()
         getCategoryHeader()
     }
@@ -57,7 +65,14 @@ class HymnPagerViewModel @ViewModelInject constructor(private val repository: Hy
             else -> repository.loadHymnIndices(sortBy,
                     topicId = categoryId).toObservable()
         }
-        indicesObservable.compose(indicesToLceMapper())
+        indicesObservable.flatMap { localIndices ->
+            // Check online hymns and set the boolean variable to true if the given index has online entry.
+            // We use this to determine if it's possible to show sheet music.
+            onlineRepo.hymnIds(sortBy).map { onlineIndices ->
+                localIndices.map { Pair(it, onlineIndices.contains(it)) }
+            }
+        }
+                .compose(indicesToLceMapper())
                 .startWith(Lce.Loading(true))
                 .observeOn(schedulerProvider.ui())
                 .subscribe(indicesConsumer, errorConsumer)
@@ -81,7 +96,7 @@ class HymnPagerViewModel @ViewModelInject constructor(private val repository: Hy
                 .let { compositeDisposable.add(it) }
     }
 
-    private fun indicesToLceMapper(): ObservableTransformer<List<Int>, Lce<List<Int>>> = ObservableTransformer { upstream ->
+    private fun indicesToLceMapper(): ObservableTransformer<List<Pair<Int, Boolean>>, Lce<List<Pair<Int, Boolean>>>> = ObservableTransformer { upstream ->
         upstream.map { Lce.Content(it) }
     }
 
@@ -129,6 +144,17 @@ class HymnPagerViewModel @ViewModelInject constructor(private val repository: Hy
                 .let { shareDisposable?.add(it) }
 
 
+    }
+
+    private val _preferSheetMusic: MutableLiveData<Boolean> = MutableLiveData(false)
+    val preferSheetMusic: LiveData<Boolean> = _preferSheetMusic
+
+    private fun setupHymnDisplayPreference() {
+        preferencesRepo.preferSheetMusic()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ _preferSheetMusic.value = it }, { Timber.w(it) })
+                .also { compositeDisposable.add(it) }
     }
 
     companion object {
