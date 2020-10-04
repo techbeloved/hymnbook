@@ -55,4 +55,14 @@ interface SharedPreferencesRepo {
      */
     fun midiArchiveVersion(version: Int)
 
+    /**
+     * A shared preference that indicates whether the user has preferred sheet music display or otherwise
+     */
+    fun preferSheetMusic(): Observable<Boolean>
+
+    /**
+     * Updates the sheet music preference
+     */
+    fun updatePreferSheetMusic(value: Boolean)
+
 }

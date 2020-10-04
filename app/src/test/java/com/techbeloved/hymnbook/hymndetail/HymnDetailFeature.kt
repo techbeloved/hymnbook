@@ -36,8 +36,9 @@ class HymnDetailFeature {
 
     @Mock
     private lateinit var hymnDetailStateObserver: Observer<Lce<HymnDetailItem>>
+
     @Mock
-    private lateinit var hymnIndicesObserver: Observer<in Lce<List<Int>>>
+    private lateinit var hymnIndicesObserver: Observer<in Lce<List<HymnNumber>>>
 
     @Mock
     private lateinit var hymnDatabase: HymnsDatabase

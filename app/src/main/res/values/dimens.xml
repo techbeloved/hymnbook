@@ -4,7 +4,7 @@
     <dimen name="list_item_text_size">18sp</dimen>
     <dimen name="text_hymn_text_size">16sp</dimen>
     <dimen name="text_hymnbook_large">24sp</dimen>
-    <dimen name="radio_button_widget_margin">16dp</dimen>
+    <dimen name="radio_button_widget_margin">8dp</dimen>
     <dimen name="width_play_controls_normal">40dp</dimen>
     <dimen name="height_play_controls_normal">40dp</dimen>
     <dimen name="height_play_controls_layout">72dp</dimen>

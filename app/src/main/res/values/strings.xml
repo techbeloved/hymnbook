@@ -126,6 +126,7 @@
     <string name="link_timelesstruths">https://library.timelesstruths.org/music/</string>
     <string name="link_cyberhymnal">http://www.hymntime.com/tch/index.htm</string>
     <string name="link_hymnary">https://hymnary.org/</string>
+    <string name="pref_key_prefer_sheet_music">prefer_sheet_music_display</string>
 
     <string-array name="tempo_values">
         <item>0.5×</item>

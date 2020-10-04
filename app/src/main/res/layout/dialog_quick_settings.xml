@@ -35,7 +35,6 @@
                 android:layout_width="104dp"
                 android:layout_height="0dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
                 android:text="@string/a_small_text"
                 android:textColor="?colorOnSurface"
                 android:textSize="12sp"
@@ -56,44 +55,11 @@
                 android:text="@string/a_big_text"
                 android:textColor="?colorOnSurface"
                 android:textSize="28sp"
-                app:layout_constraintBottom_toTopOf="@+id/radiogroup_quick_settings_theme_selector"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/button_quick_settings_font_decrease"
                 app:layout_constraintTop_toBottomOf="@+id/imageview_quick_settings_drag_arrow"
                 app:layout_constraintVertical_chainStyle="spread" />
-
-            <RadioGroup
-                android:id="@+id/radiogroup_quick_settings_theme_selector"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:gravity="center"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/button_quick_settings_font_increase"
-                app:layout_constraintStart_toStartOf="@+id/button_quick_settings_font_decrease"
-                app:layout_constraintTop_toBottomOf="@+id/button_quick_settings_font_increase">
-
-                <com.techbeloved.hymnbook.customviews.CenteredRadioButton
-                    android:id="@+id/radiobutton_quick_settings_light_theme"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/radio_button_widget_margin"
-                    android:layout_marginRight="@dimen/radio_button_widget_margin"
-                    android:background="@drawable/bg_circle_white"
-                    android:button="@drawable/selector_radio_button_black_tick" />
-
-                <com.techbeloved.hymnbook.customviews.CenteredRadioButton
-                    android:id="@+id/radiobutton_quick_settings_dark_theme"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/radio_button_widget_margin"
-                    android:layout_marginRight="@dimen/radio_button_widget_margin"
-                    android:background="@drawable/bg_circle_dark"
-                    android:button="@drawable/selector_radio_button_white_tick" />
-            </RadioGroup>
 
             <ImageView
                 android:id="@+id/imageview_quick_settings_drag_arrow"
@@ -103,10 +69,88 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:contentDescription="@string/description_bottom_sheet_drag_button"
-                app:srcCompat="@drawable/ic_caret_arrow_down"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_caret_arrow_down" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardview_quick_settings_music_display"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="8dp"
+                app:cardBackgroundColor="?colorSurface"
+                app:cardElevation="1dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guideline5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_quick_settings_font_decrease">
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switch_quick_settings_prefer_sheet_music"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/label_sheet_music" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardview_quick_settings_theme"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"
+                app:cardBackgroundColor="?colorSurface"
+                app:cardElevation="1dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/guideline5"
+                app:layout_constraintTop_toBottomOf="@+id/button_quick_settings_font_decrease">
+
+                <RadioGroup
+                    android:id="@+id/radiogroup_quick_settings_theme_selector"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <com.techbeloved.hymnbook.customviews.CenteredRadioButton
+                        android:id="@+id/radiobutton_quick_settings_light_theme"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="@dimen/radio_button_widget_margin"
+                        android:layout_marginRight="@dimen/radio_button_widget_margin"
+                        android:background="@drawable/bg_circle_white"
+                        android:button="@drawable/selector_radio_button_black_tick" />
+
+                    <com.techbeloved.hymnbook.customviews.CenteredRadioButton
+                        android:id="@+id/radiobutton_quick_settings_dark_theme"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="@dimen/radio_button_widget_margin"
+                        android:layout_marginRight="@dimen/radio_button_widget_margin"
+                        android:background="@drawable/bg_circle_dark"
+                        android:button="@drawable/selector_radio_button_white_tick" />
+
+                    <com.techbeloved.hymnbook.customviews.CenteredRadioButton
+                        android:id="@+id/radiobutton_quick_settings_system_theme"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="@dimen/radio_button_widget_margin"
+                        android:layout_marginRight="@dimen/radio_button_widget_margin"
+                        android:background="@drawable/bg_circle_white_dark"
+                        android:button="@drawable/selector_radio_button_white_tick" />
+                </RadioGroup>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
