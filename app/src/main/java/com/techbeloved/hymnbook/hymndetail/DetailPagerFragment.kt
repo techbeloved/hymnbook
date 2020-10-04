@@ -60,7 +60,7 @@ class DetailPagerFragment : BaseDetailPagerFragment() {
                 is Lce.Content -> {
                     initializeViewPager(indicesLce.content, indexToLoad)
                     updateCurrentItemId(indexToLoad)
-                    updateHymnItems(indicesLce.content.map { it.first })
+                    updateHymnItems(indicesLce.content.map { it.index })
                 }
                 is Lce.Error -> showContentError(indicesLce.error)
             }
@@ -114,7 +114,7 @@ class DetailPagerFragment : BaseDetailPagerFragment() {
         super.onSaveInstanceState(outState)
     }
 
-    private fun initializeViewPager(hymnIndices: List<Pair<Int, Boolean>>, initialIndex: Int) {
+    private fun initializeViewPager(hymnIndices: List<HymnNumber>, initialIndex: Int) {
         Timber.i("Initializing viewPager with index: $initialIndex")
         //showProgressLoading(false)
 
@@ -123,7 +123,7 @@ class DetailPagerFragment : BaseDetailPagerFragment() {
         // Which implies that when the indices is sorted by titles, the correct detail won't be shown.
         // So we just need to find the index from the list of hymn indices
 
-        val indexToLoad = hymnIndices.indexOfFirst { it.first == initialIndex }
+        val indexToLoad = hymnIndices.indexOfFirst { it.index == initialIndex }
         binding.viewpagerHymnDetail.currentItem = indexToLoad
     }
 
@@ -136,15 +136,15 @@ class DetailPagerFragment : BaseDetailPagerFragment() {
 
     @SuppressLint("WrongConstant")
     inner class DetailPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-        private val hymnIndices = mutableListOf<Pair<Int, Boolean>>()
+        private val hymnIndices = mutableListOf<HymnNumber>()
         var preferSheetMusic: Boolean by observable(false) { property, oldValue, newValue ->
             if (oldValue != newValue) notifyDataSetChanged()
         }
 
         override fun getItem(position: Int): Fragment {
             val item = hymnIndices[position]
-            val hymnToShow = if (position < hymnIndices.size) item.first else 1
-            return if (preferSheetMusic && item.second) {
+            val hymnToShow = if (position < hymnIndices.size) item.index else 1
+            return if (preferSheetMusic && item.hasSheetMusic) {
                 SheetMusicDetailFragment().apply { init(hymnToShow) }
             } else {
                 DetailFragment().apply { init(hymnToShow) }
@@ -153,7 +153,7 @@ class DetailPagerFragment : BaseDetailPagerFragment() {
 
         override fun setPrimaryItem(container: ViewGroup, position: Int, `object`: Any) {
             super.setPrimaryItem(container, position, `object`)
-            updateCurrentItemId(hymnIndices[position].first)
+            updateCurrentItemId(hymnIndices[position].index)
         }
 
         override fun getItemPosition(`object`: Any): Int {
@@ -164,7 +164,7 @@ class DetailPagerFragment : BaseDetailPagerFragment() {
             return hymnIndices.size
         }
 
-        fun submitList(hymnIndices: List<Pair<Int, Boolean>>) {
+        fun submitList(hymnIndices: List<HymnNumber>) {
             this.hymnIndices.clear()
             this.hymnIndices.addAll(hymnIndices)
             notifyDataSetChanged()

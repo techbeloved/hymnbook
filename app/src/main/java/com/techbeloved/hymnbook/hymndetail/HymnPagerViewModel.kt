@@ -30,7 +30,7 @@ class HymnPagerViewModel @ViewModelInject constructor(private val repository: Hy
                                                       private val preferencesRepo: SharedPreferencesRepo) : ViewModel() {
 
     private val categoryUri: String get() = savedStateHandle[CATEGORY_URI_ARG]!!
-    private val _hymnIndicesLiveData: MutableLiveData<Lce<List<Pair<Int, Boolean>>>> = MutableLiveData()
+    private val _hymnIndicesLiveData: MutableLiveData<Lce<List<HymnNumber>>> = MutableLiveData()
 
     private val _shareLinkStatus: MutableLiveData<ShareStatus> = MutableLiveData()
     val shareLinkStatus: LiveData<ShareStatus> get() = _shareLinkStatus
@@ -38,10 +38,10 @@ class HymnPagerViewModel @ViewModelInject constructor(private val repository: Hy
     private val _categoryHeader: MutableLiveData<String> = MutableLiveData()
     val header: LiveData<String> get() = _categoryHeader
 
-    val hymnIndicesLiveData: LiveData<Lce<List<Pair<Int, Boolean>>>>
+    val hymnIndicesLiveData: LiveData<Lce<List<HymnNumber>>>
         get() = Transformations.distinctUntilChanged(_hymnIndicesLiveData)
 
-    private val indicesConsumer: Consumer<in Lce<List<Pair<Int, Boolean>>>>? = Consumer {
+    private val indicesConsumer: Consumer<in Lce<List<HymnNumber>>>? = Consumer {
         _hymnIndicesLiveData.value = it
     }
 
@@ -69,7 +69,7 @@ class HymnPagerViewModel @ViewModelInject constructor(private val repository: Hy
             // Check online hymns and set the boolean variable to true if the given index has online entry.
             // We use this to determine if it's possible to show sheet music.
             onlineRepo.hymnIds(sortBy).map { onlineIndices ->
-                localIndices.map { Pair(it, onlineIndices.contains(it)) }
+                localIndices.map { HymnNumber(it, onlineIndices.contains(it)) }
             }
         }
                 .compose(indicesToLceMapper())
@@ -96,7 +96,7 @@ class HymnPagerViewModel @ViewModelInject constructor(private val repository: Hy
                 .let { compositeDisposable.add(it) }
     }
 
-    private fun indicesToLceMapper(): ObservableTransformer<List<Pair<Int, Boolean>>, Lce<List<Pair<Int, Boolean>>>> = ObservableTransformer { upstream ->
+    private fun indicesToLceMapper(): ObservableTransformer<List<HymnNumber>, Lce<List<HymnNumber>>> = ObservableTransformer { upstream ->
         upstream.map { Lce.Content(it) }
     }
 
