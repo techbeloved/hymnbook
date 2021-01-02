@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken
 import com.techbeloved.hymnbook.HymnbookApp
 import com.techbeloved.hymnbook.data.model.Hymn
 import com.techbeloved.hymnbook.data.model.Topic
+import timber.log.Timber
 import java.io.IOException
 import java.nio.charset.Charset
 
@@ -13,19 +14,22 @@ object DataGenerator {
     fun generateHymns(): List<Hymn> {
         val typeOfHymnList = object : TypeToken<List<Hymn>>() {}.type
 
-        return GsonBuilder().create().fromJson(loadHymnJsonFromAsset(), typeOfHymnList)
+        val gson = GsonBuilder().create()
+        return getHymnFiles().map { filename -> loadHymnJsonFromAsset(filename).also { Timber.d("Loaded $filename") } }
+                .flatMap { hymnJson ->
+                    hymnJson?.let { gson.fromJson(it, typeOfHymnList) } ?: emptyList()
+                }
     }
 
     fun generateTopics(): List<Topic> {
         val typeOfTopicList = object : TypeToken<List<Topic>>() {}.type
-        val topics = GsonBuilder().create().fromJson<List<Topic>>(loadTopicsJsonFromAsset(), typeOfTopicList)
-        return topics
+        return GsonBuilder().create().fromJson(loadTopicsJsonFromAsset(), typeOfTopicList)
     }
 
-    fun loadHymnJsonFromAsset(): String? {
+    private fun loadHymnJsonFromAsset(filename: String): String? {
         val json: String?
         try {
-            val inputStream = HymnbookApp.instance.assets.open("all_hymns_v5.json")
+            val inputStream = HymnbookApp.instance.assets.open(filename)
             val size = inputStream.available()
             val buffer = ByteArray(size)
             inputStream.read(buffer)
@@ -37,6 +41,14 @@ object DataGenerator {
         }
 
         return json
+    }
+
+    /**
+     * Preloaded hymn files must be json and contain the word "hymns" and located in the assets folder
+     */
+    private fun getHymnFiles(): List<String> {
+        return HymnbookApp.instance.assets.list("")?.filter { it.matches(".*hymns.*\\.json$".toRegex()) }
+                ?: emptyList()
     }
 
     fun loadTopicsJsonFromAsset(): String? {

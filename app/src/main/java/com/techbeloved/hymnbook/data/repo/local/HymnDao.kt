@@ -1,9 +1,6 @@
 package com.techbeloved.hymnbook.data.repo.local
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.techbeloved.hymnbook.data.model.Hymn
 import com.techbeloved.hymnbook.data.model.HymnDetail
 import com.techbeloved.hymnbook.data.model.HymnTitle
@@ -56,7 +53,7 @@ interface HymnDao {
     fun updateSheetMusicDownloadProgress(hymnNo: Int, dStatus: Int)
 
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAll(hymns: List<Hymn>)
 
     @Insert

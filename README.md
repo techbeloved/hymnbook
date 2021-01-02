@@ -21,6 +21,7 @@ Or if you want to build the project on your machine.
 * Create a firebase project, add your sha-1 key to firebase and download the google-services.json file and place in the app directory.
 * You may want to provide some default hymns as asset so the database is prepopulated at install. Or just customise the app to download files from your firebase database. (More details on this when a stable version is out)
 
+
 ### Built With
 Some of the technologies used in this app include
 
