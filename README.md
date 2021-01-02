@@ -19,7 +19,15 @@ Download from Google [Play Store](https://play.google.com/store/apps/details?id=
 Or if you want to build the project on your machine.
 
 * Create a firebase project, add your sha-1 key to firebase and download the google-services.json file and place in the app directory.
-* You may want to provide some default hymns as asset so the database is prepopulated at install. Or just customise the app to download files from your firebase database. (More details on this when a stable version is out)
+* You may want to provide some default hymns as asset so the database is prepopulated at install. Or just customise the app to download files from your firebase database.
+
+#### Preload the app with some hymn data
+To achieve this, take a look at the [sample_hymns.json](app/src/main/assets/sample_hymns.json) file. 
+
+* Your hymn files should follow the same format
+* You can add multiple files. Your file names must have "*hymns*" in it and must be a json file
+* You should add topics as well following same pattern as in [all_topics.json](app/src/main/assets/all_topics.json) sample. Your hymns topics must correspond to the topics you have here.
+
 
 ### Built With
 Some of the technologies used in this app include

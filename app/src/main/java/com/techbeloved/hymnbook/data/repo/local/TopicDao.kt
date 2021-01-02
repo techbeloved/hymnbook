@@ -1,9 +1,6 @@
 package com.techbeloved.hymnbook.data.repo.local
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.techbeloved.hymnbook.data.model.Topic
 import io.reactivex.Flowable
 
@@ -19,7 +16,7 @@ interface TopicDao {
     @Insert
     fun insertTopic(topic: Topic)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAll(topics: List<Topic>)
 
     @Delete
