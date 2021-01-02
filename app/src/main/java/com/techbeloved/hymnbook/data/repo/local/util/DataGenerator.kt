@@ -23,7 +23,11 @@ object DataGenerator {
 
     fun generateTopics(): List<Topic> {
         val typeOfTopicList = object : TypeToken<List<Topic>>() {}.type
-        return GsonBuilder().create().fromJson(loadTopicsJsonFromAsset(), typeOfTopicList)
+        val gson = GsonBuilder().create()
+        return getTopicFiles().map { filename -> loadTopicsJsonFromAsset(filename) }
+                .flatMap { topicJson ->
+                    topicJson?.let { gson.fromJson(it, typeOfTopicList) } ?: emptyList()
+                }
     }
 
     private fun loadHymnJsonFromAsset(filename: String): String? {
@@ -47,14 +51,21 @@ object DataGenerator {
      * Preloaded hymn files must be json and contain the word "hymns" and located in the assets folder
      */
     private fun getHymnFiles(): List<String> {
-        return HymnbookApp.instance.assets.list("")?.filter { it.matches(".*hymns.*\\.json$".toRegex()) }
-                ?: emptyList()
+        return getAssetFiles(".*hymns.*\\.json$".toRegex())
     }
 
-    fun loadTopicsJsonFromAsset(): String? {
+    private fun getTopicFiles(): List<String> {
+        return getAssetFiles(".*topics.*\\.json$".toRegex())
+    }
+
+    private fun getAssetFiles(pattern: Regex) =
+            (HymnbookApp.instance.assets.list("")?.filter { it.matches(pattern) }
+                    ?: emptyList())
+
+    fun loadTopicsJsonFromAsset(filename: String): String? {
         val json: String?
         try {
-            val inputStream = HymnbookApp.instance.assets.open("all_topics.json")
+            val inputStream = HymnbookApp.instance.assets.open(filename)
             val size = inputStream.available()
             val buffer = ByteArray(size)
             inputStream.read(buffer)
