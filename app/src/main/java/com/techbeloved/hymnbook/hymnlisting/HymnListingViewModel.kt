@@ -1,7 +1,6 @@
 package com.techbeloved.hymnbook.hymnlisting
 
 import androidx.annotation.VisibleForTesting
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,15 +9,18 @@ import com.techbeloved.hymnbook.data.repo.HymnsRepository
 import com.techbeloved.hymnbook.hymndetail.SortBy
 import com.techbeloved.hymnbook.playlists.PlaylistsRepo
 import com.techbeloved.hymnbook.usecases.Lce
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.BackpressureStrategy
 import io.reactivex.FlowableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.processors.BehaviorProcessor
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 
-class HymnListingViewModel @ViewModelInject constructor(private val hymnsRepository: HymnsRepository, private val playlistsRepo: PlaylistsRepo) : ViewModel() {
+@HiltViewModel
+class HymnListingViewModel @Inject constructor(private val hymnsRepository: HymnsRepository, private val playlistsRepo: PlaylistsRepo) : ViewModel() {
 
     private val disposables = CompositeDisposable()
 

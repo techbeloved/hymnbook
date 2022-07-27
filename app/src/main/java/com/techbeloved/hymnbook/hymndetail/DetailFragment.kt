@@ -31,19 +31,19 @@ class DetailFragment : Fragment() {
     private lateinit var binding: FragmentDetailBinding
     private val viewModel: HymnDetailViewModel by viewModels()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false)
         binding.lifecycleOwner = this
         configureSettings()
 
-        viewModel.hymnDetailLiveData.observe(viewLifecycleOwner, {
+        viewModel.hymnDetailLiveData.observe(viewLifecycleOwner) {
             when (it) {
                 is Lce.Loading -> showProgressLoading(it.loading)
                 is Lce.Content -> showContentDetail(it.content)
                 is Lce.Error -> showContentError(it.error)
             }
-        })
+        }
 
         if (arguments != null && arguments?.containsKey(ARG_HYMN_INDEX) != null) {
             val hymnIndexToBeLoaded = requireArguments().getInt(ARG_HYMN_INDEX)
@@ -59,7 +59,7 @@ class DetailFragment : Fragment() {
     private var currentTextSize: Float = 1.0f
 
     private fun configureSettings() {
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity)
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
         val rxPreferences = RxSharedPreferences.create(sharedPreferences)
 
         val defaultTextSize = resources.getInteger(R.integer.normal_detail_text_size).toFloat()

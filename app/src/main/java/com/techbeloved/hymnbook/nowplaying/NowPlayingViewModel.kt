@@ -4,15 +4,17 @@ import android.os.Handler
 import android.os.Looper
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.techbeloved.hymnbook.tunesplayback.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import timber.log.Timber
+import javax.inject.Inject
 
 /**
  * [ViewModel] for interacting with the Music Player, sending and receiving playback requests and updates
  */
-class NowPlayingViewModel @ViewModelInject constructor(mediaSessionConnection: MediaSessionConnection) : ViewModel() {
+@HiltViewModel
+class NowPlayingViewModel @Inject constructor(mediaSessionConnection: MediaSessionConnection) : ViewModel() {
 
     val hymnItems: MutableList<Int> = ArrayList()
 
@@ -50,7 +52,7 @@ class NowPlayingViewModel @ViewModelInject constructor(mediaSessionConnection: M
         val playbackState = it ?: EMPTY_PLAYBACK_STATE
         val metadata = mediaSessionConnection.nowPlaying.value ?: NOTHING_PLAYING
         if (metadata.id != null) {
-            updateState(playbackState, metadata)
+            updateState(playbackState)
         }
     }
 
@@ -58,11 +60,11 @@ class NowPlayingViewModel @ViewModelInject constructor(mediaSessionConnection: M
         val metadata = it ?: NOTHING_PLAYING
         val playbackState = mediaSessionConnection.playbackState.value ?: EMPTY_PLAYBACK_STATE
         if (metadata.id != null) {
-            updateState(playbackState, metadata)
+            updateState(playbackState)
         }
     }
 
-    private fun updateState(playbackState: PlaybackStateCompat, metadata: MediaMetadataCompat) {
+    private fun updateState(playbackState: PlaybackStateCompat) {
         Timber.i("Updating state or metadata. Is playing %s", playbackState.isPlaying)
         _isPlaying.value = playbackState.isPlaying
 
@@ -174,13 +176,6 @@ class NowPlayingViewModel @ViewModelInject constructor(mediaSessionConnection: M
         if (_isPlaying.value == true && position < hymnItems.size) {
             playMedia(hymnItems[position].toString(), true)
         }
-    }
-
-    class Factory(private val mediaSessionConnection: MediaSessionConnection) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return NowPlayingViewModel(mediaSessionConnection) as T
-        }
-
     }
 
 }

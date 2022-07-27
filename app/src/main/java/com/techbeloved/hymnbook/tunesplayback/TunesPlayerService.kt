@@ -1,6 +1,7 @@
 package com.techbeloved.hymnbook.tunesplayback
 
 import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -70,35 +71,37 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
         super.onCreate()
 
         val sessionActivityPendingIntent =
-                packageManager?.getLaunchIntentForPackage(packageName)?.let { sessionIntent ->
-                    PendingIntent.getActivity(this, 0, sessionIntent, 0)
-                }
+            packageManager?.getLaunchIntentForPackage(packageName)?.let { sessionIntent ->
+                val pendingFlags =
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) FLAG_IMMUTABLE else 0
+                PendingIntent.getActivity(this, 0, sessionIntent, pendingFlags)
+            }
 
         // Create a media session
-        mediaSession = MediaSessionCompat(baseContext, TAG).apply {
+        mediaSession =
+            MediaSessionCompat(baseContext, TAG, null, sessionActivityPendingIntent).apply {
 
-            setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS
-                    or MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS)
+                stateBuilder = PlaybackStateCompat.Builder()
+                    .setActions(
+                        PlaybackStateCompat.ACTION_PLAY
+                                or PlaybackStateCompat.ACTION_PLAY_PAUSE
+                    )
 
-            stateBuilder = PlaybackStateCompat.Builder()
-                    .setActions(PlaybackStateCompat.ACTION_PLAY
-                            or PlaybackStateCompat.ACTION_PLAY_PAUSE)
+                setPlaybackState(stateBuilder.build())
 
-            setPlaybackState(stateBuilder.build())
+                setCallback(MediaSessionCallback())
 
-            setCallback(MediaSessionCallback())
+                setSessionToken(sessionToken)
 
-            setSessionToken(sessionToken)
-
-            setSessionActivity(sessionActivityPendingIntent)
-        }
+                setSessionActivity(sessionActivityPendingIntent)
+            }
 
         mediaController = MediaControllerCompat(this, mediaSession).also {
             it.registerCallback(mediaControllerCallback)
         }
 
         becomingNoisyReceiver =
-                BecomingNoisyReceiver(context = this, sessionToken = mediaSession.sessionToken)
+            BecomingNoisyReceiver(context = this, sessionToken = mediaSession.sessionToken)
 
         notificationBuilder = NotificationBuilder(this)
         notificationManager = NotificationManagerCompat.from(this)
@@ -109,48 +112,51 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
         playback = MediaPlayerAdapter()
 
         val disposable = playback.playbackStatus().subscribe(
-                { status ->
-                    if (mediaSession.isActive) {
-                        when (status) {
+            { status ->
+                if (mediaSession.isActive) {
+                    when (status) {
 
-                            is PlaybackStatus.PlaybackComplete -> {
-                                setMediaPlaybackState(PlaybackStateCompat.STATE_PAUSED)
-                            }
-                            is PlaybackStatus.PlaybackError -> setMediaPlaybackState(PlaybackStateCompat.STATE_ERROR)
+                        is PlaybackStatus.PlaybackComplete -> {
+                            setMediaPlaybackState(PlaybackStateCompat.STATE_PAUSED)
                         }
+                        is PlaybackStatus.PlaybackError -> setMediaPlaybackState(PlaybackStateCompat.STATE_ERROR)
                     }
-                },
-                {
-                    Timber.w(it)
-
                 }
+            },
+            {
+                Timber.w(it)
+
+            }
         )
 
         disposables.add(disposable)
 
         playbackPrefs.playbackRate()
-                .subscribe(
-                        { rate ->
-                            if (mediaSession.isActive) {
+            .subscribe(
+                { rate ->
+                    if (mediaSession.isActive) {
 
-                                val args = Bundle().apply {
-                                    putFloat(ARGS_PLAYBACK_RATE, rate)
-                                }
-                                mediaController.transportControls.sendCustomAction(ACTION_PLAYBACK_RATE, args)
-                            }
-                        }, { Timber.w(it) }
-                )
-                .let { disposables.add(it) }
+                        val args = Bundle().apply {
+                            putFloat(ARGS_PLAYBACK_RATE, rate)
+                        }
+                        mediaController.transportControls.sendCustomAction(
+                            ACTION_PLAYBACK_RATE,
+                            args
+                        )
+                    }
+                }, { Timber.w(it) }
+            )
+            .let { disposables.add(it) }
 
         playbackPrefs.repeatMode()
-                .distinctUntilChanged()
-                .subscribe({ repeatMode ->
-                    if (mediaSession.isActive) {
-                        mediaController.transportControls.setRepeatMode(repeatMode)
-                    }
+            .distinctUntilChanged()
+            .subscribe({ repeatMode ->
+                if (mediaSession.isActive) {
+                    mediaController.transportControls.setRepeatMode(repeatMode)
+                }
 
-                }, { Timber.w(it) })
-                .let { disposables.add(it) }
+            }, { Timber.w(it) })
+            .let { disposables.add(it) }
 
         stopSubject.switchMap { request ->
             when (request) {
@@ -169,7 +175,7 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
             stopForeground(true)
             stopSelf()
         }, { Timber.w(it) })
-                .let { disposables.add(it) }
+            .let { disposables.add(it) }
 
     }
 
@@ -182,7 +188,10 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
     }
 
 
-    override fun onLoadChildren(parentId: String, result: Result<MutableList<MediaBrowserCompat.MediaItem>>) {
+    override fun onLoadChildren(
+        parentId: String,
+        result: Result<MutableList<MediaBrowserCompat.MediaItem>>
+    ) {
         if (EMPTY_MEDIA_ROOT_ID == parentId) {
             result.sendResult(null)
             return
@@ -193,7 +202,11 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
         result.sendResult(mediaItems)
     }
 
-    override fun onGetRoot(clientPackageName: String, clientUid: Int, rootHints: Bundle?): BrowserRoot? {
+    override fun onGetRoot(
+        clientPackageName: String,
+        clientUid: Int,
+        rootHints: Bundle?
+    ): BrowserRoot {
         return BrowserRoot(EMPTY_MEDIA_ROOT_ID, null)
     }
 
@@ -211,22 +224,26 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
         when (state) {
             PlaybackStateCompat.STATE_PLAYING -> {
                 playbackStateBuilder.setActions(
-                        PlaybackStateCompat.ACTION_PLAY_PAUSE
-                                or PlaybackStateCompat.ACTION_PAUSE
+                    PlaybackStateCompat.ACTION_PLAY_PAUSE
+                            or PlaybackStateCompat.ACTION_PAUSE
                 )
                 playbackStateBuilder.setState(state, playbackPosition, playbackRate)
                 stopSubject.onNext(CANCEL_STOP_REQUEST)
             }
             PlaybackStateCompat.STATE_PAUSED -> {
                 playbackStateBuilder.setActions(
-                        PlaybackStateCompat.ACTION_PLAY_PAUSE
-                                or PlaybackStateCompat.ACTION_PLAY
+                    PlaybackStateCompat.ACTION_PLAY_PAUSE
+                            or PlaybackStateCompat.ACTION_PLAY
                 )
                 playbackStateBuilder.setState(state, playbackPosition, playbackRate)
                 stopSubject.onNext(REQUEST_DELAYED_STOP)
             }
             else -> {
-                playbackStateBuilder.setState(state, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0.0f)
+                playbackStateBuilder.setState(
+                    state,
+                    PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,
+                    0.0f
+                )
                 stopSubject.onNext(REQUEST_DELAYED_STOP)
             }
         }
@@ -241,7 +258,8 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
 
         private lateinit var audioFocusRequest: AudioFocusRequest
 
-        private val audioManager = applicationContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        private val audioManager =
+            applicationContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
 
         private var shouldPlayOnFocusGain: Boolean = false
@@ -262,54 +280,57 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
 
             playFromMediaIdSubject.switchMapSingle { mediaId ->
                 repository.getHymnById(mediaId.toInt())
-                        .firstOrError()
+                    .firstOrError()
             }
-                    .subscribe({ hymn ->
-                        // Check that the hymn is playable.
-                        if (hymn.audio?.midi.isNullOrBlank()
-                                && hymn.audio?.mp3.isNullOrBlank()) {
-                            // Let the client know that there's an error.
-                            mediaSession.sendSessionEvent(EVENT_PLAYABLE_MEDIA_NOT_AVAILABLE,
-                                    Bundle().apply { putInt(EXTRA_HYMN_ID, hymn.num) })
-                            return@subscribe
-                        }
+                .subscribe({ hymn ->
+                    // Check that the hymn is playable.
+                    if (hymn.audio?.midi.isNullOrBlank()
+                        && hymn.audio?.mp3.isNullOrBlank()
+                    ) {
+                        // Let the client know that there's an error.
+                        mediaSession.sendSessionEvent(EVENT_PLAYABLE_MEDIA_NOT_AVAILABLE,
+                            Bundle().apply { putInt(EXTRA_HYMN_ID, hymn.num) })
+                        return@subscribe
+                    }
 
-                        val mp3 = hymn.audio?.mp3
-                        val midi = hymn?.audio?.midi
-                        if (!File(midi).exists() && !File(mp3).exists()) {
-                            mediaSession.sendSessionEvent(EVENT_MEDIA_FILE_NOT_FOUND,
-                                    Bundle().apply { putInt(EXTRA_HYMN_ID, hymn.num) })
-                            return@subscribe
-                        }
+                    val mp3 = hymn.audio?.mp3
+                    val midi = hymn?.audio?.midi
+                    if ((midi.isNullOrBlank() || !File(midi).exists())
+                        && (mp3.isNullOrBlank() || !File(mp3).exists())
+                    ) {
+                        mediaSession.sendSessionEvent(EVENT_MEDIA_FILE_NOT_FOUND,
+                            Bundle().apply { putInt(EXTRA_HYMN_ID, hymn.num) })
+                        return@subscribe
+                    }
 
-                        numVerses = hymn.verses.size
-                        // Create the metadata
-                        metadataBuilder.id = hymn.num.toString()
-                        metadataBuilder.title = hymn.title
-                        metadataBuilder.displaySubtitle = hymn.first
-                        metadataBuilder.artist = hymn.attribution?.musicBy
-                        metadataBuilder.mediaUri = hymn.audio?.midi ?: hymn.audio?.mp3
-                        metadataBuilder.album = "Watchman Hymnbook"
+                    numVerses = hymn.verses.size
+                    // Create the metadata
+                    metadataBuilder.id = hymn.num.toString()
+                    metadataBuilder.title = hymn.title
+                    metadataBuilder.displaySubtitle = hymn.first
+                    metadataBuilder.artist = hymn.attribution?.musicBy
+                    metadataBuilder.mediaUri = hymn.audio?.midi ?: hymn.audio?.mp3
+                    metadataBuilder.album = "Watchman Hymnbook"
 
-                        // Set repeat mode before preparing. onPrepare uses the value set in repeat mode
-                        playback.setRepeat(repeatMode, numVerses)
+                    // Set repeat mode before preparing. onPrepare uses the value set in repeat mode
+                    playback.setRepeat(repeatMode, numVerses)
 
-                        val metadata = metadataBuilder.build()
-                        val preparedDuration = try {
-                            playback.prepare(metadata).blockingGet(0)
-                        } catch (e: Exception) {
-                            Timber.w(e, "MediaPlayer cannot play file")
-                            0
-                        }
-                        if (preparedDuration > 0) {
-                            // Set the session metadata
-                            metadataBuilder.duration = preparedDuration.toLong()
-                            mediaSession.setMetadata(metadataBuilder.build())
-                            onPlay()
-                        }
+                    val metadata = metadataBuilder.build()
+                    val preparedDuration = try {
+                        playback.prepare(metadata).blockingGet(0)
+                    } catch (e: Exception) {
+                        Timber.w(e, "MediaPlayer cannot play file")
+                        0
+                    }
+                    if (preparedDuration > 0) {
+                        // Set the session metadata
+                        metadataBuilder.duration = preparedDuration.toLong()
+                        mediaSession.setMetadata(metadataBuilder.build())
+                        onPlay()
+                    }
 
-                    }, { Timber.w(it, "Error getting hymn") })
-                    .let { disposables.add(it) }
+                }, { Timber.w(it, "Error getting hymn") })
+                .let { disposables.add(it) }
         }
 
         override fun onPlayFromMediaId(mediaId: String?, extras: Bundle?) {
@@ -393,42 +414,43 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
             } else {
                 // DONE: request audio focus for lower android versions
                 result = audioManager.requestAudioFocus(
-                        audioFocusChangeListener,
-                        AudioManager.STREAM_MUSIC,
-                        AudioManager.AUDIOFOCUS_GAIN
+                    audioFocusChangeListener,
+                    AudioManager.STREAM_MUSIC,
+                    AudioManager.AUDIOFOCUS_GAIN
                 )
             }
 
             return result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
         }
 
-        private val audioFocusChangeListener: AudioManager.OnAudioFocusChangeListener = AudioManager.OnAudioFocusChangeListener { focusChange ->
-            when (focusChange) {
-                AudioManager.AUDIOFOCUS_LOSS -> {
-                    playback.onPause()
-                    shouldPlayOnFocusGain = false
-                }
-                AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
-                    if (playback.isPlaying()) {
+        private val audioFocusChangeListener: AudioManager.OnAudioFocusChangeListener =
+            AudioManager.OnAudioFocusChangeListener { focusChange ->
+                when (focusChange) {
+                    AudioManager.AUDIOFOCUS_LOSS -> {
                         playback.onPause()
-                        shouldPlayOnFocusGain = true // We want to resume later
-                    } else {
                         shouldPlayOnFocusGain = false
                     }
-                }
-                AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
-                    if (playback.isPlaying()) {
-                        playback.duck()
-                        shouldPlayOnFocusGain = true
+                    AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
+                        if (playback.isPlaying()) {
+                            playback.onPause()
+                            shouldPlayOnFocusGain = true // We want to resume later
+                        } else {
+                            shouldPlayOnFocusGain = false
+                        }
                     }
-                }
-                AudioManager.AUDIOFOCUS_GAIN -> {
-                    if (shouldPlayOnFocusGain) {
-                        playback.onPlay()
+                    AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
+                        if (playback.isPlaying()) {
+                            playback.duck()
+                            shouldPlayOnFocusGain = true
+                        }
+                    }
+                    AudioManager.AUDIOFOCUS_GAIN -> {
+                        if (shouldPlayOnFocusGain) {
+                            playback.onPlay()
+                        }
                     }
                 }
             }
-        }
 
 
     }
@@ -448,7 +470,8 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
 
             // Skip building a notification when state is "none" and metadata is null
             val notification = if (mediaController.metadata != null
-                    && updatedState != PlaybackStateCompat.STATE_NONE) {
+                && updatedState != PlaybackStateCompat.STATE_NONE
+            ) {
                 notificationBuilder.buildNotification(mediaSession.sessionToken)
             } else {
                 null
@@ -464,8 +487,8 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
 
                         if (!isForegroundService) {
                             ContextCompat.startForegroundService(
-                                    applicationContext,
-                                    Intent(applicationContext, this@TunesPlayerService.javaClass)
+                                applicationContext,
+                                Intent(applicationContext, this@TunesPlayerService.javaClass)
                             )
                             startForeground(NOW_PLAYING_NOTIFICATION, notification)
                             isForegroundService = true
@@ -502,8 +525,8 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
 }
 
 private class BecomingNoisyReceiver(
-        private val context: Context,
-        sessionToken: MediaSessionCompat.Token
+    private val context: Context,
+    sessionToken: MediaSessionCompat.Token
 ) : BroadcastReceiver() {
 
     private val noisyIntentFilter = IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY)

@@ -11,10 +11,10 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.preference.PreferenceManager
@@ -68,7 +68,7 @@ abstract class BaseDetailPagerFragment : Fragment() {
                     val playlistDialog = AddToPlaylistDialogFragment().apply {
                         arguments = Bundle().apply { putInt(EXTRA_SELECTED_HYMN_ID, currentHymnId) }
                     }
-                    playlistDialog.show(requireFragmentManager(), null)
+                    playlistDialog.show(childFragmentManager, null)
                     true
                 }
                 R.id.menu_detail_share -> {
@@ -156,66 +156,76 @@ abstract class BaseDetailPagerFragment : Fragment() {
             setupTempoControls()
         }
 
-        nowPlayingViewModel.isPlaying.observe(viewLifecycleOwner, { playing ->
+        nowPlayingViewModel.isPlaying.observe(viewLifecycleOwner) { playing ->
             if (playing) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    val playToPause = requireContext().getDrawable(R.drawable.avd_play_to_pause) as AnimatedVectorDrawable
-                    binding.bottomsheetPlayControls.imageViewControlsPlayPause.setImageDrawable(playToPause)
-                    playToPause.start()
-                } else {
-                    binding.bottomsheetPlayControls.imageViewControlsPlayPause.setImageResource(R.drawable.ic_pause)
-                }
+                val playToPause =
+                    ContextCompat.getDrawable(requireContext(), R.drawable.avd_play_to_pause) as AnimatedVectorDrawable
+                binding.bottomsheetPlayControls.imageViewControlsPlayPause.setImageDrawable(
+                    playToPause
+                )
+                playToPause.start()
             } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    val pauseToPlay = requireContext().getDrawable(R.drawable.avd_pause_to_play) as AnimatedVectorDrawable
-                    binding.bottomsheetPlayControls.imageViewControlsPlayPause.setImageDrawable(pauseToPlay)
-                    pauseToPlay.start()
-                } else {
-                    binding.bottomsheetPlayControls.imageViewControlsPlayPause.setImageResource(R.drawable.ic_play)
-                }
+                val pauseToPlay =
+                    ContextCompat.getDrawable(requireContext(), R.drawable.avd_pause_to_play) as AnimatedVectorDrawable
+                binding.bottomsheetPlayControls.imageViewControlsPlayPause.setImageDrawable(
+                    pauseToPlay
+                )
+                pauseToPlay.start()
             }
-        })
+        }
 
-        nowPlayingViewModel.mediaPosition.observe(viewLifecycleOwner, { position ->
+        nowPlayingViewModel.mediaPosition.observe(viewLifecycleOwner) { position ->
             val currentPosition = if (position < 0) 0 else position
-            binding.bottomsheetPlayControls.progressbarControlsProgress.progress = currentPosition.toFloat()
-        })
+            binding.bottomsheetPlayControls.progressbarControlsProgress.progress =
+                currentPosition.toFloat()
+        }
 
-        nowPlayingViewModel.metadata.observe(viewLifecycleOwner, { metadata ->
+        nowPlayingViewModel.metadata.observe(viewLifecycleOwner) { metadata ->
             val duration = metadata.duration
             if (duration > 0) {
-                binding.bottomsheetPlayControls.progressbarControlsProgress.maximum = duration.toFloat()
+                binding.bottomsheetPlayControls.progressbarControlsProgress.maximum =
+                    duration.toFloat()
             }
-        })
+        }
 
-        nowPlayingViewModel.repeatMode.observe(viewLifecycleOwner, { mode ->
+        nowPlayingViewModel.repeatMode.observe(viewLifecycleOwner) { mode ->
             Timber.i("Repeat mode changed: %s", mode)
             when (mode) {
                 PlaybackStateCompat.REPEAT_MODE_NONE -> {
                     binding.bottomsheetPlayControls.imageViewControlsRepeatToggle.setImageResource(R.drawable.ic_times_one)
-                    binding.bottomsheetPlayControls.progressbarControlsProgress.isIndeterminate = false
+                    binding.bottomsheetPlayControls.progressbarControlsProgress.isIndeterminate =
+                        false
                 }
                 PlaybackStateCompat.REPEAT_MODE_ALL -> {
                     binding.bottomsheetPlayControls.imageViewControlsRepeatToggle.setImageResource(R.drawable.ic_times_all)
-                    binding.bottomsheetPlayControls.progressbarControlsProgress.isIndeterminate = false
+                    binding.bottomsheetPlayControls.progressbarControlsProgress.isIndeterminate =
+                        false
                 }
                 PlaybackStateCompat.REPEAT_MODE_ONE -> {
                     binding.bottomsheetPlayControls.imageViewControlsRepeatToggle.setImageResource(R.drawable.ic_repeat_active)
                 }
             }
-        })
+        }
 
         binding.bottomsheetPlayControls.imageViewControlsRepeatToggle.setOnClickListener { nowPlayingViewModel.cycleRepeatMode() }
 
-        nowPlayingViewModel.playbackEvent.observe(viewLifecycleOwner, { event ->
+        nowPlayingViewModel.playbackEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
-                is PlaybackEvent.Error -> Snackbar.make(binding.coordinatorLayoutHymnDetail.rootView, event.message, Snackbar.LENGTH_SHORT).show()
-                is PlaybackEvent.Message -> Snackbar.make(binding.coordinatorLayoutHymnDetail, event.message, Snackbar.LENGTH_SHORT).show()
+                is PlaybackEvent.Error -> Snackbar.make(
+                    binding.coordinatorLayoutHymnDetail.rootView,
+                    event.message,
+                    Snackbar.LENGTH_SHORT
+                ).show()
+                is PlaybackEvent.Message -> Snackbar.make(
+                    binding.coordinatorLayoutHymnDetail,
+                    event.message,
+                    Snackbar.LENGTH_SHORT
+                ).show()
                 PlaybackEvent.None -> { /* Do nothing */
                     Timber.i("Nothing received!")
                 }
             }
-        })
+        }
 
     }
 
@@ -225,9 +235,9 @@ abstract class BaseDetailPagerFragment : Fragment() {
         val tempoViewBinding: DialogTempoSelectorBinding = DataBindingUtil.inflate(layoutInflater, R.layout.dialog_tempo_selector, null, false)
         tempoDialog.setContentView(tempoViewBinding.root)
 
-        nowPlayingViewModel.playbackTempo.observe(viewLifecycleOwner, Observer {
+        nowPlayingViewModel.playbackTempo.observe(viewLifecycleOwner) {
             tempoViewBinding.seekBarTempoSelector.progress = it
-        })
+        }
 
         tempoViewBinding.seekBarTempoSelector.setOnSeekBarChangeListener(
                 object : SeekBar.OnSeekBarChangeListener {
@@ -251,18 +261,20 @@ abstract class BaseDetailPagerFragment : Fragment() {
             tempoDialog.show()
         }
 
-        nowPlayingViewModel.playbackRate.observe(viewLifecycleOwner, Observer { rate ->
-            binding.bottomsheetPlayControls.textControlsTempo.text = getString(R.string.tempo_x, rate)
-        })
+        nowPlayingViewModel.playbackRate.observe(viewLifecycleOwner) { rate ->
+            binding.bottomsheetPlayControls.textControlsTempo.text =
+                getString(R.string.tempo_x, rate)
+        }
 
     }
 
     protected fun showContentError(error: String) {
-        // TODO: Implement error screen and show it here
+        Timber.d("Error $error occurred")
     }
 
 
     protected fun showProgressLoading(loading: Boolean) {
+        Timber.d("Loading $loading")
         //if (loading) binding.progressBarHymnDetailLoading.visibility = View.VISIBLE
         //else binding.progressBarHymnDetailLoading.visibility = View.GONE
     }
@@ -272,7 +284,7 @@ abstract class BaseDetailPagerFragment : Fragment() {
      * Configure the quick settings found in the bottomsheet
      */
     private fun setupQuickSettings() {
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity)
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
         val rxPreferences = RxSharedPreferences.create(sharedPreferences)
         val defaultTextSize = resources.getInteger(R.integer.normal_detail_text_size).toFloat()
         val fontSizePreference: Preference<Float> = rxPreferences.getFloat(

@@ -1,6 +1,5 @@
 package com.techbeloved.hymnbook.sheetmusic
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -15,15 +14,18 @@ import com.techbeloved.hymnbook.hymndetail.SortBy
 import com.techbeloved.hymnbook.usecases.Lce
 import com.techbeloved.hymnbook.utils.DEFAULT_SHEET_MUSIC_CATEGORY
 import com.techbeloved.hymnbook.utils.SchedulerProvider
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.ObservableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
+import javax.inject.Inject
 
-class SheetMusicPagerViewModel @ViewModelInject constructor(private val repo: OnlineRepo,
-                                                            private val shareLinkProvider: ShareLinkProvider,
-                                                            private val schedulerProvider: SchedulerProvider) : ViewModel() {
+@HiltViewModel
+class SheetMusicPagerViewModel @Inject constructor(private val repo: OnlineRepo,
+                                                       private val shareLinkProvider: ShareLinkProvider,
+                                                       private val schedulerProvider: SchedulerProvider) : ViewModel() {
 
     private val disposables: CompositeDisposable = CompositeDisposable()
     private val hymnIndicesLiveData: MutableLiveData<Lce<List<Int>>> = MutableLiveData()

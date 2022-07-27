@@ -1,8 +1,6 @@
 package com.techbeloved.hymnbook.hymndetail
 
 import androidx.annotation.IntDef
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.techbeloved.hymnbook.data.ShareLinkProvider
 import com.techbeloved.hymnbook.data.SharedPreferencesRepo
@@ -11,23 +9,26 @@ import com.techbeloved.hymnbook.data.repo.OnlineRepo
 import com.techbeloved.hymnbook.playlists.PlaylistsRepo
 import com.techbeloved.hymnbook.usecases.Lce
 import com.techbeloved.hymnbook.utils.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.ObservableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
+import javax.inject.Inject
 
 /**
- * @param categoryUri holds information about the category we are currently browsing
+ * categoryUri holds information about the category we are currently browsing
  */
-class HymnPagerViewModel @ViewModelInject constructor(private val repository: HymnsRepository,
-                                                      private val playlistsRepo: PlaylistsRepo,
-                                                      private val onlineRepo: OnlineRepo,
-                                                      @Assisted private val savedStateHandle: SavedStateHandle,
-                                                      private val schedulerProvider: SchedulerProvider,
-                                                      private val shareLinkProvider: ShareLinkProvider,
-                                                      private val preferencesRepo: SharedPreferencesRepo) : ViewModel() {
+@HiltViewModel
+class HymnPagerViewModel @Inject constructor(private val repository: HymnsRepository,
+                                             private val playlistsRepo: PlaylistsRepo,
+                                             private val onlineRepo: OnlineRepo,
+                                             private val savedStateHandle: SavedStateHandle,
+                                             private val schedulerProvider: SchedulerProvider,
+                                             private val shareLinkProvider: ShareLinkProvider,
+                                             private val preferencesRepo: SharedPreferencesRepo) : ViewModel() {
 
     private val categoryUri: String get() = savedStateHandle[CATEGORY_URI_ARG]!!
     private val _hymnIndicesLiveData: MutableLiveData<Lce<List<HymnNumber>>> = MutableLiveData()
@@ -41,11 +42,11 @@ class HymnPagerViewModel @ViewModelInject constructor(private val repository: Hy
     val hymnIndicesLiveData: LiveData<Lce<List<HymnNumber>>>
         get() = Transformations.distinctUntilChanged(_hymnIndicesLiveData)
 
-    private val indicesConsumer: Consumer<in Lce<List<HymnNumber>>>? = Consumer {
+    private val indicesConsumer: Consumer<in Lce<List<HymnNumber>>> = Consumer {
         _hymnIndicesLiveData.value = it
     }
 
-    private val errorConsumer: Consumer<in Throwable>? = Consumer {
+    private val errorConsumer: Consumer<in Throwable> = Consumer {
         _hymnIndicesLiveData.value = Lce.Error("Failed to load indices of hymns")
     }
 

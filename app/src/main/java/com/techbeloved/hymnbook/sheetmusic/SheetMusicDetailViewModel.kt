@@ -1,15 +1,17 @@
 package com.techbeloved.hymnbook.sheetmusic
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.techbeloved.hymnbook.usecases.Lce
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.ObservableTransformer
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
+import javax.inject.Inject
 
-class SheetMusicDetailViewModel @ViewModelInject constructor(private val hymnUseCases: HymnUseCases) : ViewModel() {
+@HiltViewModel
+class SheetMusicDetailViewModel @Inject constructor(private val hymnUseCases: HymnUseCases) : ViewModel() {
     private var disposableLoadHymn: CompositeDisposable? = CompositeDisposable()
     private val hymnDetailLce: MutableLiveData<Lce<SheetMusicState>> = MutableLiveData()
 

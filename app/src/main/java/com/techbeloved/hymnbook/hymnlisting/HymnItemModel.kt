@@ -3,7 +3,7 @@ package com.techbeloved.hymnbook.hymnlisting
 import android.os.Parcelable
 import android.view.View
 import androidx.recyclerview.widget.DiffUtil
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 interface HymnItemModel {
 

@@ -1,22 +1,23 @@
 package com.techbeloved.hymnbook.sheetmusic
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.techbeloved.hymnbook.hymndetail.BY_NUMBER
 import com.techbeloved.hymnbook.hymndetail.SortBy
 import com.techbeloved.hymnbook.hymnlisting.TitleItem
 import com.techbeloved.hymnbook.usecases.Lce
 import com.techbeloved.hymnbook.utils.SchedulerProvider
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.ObservableTransformer
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
+import javax.inject.Inject
 
-class SheetMusicListingViewModel @ViewModelInject constructor(private val useCases: HymnUseCases,
-                                                              private val schedulerProvider: SchedulerProvider) : ViewModel() {
+@HiltViewModel
+class SheetMusicListingViewModel @Inject constructor(private val useCases: HymnUseCases,
+                                                         private val schedulerProvider: SchedulerProvider) : ViewModel() {
 
     private val sortBySubject = PublishSubject.create<Int>()
     private val disposables: CompositeDisposable = CompositeDisposable()
@@ -53,12 +54,5 @@ class SheetMusicListingViewModel @ViewModelInject constructor(private val useCas
 
     private fun <T> getViewState(): ObservableTransformer<T, Lce<T>> = ObservableTransformer { upstream ->
         upstream.map { Lce.Content(it) }
-    }
-
-    class Factory(private val useCases: HymnUseCases, private val schedulerProvider: SchedulerProvider) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return SheetMusicListingViewModel(useCases, schedulerProvider) as T
-        }
-
     }
 }

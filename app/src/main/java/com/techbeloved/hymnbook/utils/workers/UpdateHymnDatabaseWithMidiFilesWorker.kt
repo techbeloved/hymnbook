@@ -1,18 +1,20 @@
 package com.techbeloved.hymnbook.utils.workers
 
 import android.content.Context
-import androidx.hilt.Assisted
-import androidx.hilt.work.WorkerInject
+import androidx.hilt.work.HiltWorker
 import androidx.work.RxWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import io.reactivex.Single
 import timber.log.Timber
 import java.io.File
 
-class UpdateHymnDatabaseWithMidiFilesWorker @WorkerInject constructor(@Assisted context: Context, @Assisted params: WorkerParameters, private val hymnsRepository: HymnsRepository) : RxWorker(context, params) {
+@HiltWorker
+class UpdateHymnDatabaseWithMidiFilesWorker @AssistedInject constructor(@Assisted context: Context, @Assisted params: WorkerParameters, private val hymnsRepository: HymnsRepository) : RxWorker(context, params) {
     override fun createWork(): Single<Result> {
         makeStatusNotification("Updating database", applicationContext)
 
@@ -20,7 +22,7 @@ class UpdateHymnDatabaseWithMidiFilesWorker @WorkerInject constructor(@Assisted 
             val midiFilesDirectory = inputData.getString(KEY_UNZIP_FILES_DIRECTORY)
                     ?: File(applicationContext.getExternalFilesDir(null), applicationContext.getString(R.string.file_path_midi)).absolutePath
             val directory = File(midiFilesDirectory)
-            var numberOfFiles: Int = 0
+            var numberOfFiles = 0
             for (fileName in (directory.list { dir, name ->
                 name.contains("hymn")
                         && name.endsWith(".mid", true)
