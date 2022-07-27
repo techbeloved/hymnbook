@@ -1,14 +1,15 @@
 package com.techbeloved.hymnbook.utils.workers
 
 import android.content.Context
-import androidx.hilt.Assisted
-import androidx.hilt.work.WorkerInject
+import androidx.hilt.work.HiltWorker
 import androidx.work.Data
 import androidx.work.RxWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.techbeloved.hymnbook.data.SharedPreferencesRepo
 import com.techbeloved.hymnbook.data.repo.OnlineRepo
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import io.reactivex.Single
 import timber.log.Timber
 
@@ -16,10 +17,11 @@ import timber.log.Timber
  * Should use this to schedule hymns midi download and database sync. Periodically,
  * like once a week checks for new update. If there is any update, downloads, it, extracts it and populate the database
  */
-class MidiSyncWorker @WorkerInject constructor(@Assisted context: Context,
-                                               @Assisted params: WorkerParameters,
-                                               private val sharedPreferencesRepo: SharedPreferencesRepo,
-                                               private val onlineRepo: OnlineRepo) : RxWorker(context, params) {
+@HiltWorker
+class MidiSyncWorker @AssistedInject constructor(@Assisted context: Context,
+                                                     @Assisted params: WorkerParameters,
+                                                     private val sharedPreferencesRepo: SharedPreferencesRepo,
+                                                     private val onlineRepo: OnlineRepo) : RxWorker(context, params) {
 
     override fun createWork(): Single<Result> {
         Timber.i("MidiSyncWork: onGoing work")

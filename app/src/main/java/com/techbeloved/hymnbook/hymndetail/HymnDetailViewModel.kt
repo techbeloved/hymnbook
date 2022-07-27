@@ -8,7 +8,6 @@ import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
 import android.util.TypedValue
 import androidx.annotation.VisibleForTesting
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,6 +17,7 @@ import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.data.model.HymnDetail
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
 import com.techbeloved.hymnbook.usecases.Lce
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.FlowableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -25,8 +25,10 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
+import javax.inject.Inject
 
-class HymnDetailViewModel @ViewModelInject constructor(
+@HiltViewModel
+class HymnDetailViewModel @Inject constructor(
         @ApplicationContext private val context: Context,
         private val hymnRepository: HymnsRepository) : ViewModel() {
 

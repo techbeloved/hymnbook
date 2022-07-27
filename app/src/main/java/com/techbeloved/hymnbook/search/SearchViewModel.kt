@@ -1,13 +1,12 @@
 package com.techbeloved.hymnbook.search
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.techbeloved.hymnbook.data.model.SearchResult
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
 import com.techbeloved.hymnbook.usecases.Lce
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.FlowableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -16,8 +15,10 @@ import io.reactivex.processors.PublishProcessor
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class SearchViewModel @ViewModelInject constructor(private val repository: HymnsRepository) : ViewModel() {
+@HiltViewModel
+class SearchViewModel @Inject constructor(private val repository: HymnsRepository) : ViewModel() {
 
     private val mutableSearchResults: MutableLiveData<Lce<List<SearchResultItem>>> = MutableLiveData()
     val searchResults: LiveData<Lce<List<SearchResultItem>>>
@@ -63,12 +64,5 @@ class SearchViewModel @ViewModelInject constructor(private val repository: Hymns
     override fun onCleared() {
         super.onCleared()
         if (!disposables.isDisposed) disposables.dispose()
-    }
-
-    class Factory(private val repository: HymnsRepository) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return SearchViewModel(repository) as T
-        }
-
     }
 }

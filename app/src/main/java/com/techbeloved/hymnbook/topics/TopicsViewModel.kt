@@ -1,15 +1,16 @@
 package com.techbeloved.hymnbook.topics
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.techbeloved.hymnbook.usecases.Lce
-import io.reactivex.ObservableTransformer
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
+import javax.inject.Inject
 
-class TopicsViewModel @ViewModelInject constructor(private val topicsUseCases: TopicsUseCases) : ViewModel() {
+@HiltViewModel
+class TopicsViewModel @Inject constructor(private val topicsUseCases: TopicsUseCases) : ViewModel() {
 
 
     private val disposables: CompositeDisposable = CompositeDisposable()
@@ -30,10 +31,6 @@ class TopicsViewModel @ViewModelInject constructor(private val topicsUseCases: T
     // Load topics already
     init {
         loadTopics()
-    }
-
-    private fun <T> getViewState() = ObservableTransformer<T, Lce<T>> { upstream ->
-        upstream.map { Lce.Content(it) }
     }
 
     override fun onCleared() {

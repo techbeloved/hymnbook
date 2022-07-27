@@ -50,14 +50,14 @@ class HymnbookActivity : AppCompatActivity() {
         navController = findNavController(R.id.mainNavHostFragment)
 
         binding.bottomNavigationMain.setupWithNavController(navController)
-        binding.bottomNavigationMain.setOnNavigationItemSelectedListener { item ->
+        binding.bottomNavigationMain.setOnItemSelectedListener { item ->
             if (navController.currentDestination?.id != item.itemId) {
                 item.onNavDestinationSelected(navController)
                 true
             } else false
         }
 
-        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+        navController.addOnDestinationChangedListener { _, destination, _ ->
             // Hide the bottom navigation in detail view
             when (destination.id) {
                 R.id.detailPagerFragment,
@@ -72,7 +72,7 @@ class HymnbookActivity : AppCompatActivity() {
         handleDynamicLinks(intent)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.bottom_nav, menu)
         return true
     }

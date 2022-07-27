@@ -1,6 +1,5 @@
 package com.techbeloved.hymnbook.playlists
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,15 +8,18 @@ import com.techbeloved.hymnbook.hymnlisting.HymnItemModel
 import com.techbeloved.hymnbook.hymnlisting.TitleItem
 import com.techbeloved.hymnbook.usecases.Lce
 import com.techbeloved.hymnbook.utils.SchedulerProvider
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class PlaylistsViewModel @ViewModelInject constructor(private val playlistsRepo: PlaylistsRepo,
-                                                      private val schedulerProvider: SchedulerProvider) : ViewModel() {
+@HiltViewModel
+class PlaylistsViewModel @Inject constructor(private val playlistsRepo: PlaylistsRepo,
+                                                 private val schedulerProvider: SchedulerProvider) : ViewModel() {
 
     private val playlistsLive = MutableLiveData<Lce<List<HymnItemModel>>>()
 

@@ -1,12 +1,13 @@
 package com.techbeloved.hymnbook.utils.workers
 
 import android.content.Context
-import androidx.hilt.Assisted
-import androidx.hilt.work.WorkerInject
+import androidx.hilt.work.HiltWorker
 import androidx.work.Data
 import androidx.work.RxWorker
 import androidx.work.WorkerParameters
 import com.techbeloved.hymnbook.data.download.Downloader
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import io.reactivex.Single
 import timber.log.Timber
 import java.io.File
@@ -14,7 +15,8 @@ import java.io.File
 /**
  * A worker that downloads archive
  */
-class DownloadFirebaseArchiveWorker @WorkerInject constructor(@Assisted context: Context, @Assisted params: WorkerParameters, private val downloader: Downloader) : RxWorker(context, params) {
+@HiltWorker
+class DownloadFirebaseArchiveWorker @AssistedInject constructor(@Assisted context: Context, @Assisted params: WorkerParameters, private val downloader: Downloader) : RxWorker(context, params) {
 
     override fun createWork(): Single<Result> {
         Timber.i("Downloading archive: onGoing")

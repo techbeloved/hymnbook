@@ -1,6 +1,5 @@
 package com.techbeloved.hymnbook.playlists
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,17 +7,20 @@ import com.techbeloved.hymnbook.data.model.Favorite
 import com.techbeloved.hymnbook.data.model.Playlist
 import com.techbeloved.hymnbook.hymnlisting.TitleItem
 import com.techbeloved.hymnbook.utils.SchedulerProvider
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 import kotlin.properties.Delegates
 
 /**
  * A [ViewModel] used to manage playlists. It handles things such as
  *  playlist creation, deletion, adding of songs to playlist, etc
  */
-class ManagePlaylistViewModel @ViewModelInject constructor(private val playlistsRepo: PlaylistsRepo, private val schedulerProvider: SchedulerProvider) : ViewModel() {
+@HiltViewModel
+class ManagePlaylistViewModel @Inject constructor(private val playlistsRepo: PlaylistsRepo, private val schedulerProvider: SchedulerProvider) : ViewModel() {
 
     private var _editing = false
     val editing get() = _editing

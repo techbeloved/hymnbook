@@ -1,15 +1,17 @@
 package com.techbeloved.hymnbook
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import com.techbeloved.hymnbook.usecases.HymnbookUseCases
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
+import javax.inject.Inject
 
 /**
  * A [ViewModel] shared by the fragments in order to update the main activity with their states, mostly the toolbar title
  */
-class HymnbookViewModel @ViewModelInject constructor(private val useCases: HymnbookUseCases) : ViewModel() {
+@HiltViewModel
+class HymnbookViewModel @Inject constructor(private val useCases: HymnbookUseCases) : ViewModel() {
 
     private val disposables = CompositeDisposable()
 
