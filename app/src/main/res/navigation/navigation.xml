@@ -3,31 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/hymnListingFragment">
 
-    <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.techbeloved.hymnbook.home.HomeFragment"
-        android:label="Hymnbook"
-        tools:layout="@layout/fragment_home">
-        <action
-            android:id="@+id/action_homeFragment_to_hymnListingFragment"
-            app:destination="@id/hymnListingFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:launchSingleTop="true"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
-        <action
-            android:id="@+id/action_homeFragment_to_sheetMusicListing"
-            app:destination="@id/sheetMusicListing" />
-        <action
-            android:id="@+id/action_homeFragment_to_detailPagerFragment"
-            app:destination="@id/detailPagerFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_sheetMusicPagerFragment"
-            app:destination="@id/sheetMusicPagerFragment" />
-    </fragment>
     <fragment
         android:id="@+id/hymnListingFragment"
         android:name="com.techbeloved.hymnbook.hymnlisting.HymnListingFragment"
@@ -41,16 +18,38 @@
             android:defaultValue="Hymns"
             app:argType="string" />
         <argument
-            android:name="navUri"
+            android:name="category"
+            android:defaultValue="wccrm"
             app:argType="string" />
+        <argument
+            android:name="categoryId"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <deepLink
+            android:id="@+id/deepLink"
+            app:uri="https://hymnbook.com/{category}/{categoryId}" />
     </fragment>
     <fragment
         android:id="@+id/detailPagerFragment"
         android:name="com.techbeloved.hymnbook.hymndetail.DetailPagerFragment"
         tools:layout="@layout/fragment_detail">
         <argument
-            android:name="navUri"
+            android:name="category"
+            android:defaultValue="wccrm"
             app:argType="string" />
+        <argument
+            android:name="categoryId"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="hymnId"
+            app:argType="integer" />
+        <deepLink
+            android:id="@+id/deepLink2"
+            app:uri="https://hymnbook.com/{category}/{categoryId}/hymns/{hymnId}" />
+        <deepLink
+            android:id="@+id/deepLink3"
+            app:uri="content://hymnbook.com/{category}/{categoryId}/hymns/{hymnId}" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -81,7 +80,7 @@
         android:id="@+id/settingsActivity"
         android:name="com.techbeloved.hymnbook.SettingsActivity"
         android:label="@string/action_settings"
-        tools:layout="@layout/activity_settings_main"/>
+        tools:layout="@layout/activity_settings_main" />
     <fragment
         android:id="@+id/sheetMusicListing"
         android:name="com.techbeloved.hymnbook.sheetmusic.SheetMusicListingFragment"
@@ -98,8 +97,8 @@
         tools:layout="@layout/fragment_sheet_music_detail">
         <argument
             android:name="hymnId"
-            app:argType="integer"
-            android:defaultValue="1" />
+            android:defaultValue="1"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/topicsFragment"

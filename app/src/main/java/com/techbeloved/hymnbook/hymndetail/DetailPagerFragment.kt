@@ -11,13 +11,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.navigation.fragment.navArgs
 import androidx.viewpager.widget.PagerAdapter
 import com.google.android.material.snackbar.Snackbar
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.sheetmusic.SheetMusicDetailFragment
 import com.techbeloved.hymnbook.usecases.Lce
-import com.techbeloved.hymnbook.utils.*
+import com.techbeloved.hymnbook.utils.DepthPageTransformer
+import com.techbeloved.hymnbook.utils.MINIMUM_VERSION_FOR_SHARE_LINK
+import com.techbeloved.hymnbook.utils.WCCRM_LOGO_URL
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import kotlin.properties.Delegates.observable
@@ -25,52 +27,43 @@ import kotlin.properties.Delegates.observable
 @AndroidEntryPoint
 class DetailPagerFragment : BaseDetailPagerFragment() {
 
+    private val detailArgs by navArgs<DetailPagerFragmentArgs>()
     private val viewModel: HymnPagerViewModel by viewModels()
-    private lateinit var detailPagerAdapter: DetailPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Restore current index
-        if (savedInstanceState != null) {
-            currentHymnId = savedInstanceState.getInt(EXTRA_CURRENT_ITEM_ID, 1)
-            currentCategoryUri = savedInstanceState.getString(EXTRA_CURRENT_CATEGORY_URI, DEFAULT_CATEGORY_URI)
-        } else {
-            val args = requireArguments().let { DetailPagerFragmentArgs.fromBundle(it) }
-            val inComingItemUri = args.navUri
-            currentHymnId = inComingItemUri.hymnId()?.toInt() ?: 1
-            currentCategoryUri = inComingItemUri.parentCategoryUri() ?: DEFAULT_CATEGORY_URI
-        }
-        // Set the category uri. This would be used by the viewModel
-        requireArguments().putString(HymnPagerViewModel.CATEGORY_URI_ARG, currentCategoryUri)
+        currentHymnId = savedInstanceState?.getInt(EXTRA_CURRENT_ITEM_ID, detailArgs.hymnId)
+            ?: detailArgs.hymnId
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        detailPagerAdapter = DetailPagerAdapter(childFragmentManager).also { adapter ->
+        val detailPagerAdapter = DetailPagerAdapter(childFragmentManager).also { adapter ->
             viewModel.preferSheetMusic.observe(viewLifecycleOwner) { adapter.preferSheetMusic = it }
         }
         binding.viewpagerHymnDetail.adapter = detailPagerAdapter
         binding.viewpagerHymnDetail.setPageTransformer(true, DepthPageTransformer())
 
-        viewModel.hymnIndicesLiveData.observe(viewLifecycleOwner, Observer { indicesLce ->
+        viewModel.hymnIndicesLiveData.observe(viewLifecycleOwner) { indicesLce ->
             val indexToLoad = currentHymnId
             when (indicesLce) {
                 is Lce.Loading -> showProgressLoading(indicesLce.loading)
                 is Lce.Content -> {
-                    initializeViewPager(indicesLce.content, indexToLoad)
+                    initializeViewPager(detailPagerAdapter, indicesLce.content, indexToLoad)
                     updateCurrentItemId(indexToLoad)
                     updateHymnItems(indicesLce.content.map { it.index })
                 }
                 is Lce.Error -> showContentError(indicesLce.error)
             }
-        })
+        }
 
-        viewModel.header.observe(viewLifecycleOwner, Observer { title ->
+        viewModel.header.observe(viewLifecycleOwner) { title ->
             binding.toolbarDetail.title = title
-        })
+        }
 
-        viewModel.shareLinkStatus.observe(viewLifecycleOwner, Observer { shareStatus ->
+        viewModel.shareLinkStatus.observe(viewLifecycleOwner) { shareStatus ->
             when (shareStatus) {
                 ShareStatus.Loading -> showShareLoadingDialog()
                 is ShareStatus.Success -> showShareOptionsChooser(shareStatus.shareLink)
@@ -81,12 +74,16 @@ class DetailPagerFragment : BaseDetailPagerFragment() {
                     cancelProgressDialog()
                 }
             }
-        })
+        }
     }
 
     private fun showShareError(error: Throwable) {
         Timber.w(error)
-        Snackbar.make(requireView().rootView, "Failure creating share content", Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(
+            requireView().rootView,
+            "Failure creating share content",
+            Snackbar.LENGTH_SHORT
+        ).show()
     }
 
     private fun showShareOptionsChooser(shareLink: String) {
@@ -110,11 +107,14 @@ class DetailPagerFragment : BaseDetailPagerFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putInt(EXTRA_CURRENT_ITEM_ID, currentHymnId)
-        outState.putString(EXTRA_CURRENT_CATEGORY_URI, currentCategoryUri)
         super.onSaveInstanceState(outState)
     }
 
-    private fun initializeViewPager(hymnIndices: List<HymnNumber>, initialIndex: Int) {
+    private fun initializeViewPager(
+        detailPagerAdapter: DetailPagerAdapter,
+        hymnIndices: List<HymnNumber>,
+        initialIndex: Int
+    ) {
         Timber.i("Initializing viewPager with index: $initialIndex")
         //showProgressLoading(false)
 
@@ -128,14 +128,17 @@ class DetailPagerFragment : BaseDetailPagerFragment() {
     }
 
     override fun initiateContentSharing() {
-        viewModel.requestShareLink(currentHymnId,
-                getString(R.string.about_app),
-                MINIMUM_VERSION_FOR_SHARE_LINK,
-                WCCRM_LOGO_URL)
+        viewModel.requestShareLink(
+            currentHymnId,
+            getString(R.string.about_app),
+            MINIMUM_VERSION_FOR_SHARE_LINK,
+            WCCRM_LOGO_URL
+        )
     }
 
     @SuppressLint("WrongConstant")
-    inner class DetailPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+    inner class DetailPagerAdapter(fm: FragmentManager) :
+        FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         private val hymnIndices = mutableListOf<HymnNumber>()
         var preferSheetMusic: Boolean by observable(false) { property, oldValue, newValue ->
             if (oldValue != newValue) notifyDataSetChanged()

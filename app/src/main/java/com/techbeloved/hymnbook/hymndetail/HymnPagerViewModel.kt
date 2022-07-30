@@ -8,7 +8,10 @@ import com.techbeloved.hymnbook.data.repo.HymnsRepository
 import com.techbeloved.hymnbook.data.repo.OnlineRepo
 import com.techbeloved.hymnbook.playlists.PlaylistsRepo
 import com.techbeloved.hymnbook.usecases.Lce
-import com.techbeloved.hymnbook.utils.*
+import com.techbeloved.hymnbook.utils.CATEGORY_PLAYLISTS
+import com.techbeloved.hymnbook.utils.DEFAULT_CATEGORY_URI
+import com.techbeloved.hymnbook.utils.SchedulerProvider
+import com.techbeloved.hymnbook.utils.buildCategoryUri
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.ObservableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -25,12 +28,13 @@ import javax.inject.Inject
 class HymnPagerViewModel @Inject constructor(private val repository: HymnsRepository,
                                              private val playlistsRepo: PlaylistsRepo,
                                              private val onlineRepo: OnlineRepo,
-                                             private val savedStateHandle: SavedStateHandle,
+                                             savedStateHandle: SavedStateHandle,
                                              private val schedulerProvider: SchedulerProvider,
                                              private val shareLinkProvider: ShareLinkProvider,
                                              private val preferencesRepo: SharedPreferencesRepo) : ViewModel() {
 
-    private val categoryUri: String get() = savedStateHandle[CATEGORY_URI_ARG]!!
+    private val detailArgs = DetailPagerFragmentArgs.fromSavedStateHandle(savedStateHandle)
+
     private val _hymnIndicesLiveData: MutableLiveData<Lce<List<HymnNumber>>> = MutableLiveData()
 
     private val _shareLinkStatus: MutableLiveData<ShareStatus> = MutableLiveData()
@@ -59,9 +63,9 @@ class HymnPagerViewModel @Inject constructor(private val repository: HymnsReposi
     }
 
     fun loadHymnIndices(@SortBy sortBy: Int = BY_NUMBER) {
-        val category = categoryUri.category()
-        val categoryId = categoryUri.categoryId()?.toInt() ?: 0
-        val indicesObservable = when (category) {
+
+        val categoryId = detailArgs.categoryId
+        val indicesObservable = when (detailArgs.category) {
             CATEGORY_PLAYLISTS -> playlistsRepo.loadHymnIndicesInPlaylist(categoryId, sortBy)
             else -> repository.loadHymnIndices(sortBy,
                     topicId = categoryId).toObservable()
@@ -81,8 +85,8 @@ class HymnPagerViewModel @Inject constructor(private val repository: HymnsReposi
     }
 
     private fun getCategoryHeader() {
-        val category = categoryUri.category()
-        val categoryId = categoryUri.categoryId()?.toInt() ?: 0
+        val category = detailArgs.category
+        val categoryId = detailArgs.categoryId
 
         val titleObservable = when (category) {
             CATEGORY_PLAYLISTS -> playlistsRepo.getPlaylistById(categoryId).map { it.title }
@@ -117,12 +121,12 @@ class HymnPagerViewModel @Inject constructor(private val repository: HymnsReposi
         shareDisposable?.dispose()
         shareDisposable = CompositeDisposable()
 
-        val category = categoryUri.category()
+        val category = detailArgs.category
 
         val browsingCategory = if (category == CATEGORY_PLAYLISTS) {
             DEFAULT_CATEGORY_URI
         } else {
-            categoryUri
+            buildCategoryUri(detailArgs.category, detailArgs.categoryId)
         }
 
         _shareLinkStatus.value = ShareStatus.Loading
