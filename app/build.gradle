@@ -10,7 +10,14 @@ apply plugin: 'dagger.hilt.android.plugin'
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 
 def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+} else {
+    keystoreProperties.setProperty("storeFile", System.getenv("KEYSTORE"))
+    keystoreProperties.setProperty("keyAlias", System.getenv("ALIAS"))
+    keystoreProperties.setProperty("keyPassword", System.getenv("KEY_PASSWORD"))
+    keystoreProperties.setProperty("storePassword", System.getenv("KEY_STORE_PASSWORD"))
+}
 
 android {
     signingConfigs {
