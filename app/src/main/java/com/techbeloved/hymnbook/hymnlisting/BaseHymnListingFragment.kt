@@ -5,12 +5,18 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.*
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,7 +37,8 @@ import java.util.concurrent.TimeUnit
 abstract class BaseHymnListingFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
     abstract var title: String
-    private lateinit var hymnListAdapter: HymnListAdapterNoDiff
+    private var _hymnListAdapter: HymnListAdapterNoDiff? = null
+    private val hymnListAdapter: HymnListAdapterNoDiff get() = _hymnListAdapter!!
 
     /**
      * Load hymn titles sorted by the key
@@ -92,17 +99,20 @@ abstract class BaseHymnListingFragment : Fragment(), PopupMenu.OnMenuItemClickLi
 
     private fun setupFilterObserver() {
         val disposable = filterPublishSubject.debounce(300, TimeUnit.MILLISECONDS)
-                .skip(1)
-                .distinctUntilChanged()
-                .subscribeOn(Schedulers.single())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ keyword -> hymnListAdapter.filter.filter(keyword) }, { Timber.w(it, "Could not do filter") })
+            .skip(1)
+            .distinctUntilChanged()
+            .subscribeOn(Schedulers.single())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { keyword -> hymnListAdapter.filter.filter(keyword) },
+                { Timber.w(it, "Could not do filter") })
         disposables.add(disposable)
     }
 
     protected fun hideKeyboard(view: View) {
         if (activity != null) {
-            val inputMethodManager = requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            val inputMethodManager =
+                requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
@@ -129,7 +139,8 @@ abstract class BaseHymnListingFragment : Fragment(), PopupMenu.OnMenuItemClickLi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        preferences = PreferenceManager.getDefaultSharedPreferences(requireActivity().applicationContext)
+        preferences =
+            PreferenceManager.getDefaultSharedPreferences(requireActivity().applicationContext)
         rxPreferences = RxSharedPreferences.create(preferences)
 
         sortByPref = rxPreferences.getInteger(getString(R.string.pref_key_sort_by))
@@ -137,25 +148,43 @@ abstract class BaseHymnListingFragment : Fragment(), PopupMenu.OnMenuItemClickLi
         setupFilterObserver()
 
         val disposable = sortByPref.asObservable().subscribe(
-                {
-                    Timber.i("Current settings: %s", it)
-                    currentSortKey = when (it) {
-                        BY_TITLE -> R.id.action_sort_by_title
-                        else -> R.id.action_sort_by_number
-                    }
-                    loadHymnTitles(it)
-                }, { Timber.e(it) })
+            {
+                Timber.i("Current settings: %s", it)
+                currentSortKey = when (it) {
+                    BY_TITLE -> R.id.action_sort_by_title
+                    else -> R.id.action_sort_by_number
+                }
+                loadHymnTitles(it)
+            }, { Timber.e(it) })
         disposables.add(disposable)
     }
 
-    private lateinit var binding: FragmentSongListingBinding
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_song_listing, container, false)
+    private val binding: FragmentSongListingBinding get() = _binding!!
+    private var _binding: FragmentSongListingBinding? = null
+    private val navController by lazy { findNavController() }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_song_listing, container, false)
         binding.lifecycleOwner = this
-        NavigationUI.setupWithNavController(binding.toolbarSongListing, findNavController())
-        binding.toolbarSongListing.title = title
 
-        hymnListAdapter = HymnListAdapterNoDiff(clickListener)
+        //region Hide toolbar on first screen
+        val isFirstScreen = navController.previousBackStackEntry == null
+        if (isFirstScreen) {
+            binding.toolbarSongListing.isVisible = false
+        } else {
+            NavigationUI.setupWithNavController(
+                binding.toolbarSongListing, navController,
+                configuration = AppBarConfiguration(emptySet())
+            )
+        }
+        //endregion
+
+        binding.toolbarSongListing.title = title
+        _hymnListAdapter = HymnListAdapterNoDiff(clickListener)
         binding.recyclerviewSongList.apply {
             adapter = hymnListAdapter
             layoutManager = LinearLayoutManager(activity)
@@ -164,7 +193,9 @@ abstract class BaseHymnListingFragment : Fragment(), PopupMenu.OnMenuItemClickLi
         binding.edittextFilterHymns.setSortByClickListener {
             showSortByPopup(it)
         }
-        binding.edittextFilterHymns.setOnFocusChangeListener { view, hasFocus -> if (!hasFocus) hideKeyboard(view) }
+        binding.edittextFilterHymns.setOnFocusChangeListener { view, hasFocus ->
+            if (!hasFocus) hideKeyboard(view)
+        }
 
         observeViewModel()
 
@@ -192,5 +223,11 @@ abstract class BaseHymnListingFragment : Fragment(), PopupMenu.OnMenuItemClickLi
     override fun onDestroy() {
         super.onDestroy()
         if (!disposables.isDisposed) disposables.dispose()
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        _hymnListAdapter = null
+        super.onDestroyView()
     }
 }

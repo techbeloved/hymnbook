@@ -1,7 +1,5 @@
 package com.techbeloved.hymnbook.utils
 
-import android.net.Uri
-
 const val DYNAMIC_LINK_DOMAIN = "https://hymnbook.page.link"
 const val MINIMUM_VERSION_FOR_SHARE_LINK = 10
 const val WCCRM_LOGO_URL = "https://firebasestorage.googleapis.com/v0/b/hymnbook-50b7e.appspot.com/o/wccrm_logo.jpg?alt=media&token=8f338e20-b8e4-4ca7-8e9b-997f882ab18e"
@@ -35,49 +33,6 @@ const val CATEGORY_REGEX = """($SCHEME_HTTP|$SCHEME_NORMAL)://$AUTHORITY/(\w+)/(
  */
 const val ITEM_REGEX = """($SCHEME_HTTP|$SCHEME_NORMAL)://$AUTHORITY/(\w+)/(\d+)/hymns/(\d+)/?$"""
 
-const val CATEGORY_URI_EXTRACT_REGEX = """($SCHEME_HTTP|$SCHEME_NORMAL://$AUTHORITY/\w+/\d+)/hymns/(\d+)/?$"""
-
-/**
- * Retrieve category name from hymnbook uri. Returns null if uri is not valid category uri
- */
-fun String.category(): String? {
-    val categoryRegex = CATEGORY_REGEX.toRegex()
-    val itemRegex = ITEM_REGEX.toRegex()
-
-    return when {
-        categoryRegex matches this -> {
-            val matchResult = categoryRegex.find(this)
-            matchResult?.groupValues?.get(2)
-        }
-        itemRegex matches this -> {
-            val matchResult = itemRegex.find(this)
-            matchResult?.groupValues?.get(2)
-        }
-        else -> null
-    }
-}
-
-/**
- * Extracts category id from a hymnbook uri.
- * @return category id or null if uri is not valid
- */
-fun String.categoryId(): String? {
-    val categoryRegex = CATEGORY_REGEX.toRegex()
-    val itemRegex = ITEM_REGEX.toRegex()
-
-    return when {
-        categoryRegex matches this -> {
-            val matchResult = categoryRegex.find(this)
-            matchResult?.groupValues?.get(3)
-        }
-        itemRegex matches this -> {
-            val matchResult = itemRegex.find(this)
-            matchResult?.groupValues?.get(3)
-        }
-        else -> null
-    }
-}
-
 /**
  * Extracts hymnId from a hymnbook uri.
  * @return hymn id or null if uri is not a valid uri pointing to a hymn item
@@ -96,25 +51,6 @@ fun String.isValidCategoryUri(): Boolean {
     return categoryRegex matches this
 }
 
-fun String.isValidHymnUri(): Boolean {
-    val categoryRegex = ITEM_REGEX.toRegex()
-    return categoryRegex matches this
-}
-
-fun buildHymnbookUri(category: String, categoryId: Int, hymnId: Int? = null, scheme: String = SCHEME_NORMAL): Uri {
-    return Uri.Builder().apply {
-        scheme(scheme)
-        authority(AUTHORITY)
-        appendEncodedPath(category)
-        appendEncodedPath(categoryId.toString())
-        if (hymnId != null) {
-            appendEncodedPath("hymns")
-            appendEncodedPath(hymnId.toString())
-        }
-
-    }.build()
-}
-
 /**
  * Uses string concatenation to build a simple category uri
  */
@@ -127,12 +63,4 @@ fun String.appendHymnId(hymnId: Int): String? {
         return "$this/hymns/$hymnId"
     }
     return null
-}
-
-fun String.parentCategoryUri(): String? {
-    val itemUriRegex = CATEGORY_URI_EXTRACT_REGEX.toRegex()
-    return if (itemUriRegex matches this) {
-        val matchResult = itemUriRegex.find(this)
-        matchResult?.groupValues?.get(1)
-    } else null
 }

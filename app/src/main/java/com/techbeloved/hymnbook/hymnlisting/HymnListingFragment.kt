@@ -5,18 +5,19 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.usecases.Lce
-import com.techbeloved.hymnbook.utils.*
+import com.techbeloved.hymnbook.utils.CATEGORY_PLAYLISTS
+import com.techbeloved.hymnbook.utils.CATEGORY_TOPICS
+import com.techbeloved.hymnbook.utils.safeNavigate
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 @AndroidEntryPoint
 class HymnListingFragment : BaseHymnListingFragment() {
 
-    private lateinit var currentCategoryUri: String
+    private val hymnArgs by navArgs<HymnListingFragmentArgs>()
     private val viewModel: HymnListingViewModel by viewModels()
 
     override lateinit var title: String
@@ -24,58 +25,41 @@ class HymnListingFragment : BaseHymnListingFragment() {
     private val navController by lazy { findNavController() }
 
     override fun navigateToHymnDetail(view: View, item: HymnItemModel) {
-        navController.safeNavigate(HymnListingFragmentDirections
-                .actionHymnListingFragmentToDetailPagerFragment(currentCategoryUri.appendHymnId(item.id)!!))
-    }
 
+        navController.safeNavigate(
+            HymnListingFragmentDirections
+                .actionHymnListingFragmentToDetailPagerFragment(
+                    hymnId = item.id,
+                    category = hymnArgs.category,
+                    categoryId = hymnArgs.categoryId
+                )
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        doInOnCreate(savedInstanceState)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putString(EXTRA_CURRENT_CATEGORY_URI, currentCategoryUri)
-        super.onSaveInstanceState(outState)
+        doInOnCreate()
     }
 
     override fun observeViewModel() {
         // Monitor data
-        viewModel.hymnTitlesLiveData.observe(viewLifecycleOwner, Observer {
-            Timber.i("Receiving items")
+        viewModel.hymnTitlesLiveData.observe(viewLifecycleOwner) {
             when (it) {
                 is Lce.Loading -> showLoadingProgress(it.loading)
                 is Lce.Content -> displayContent(it.content)
                 is Lce.Error -> showLoadingProgress(false) // Possibly show error message
             }
-        })
+        }
     }
 
-    private fun doInOnCreate(savedInstanceState: Bundle?) {
-        // Get the topic id from arguments
+    private fun doInOnCreate() {
 
-        val args = arguments?.let { HymnListingFragmentArgs.fromBundle(it) }
-        if (savedInstanceState != null && savedInstanceState.containsKey(EXTRA_CURRENT_CATEGORY_URI)) {
-            currentCategoryUri = savedInstanceState.getString(EXTRA_CURRENT_CATEGORY_URI, DEFAULT_CATEGORY_URI)
+        title = hymnArgs.title
 
-        } else {
-            currentCategoryUri = args?.navUri ?: DEFAULT_CATEGORY_URI
-        }
-
-        title = args?.title.toString()
-        Timber.i("incoming Uri: %s", args?.navUri)
-        val categoryRegex = CATEGORY_REGEX.toRegex()
-
-        if (categoryRegex matches currentCategoryUri) {
-            val matchResult = categoryRegex.find(currentCategoryUri)
-            val category = matchResult?.groupValues?.get(2)
-            val categoryId = matchResult?.groupValues?.get(3)
-            Timber.i("Matched category, %s", category)
-            when (category) {
-                CATEGORY_PLAYLISTS -> viewModel.loadHymnsForPlaylist(categoryId?.toInt() ?: 1)
-                CATEGORY_TOPICS -> viewModel.loadHymnsForTopic(categoryId?.toInt() ?: 0)
-                else -> viewModel.loadHymnsForTopic()
-            }
+        when (hymnArgs.category) {
+            CATEGORY_PLAYLISTS -> viewModel.loadHymnsForPlaylist(hymnArgs.categoryId)
+            CATEGORY_TOPICS -> viewModel.loadHymnsForTopic(hymnArgs.categoryId)
+            else -> viewModel.loadHymnsForTopic()
         }
 
     }
@@ -89,5 +73,3 @@ class HymnListingFragment : BaseHymnListingFragment() {
     }
 
 }
-
-const val EXTRA_CURRENT_CATEGORY_URI = "currentCategoryUri"

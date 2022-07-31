@@ -18,8 +18,6 @@ import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.FragmentSearchBinding
 import com.techbeloved.hymnbook.hymnlisting.HymnItemModel
 import com.techbeloved.hymnbook.usecases.Lce
-import com.techbeloved.hymnbook.utils.DEFAULT_CATEGORY_URI
-import com.techbeloved.hymnbook.utils.appendHymnId
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -28,8 +26,7 @@ class SearchFragment : Fragment() {
 
     private val clickListener: HymnItemModel.ClickListener<HymnItemModel> = object : HymnItemModel.ClickListener<HymnItemModel> {
         override fun onItemClick(view: View, item: HymnItemModel) {
-            findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToDetailPagerFragment(
-                    DEFAULT_CATEGORY_URI.appendHymnId(item.id)!!))
+            findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToDetailPagerFragment(item.id))
         }
 
     }
@@ -53,7 +50,7 @@ class SearchFragment : Fragment() {
     lateinit var searchResultsAdapter: SearchResultsAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
         binding.lifecycleOwner = this
         NavigationUI.setupWithNavController(binding.toolbarSearch, findNavController())
@@ -73,17 +70,17 @@ class SearchFragment : Fragment() {
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         viewModel.monitorSearch()
 
-        viewModel.searchResults.observe(viewLifecycleOwner, {
+        viewModel.searchResults.observe(viewLifecycleOwner) {
             when (it) {
                 is Lce.Loading -> showLoadingProgress(it.loading)
                 is Lce.Content -> showResults(it.content)
                 is Lce.Error -> showError(it.error)
             }
-        })
+        }
     }
 
     private fun searchHymns(query: String) {

@@ -39,18 +39,18 @@ import javax.inject.Inject
 abstract class BaseDetailPagerFragment : Fragment() {
     @Inject
     lateinit var sharedPreferencesRepo: SharedPreferencesRepo
-    private lateinit var _currentHymnCategoryUri: String
     private var _currentHymnId: Int = 1
     private val nowPlayingViewModel: NowPlayingViewModel by viewModels()
 
-    protected lateinit var binding: FragmentDetailPagerBinding
+    private var _binding: FragmentDetailPagerBinding? = null
+    protected val binding: FragmentDetailPagerBinding get() = _binding!!
     private lateinit var quickSettingsSheet: BottomSheetBehavior<CardView>
     private lateinit var playControlsSheet: BottomSheetBehavior<CardView>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail_pager, container, false)
+        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail_pager, container, false)
         binding.lifecycleOwner = this
         binding.nowPlaying = nowPlayingViewModel
 
@@ -121,11 +121,16 @@ abstract class BaseDetailPagerFragment : Fragment() {
         showStatusBar()
     }
 
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
+
     private fun setupMediaPlaybackControls() {
         // Only enable play button when music service is connected
-        nowPlayingViewModel.isConnected.observe(viewLifecycleOwner, { connected ->
+        nowPlayingViewModel.isConnected.observe(viewLifecycleOwner) { connected ->
             binding.bottomsheetPlayControls.cardViewPlayControls.isEnabled = connected
-        })
+        }
         binding.bottomsheetPlayControls.imageViewControlsPlayPause.setOnClickListener {
             nowPlayingViewModel.playMedia(_currentHymnId.toString())
         }
@@ -423,12 +428,6 @@ abstract class BaseDetailPagerFragment : Fragment() {
             _currentHymnId = value
         }
 
-    var currentCategoryUri
-        get() = _currentHymnCategoryUri
-        set(value) {
-            _currentHymnCategoryUri = value
-        }
-
     /**
      * Called upon to request sharing of hymn item
      */
@@ -436,4 +435,3 @@ abstract class BaseDetailPagerFragment : Fragment() {
 }
 
 const val EXTRA_CURRENT_ITEM_ID = "currentItemId"
-const val EXTRA_CURRENT_CATEGORY_URI = "extraCurrentItemUri"

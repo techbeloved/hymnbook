@@ -1,6 +1,5 @@
 package com.techbeloved.hymnbook.playlists
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,9 +20,7 @@ import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.FragmentPlaylistsBinding
 import com.techbeloved.hymnbook.hymnlisting.HymnItemModel
 import com.techbeloved.hymnbook.usecases.Lce
-import com.techbeloved.hymnbook.utils.AUTHORITY
-import com.techbeloved.hymnbook.utils.CATEGORY_PLAYLISTS
-import com.techbeloved.hymnbook.utils.SCHEME_NORMAL
+import com.techbeloved.hymnbook.utils.safeNavigate
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -33,47 +30,44 @@ class PlaylistsFragment : Fragment() {
     private val viewModel: PlaylistsViewModel by viewModels()
 
     private val clickListener: HymnItemModel.ClickListener<HymnItemModel> =
-            object : HymnItemModel.ClickListener<HymnItemModel> {
-                override fun onItemClick(view: View, item: HymnItemModel) {
-                    val navUri = Uri.Builder()
-                            .authority(AUTHORITY)
-                            .scheme(SCHEME_NORMAL)
-                            .appendEncodedPath(CATEGORY_PLAYLISTS)
-                            .appendEncodedPath(item.id.toString())
-                            .build()
-                    Timber.i("navUri: %s", navUri)
-                    findNavController().navigate(PlaylistsFragmentDirections
-                            .actionPlaylistsFragmentToHymnListingFragment(item.title, navUri.toString()))
-                }
-
-                override fun onOptionsMenuClicked(view: View, item: HymnItemModel) {
-                    PopupMenu(requireContext(), view).apply {
-                        inflate(R.menu.playlists_popup_menu)
-                        setOnMenuItemClickListener { menuItem ->
-                            when (menuItem.itemId) {
-                                R.id.action_delete_playlist -> {
-                                    viewModel.requestPlaylistDelete(item.id)
-                                    true
-                                }
-                                R.id.action_playlist_rename -> {
-                                    showEditPlaylistDialog(item)
-                                    true
-                                }
-
-                                else -> false
-                            }
-                        }
-                        show()
-                    }
-
-                }
+        object : HymnItemModel.ClickListener<HymnItemModel> {
+            override fun onItemClick(view: View, item: HymnItemModel) {
+                findNavController().safeNavigate(
+                    PlaylistsFragmentDirections
+                        .actionPlaylistsFragmentToHymnListingFragment(categoryId = item.id)
+                )
             }
+
+            override fun onOptionsMenuClicked(view: View, item: HymnItemModel) {
+                PopupMenu(requireContext(), view).apply {
+                    inflate(R.menu.playlists_popup_menu)
+                    setOnMenuItemClickListener { menuItem ->
+                        when (menuItem.itemId) {
+                            R.id.action_delete_playlist -> {
+                                viewModel.requestPlaylistDelete(item.id)
+                                true
+                            }
+                            R.id.action_playlist_rename -> {
+                                showEditPlaylistDialog(item)
+                                true
+                            }
+
+                            else -> false
+                        }
+                    }
+                    show()
+                }
+
+            }
+        }
 
     private val playlistsAdapter by lazy { PlaylistsAdapter(clickListener) }
 
     private lateinit var binding: FragmentPlaylistsBinding
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_playlists, container, false)
 
         NavigationUI.setupWithNavController(binding.toolbarPlaylists, findNavController())
@@ -106,22 +100,27 @@ class PlaylistsFragment : Fragment() {
     private fun showEditPlaylistDialog(item: HymnItemModel) {
         val createNewPlaylistDialog = CreateNewPlaylistDialogFragment().apply {
             arguments = Bundle().apply {
-                putParcelable(EXTRA_PLAYLIST_UPDATE_EVENT, PlaylistEvent.Update(item.id, item.title, item.subtitle
-                        ?: ""))
+                putParcelable(
+                    EXTRA_PLAYLIST_UPDATE_EVENT, PlaylistEvent.Update(
+                        item.id, item.title, item.subtitle
+                            ?: ""
+                    )
+                )
             }
         }
         createNewPlaylistDialog.show(requireFragmentManager(), null)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel.playlistsData.observe(viewLifecycleOwner, Observer {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.playlistsData.observe(viewLifecycleOwner) {
             when (it) {
                 is Lce.Content -> displayContent(it.content)
                 is Lce.Loading -> showUiLoading(true)
-                is Lce.Error -> showLoadingError(it.error)
+                is Lce.Error -> showLoadingError()
             }
-        })
+        }
 
         viewModel.playlistStatus.observe(viewLifecycleOwner, Observer { showSnackbarInfo(it) })
     }
@@ -135,9 +134,17 @@ class PlaylistsFragment : Fragment() {
             }
             is PlaylistStatus.Error -> {
                 Timber.w(status.error)
-                Snackbar.make(binding.recyclerviewPlaylists, R.string.error_deleting_playlist, Snackbar.LENGTH_LONG).show()
+                Snackbar.make(
+                    binding.recyclerviewPlaylists,
+                    R.string.error_deleting_playlist,
+                    Snackbar.LENGTH_LONG
+                ).show()
             }
-            PlaylistStatus.DeleteRequested -> Snackbar.make(binding.recyclerviewPlaylists, R.string.playlist_deleted, Snackbar.LENGTH_LONG).apply {
+            PlaylistStatus.DeleteRequested -> Snackbar.make(
+                binding.recyclerviewPlaylists,
+                R.string.playlist_deleted,
+                Snackbar.LENGTH_LONG
+            ).apply {
                 setAction("Undo") {
                     viewModel.undoDelete()
                 }
@@ -152,7 +159,7 @@ class PlaylistsFragment : Fragment() {
         binding.isEmpty = content.isEmpty()
     }
 
-    private fun showLoadingError(error: String) {
+    private fun showLoadingError() {
         showUiLoading(false)
         binding.isEmpty = false
     }

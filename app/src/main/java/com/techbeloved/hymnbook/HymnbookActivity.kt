@@ -2,7 +2,6 @@ package com.techbeloved.hymnbook
 
 import android.content.Intent
 import android.content.res.Configuration
-import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -22,11 +21,7 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.techbeloved.hymnbook.databinding.ActivityHymnbookBinding
-import com.techbeloved.hymnbook.home.HomeFragmentDirections
-import com.techbeloved.hymnbook.utils.CATEGORY_WCCRM_SHEET_MUSIC
-import com.techbeloved.hymnbook.utils.category
-import com.techbeloved.hymnbook.utils.hymnId
-import com.techbeloved.hymnbook.utils.isValidHymnUri
+import com.techbeloved.hymnbook.utils.safeNavigate
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -116,22 +111,9 @@ class HymnbookActivity : AppCompatActivity() {
                 .getDynamicLink(intent)
                 .addOnSuccessListener(this) { pendingDynamicLinkData ->
                     // Get deep link from result (may be null if no link is found)
-                    var deepLink: Uri? = null
-                    if (pendingDynamicLinkData != null) {
-                        deepLink = pendingDynamicLinkData.link
-                    }
-
-                    Timber.i("Deep link received: %s", deepLink)
-
-                    deepLink?.let { uri ->
-                        val uriString = uri.toString()
-                        if (uriString.category() == CATEGORY_WCCRM_SHEET_MUSIC && uriString.isValidHymnUri()) {
-                            navController.navigate(HomeFragmentDirections
-                                    .actionHomeFragmentToSheetMusicPagerFragment(uriString.hymnId()?.toInt()
-                                            ?: 1))
-                        } else {
-                            navController.navigate(HomeFragmentDirections.actionHomeFragmentToDetailPagerFragment(uriString))
-                        }
+                    val deepLink = pendingDynamicLinkData?.link
+                    if (deepLink != null) {
+                        navController.safeNavigate(deepLink)
                     }
 
                 }
@@ -142,6 +124,5 @@ class HymnbookActivity : AppCompatActivity() {
         super.onDestroy()
         if (!disposables.isDisposed) disposables.dispose()
         viewModel.updateAppFirstStart(false)
-        //unregisterReceiver(onDownloadComplete)
     }
 }
