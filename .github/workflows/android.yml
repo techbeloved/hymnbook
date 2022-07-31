@@ -17,7 +17,7 @@ jobs:
       KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       ALIAS: ${{ secrets.ALIAS }}
       KEYSTORE: "android-signing-keystore.jks"
-
+      HYMBOOK_GOOGLE_JSON: ${{ secrets.HYMBOOK_GOOGLE_JSON }}
     steps:
     - uses: actions/checkout@v3
     - name: set up JDK 11
@@ -32,6 +32,8 @@ jobs:
     - name: Build with Gradle
       run: |
         export KEYSTORE=$(readlink -f $KEYSTORE)
+        echo $KEYSTORE
         echo "$SIGNING_KEY" | base64 -d > "$KEYSTORE"
+        echo "$HYMBOOK_GOOGLE_JSON" | base64 -d > app/google-services.json
 
         ./gradlew assembleDebug assembleRelease
