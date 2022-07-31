@@ -26,8 +26,10 @@ jobs:
         KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         ALIAS: ${{ secrets.ALIAS }}
-        KEYSTORE: "$HOME/android-signing-keystore.jks"
-      run: echo "$SIGNING_KEY" | base64 -d > "$KEYSTORE"
+        KEYSTORE: "android-signing-keystore.jks"
+      run: |
+        export KEYSTORE=$(readlink -f $KEYSTORE)
+        echo "$SIGNING_KEY" | base64 -d > "$KEYSTORE"
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
