@@ -11,6 +11,13 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+      KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      ALIAS: ${{ secrets.ALIAS }}
+      KEYSTORE: "android-signing-keystore.jks"
+      HYMBOOK_GOOGLE_JSON: ${{ secrets.HYMBOOK_GOOGLE_JSON }}
     steps:
     - uses: actions/checkout@v3
     - name: set up JDK 11
@@ -19,19 +26,14 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: gradle
-        
-    - name: Setup signing
-      env:
-        SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-        KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
-        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        ALIAS: ${{ secrets.ALIAS }}
-        KEYSTORE: "android-signing-keystore.jks"
-      run: |
-        export KEYSTORE=$(readlink -f $KEYSTORE)
-        echo "$SIGNING_KEY" | base64 -d > "$KEYSTORE"
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew assembleDebug assembleRelease
+      run: |
+        export KEYSTORE=$(readlink -f $KEYSTORE)
+        echo $KEYSTORE
+        echo "$SIGNING_KEY" | base64 -d > "$KEYSTORE"
+        echo "$HYMBOOK_GOOGLE_JSON" | base64 -d > app/google-services.json
+
+        ./gradlew assembleDebug assembleRelease
