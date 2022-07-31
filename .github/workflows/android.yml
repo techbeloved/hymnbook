@@ -35,6 +35,5 @@ jobs:
         echo $KEYSTORE
         echo "$SIGNING_KEY" | base64 -d > "$KEYSTORE"
         echo "$HYMBOOK_GOOGLE_JSON" | base64 -d > app/google-services.json
-        cat app/google-services.json
 
         ./gradlew assembleDebug assembleRelease
