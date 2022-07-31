@@ -20,6 +20,7 @@ import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.databinding.FragmentPlaylistsBinding
 import com.techbeloved.hymnbook.hymnlisting.HymnItemModel
 import com.techbeloved.hymnbook.usecases.Lce
+import com.techbeloved.hymnbook.utils.CATEGORY_PLAYLISTS
 import com.techbeloved.hymnbook.utils.safeNavigate
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -34,7 +35,11 @@ class PlaylistsFragment : Fragment() {
             override fun onItemClick(view: View, item: HymnItemModel) {
                 findNavController().safeNavigate(
                     PlaylistsFragmentDirections
-                        .actionPlaylistsFragmentToHymnListingFragment(categoryId = item.id)
+                        .actionPlaylistsFragmentToHymnListingFragment(
+                            categoryId = item.id,
+                            category = CATEGORY_PLAYLISTS,
+                            title = item.title
+                        )
                 )
             }
 
