@@ -9,7 +9,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintlayout_tempo_selector"
         android:layout_width="match_parent"
-        android:layout_height="104dp">
+        android:layout_height="104dp"
+        android:minHeight="104dp">
 
         <SeekBar
             android:id="@+id/seekBar_tempo_selector"
@@ -39,7 +40,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
             android:text="@string/tempo_10"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
             android:textSize="12sp"
