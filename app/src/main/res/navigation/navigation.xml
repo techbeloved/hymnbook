@@ -12,7 +12,40 @@
         tools:layout="@layout/fragment_song_listing">
         <action
             android:id="@+id/action_hymnListingFragment_to_detailPagerFragment"
-            app:destination="@id/detailPagerFragment" />
+            app:destination="@id/detailPagerFragment"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait"
+            app:popEnterAnim="@anim/wait"
+            app:popExitAnim="@anim/slide_right"/>
+        <argument
+            android:name="title"
+            android:defaultValue="Hymns"
+            app:argType="string" />
+        <argument
+            android:name="category"
+            android:defaultValue="wccrm"
+            app:argType="string" />
+        <argument
+            android:name="categoryId"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <deepLink
+            android:id="@+id/deepLink"
+            app:uri="https://hymnbook.com/{category}/{categoryId}" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/hymnListingFragment2"
+        android:name="com.techbeloved.hymnbook.hymnlisting.HymnListingFragment"
+        android:label="Hymns"
+        tools:layout="@layout/fragment_song_listing">
+        <action
+            android:id="@+id/action_hymnListingFragment_to_detailPagerFragment"
+            app:destination="@id/detailPagerFragment"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait"
+            app:popEnterAnim="@anim/wait"
+            app:popExitAnim="@anim/slide_right"/>
         <argument
             android:name="title"
             android:defaultValue="Hymns"
@@ -59,10 +92,10 @@
         <action
             android:id="@+id/action_searchFragment_to_detailPagerFragment"
             app:destination="@id/detailPagerFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait"
+            app:popEnterAnim="@anim/wait"
+            app:popExitAnim="@anim/slide_right" />
     </fragment>
     <fragment
         android:id="@+id/moreFragment"
@@ -71,10 +104,18 @@
         tools:layout="@layout/fragment_more">
         <action
             android:id="@+id/action_moreFragment_to_settingsActivity"
-            app:destination="@id/settingsActivity" />
+            app:destination="@id/settingsActivity"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait"
+            app:popEnterAnim="@anim/wait"
+            app:popExitAnim="@anim/slide_right"/>
         <action
             android:id="@+id/action_moreFragment_to_aboutFragment"
-            app:destination="@id/aboutFragment" />
+            app:destination="@id/aboutFragment"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait"
+            app:popEnterAnim="@anim/wait"
+            app:popExitAnim="@anim/slide_right"/>
     </fragment>
     <activity
         android:id="@+id/settingsActivity"
@@ -82,36 +123,17 @@
         android:label="@string/action_settings"
         tools:layout="@layout/activity_settings_main" />
     <fragment
-        android:id="@+id/sheetMusicListing"
-        android:name="com.techbeloved.hymnbook.sheetmusic.SheetMusicListingFragment"
-        android:label="Sheet Music"
-        tools:layout="@layout/fragment_song_listing">
-        <action
-            android:id="@+id/action_sheetMusicListing_to_sheetMusicPagerFragment"
-            app:destination="@id/sheetMusicPagerFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/sheetMusicPagerFragment"
-        android:name="com.techbeloved.hymnbook.sheetmusic.SheetMusicPagerFragment"
-        android:label="Sheet Music"
-        tools:layout="@layout/fragment_sheet_music_detail">
-        <argument
-            android:name="hymnId"
-            android:defaultValue="1"
-            app:argType="integer" />
-    </fragment>
-    <fragment
         android:id="@+id/topicsFragment"
         android:name="com.techbeloved.hymnbook.topics.TopicsFragment"
         android:label="Topics"
         tools:layout="@layout/topics_fragment">
         <action
             android:id="@+id/action_topicsFragment_to_hymnListingFragment"
-            app:destination="@id/hymnListingFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:destination="@id/hymnListingFragment2"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait"
+            app:popEnterAnim="@anim/wait"
+            app:popExitAnim="@anim/slide_right" />
     </fragment>
     <fragment
         android:id="@+id/playlistsFragment"
@@ -120,7 +142,11 @@
         tools:layout="@layout/fragment_playlists">
         <action
             android:id="@+id/action_playlistsFragment_to_hymnListingFragment"
-            app:destination="@id/hymnListingFragment" />
+            app:destination="@id/hymnListingFragment2"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait"
+            app:popEnterAnim="@anim/wait"
+            app:popExitAnim="@anim/slide_right"/>
     </fragment>
     <fragment
         android:id="@+id/aboutFragment"
@@ -129,10 +155,18 @@
         tools:layout="@layout/fragment_about">
         <action
             android:id="@+id/action_aboutFragment_to_openSourceLicensesFragment"
-            app:destination="@id/openSourceLicensesFragment" />
+            app:destination="@id/openSourceLicensesFragment"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait"
+            app:popEnterAnim="@anim/wait"
+            app:popExitAnim="@anim/slide_right"/>
         <action
             android:id="@+id/action_aboutFragment_to_acknowledgementFragment"
-            app:destination="@id/acknowledgementFragment" />
+            app:destination="@id/acknowledgementFragment"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait"
+            app:popEnterAnim="@anim/wait"
+            app:popExitAnim="@anim/slide_right"/>
     </fragment>
     <fragment
         android:id="@+id/openSourceLicensesFragment"

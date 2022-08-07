@@ -55,11 +55,11 @@ class HymnbookActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             // Hide the bottom navigation in detail view
             when (destination.id) {
-                R.id.detailPagerFragment,
-                R.id.sheetMusicPagerFragment -> if (binding.bottomNavigationMain.isVisible) {
+                R.id.detailPagerFragment -> if (binding.bottomNavigationMain.isVisible) {
                     binding.bottomNavigationMain.visibility = View.INVISIBLE
                 }
-                else -> if (!binding.bottomNavigationMain.isVisible) binding.bottomNavigationMain.visibility = View.VISIBLE
+                else -> if (!binding.bottomNavigationMain.isVisible) binding.bottomNavigationMain.visibility =
+                    View.VISIBLE
             }
         }
 
@@ -73,7 +73,9 @@ class HymnbookActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return (navController.currentDestination?.id != item.itemId && item.onNavDestinationSelected(navController))
+        return (navController.currentDestination?.id != item.itemId && item.onNavDestinationSelected(
+            navController
+        ))
                 || super.onOptionsItemSelected(item)
     }
 
@@ -82,42 +84,45 @@ class HymnbookActivity : AppCompatActivity() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         val rxPreferences = RxSharedPreferences.create(sharedPreferences)
 
-        val nightModePreference: Preference<Boolean> = rxPreferences.getBoolean(getString(R.string.pref_key_enable_night_mode), false)
+        val nightModePreference: Preference<Boolean> =
+            rxPreferences.getBoolean(getString(R.string.pref_key_enable_night_mode), false)
         val disposable = nightModePreference.asObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { enable ->
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { enable ->
 
-                    // If already in night mode, do nothing, and otherwise
-                    when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
-                        Configuration.UI_MODE_NIGHT_NO -> {
-                            if (enable) delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
-                            else delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                // If already in night mode, do nothing, and otherwise
+                when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+                    Configuration.UI_MODE_NIGHT_NO -> {
+                        if (enable) delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
+                        else delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
 
-                        }
-                        Configuration.UI_MODE_NIGHT_YES -> {
-                            if (!enable) delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-                        }
-                        Configuration.UI_MODE_NIGHT_UNDEFINED -> {
-                            if (!enable) delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-                        }
+                    }
+                    Configuration.UI_MODE_NIGHT_YES -> {
+                        if (!enable) delegate.localNightMode =
+                            AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                    }
+                    Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+                        if (!enable) delegate.localNightMode =
+                            AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
                     }
                 }
+            }
         disposables.add(disposable)
     }
 
     private fun handleDynamicLinks(intent: Intent) {
         FirebaseDynamicLinks.getInstance()
-                .getDynamicLink(intent)
-                .addOnSuccessListener(this) { pendingDynamicLinkData ->
-                    // Get deep link from result (may be null if no link is found)
-                    val deepLink = pendingDynamicLinkData?.link
-                    if (deepLink != null) {
-                        navController.safeNavigate(deepLink)
-                    }
-
+            .getDynamicLink(intent)
+            .addOnSuccessListener(this) { pendingDynamicLinkData ->
+                // Get deep link from result (may be null if no link is found)
+                val deepLink = pendingDynamicLinkData?.link
+                if (deepLink != null) {
+                    navController.safeNavigate(deepLink)
                 }
-                .addOnFailureListener(this) { e -> Timber.w(e, "getDynamicLink:onFailure") }
+
+            }
+            .addOnFailureListener(this) { e -> Timber.w(e, "getDynamicLink:onFailure") }
     }
 
     override fun onDestroy() {
