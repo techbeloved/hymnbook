@@ -89,7 +89,7 @@ data class Hymn(var id: String, @PrimaryKey var num: Int, var title: String, var
     }
 }
 
-@IntDef(DOWNLOADED, DOWNLOAD_IN_PROGRESS, DOWNLOAD_FAILED, NONE)
+@IntDef(READY, DOWNLOADED, DOWNLOAD_IN_PROGRESS, DOWNLOAD_FAILED, NONE)
 @Retention(AnnotationRetention.SOURCE)
 annotation class Status
 

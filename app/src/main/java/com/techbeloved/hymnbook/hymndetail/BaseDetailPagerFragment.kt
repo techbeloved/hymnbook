@@ -14,6 +14,7 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
@@ -26,6 +27,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.data.SharedPreferencesRepo
+import com.techbeloved.hymnbook.data.model.NightMode
 import com.techbeloved.hymnbook.databinding.DialogTempoSelectorBinding
 import com.techbeloved.hymnbook.databinding.FragmentDetailPagerBinding
 import com.techbeloved.hymnbook.nowplaying.NowPlayingViewModel
@@ -41,16 +43,20 @@ abstract class BaseDetailPagerFragment : Fragment() {
     lateinit var sharedPreferencesRepo: SharedPreferencesRepo
     private var _currentHymnId: Int = 1
     private val nowPlayingViewModel: NowPlayingViewModel by viewModels()
+    private val quickSettingsViewModel: QuickSettingsViewModel by activityViewModels()
 
     private var _binding: FragmentDetailPagerBinding? = null
     protected val binding: FragmentDetailPagerBinding get() = _binding!!
     private lateinit var quickSettingsSheet: BottomSheetBehavior<CardView>
     private lateinit var playControlsSheet: BottomSheetBehavior<CardView>
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
-        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail_pager, container, false)
+        _binding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_detail_pager, container, false)
         binding.lifecycleOwner = this
         binding.nowPlaying = nowPlayingViewModel
 
@@ -81,9 +87,11 @@ abstract class BaseDetailPagerFragment : Fragment() {
         }
 
         quickSettingsSheet = BottomSheetBehavior.from(
-                binding.bottomsheetQuickSettings.cardviewQuickSettings)
+            binding.bottomsheetQuickSettings.cardviewQuickSettings
+        )
         playControlsSheet = BottomSheetBehavior.from(
-                binding.bottomsheetPlayControls.cardViewPlayControls)
+            binding.bottomsheetPlayControls.cardViewPlayControls
+        )
         setupQuickSettings()
 
         setupMediaPlaybackControls()
@@ -95,26 +103,33 @@ abstract class BaseDetailPagerFragment : Fragment() {
 
     private var previousState = ViewPager.SCROLL_STATE_IDLE
     private var userScrollChange = false
-    private val pageChangeListener: ViewPager.OnPageChangeListener = object : ViewPager.OnPageChangeListener {
-        override fun onPageScrollStateChanged(state: Int) {
-            if (previousState == ViewPager.SCROLL_STATE_DRAGGING
-                    && state == ViewPager.SCROLL_STATE_SETTLING)
-                userScrollChange = true
-            else if (previousState == ViewPager.SCROLL_STATE_SETTLING
-                    && state == ViewPager.SCROLL_STATE_IDLE)
-                userScrollChange = false
+    private val pageChangeListener: ViewPager.OnPageChangeListener =
+        object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+                if (previousState == ViewPager.SCROLL_STATE_DRAGGING
+                    && state == ViewPager.SCROLL_STATE_SETTLING
+                )
+                    userScrollChange = true
+                else if (previousState == ViewPager.SCROLL_STATE_SETTLING
+                    && state == ViewPager.SCROLL_STATE_IDLE
+                )
+                    userScrollChange = false
 
-            previousState = state
+                previousState = state
+            }
+
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                if (userScrollChange) nowPlayingViewModel.skipTo(position)
+            }
+
         }
-
-        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-        }
-
-        override fun onPageSelected(position: Int) {
-            if (userScrollChange) nowPlayingViewModel.skipTo(position)
-        }
-
-    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -164,14 +179,20 @@ abstract class BaseDetailPagerFragment : Fragment() {
         nowPlayingViewModel.isPlaying.observe(viewLifecycleOwner) { playing ->
             if (playing) {
                 val playToPause =
-                    ContextCompat.getDrawable(requireContext(), R.drawable.avd_play_to_pause) as AnimatedVectorDrawable
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.avd_play_to_pause
+                    ) as AnimatedVectorDrawable
                 binding.bottomsheetPlayControls.imageViewControlsPlayPause.setImageDrawable(
                     playToPause
                 )
                 playToPause.start()
             } else {
                 val pauseToPlay =
-                    ContextCompat.getDrawable(requireContext(), R.drawable.avd_pause_to_play) as AnimatedVectorDrawable
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.avd_pause_to_play
+                    ) as AnimatedVectorDrawable
                 binding.bottomsheetPlayControls.imageViewControlsPlayPause.setImageDrawable(
                     pauseToPlay
                 )
@@ -237,7 +258,8 @@ abstract class BaseDetailPagerFragment : Fragment() {
     @RequiresApi(23)
     private fun setupTempoControls() {
         val tempoDialog = BottomSheetDialog(requireActivity())
-        val tempoViewBinding: DialogTempoSelectorBinding = DataBindingUtil.inflate(layoutInflater, R.layout.dialog_tempo_selector, null, false)
+        val tempoViewBinding: DialogTempoSelectorBinding =
+            DataBindingUtil.inflate(layoutInflater, R.layout.dialog_tempo_selector, null, false)
         tempoDialog.setContentView(tempoViewBinding.root)
 
         nowPlayingViewModel.playbackTempo.observe(viewLifecycleOwner) {
@@ -245,22 +267,26 @@ abstract class BaseDetailPagerFragment : Fragment() {
         }
 
         tempoViewBinding.seekBarTempoSelector.setOnSeekBarChangeListener(
-                object : SeekBar.OnSeekBarChangeListener {
-                    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                        if (fromUser) {
-                            nowPlayingViewModel.saveTempo(progress)
-                        }
+            object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(
+                    seekBar: SeekBar?,
+                    progress: Int,
+                    fromUser: Boolean
+                ) {
+                    if (fromUser) {
+                        nowPlayingViewModel.saveTempo(progress)
                     }
+                }
 
-                    override fun onStartTrackingTouch(seekBar: SeekBar?) {
-
-                    }
-
-                    override fun onStopTrackingTouch(seekBar: SeekBar?) {
-
-                    }
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {
 
                 }
+
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+
+                }
+
+            }
         )
         binding.bottomsheetPlayControls.textControlsTempo.setOnClickListener {
             tempoDialog.show()
@@ -293,17 +319,16 @@ abstract class BaseDetailPagerFragment : Fragment() {
         val rxPreferences = RxSharedPreferences.create(sharedPreferences)
         val defaultTextSize = resources.getInteger(R.integer.normal_detail_text_size).toFloat()
         val fontSizePreference: Preference<Float> = rxPreferences.getFloat(
-                getString(R.string.pref_key_detail_font_size), defaultTextSize)
+            getString(R.string.pref_key_detail_font_size), defaultTextSize
+        )
 
         // Example, max_text_size = 6, maxIncrement = 6/20 = 0.3. So we cannot add more than 0.3 to original text size
         val maxTextIncrement = resources.getInteger(R.integer.max_text_size)
         val minTextIncrement = resources.getInteger(R.integer.min_text_size)
-        Timber.i("minTextSize: %s", minTextIncrement)
 
         binding.bottomsheetQuickSettings.buttonQuickSettingsFontIncrease.setOnClickListener { v ->
             val currentSize = fontSizePreference.get()
             if (currentSize - defaultTextSize < maxTextIncrement) {
-                Timber.i("Current: %s", currentSize)
                 fontSizePreference.set(currentSize + 1f)
             }
         }
@@ -312,33 +337,43 @@ abstract class BaseDetailPagerFragment : Fragment() {
             val currentSize = fontSizePreference.get()
             if (currentSize - defaultTextSize > minTextIncrement) {
                 fontSizePreference.set(currentSize - 1f)
-                Timber.i("Current: %s", currentSize)
             }
         }
 
         // night Mode
-        val nightModePreference: Preference<Boolean> = rxPreferences.getBoolean(getString(R.string.pref_key_enable_night_mode), false)
-        val darkModeEnabled = nightModePreference.get()
-        if (darkModeEnabled) {
-            binding.bottomsheetQuickSettings.radiobuttonQuickSettingsDarkTheme.isChecked = true
-        } else {
-            binding.bottomsheetQuickSettings.radiobuttonQuickSettingsLightTheme.isChecked = true
+
+        quickSettingsViewModel.nightMode.observe(viewLifecycleOwner) { nightMode: NightMode ->
+            when (nightMode) {
+                NightMode.On -> binding.bottomsheetQuickSettings
+                    .radiobuttonQuickSettingsDarkTheme.isChecked = true
+                NightMode.Off -> binding.bottomsheetQuickSettings
+                    .radiobuttonQuickSettingsLightTheme.isChecked = true
+                NightMode.System -> binding.bottomsheetQuickSettings
+                    .radiobuttonQuickSettingsSystemTheme.isChecked = true
+            }
         }
-        binding.bottomsheetQuickSettings.radiogroupQuickSettingsThemeSelector.setOnCheckedChangeListener { group, checkedId ->
-            if (checkedId == R.id.radiobutton_quick_settings_dark_theme) {
-                nightModePreference.set(true)
-            } else if (checkedId == R.id.radiobutton_quick_settings_light_theme) {
-                nightModePreference.set(false)
+        binding.bottomsheetQuickSettings.radiogroupQuickSettingsThemeSelector.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.radiobutton_quick_settings_dark_theme -> {
+                    quickSettingsViewModel.setNightMode(NightMode.On)
+                }
+                R.id.radiobutton_quick_settings_light_theme -> {
+                    quickSettingsViewModel.setNightMode(NightMode.Off)
+                }
+                R.id.radiobutton_quick_settings_system_theme -> {
+                    quickSettingsViewModel.setNightMode(NightMode.System)
+                }
             }
         }
 
         // Display options
         // Set the initial value before listening to further changes
-        val preferSheetMusic = rxPreferences.getBoolean(getString(R.string.pref_key_prefer_sheet_music), false).get()
-        binding.bottomsheetQuickSettings.switchQuickSettingsPreferSheetMusic.apply {
-            isChecked = preferSheetMusic
-            setOnCheckedChangeListener { _, isChecked ->
-                sharedPreferencesRepo.updatePreferSheetMusic(isChecked)
+        quickSettingsViewModel.enableSheetMusic.observe(viewLifecycleOwner) { enabled: Boolean ->
+            binding.bottomsheetQuickSettings.switchQuickSettingsPreferSheetMusic.apply {
+                isChecked = enabled
+                setOnCheckedChangeListener { _, isChecked ->
+                    quickSettingsViewModel.preferSheetMusic(isChecked)
+                }
             }
         }
     }
@@ -365,7 +400,8 @@ abstract class BaseDetailPagerFragment : Fragment() {
         var newUiOptions = requireActivity().window.decorView.systemUiVisibility
         // END_INCLUDE (get_current_ui_flags)
         // Hide or show toolbar accordingly
-        val isImmersiveModeEnabled = newUiOptions or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY == newUiOptions
+        val isImmersiveModeEnabled =
+            newUiOptions or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY == newUiOptions
         if (isImmersiveModeEnabled) {
             binding.toolbarDetail.visibility = View.VISIBLE
         } else {
@@ -393,7 +429,8 @@ abstract class BaseDetailPagerFragment : Fragment() {
 
     private fun showStatusBar() {
         var newUiOptions = requireActivity().window.decorView.systemUiVisibility
-        val isImmersiveModeEnabled = newUiOptions or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY == newUiOptions
+        val isImmersiveModeEnabled =
+            newUiOptions or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY == newUiOptions
         if (isImmersiveModeEnabled) {
 
             newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_HIDE_NAVIGATION

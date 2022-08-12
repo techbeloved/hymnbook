@@ -1,5 +1,6 @@
 package com.techbeloved.hymnbook.sheetmusic
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +22,8 @@ import java.io.File
 class SheetMusicDetailFragment : Fragment() {
 
     private var hymnId: Int = 1
-    private lateinit var binding: FragmentSheetMusicDetailBinding
+    private  var _binding: FragmentSheetMusicDetailBinding? = null
+    private  val binding: FragmentSheetMusicDetailBinding get() = _binding!!
     private val viewModel: SheetMusicDetailViewModel by viewModels()
 
     private val hymnDetailObserver: Observer<Lce<SheetMusicState>> = Observer { hymnLce ->
@@ -32,9 +34,18 @@ class SheetMusicDetailFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         super.onCreateView(inflater, container, savedInstanceState)
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_sheet_music_detail, container, false)
+        _binding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_sheet_music_detail,
+            container,
+            false
+        )
 
         binding.textviewErrorLoadingDetail.setOnClickListener {
             viewModel.download(hymnId)
@@ -74,36 +85,37 @@ class SheetMusicDetailFragment : Fragment() {
                 showProgress(content.downloadProgress)
             }
             is SheetMusicState.Ready -> {
-                binding.pdfViewSheetMusicDetail.fromFile(File(content.localUri))
-                        .onError { error ->
-                            Timber.w(error, "Error loading document")
-                            showError("Error loading document. Tap to retry. ${error.message}", true)
-                        }
-                        .onPageError { page, t ->
-                            Timber.w(t, "Error loading page")
-                            showError("Error loading page. Tap to retry. ${t.message}", true)
-                        }
-                        .pageSnap(true)
-                        .pageFitPolicy(FitPolicy.WIDTH)
-                        .autoSpacing(false)
-                        .pageSnap(true)
-                        .enableAntialiasing(true)
-                        .nightMode(content.darkMode)
-                        .enableDoubletap(true)
-                        .load()
+                binding.pdfViewSheetMusicDetail.fromFile(File(content.localUri ?: ""))
+                    .onError { error ->
+                        Timber.w(error, "Error loading document")
+                        showError("Error loading document. Tap to retry. ${error.message}", true)
+                    }
+                    .onPageError { page, t ->
+                        Timber.w(t, "Error loading page")
+                        showError("Error loading page. Tap to retry. ${t.message}", true)
+                    }
+                    .pageSnap(true)
+                    .pageFitPolicy(FitPolicy.WIDTH)
+                    .autoSpacing(false)
+                    .pageSnap(true)
+                    .enableAntialiasing(true)
+                    .nightMode(isDarkMode())
+                    .enableDoubletap(true)
+                    .load()
                 showProgress(show = false)
             }
         }
 
     }
 
+    private fun isDarkMode(): Boolean {
+        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        return currentNightMode == Configuration.UI_MODE_NIGHT_YES
+    }
+
     private fun showProgress(progress: Int = 0, show: Boolean = true) {
-        if (show) {
-            if (!binding.progressBarSheetMusicDownloading.isVisible) binding.progressBarSheetMusicDownloading.visibility = View.VISIBLE
-            binding.progressBarSheetMusicDownloading.progress = progress
-        } else {
-            binding.progressBarSheetMusicDownloading.visibility = View.GONE
-        }
+        binding.progressBarSheetMusicDownloading.isVisible = show
+        if (show) binding.progressBarSheetMusicDownloading.progress = progress
     }
 
     private fun showError(error: String = "", show: Boolean = false) {

@@ -19,27 +19,16 @@
     <string name="text_hint_filter_hymns">Filter Hymns</string>
 
     <string name="hymn_no_temp">Hymn, %1$d</string>
-    <string name="pref_key_sort_by">filter_by</string>
     <string name="label_sort_by_number">Sort by number</string>
     <string name="label_sort_by_title">Sort by title</string>
-    <string name="pref_key_enable_night_mode">night_mode_switch</string>
-    <string name="pref_key_category_app_theme">pref_category_app_theme</string>
-    <string name="pref_key_detail_font_size">detail_font_size</string>
     <string name="title_more">More</string>
     <string name="text_hymn_of_the_day">Hymn of the day</string>
     <string name="text_share">Share</string>
     <string name="label_sheet_music">Sheet Music</string>
-    <string name="pref_key_first_start" translatable="false">first_start</string>
-    <string name="pref_key_current_download_id" translatable="false">download_id</string>
     <string name="file_path_catalogs" translatable="false">catalogs/</string>
     <string name="file_path_midi">midi</string>
     <string name="file_path_downloads">downloads</string>
-    <string name="pref_key_hymn_catalog_ready">hymn_catalog_ready</string>
-    <string name="pref_key_hymn_midi_files_ready">hymn_midi_files_ready</string>
-    <string name="pref_key_hymn_catalog_download_status">hymn_catalog_download_status</string>
-    <string name="pref_key_hymn_catalog_download_id">hymn_catalog_download_id</string>
     <string name="description_bottom_sheet_drag_button">Bottom sheet drag button</string>
-    <string name="pref_key_saved_midi_version">saved_midi_version</string>
     <string name="file_path_artifacts">artifacts/</string>
     <string name="file_path_midi_archive">hymns.zip</string>
     <string name="notification_play">Play</string>
@@ -61,8 +50,6 @@
     <string name="tempo_05">0.5×</string>
     <string name="tempo_15">1.5×</string>
     <string name="tempo_10">1.0×</string>
-    <string name="pref_key_playback_rate">key_playback_rate</string>
-    <string name="pref_key_repeat_mode">key_repeat_mode</string>
     <string name="new_playlist_text">New playlist</string>
     <string name="add_new_playlist">Add new playlist</string>
     <string name="ok_text">OK</string>
@@ -126,7 +113,22 @@
     <string name="link_timelesstruths">https://library.timelesstruths.org/music/</string>
     <string name="link_cyberhymnal">http://www.hymntime.com/tch/index.htm</string>
     <string name="link_hymnary">https://hymnary.org/</string>
-    <string name="pref_key_prefer_sheet_music">prefer_sheet_music_display</string>
+
+    <!-- Preference keys   -->
+    <string name="pref_key_first_start" translatable="false">first_start</string>
+    <string name="pref_key_saved_midi_version" translatable="false">saved_midi_version</string>
+    <string name="pref_key_playback_rate" translatable="false">key_playback_rate</string>
+    <string name="pref_key_repeat_mode" translatable="false">key_repeat_mode</string>
+    <string name="pref_key_prefer_sheet_music" translatable="false">prefer_sheet_music_display</string>
+    <string name="pref_key_sort_by" translatable="false">filter_by</string>
+    <string name="pref_key_enable_night_mode" translatable="false">night_mode_switch_updated</string>
+    <string name="pref_key_category_app_theme" translatable="false">pref_category_app_theme</string>
+    <string name="pref_key_detail_font_size" translatable="false">detail_font_size</string>
+    <string name="pref_key_current_download_id" translatable="false">download_id</string>
+    <string name="pref_key_hymn_catalog_ready" translatable="false">hymn_catalog_ready</string>
+    <string name="pref_key_hymn_midi_files_ready" translatable="false">hymn_midi_files_ready</string>
+    <string name="pref_key_hymn_catalog_download_status" translatable="false">hymn_catalog_download_status</string>
+    <string name="pref_key_hymn_catalog_download_id" translatable="false">hymn_catalog_download_id</string>
 
     <string-array name="tempo_values">
         <item>0.5×</item>
@@ -136,5 +138,12 @@
         <item>1.1×</item>
         <item>1.3×</item>
         <item>1.5×</item>
+    </string-array>
+
+    <!--  These must correspond with NightMode enum  -->
+    <string-array name="prefs_night_mode">
+        <item>On</item>
+        <item>Off</item>
+        <item>System</item>
     </string-array>
 </resources>
