@@ -139,6 +139,11 @@ class SheetMusicDetailFragment : Fragment() {
         args.putInt(ARG_HYMN_INDEX, hymnNo)
         this.arguments = args
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }
 
 private const val ARG_HYMN_INDEX = "hymnIndex"
