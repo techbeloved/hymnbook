@@ -4,7 +4,6 @@ import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat
-import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -59,8 +58,6 @@ abstract class BaseDetailPagerFragment : Fragment() {
             DataBindingUtil.inflate(inflater, R.layout.fragment_detail_pager, container, false)
         binding.lifecycleOwner = this
         binding.nowPlaying = nowPlayingViewModel
-
-        setupImmersiveMode() // Immersive mode
 
         NavigationUI.setupWithNavController(binding.toolbarDetail, findNavController())
         binding.toolbarDetail.inflateMenu(R.menu.detail)
@@ -130,11 +127,6 @@ abstract class BaseDetailPagerFragment : Fragment() {
             }
 
         }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        showStatusBar()
-    }
 
     override fun onDestroyView() {
         _binding = null
@@ -326,14 +318,14 @@ abstract class BaseDetailPagerFragment : Fragment() {
         val maxTextIncrement = resources.getInteger(R.integer.max_text_size)
         val minTextIncrement = resources.getInteger(R.integer.min_text_size)
 
-        binding.bottomsheetQuickSettings.buttonQuickSettingsFontIncrease.setOnClickListener { v ->
+        binding.bottomsheetQuickSettings.buttonQuickSettingsFontIncrease.setOnClickListener {
             val currentSize = fontSizePreference.get()
             if (currentSize - defaultTextSize < maxTextIncrement) {
                 fontSizePreference.set(currentSize + 1f)
             }
         }
 
-        binding.bottomsheetQuickSettings.buttonQuickSettingsFontDecrease.setOnClickListener { v ->
+        binding.bottomsheetQuickSettings.buttonQuickSettingsFontDecrease.setOnClickListener {
             val currentSize = fontSizePreference.get()
             if (currentSize - defaultTextSize > minTextIncrement) {
                 fontSizePreference.set(currentSize - 1f)
@@ -375,69 +367,6 @@ abstract class BaseDetailPagerFragment : Fragment() {
                     quickSettingsViewModel.preferSheetMusic(isChecked)
                 }
             }
-        }
-    }
-
-    protected fun setupImmersiveMode() {
-        // Setup the gesture listener to listen for single tap and toggle fullscreen
-        val mainView = binding.touchableFrameHymnDetail
-        val gestureListener = GestureListener {
-            toggleHideyBar()
-            false
-        }
-        val gd = GestureDetector(activity, gestureListener)
-        mainView.setGestureDetector(gd)
-    }
-
-    /**
-     * Detects and toggles immersive mode (also known as "hidey bar" mode).
-     */
-    private fun toggleHideyBar() {
-
-        // BEGIN_INCLUDE (get_current_ui_flags)
-        // The UI options currently enabled are represented by a bitfield.
-        // getSystemUiVisibility() gives us that bitfield.
-        var newUiOptions = requireActivity().window.decorView.systemUiVisibility
-        // END_INCLUDE (get_current_ui_flags)
-        // Hide or show toolbar accordingly
-        val isImmersiveModeEnabled =
-            newUiOptions or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY == newUiOptions
-        if (isImmersiveModeEnabled) {
-            binding.toolbarDetail.visibility = View.VISIBLE
-        } else {
-            binding.toolbarDetail.visibility = View.GONE
-        }
-
-        // BEGIN_INCLUDE (toggle_ui_flags)
-        newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-        newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_FULLSCREEN
-
-
-        // Immersive mode: Backward compatible to KitKat.
-        // Note that this flag doesn't do anything by itself, it only augments the behavior
-        // of HIDE_NAVIGATION and FLAG_FULLSCREEN.  For the purposes of this sample
-        // all three flags are being toggled together.
-        // Note that there are two immersive mode UI flags, one of which is referred to as "sticky".
-        // Sticky immersive mode differs in that it makes the navigation and status bars
-        // semi-transparent, and the UI flag does not get cleared when the user interacts with
-        // the screen.
-        newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-
-        requireActivity().window.decorView.systemUiVisibility = newUiOptions
-        //END_INCLUDE (set_ui_flags)
-    }
-
-    private fun showStatusBar() {
-        var newUiOptions = requireActivity().window.decorView.systemUiVisibility
-        val isImmersiveModeEnabled =
-            newUiOptions or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY == newUiOptions
-        if (isImmersiveModeEnabled) {
-
-            newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-            newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_FULLSCREEN
-
-            newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-            requireActivity().window.decorView.systemUiVisibility = newUiOptions
         }
     }
 
