@@ -28,12 +28,13 @@ import timber.log.Timber
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
 
-    private lateinit var binding: FragmentDetailBinding
+    private  var _binding: FragmentDetailBinding? = null
+    private  val binding: FragmentDetailBinding get() = _binding!!
     private val viewModel: HymnDetailViewModel by viewModels()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false)
+        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false)
         binding.lifecycleOwner = this
         configureSettings()
 
@@ -114,6 +115,11 @@ class DetailFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         if (!disposables.isDisposed) disposables.dispose()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

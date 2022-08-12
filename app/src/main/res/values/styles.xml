@@ -82,11 +82,10 @@
     <style name="Hymnbook.BottomSheet" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/Hymnbook.Modal</item>
         <item name="android:windowIsFloating">false</item>
+        <item name="android:windowAnimationStyle">@style/Animation.MaterialComponents.BottomSheetDialog</item>
     </style>
 
-    <style name="Hymnbook.Modal" parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@drawable/bg_rounded_top</item>
-    </style>
+    <style name="Hymnbook.Modal" parent="Widget.MaterialComponents.BottomSheet.Modal"/>
 
     <style name="AppTheme.Launcher" parent="AppTheme">
         <item name="android:windowBackground">@drawable/bg_launch_screen</item>

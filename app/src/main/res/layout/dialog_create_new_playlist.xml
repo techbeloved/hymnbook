@@ -20,7 +20,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginRight="16dp"
             android:gravity="center"
-            android:text="Create new playlist"
+            android:text="@string/create_new_playlist"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -65,7 +65,7 @@
 
         <Button
             android:id="@+id/button_create_new_playlist_save"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
@@ -75,8 +75,6 @@
             android:enabled="false"
             android:text="@string/save"
             android:textAllCaps="false"
-            app:cornerRadius="16dp"
-            app:strokeColor="?colorPrimary"
-            app:strokeWidth="1dp" />
+            app:cornerRadius="16dp" />
     </LinearLayout>
 </layout>

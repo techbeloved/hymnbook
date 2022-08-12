@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -49,15 +50,14 @@ class AddToPlaylistDialogFragment : BottomSheetDialogFragment() {
 
     private lateinit var playlistAdapter: SimplePlaylistsAdapter
     private lateinit var binding: DialogFragmentAddToPlaylistBinding
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.dialog_fragment_add_to_playlist, container, false)
 
         val sceneRoot: ViewGroup = binding.sceneRootAddToPlaylist
-        val selectPlaylistScene = Scene.getSceneForLayout(sceneRoot, R.layout.dialog_select_playlist, requireContext())
         val createPlaylistScene = Scene.getSceneForLayout(sceneRoot, R.layout.dialog_create_new_playlist, requireContext())
 
         val slide = Slide()
-        slide.slideEdge = Gravity.RIGHT
+        slide.slideEdge = Gravity.END
         binding.dialogSelectPlaylist.buttonSelectPlaylistAddNew.setOnClickListener { TransitionManager.go(createPlaylistScene, slide) }
 
         // setup create new playlist screen
@@ -98,19 +98,18 @@ class AddToPlaylistDialogFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.playlists.observe(viewLifecycleOwner, { playlists ->
+        viewModel.playlists.observe(viewLifecycleOwner) { playlists ->
             playlistAdapter.submitList(playlists)
-        })
-        viewModel.favoriteSaved.observe(viewLifecycleOwner, { saved ->
+        }
+        viewModel.favoriteSaved.observe(viewLifecycleOwner) { saved ->
             showFavoriteSavedSnackbar(saved)
-        })
+        }
     }
 
     private fun showFavoriteSavedSnackbar(favoriteStatus: ManagePlaylistViewModel.SaveStatus) {
         when (favoriteStatus) {
             ManagePlaylistViewModel.SaveStatus.Saved -> {
-                Snackbar.make(requireView().rootView, R.string.success_adding_to_playlist, Snackbar.LENGTH_SHORT)
-                        .show()
+                Toast.makeText(requireContext(),  R.string.success_adding_to_playlist, Toast.LENGTH_SHORT).show()
             }
             is ManagePlaylistViewModel.SaveStatus.SaveFailed -> {
                 if (favoriteStatus.error is SQLiteConstraintException) {
