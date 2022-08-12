@@ -1,40 +1,31 @@
 package com.techbeloved.hymnbook.sheetmusic
 
-import com.techbeloved.hymnbook.data.SharedPreferencesRepo
 import com.techbeloved.hymnbook.data.download.Downloader
-import com.techbeloved.hymnbook.data.model.*
+import com.techbeloved.hymnbook.data.model.DOWNLOAD_FAILED
+import com.techbeloved.hymnbook.data.model.DOWNLOAD_IN_PROGRESS
+import com.techbeloved.hymnbook.data.model.Hymn
+import com.techbeloved.hymnbook.data.model.HymnTitle
+import com.techbeloved.hymnbook.data.model.READY
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
 import com.techbeloved.hymnbook.data.repo.OnlineRepo
 import com.techbeloved.hymnbook.hymnlisting.TitleItem
 import com.techbeloved.hymnbook.utils.SchedulerProvider
 import io.reactivex.FlowableTransformer
 import io.reactivex.Observable
-import io.reactivex.functions.BiFunction
 import javax.inject.Inject
 
-class HymnsUseCasesImp @Inject constructor(private val hymnsRepository: HymnsRepository,
-                                           private val onlineRepo: OnlineRepo,
-                                           private val schedulerProvider: SchedulerProvider,
-                                           private val downloader: Downloader,
-                                           private val sharedPreferences: SharedPreferencesRepo) : HymnUseCases {
+class HymnsUseCasesImp @Inject constructor(
+    private val hymnsRepository: HymnsRepository,
+    private val onlineRepo: OnlineRepo,
+    private val schedulerProvider: SchedulerProvider,
+    private val downloader: Downloader
+) : HymnUseCases {
 
     override fun hymnSheetMusicDetail(hymnId: Int): Observable<SheetMusicState> {
-        // We want to get the latest night mode and push it to the screen since our pdf viewer will
-        // have to set it's own night mode apart from system
-        return Observable.combineLatest(
-                hymnsRepository.getHymnById(hymnId)
-                        .compose(resolveSheetMusicState()).toObservable(),
-                sharedPreferences.isNightModeActive()
-                        .subscribeOn(schedulerProvider.io()),
 
-                BiFunction<SheetMusicState, Boolean, SheetMusicState> { state, nightMode ->
-                    when (state) {
-                        is SheetMusicState.Ready -> state.copy(darkMode = nightMode)
-                        else -> state
-                    }
-                })
-
-                .observeOn(schedulerProvider.ui())
+        return hymnsRepository.getHymnById(hymnId)
+            .compose(resolveSheetMusicState()).toObservable()
+            .observeOn(schedulerProvider.ui())
 
     }
 

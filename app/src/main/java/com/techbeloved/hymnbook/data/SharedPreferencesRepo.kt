@@ -1,5 +1,6 @@
 package com.techbeloved.hymnbook.data
 
+import com.techbeloved.hymnbook.data.model.NightMode
 import io.reactivex.Observable
 import io.reactivex.Single
 
@@ -28,12 +29,12 @@ interface SharedPreferencesRepo {
     /**
      * Returns night mode preference.
      */
-    fun isNightModeActive(): Observable<Boolean>
+    fun nightModeActive(): Observable<NightMode>
 
     /**
      * Updates the night mode preference
      */
-    fun setNightModeActive(value: Boolean)
+    fun setNightModeActive(mode: NightMode)
 
     /**
      * Checks that midi files are ready

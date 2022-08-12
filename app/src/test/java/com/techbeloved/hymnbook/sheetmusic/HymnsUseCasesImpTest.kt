@@ -41,11 +41,10 @@ class HymnsUseCasesImpTest {
     fun setUp() {
         schedulerProvider = ImmediateSchedulerProvider()
         subject = HymnsUseCasesImp(
-                hymnsRepoMock,
-                onlineRepoMock,
-                schedulerProvider,
-                downloaderMock,
-                sharePrefsRepoMock
+            hymnsRepoMock,
+            onlineRepoMock,
+            schedulerProvider,
+            downloaderMock
         )
 
 

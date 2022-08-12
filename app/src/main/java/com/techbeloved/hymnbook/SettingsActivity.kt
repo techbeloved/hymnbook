@@ -2,22 +2,22 @@ package com.techbeloved.hymnbook
 
 import android.content.res.Configuration
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.preference.PreferenceManager
-import com.f2prateek.rx.preferences2.Preference
-import com.f2prateek.rx.preferences2.RxSharedPreferences
+import com.techbeloved.hymnbook.data.model.NightMode
 import com.techbeloved.hymnbook.databinding.ActivitySettingsMainBinding
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import com.techbeloved.hymnbook.hymndetail.QuickSettingsViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SettingsActivity : AppCompatActivity() {
 
+    private val quickSettingsViewModel: QuickSettingsViewModel by viewModels()
     private lateinit var binding: ActivitySettingsMainBinding
     private lateinit var navController: NavController
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,37 +34,37 @@ class SettingsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    private val disposables: CompositeDisposable = CompositeDisposable()
     private fun setupNightMode() {
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val rxPreferences = RxSharedPreferences.create(sharedPreferences)
 
-        val nightModePreference: Preference<Boolean> = rxPreferences.getBoolean(getString(R.string.pref_key_enable_night_mode), false)
-        val disposable = nightModePreference.asObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { enable ->
-
-                    // If already in night mode, do nothing, and otherwise
-                    when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
-                        Configuration.UI_MODE_NIGHT_NO -> {
-                            if (enable) delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
-                            else delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-
-                        }
-                        Configuration.UI_MODE_NIGHT_YES -> {
-                            if (!enable) delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-                        }
-                        Configuration.UI_MODE_NIGHT_UNDEFINED -> {
-                            if (!enable) delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-                        }
+        quickSettingsViewModel.nightMode.observe(this) { selectedMode: NightMode ->
+            when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+                Configuration.UI_MODE_NIGHT_NO -> when (selectedMode) {
+                    NightMode.On -> delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
+                    NightMode.Off -> {
+                        // No need
                     }
+                    NightMode.System -> delegate.localNightMode =
+                        AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
                 }
-        disposables.add(disposable)
-    }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        if (!disposables.isDisposed) disposables.dispose()
+                Configuration.UI_MODE_NIGHT_YES -> when (selectedMode) {
+                    NightMode.On -> {
+                        // No need
+                    }
+                    NightMode.Off -> delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_NO
+                    NightMode.System -> delegate.localNightMode =
+                        AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+
+                }
+
+                Configuration.UI_MODE_NIGHT_UNDEFINED -> when (selectedMode) {
+                    NightMode.On -> delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
+                    NightMode.Off -> delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_NO
+                    NightMode.System -> delegate.localNightMode =
+                        AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+
+                }
+            }
+        }
     }
 }

@@ -4,12 +4,13 @@
         app:key="@string/pref_key_category_app_theme"
         app:title="App theme"
         app:iconSpaceReserved="false">
-        <SwitchPreference
+        <DropDownPreference
             app:key="@string/pref_key_enable_night_mode"
-            app:title="Enable Night Mode"
+            app:title="Dark Theme"
             app:icon="@drawable/ic_brightness_24dp"
-            app:summary="For comfort reading in the night" />
-
+            app:entryValues="@array/prefs_night_mode"
+            app:entries="@array/prefs_night_mode"
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
 </PreferenceScreen>
