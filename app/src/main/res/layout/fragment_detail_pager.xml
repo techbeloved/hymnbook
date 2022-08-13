@@ -21,7 +21,6 @@
             android:id="@+id/appbar_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
             android:focusableInTouchMode="true"
             android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar">
 
@@ -35,19 +34,13 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <com.techbeloved.hymnbook.viewgroup.TouchableFrameWrapper
-            android:id="@+id/touchable_frame_hymn_detail"
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewpager_hymn_detail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:paddingBottom="?actionBarSize"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <androidx.viewpager.widget.ViewPager
-                android:id="@+id/viewpager_hymn_detail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.techbeloved.hymnbook.viewgroup.TouchableFrameWrapper>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <ProgressBar
             android:id="@+id/progressBar_hymn_detail_loading"

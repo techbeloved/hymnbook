@@ -12,7 +12,9 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class QuickSettingsViewModel @Inject constructor(private val sharedPreferencesRepo: SharedPreferencesRepo): ViewModel() {
+class QuickSettingsViewModel @Inject constructor(
+    private val sharedPreferencesRepo: SharedPreferencesRepo
+) : ViewModel() {
 
     private val disposables = CompositeDisposable()
     val nightMode: MutableLiveData<NightMode> = MutableLiveData()
@@ -34,8 +36,8 @@ class QuickSettingsViewModel @Inject constructor(private val sharedPreferencesRe
 
     private fun getNightModeData() {
         sharedPreferencesRepo.nightModeActive().subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(nightMode::setValue) { Timber.w(it) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(nightMode::setValue) { Timber.w(it) }
             .let { disposables.add(it) }
     }
 
