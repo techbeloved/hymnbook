@@ -1,8 +1,12 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-parcelize'
-apply plugin: 'kotlin-kapt'
-apply plugin: "androidx.navigation.safeargs.kotlin"
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-parcelize'
+    id 'kotlin-kapt'
+    id 'androidx.navigation.safeargs.kotlin'
+    id 'com.github.triplet.play' version '3.7.0'
+}
+
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'dagger.hilt.android.plugin'
@@ -42,9 +46,9 @@ android {
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments += [
-                        "room.schemaLocation":"$projectDir/schemas".toString(),
-                        "room.incremental":"true",
-                        "room.expandProjection":"true"]
+                        "room.schemaLocation"  : "$projectDir/schemas".toString(),
+                        "room.incremental"     : "true",
+                        "room.expandProjection": "true"]
             }
         }
     }
@@ -81,16 +85,6 @@ android {
     productFlavors {
     }
 
-    splits {
-        abi {
-            enable true
-            reset()
-
-            include "x86", "x86_64", "armeabi-v7a", "arm64-v8a"
-            universalApk false
-        }
-    }
-
     bundle {
         language {
             enableSplit = true
@@ -102,10 +96,29 @@ android {
             enableSplit true
         }
     }
+
+    playConfigs {
+    // only enable for release build in CI (release should be built only on CI)
+        release {
+            enabled.set(true)
+        }
+    }
 }
 
 kapt {
     generateStubs = true
+}
+
+import com.github.triplet.gradle.androidpublisher.ReleaseStatus
+play {
+    track.set("internal")
+    userFraction.set(1.doubleValue())
+    updatePriority.set(2)
+    releaseStatus.set(ReleaseStatus.IN_PROGRESS)
+    defaultToAppBundles.set(true)
+
+    // Only enable in CI
+    enabled.set(false)
 }
 
 dependencies {
