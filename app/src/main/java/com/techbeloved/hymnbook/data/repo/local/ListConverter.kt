@@ -1,31 +1,23 @@
-package com.techbeloved.hymnbook.data.repo.local;
+package com.techbeloved.hymnbook.data.repo.local
 
-import android.content.Context;
+import androidx.room.TypeConverter
+import com.techbeloved.hymnbook.di.AppModule
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.builtins.serializer
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.techbeloved.hymnbook.data.repo.local.util.AppExecutors;
-
-import java.lang.reflect.Type;
-import java.util.List;
-
-import androidx.room.Room;
-import androidx.room.TypeConverter;
-
-public class ListConverter {
+object ListConverter {
+    @JvmStatic
     @TypeConverter
-    public static List<String> toStringList(String jsonString) {
-        Gson gson = new Gson();
-        Type type = new TypeToken<List<String>>() {
-        }.getType();
-        return gson.fromJson(jsonString, type);
+    fun toStringList(jsonString: String?): List<String> {
+        val json = AppModule.provideJson()
+        if (jsonString.isNullOrBlank()) return emptyList()
+        return json.decodeFromString(ListSerializer(String.serializer()), jsonString)
     }
 
+    @JvmStatic
     @TypeConverter
-    public static String toJSonString(List<String> genreList) {
-        Gson gson = new Gson();
-        Type type = new TypeToken<List<String>>() {
-        }.getType();
-        return gson.toJson(genreList, type);
+    fun toJSonString(genreList: List<String>): String {
+        val json = AppModule.provideJson()
+        return json.encodeToString(ListSerializer(String.serializer()), genreList)
     }
 }
