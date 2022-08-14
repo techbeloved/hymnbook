@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ "master" ]
   release:
-    types: [published]
+    types: [ published ]
 
 jobs:
   build:
@@ -26,7 +26,7 @@ jobs:
       WCCRM_HYMNS_JSON: "wccrm_hymns.json"
       WCCRM_TOPICS_JSON: "wccrm_topics.json"
       INTERNAL_DOWNLOAD_URL: ""
-      IS_RELEASE: ${{ github.event.release.action == 'released' || github.event.release.action == 'published' }}
+      IS_RELEASE: ${{ github.event_name == 'release' }}
     steps:
       - uses: actions/checkout@v3
       - name: set up JDK 11
@@ -38,10 +38,9 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: Build with Gradle
+      - name: Prepare Build Environment
         run: |
-          export KEYSTORE=$(readlink -f $KEYSTORE)
-          echo $KEYSTORE
+          echo "KEYSTORE=$(readlink -f $KEYSTORE)" >> $GITHUB_ENV
           echo "$SIGNING_KEY" | base64 -d > "$KEYSTORE"
           echo "$HYMBOOK_GOOGLE_JSON" | base64 -d > app/google-services.json
 
@@ -49,15 +48,17 @@ jobs:
           wget -q -O app/src/main/assets/"$WCCRM_HYMNS_JSON" $WCCRM_HYMNS_JSON_URL
           wget -q -O app/src/main/assets/"$WCCRM_TOPICS_JSON" $WCCRM_TOPICS_JSON_URL
 
-          if $IS_RELEASE
-          then
-            ./gradlew publishBundle
-          else
-            ./gradlew uploadReleasePrivateBundle
-            # Parse the internal sharing url
-            sudo apt-get install -y jq
-            echo "INTERNAL_DOWNLOAD_URL=$(cat app/build/outputs/internal-sharing/bundle/release/app-release.json | jq .downloadUrl)" >> $GITHUB_ENV
-          fi
+      - name: Publish to play store
+        if: github.event_name == 'release'
+        run: |
+          ./gradlew publishBundle
+      - name: Publish to Internal Sharing
+        if: github.event_name != 'release'
+        run: |
+          ./gradlew uploadReleasePrivateBundle
+          # Parse the internal sharing url
+          sudo apt-get install -y jq
+          echo "INTERNAL_DOWNLOAD_URL=$(cat app/build/outputs/internal-sharing/bundle/release/app-release.json | jq .downloadUrl)" >> $GITHUB_ENV
 
       - name: Send email
         if: ${{ env.IS_RELEASE != true }} # Only send email for test builds
