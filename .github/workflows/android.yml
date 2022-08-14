@@ -41,8 +41,8 @@ jobs:
           echo "$HYMBOOK_GOOGLE_JSON" | base64 -d > app/google-services.json
 
           rm -rf app/src/main/assets/*.json
-          wget -q -O app/src/main/assets/"$WCCRM_HYMNS_JSON" $WCCRM_HYMNS_JSON_URL
-          wget -q -O app/src/main/assets/"$WCCRM_TOPICS_JSON" $WCCRM_TOPICS_JSON_URL
+          wget -q -P app/src/main/assets/ -O $WCCRM_HYMNS_JSON $WCCRM_HYMNS_JSON_URL
+          wget -q -P app/src/main/assets/ -O WCCRM_TOPICS_JSON $WCCRM_TOPICS_JSON_URL
           ./gradlew assembleDebug assembleRelease
 
       - name: Archive build output
