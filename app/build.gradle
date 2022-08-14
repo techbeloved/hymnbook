@@ -110,12 +110,10 @@ kapt {
     generateStubs = true
 }
 
-import com.github.triplet.gradle.androidpublisher.ReleaseStatus
 play {
     track.set("internal")
-    userFraction.set(1.doubleValue())
+    userFraction.set(0.5d)
     updatePriority.set(2)
-    releaseStatus.set(ReleaseStatus.IN_PROGRESS)
     defaultToAppBundles.set(true)
 
     // Only enable in CI
