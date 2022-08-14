@@ -18,22 +18,35 @@ jobs:
       ALIAS: ${{ secrets.ALIAS }}
       KEYSTORE: "android-signing-keystore.jks"
       HYMBOOK_GOOGLE_JSON: ${{ secrets.HYMBOOK_GOOGLE_JSON }}
+      WCCRM_HYMNS_JSON_URL: ${{ secrets.WCCRM_HYMN_CATALOG }}
+      WCCRM_TOPICS_JSON_URL: ${{ secrets.WCCRM_TOPICS }}
+      WCCRM_HYMNS_JSON: "wccrm_hymns.json"
+      WCCRM_TOPICS_JSON: "wccrm_topics.json"
     steps:
-    - uses: actions/checkout@v3
-    - name: set up JDK 11
-      uses: actions/setup-java@v3
-      with:
-        java-version: '11'
-        distribution: 'temurin'
-        cache: gradle
+      - uses: actions/checkout@v3
+      - name: set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: gradle
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Build with Gradle
-      run: |
-        export KEYSTORE=$(readlink -f $KEYSTORE)
-        echo $KEYSTORE
-        echo "$SIGNING_KEY" | base64 -d > "$KEYSTORE"
-        echo "$HYMBOOK_GOOGLE_JSON" | base64 -d > app/google-services.json
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build with Gradle
+        run: |
+          export KEYSTORE=$(readlink -f $KEYSTORE)
+          echo $KEYSTORE
+          echo "$SIGNING_KEY" | base64 -d > "$KEYSTORE"
+          echo "$HYMBOOK_GOOGLE_JSON" | base64 -d > app/google-services.json
 
-        ./gradlew assembleDebug assembleRelease
+          rm -rf app/src/main/assets/*.json
+          wget -q -O app/src/main/assets/"$WCCRM_HYMNS_JSON" $WCCRM_HYMNS_JSON_URL
+          wget -q -O app/src/main/assets/"$WCCRM_TOPICS_JSON" $WCCRM_TOPICS_JSON_URL
+          ./gradlew assembleDebug assembleRelease
+
+      - name: Archive build output
+        uses: actions/upload-artifact@v3
+        with:
+          name: apk-build-output
+          path: app/build/outputs/*
