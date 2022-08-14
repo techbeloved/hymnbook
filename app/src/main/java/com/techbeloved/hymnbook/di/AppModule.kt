@@ -12,6 +12,8 @@ import dagger.hilt.components.SingletonComponent
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.serialization.json.Json
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -29,5 +31,13 @@ object AppModule {
         override fun io(): Scheduler = Schedulers.io()
 
         override fun ui(): Scheduler = AndroidSchedulers.mainThread()
+    }
+
+    @Provides
+    @Singleton
+    fun provideJson(): Json = Json {
+        this.encodeDefaults = true
+        ignoreUnknownKeys = true
+        isLenient = true
     }
 }

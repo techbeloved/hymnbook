@@ -1,10 +1,10 @@
 package com.techbeloved.hymnbook.data.repo.local.util
 
-import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
 import com.techbeloved.hymnbook.HymnbookApp
 import com.techbeloved.hymnbook.data.model.Hymn
 import com.techbeloved.hymnbook.data.model.Topic
+import com.techbeloved.hymnbook.di.AppModule
+import kotlinx.serialization.builtins.ListSerializer
 import timber.log.Timber
 import java.io.IOException
 import java.nio.charset.Charset
@@ -12,22 +12,23 @@ import java.nio.charset.Charset
 object DataGenerator {
 
     fun generateHymns(): List<Hymn> {
-        val typeOfHymnList = object : TypeToken<List<Hymn>>() {}.type
 
-        val gson = GsonBuilder().create()
+        val json = AppModule.provideJson()
         return getHymnFiles().map { filename -> loadHymnJsonFromAsset(filename).also { Timber.d("Loaded $filename") } }
-                .flatMap { hymnJson ->
-                    hymnJson?.let { gson.fromJson(it, typeOfHymnList) } ?: emptyList()
-                }
+            .flatMap { hymnJson ->
+                hymnJson?.let { json.decodeFromString(ListSerializer(Hymn.serializer()), it) }
+                    ?: emptyList()
+            }
     }
 
     fun generateTopics(): List<Topic> {
-        val typeOfTopicList = object : TypeToken<List<Topic>>() {}.type
-        val gson = GsonBuilder().create()
+        val json = AppModule.provideJson()
+
         return getTopicFiles().map { filename -> loadTopicsJsonFromAsset(filename) }
-                .flatMap { topicJson ->
-                    topicJson?.let { gson.fromJson(it, typeOfTopicList) } ?: emptyList()
-                }
+            .flatMap { topicJson ->
+                topicJson?.let { json.decodeFromString(ListSerializer(Topic.serializer()), it) }
+                    ?: emptyList()
+            }
     }
 
     private fun loadHymnJsonFromAsset(filename: String): String? {
@@ -59,8 +60,8 @@ object DataGenerator {
     }
 
     private fun getAssetFiles(pattern: Regex) =
-            (HymnbookApp.instance.assets.list("")?.filter { it.matches(pattern) }
-                    ?: emptyList())
+        (HymnbookApp.instance.assets.list("")?.filter { it.matches(pattern) }
+            ?: emptyList())
 
     fun loadTopicsJsonFromAsset(filename: String): String? {
         val json: String?
