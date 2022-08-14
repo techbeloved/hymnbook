@@ -43,7 +43,7 @@ jobs:
           rm -rf app/src/main/assets/*.json
           wget -q -P app/src/main/assets/ -O $WCCRM_HYMNS_JSON $WCCRM_HYMNS_JSON_URL
           wget -q -P app/src/main/assets/ -O WCCRM_TOPICS_JSON $WCCRM_TOPICS_JSON_URL
-          ./gradlew assembleDebug assembleRelease
+          ./gradlew uploadReleasePrivateApk
 
       - name: Archive build output
         uses: actions/upload-artifact@v3

@@ -46,9 +46,9 @@ android {
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments += [
-                        "room.schemaLocation":"$projectDir/schemas".toString(),
-                        "room.incremental":"true",
-                        "room.expandProjection":"true"]
+                        "room.schemaLocation"  : "$projectDir/schemas".toString(),
+                        "room.incremental"     : "true",
+                        "room.expandProjection": "true"]
             }
         }
     }
@@ -96,10 +96,29 @@ android {
             enableSplit true
         }
     }
+
+    playConfigs {
+    // only enable for release build in CI (release should be built only on CI)
+        release {
+            enabled.set(true)
+        }
+    }
 }
 
 kapt {
     generateStubs = true
+}
+
+import com.github.triplet.gradle.androidpublisher.ReleaseStatus
+play {
+    track.set("internal")
+    userFraction.set(1.doubleValue())
+    updatePriority.set(2)
+    releaseStatus.set(ReleaseStatus.IN_PROGRESS)
+    defaultToAppBundles.set(true)
+
+    // Only enable in CI
+    enabled.set(false)
 }
 
 dependencies {
