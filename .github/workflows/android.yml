@@ -5,6 +5,8 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
+  release:
+    types: [published]
 
 jobs:
   build:
@@ -24,6 +26,7 @@ jobs:
       WCCRM_HYMNS_JSON: "wccrm_hymns.json"
       WCCRM_TOPICS_JSON: "wccrm_topics.json"
       INTERNAL_DOWNLOAD_URL: ""
+      IS_RELEASE: ${{ github.event.release.published == true }}
     steps:
       - uses: actions/checkout@v3
       - name: set up JDK 11
@@ -46,13 +49,18 @@ jobs:
           wget -q -O app/src/main/assets/"$WCCRM_HYMNS_JSON" $WCCRM_HYMNS_JSON_URL
           wget -q -O app/src/main/assets/"$WCCRM_TOPICS_JSON" $WCCRM_TOPICS_JSON_URL
 
-          ./gradlew uploadReleasePrivateBundle
-
-          # Parse the internal sharing url
-          sudo apt-get install -y jq
-          echo "INTERNAL_DOWNLOAD_URL=$(cat app/build/outputs/internal-sharing/bundle/release/app-release.json | jq .downloadUrl)" >> $GITHUB_ENV
+          if $IS_RELEASE
+          then
+            ./gradlew publishBundle
+          else
+            ./gradlew uploadReleasePrivateBundle
+            # Parse the internal sharing url
+            sudo apt-get install -y jq
+            echo "INTERNAL_DOWNLOAD_URL=$(cat app/build/outputs/internal-sharing/bundle/release/app-release.json | jq .downloadUrl)" >> $GITHUB_ENV
+          fi
 
       - name: Send email
+        if: ${{ env.IS_RELEASE != true }} # Only send email for test builds
         uses: dawidd6/action-send-mail@v3.6.1
         with:
           server_address: smtp.gmail.com
