@@ -14,7 +14,7 @@ import com.techbeloved.hymnbook.data.model.Topic
 
 @Database(entities = [Hymn::class, Topic::class, HymnSearch::class, Favorite::class, Playlist::class],
         views = [HymnTitle::class, HymnDetail::class],
-        version = 5)
+        version = 6)
 @TypeConverters(ListConverter::class, DateConverter::class)
 abstract class HymnsDatabase : RoomDatabase() {
     abstract fun hymnDao(): HymnDao
