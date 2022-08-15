@@ -25,25 +25,41 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideHymnDatabase(@ApplicationContext context: Context,
-                            initialDataUtil: InitialDataUtil,
-                            hymnbookUseCases: Provider<HymnbookUseCases>,
-                            @Named("IO") executor: Executor): HymnsDatabase {
-        return Room.databaseBuilder(context,
-                HymnsDatabase::class.java, "hymns.db")
-                .addCallback(object : RoomDatabase.Callback() {
-                    override fun onCreate(db: SupportSQLiteDatabase) {
-                        super.onCreate(db)
-                        executor.execute {
-                            val hymns: List<Hymn> = DataGenerator.generateHymns()
-                            val topics = DataGenerator.generateTopics()
-                            initialDataUtil.insertInitialData(hymns, topics)
-                            // Schedule download of midi archive here
-                            hymnbookUseCases.get().downloadLatestHymnMidiArchive()
-                        }
+    fun provideHymnDatabase(
+        @ApplicationContext context: Context,
+        initialDataUtil: InitialDataUtil,
+        hymnbookUseCases: Provider<HymnbookUseCases>,
+        @Named("IO") executor: Executor
+    ): HymnsDatabase {
+        return Room.databaseBuilder(
+            context,
+            HymnsDatabase::class.java, "hymns.db"
+        )
+            .addCallback(object : RoomDatabase.Callback() {
+                override fun onCreate(db: SupportSQLiteDatabase) {
+                    super.onCreate(db)
+                    executor.execute {
+                        val hymns: List<Hymn> = DataGenerator.generateHymns()
+                        val topics = DataGenerator.generateTopics()
+                        initialDataUtil.insertInitialData(hymns, topics)
+                        // Schedule download of midi archive here
+                        hymnbookUseCases.get().downloadLatestHymnMidiArchive()
                     }
-                })
-                .build()
+                }
+
+                override fun onDestructiveMigration(db: SupportSQLiteDatabase) {
+                    super.onDestructiveMigration(db)
+                    executor.execute {
+                        val hymns: List<Hymn> = DataGenerator.generateHymns()
+                        val topics = DataGenerator.generateTopics()
+                        initialDataUtil.insertInitialData(hymns, topics)
+                        // Schedule download of midi archive here
+                        hymnbookUseCases.get().downloadLatestHymnMidiArchive()
+                    }
+                }
+            })
+            .fallbackToDestructiveMigrationFrom(1,2,3,4,5)
+            .build()
     }
 
     @Provides

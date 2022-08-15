@@ -13,9 +13,6 @@ import java.io.Serializable
 @Entity(tableName = "hymns")
 data class Hymn(var id: String, @PrimaryKey var num: Int, var title: String, var verses: List<String>, var first: String): Serializable {
 
-//    @PrimaryKey(autoGenerate = true)
-//    @ColumnInfo(name = "rowid")
-//    var rowId: Int = 1
     var chorus: String? = null
     @SerialName("topic")
     var topicId: Int = 0
@@ -97,34 +94,3 @@ data class Hymn(var id: String, @PrimaryKey var num: Int, var title: String, var
 @Retention(AnnotationRetention.SOURCE)
 annotation class Status
 
-
-/*
-{
-  "hymns" : [
-    {
-      "num": "1",
-      "verses": ["verse1", "verse2", "verse3"],
-      "chorus": "chorus",
-      "topic": "topic1",
-      "id": "hymn_1",
-      "audio": {
-        "midi": "link_to_midi",
-        "mp3": "link_to_mp3"
-      },
-      "sheet_music": "link_to_sheet_music",
-      "video": "link_to_video_if_any",
-      "attribution": {
-        "music_by": "Created by",
-        "lyrics_by": "Lyrics by",
-        "credits": "Credited to"
-      }
-    }
-    ],
-    "topics": [
-      {
-        "num": "1",
-        "title": "topic1"
-      }
-      ]
-}
- */
