@@ -1,6 +1,7 @@
 package com.techbeloved.hymnbook.playlists
 
 import com.techbeloved.hymnbook.data.model.Favorite
+import com.techbeloved.hymnbook.data.model.HymnNumber
 import com.techbeloved.hymnbook.data.model.HymnTitle
 import com.techbeloved.hymnbook.data.model.Playlist
 import io.reactivex.Completable
@@ -24,5 +25,6 @@ interface PlaylistsRepo {
     fun saveFavorite(favorite: Favorite): Completable
 
     fun deletePlaylistById(playlistId: Int): Completable
-    fun loadHymnIndicesInPlaylist(playlistId: Int, sortBy: Int): Observable<List<Int>>
+
+    fun loadHymnIndicesInPlaylist(playlistId: Int, sortBy: Int): Observable<List<HymnNumber>>
 }

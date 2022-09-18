@@ -58,7 +58,6 @@ class SheetMusicDetailFragment : Fragment() {
 
     private fun loadHymnDetail(indexToBeLoaded: Int) {
         viewModel.loadHymnDetail(indexToBeLoaded)
-        viewModel.checkForNewUpdate(indexToBeLoaded) // Check for update
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -16,7 +16,6 @@ interface OnlineRepo {
      * @param id: Id or hymn number of hymn
      */
     fun getHymnById(id: Int): Observable<OnlineHymn> = Observable.empty()
-    fun getLatestCatalogUrl(): Observable<String> = Observable.empty()
 
     /**
      * Retrieves just the hymn ids for the hymns saved online. (Especially those with music sheet)

@@ -15,6 +15,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.viewpager.widget.PagerAdapter
 import com.google.android.material.snackbar.Snackbar
 import com.techbeloved.hymnbook.R
+import com.techbeloved.hymnbook.data.model.HymnNumber
 import com.techbeloved.hymnbook.sheetmusic.SheetMusicDetailFragment
 import com.techbeloved.hymnbook.usecases.Lce
 import com.techbeloved.hymnbook.utils.DepthPageTransformer
@@ -53,7 +54,7 @@ class DetailPagerFragment : BaseDetailPagerFragment() {
                 is Lce.Content -> {
                     initializeViewPager(detailPagerAdapter, indicesLce.content, indexToLoad)
                     updateCurrentItemId(indexToLoad)
-                    updateHymnItems(indicesLce.content.map { it.index })
+                    updateHymnItems(indicesLce.content.map { it.number })
                 }
                 is Lce.Error -> showContentError(indicesLce.error)
             }
@@ -123,7 +124,7 @@ class DetailPagerFragment : BaseDetailPagerFragment() {
         // Which implies that when the indices is sorted by titles, the correct detail won't be shown.
         // So we just need to find the index from the list of hymn indices
 
-        val indexToLoad = hymnIndices.indexOfFirst { it.index == initialIndex }
+        val indexToLoad = hymnIndices.indexOfFirst { it.number == initialIndex }
         binding.viewpagerHymnDetail.currentItem = indexToLoad
     }
 
@@ -146,7 +147,7 @@ class DetailPagerFragment : BaseDetailPagerFragment() {
 
         override fun getItem(position: Int): Fragment {
             val item = hymnIndices[position]
-            val hymnToShow = if (position < hymnIndices.size) item.index else 1
+            val hymnToShow = if (position < hymnIndices.size) item.number else 1
             return if (preferSheetMusic && item.hasSheetMusic) {
                 SheetMusicDetailFragment().apply { init(hymnToShow) }
             } else {
@@ -156,7 +157,7 @@ class DetailPagerFragment : BaseDetailPagerFragment() {
 
         override fun setPrimaryItem(container: ViewGroup, position: Int, `object`: Any) {
             super.setPrimaryItem(container, position, `object`)
-            updateCurrentItemId(hymnIndices[position].index)
+            updateCurrentItemId(hymnIndices[position].number)
         }
 
         override fun getItemPosition(`object`: Any): Int {
