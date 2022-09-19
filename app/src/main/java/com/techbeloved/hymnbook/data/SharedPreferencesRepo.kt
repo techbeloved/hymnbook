@@ -1,6 +1,8 @@
 package com.techbeloved.hymnbook.data
 
+import com.techbeloved.hymnbook.data.model.NewFeature
 import com.techbeloved.hymnbook.data.model.NightMode
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 
@@ -65,5 +67,9 @@ interface SharedPreferencesRepo {
      * Updates the sheet music preference
      */
     fun updatePreferSheetMusic(value: Boolean)
+
+    fun newFeatures(): Observable<List<NewFeature>>
+
+    fun shown(feature: NewFeature): Completable
 
 }

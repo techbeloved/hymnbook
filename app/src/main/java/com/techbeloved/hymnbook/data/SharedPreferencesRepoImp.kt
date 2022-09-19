@@ -3,7 +3,9 @@ package com.techbeloved.hymnbook.data
 import android.content.res.Resources
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.techbeloved.hymnbook.R
+import com.techbeloved.hymnbook.data.model.NewFeature
 import com.techbeloved.hymnbook.data.model.NightMode
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import javax.inject.Inject
@@ -90,5 +92,24 @@ class SharedPreferencesRepoImp @Inject constructor(
         val preferSheetMusicPref =
             rxPreferences.getBoolean(resources.getString(R.string.pref_key_prefer_sheet_music))
         preferSheetMusicPref.set(value)
+    }
+
+    override fun newFeatures(): Observable<List<NewFeature>> {
+        return newFeaturesPreference()
+            .asObservable()
+            .map { features ->
+                val shownFeatures = features.map(NewFeature::valueOf)
+                NewFeature.values().filterNot { shownFeatures.contains(it) }
+            }
+    }
+
+    private fun newFeaturesPreference() = rxPreferences.getStringSet("NewFeaturesShown", emptySet())
+
+    override fun shown(feature: NewFeature): Completable = Completable.create { emitter ->
+        val pref = newFeaturesPreference()
+        val current = pref.get().map(NewFeature::valueOf)
+        val newSet = (current + feature).map(NewFeature::name).toSet()
+        pref.set(newSet)
+        emitter.onComplete()
     }
 }

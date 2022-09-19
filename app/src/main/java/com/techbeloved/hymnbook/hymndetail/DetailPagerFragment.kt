@@ -16,6 +16,7 @@ import androidx.viewpager.widget.PagerAdapter
 import com.google.android.material.snackbar.Snackbar
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.data.model.HymnNumber
+import com.techbeloved.hymnbook.data.model.NewFeature
 import com.techbeloved.hymnbook.sheetmusic.SheetMusicDetailFragment
 import com.techbeloved.hymnbook.usecases.Lce
 import com.techbeloved.hymnbook.utils.DepthPageTransformer
@@ -73,6 +74,16 @@ class DetailPagerFragment : BaseDetailPagerFragment() {
                 }
                 ShareStatus.None -> {
                     cancelProgressDialog()
+                }
+            }
+        }
+
+        viewModel.newFeatures.observe(viewLifecycleOwner) { feature ->
+            when (feature) {
+                NewFeature.SheetMusic ->
+                    showNewFeatureHighlight(feature, getString(R.string.sheet_music_discovery))
+                null -> {
+                    // Nothing to do
                 }
             }
         }
@@ -137,6 +148,10 @@ class DetailPagerFragment : BaseDetailPagerFragment() {
         )
     }
 
+    override fun newFeatureShown(feature: NewFeature) {
+        viewModel.newFeatureShown(feature)
+    }
+
     @SuppressLint("WrongConstant")
     inner class DetailPagerAdapter(fm: FragmentManager) :
         FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
@@ -147,11 +162,10 @@ class DetailPagerFragment : BaseDetailPagerFragment() {
 
         override fun getItem(position: Int): Fragment {
             val item = hymnIndices[position]
-            val hymnToShow = if (position < hymnIndices.size) item.number else 1
             return if (preferSheetMusic && item.hasSheetMusic) {
-                SheetMusicDetailFragment().apply { init(hymnToShow) }
+                SheetMusicDetailFragment().apply { init(item.number) }
             } else {
-                DetailFragment().apply { init(hymnToShow) }
+                DetailFragment().apply { init(item.number) }
             }
         }
 
