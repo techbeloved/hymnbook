@@ -8,6 +8,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.techbeloved.hymnbook.data.ShareLinkProvider
 import com.techbeloved.hymnbook.data.SharedPreferencesRepo
+import com.techbeloved.hymnbook.data.analytics.AppAnalytics
 import com.techbeloved.hymnbook.data.model.HymnNumber
 import com.techbeloved.hymnbook.data.model.NewFeature
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
@@ -36,7 +37,8 @@ class HymnPagerViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val schedulerProvider: SchedulerProvider,
     private val shareLinkProvider: ShareLinkProvider,
-    private val preferencesRepo: SharedPreferencesRepo
+    private val preferencesRepo: SharedPreferencesRepo,
+    private val analytics: AppAnalytics,
 ) : ViewModel() {
 
     private val detailArgs = DetailPagerFragmentArgs.fromSavedStateHandle(savedStateHandle)
@@ -86,6 +88,7 @@ class HymnPagerViewModel @Inject constructor(
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
             .subscribe({}, Timber::w).let(compositeDisposable::add)
+        analytics.logEvent(data = listOf("NewFeatureShown" to feature.name))
     }
 
     fun loadHymnIndices(@SortBy sortBy: Int = BY_NUMBER) {
