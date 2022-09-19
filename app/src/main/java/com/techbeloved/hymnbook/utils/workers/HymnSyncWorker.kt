@@ -2,6 +2,8 @@ package com.techbeloved.hymnbook.utils.workers
 
 import android.content.Context
 import androidx.hilt.work.HiltWorker
+import androidx.work.OneTimeWorkRequest
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.RxWorker
 import androidx.work.WorkerParameters
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
@@ -26,6 +28,13 @@ class HymnSyncWorker @AssistedInject constructor(
             }
             .subscribeOn(schedulerProvider.io())
             .toSingleDefault(Result.failure())
+    }
+
+    companion object {
+        fun create(): OneTimeWorkRequest {
+            return OneTimeWorkRequestBuilder<HymnSyncWorker>().build()
+        }
+        const val TAG = "HymnSyncWorker"
     }
 
 }

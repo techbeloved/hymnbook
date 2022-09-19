@@ -1,7 +1,7 @@
 package com.techbeloved.hymnbook
 
 import androidx.lifecycle.ViewModel
-import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.techbeloved.hymnbook.usecases.HymnbookUseCases
 import com.techbeloved.hymnbook.utils.workers.HymnSyncWorker
@@ -28,8 +28,8 @@ class HymnbookViewModel @Inject constructor(
     }
 
     private fun synchronizeOnlineMusic() {
-        val syncOnlineHymns = OneTimeWorkRequestBuilder<HymnSyncWorker>().build()
-        workManager.enqueue(syncOnlineHymns)
+        workManager.beginUniqueWork(HymnSyncWorker.TAG, ExistingWorkPolicy.KEEP, HymnSyncWorker.create())
+            .enqueue()
     }
 
     override fun onCleared() {

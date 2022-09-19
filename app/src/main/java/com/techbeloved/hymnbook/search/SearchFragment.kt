@@ -45,14 +45,15 @@ class SearchFragment : Fragment() {
 
     private val viewModel: SearchViewModel by viewModels()
 
-    private lateinit var binding: FragmentSearchBinding
+    private var _binding: FragmentSearchBinding? = null
+    private val binding: FragmentSearchBinding get() = _binding!!
 
     lateinit var searchResultsAdapter: SearchResultsAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
-        binding.lifecycleOwner = this
+        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
+        binding.lifecycleOwner = viewLifecycleOwner
         NavigationUI.setupWithNavController(binding.toolbarSearch, findNavController())
 
         binding.searchviewSearch.setOnQueryTextListener(searchQueryListener)
@@ -107,6 +108,11 @@ class SearchFragment : Fragment() {
             val inputMethodManager = requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
         }
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 
 }
