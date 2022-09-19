@@ -21,11 +21,14 @@ import androidx.preference.PreferenceManager
 import androidx.viewpager.widget.ViewPager
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
+import com.getkeepsafe.taptargetview.TapTarget
+import com.getkeepsafe.taptargetview.TapTargetView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import com.techbeloved.hymnbook.R
 import com.techbeloved.hymnbook.data.SharedPreferencesRepo
+import com.techbeloved.hymnbook.data.model.NewFeature
 import com.techbeloved.hymnbook.data.model.NightMode
 import com.techbeloved.hymnbook.databinding.DialogTempoSelectorBinding
 import com.techbeloved.hymnbook.databinding.FragmentDetailPagerBinding
@@ -371,8 +374,6 @@ abstract class BaseDetailPagerFragment : Fragment() {
     }
 
     private fun showQuickSettingsBottomSheet() {
-        //val quickSettingsFragment = QuickSettingsFragment()
-        //fragmentManager?.let { quickSettingsFragment.show(it, quickSettingsFragment.tag) }
         if (quickSettingsSheet.state != BottomSheetBehavior.STATE_EXPANDED) {
             quickSettingsSheet.state = BottomSheetBehavior.STATE_EXPANDED
         }
@@ -394,10 +395,37 @@ abstract class BaseDetailPagerFragment : Fragment() {
             _currentHymnId = value
         }
 
+    protected fun showNewFeatureHighlight(feature: NewFeature, title: String) {
+        TapTargetView.showFor(
+            requireActivity(),
+            TapTarget.forView(
+                binding.toolbarDetail.findViewById(R.id.menu_detail_quick_settings),
+                title
+            )
+                .outerCircleColor(R.color.primary)
+                .outerCircleAlpha(0.96f)
+                .targetCircleColor(R.color.primary_white)
+                .titleTextSize(20)
+                .descriptionTextSize(12)
+                .tintTarget(true)
+                .cancelable(true)
+                .targetRadius(60),
+            object : TapTargetView.Listener() {
+                override fun onTargetClick(view: TapTargetView?) {
+                    super.onTargetClick(view)
+                    newFeatureShown(feature)
+                    showQuickSettingsBottomSheet()
+                }
+            }
+        )
+    }
+
     /**
      * Called upon to request sharing of hymn item
      */
     abstract fun initiateContentSharing()
+
+    abstract fun newFeatureShown(feature: NewFeature)
 }
 
 const val EXTRA_CURRENT_ITEM_ID = "currentItemId"

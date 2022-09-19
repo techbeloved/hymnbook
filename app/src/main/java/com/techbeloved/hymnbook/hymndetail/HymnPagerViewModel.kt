@@ -8,7 +8,9 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.techbeloved.hymnbook.data.ShareLinkProvider
 import com.techbeloved.hymnbook.data.SharedPreferencesRepo
+import com.techbeloved.hymnbook.data.analytics.AppAnalytics
 import com.techbeloved.hymnbook.data.model.HymnNumber
+import com.techbeloved.hymnbook.data.model.NewFeature
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
 import com.techbeloved.hymnbook.playlists.PlaylistsRepo
 import com.techbeloved.hymnbook.usecases.Lce
@@ -35,7 +37,8 @@ class HymnPagerViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val schedulerProvider: SchedulerProvider,
     private val shareLinkProvider: ShareLinkProvider,
-    private val preferencesRepo: SharedPreferencesRepo
+    private val preferencesRepo: SharedPreferencesRepo,
+    private val analytics: AppAnalytics,
 ) : ViewModel() {
 
     private val detailArgs = DetailPagerFragmentArgs.fromSavedStateHandle(savedStateHandle)
@@ -59,12 +62,33 @@ class HymnPagerViewModel @Inject constructor(
         _hymnIndicesLiveData.value = Lce.Error("Failed to load indices of hymns")
     }
 
+    val newFeatures = MutableLiveData<NewFeature?>()
+
+
     private val compositeDisposable = CompositeDisposable()
 
     init {
         setupHymnDisplayPreference()
         loadHymnIndices()
         getCategoryHeader()
+        checkNewFeatures()
+    }
+
+    private fun checkNewFeatures() {
+        preferencesRepo.newFeatures().subscribeOn(schedulerProvider.io())
+            .observeOn(schedulerProvider.ui())
+            .subscribe({ features ->
+                newFeatures.value = features.firstOrNull()
+            }, Timber::w)
+            .let(compositeDisposable::add)
+    }
+
+    fun newFeatureShown(feature: NewFeature) {
+        preferencesRepo.shown(feature)
+            .subscribeOn(schedulerProvider.io())
+            .observeOn(schedulerProvider.ui())
+            .subscribe({}, Timber::w).let(compositeDisposable::add)
+        analytics.logEvent(data = listOf("NewFeatureShown" to feature.name))
     }
 
     fun loadHymnIndices(@SortBy sortBy: Int = BY_NUMBER) {
@@ -167,10 +191,6 @@ class HymnPagerViewModel @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ _preferSheetMusic.value = it }, { Timber.w(it) })
             .also { compositeDisposable.add(it) }
-    }
-
-    companion object {
-        const val CATEGORY_URI_ARG = "categoryUriArgument"
     }
 }
 

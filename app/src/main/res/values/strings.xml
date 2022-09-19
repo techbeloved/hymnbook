@@ -129,6 +129,7 @@
     <string name="pref_key_hymn_midi_files_ready" translatable="false">hymn_midi_files_ready</string>
     <string name="pref_key_hymn_catalog_download_status" translatable="false">hymn_catalog_download_status</string>
     <string name="pref_key_hymn_catalog_download_id" translatable="false">hymn_catalog_download_id</string>
+    <string name="sheet_music_discovery">Looking for sheet music? Tap here</string>
 
     <string-array name="tempo_values">
         <item>0.5×</item>

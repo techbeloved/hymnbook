@@ -2,6 +2,7 @@ package com.techbeloved.hymnbook.di
 
 import android.content.Context
 import androidx.work.WorkManager
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.techbeloved.hymnbook.utils.SchedulerProvider
 import dagger.Module
 import dagger.Provides
@@ -40,4 +41,7 @@ object AppModule {
         ignoreUnknownKeys = true
         isLenient = true
     }
+
+    @Provides
+    fun provideFirebaseAnalytics(@ApplicationContext context: Context): FirebaseAnalytics = FirebaseAnalytics.getInstance(context)
 }
