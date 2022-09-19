@@ -35,7 +35,7 @@ class DetailFragment : Fragment() {
                               savedInstanceState: Bundle?): View {
         // Inflate the layout for this fragment
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         configureSettings()
 
         viewModel.hymnDetailLiveData.observe(viewLifecycleOwner) {

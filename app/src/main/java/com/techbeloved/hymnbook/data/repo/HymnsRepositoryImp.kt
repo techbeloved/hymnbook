@@ -1,19 +1,30 @@
 package com.techbeloved.hymnbook.data.repo
 
-import com.techbeloved.hymnbook.data.model.*
+import com.techbeloved.hymnbook.data.model.Hymn
+import com.techbeloved.hymnbook.data.model.HymnDetail
+import com.techbeloved.hymnbook.data.model.HymnNumber
+import com.techbeloved.hymnbook.data.model.HymnTitle
+import com.techbeloved.hymnbook.data.model.OnlineMusicUpdate
+import com.techbeloved.hymnbook.data.model.SearchResult
+import com.techbeloved.hymnbook.data.model.Topic
 import com.techbeloved.hymnbook.data.repo.local.HymnsDatabase
 import com.techbeloved.hymnbook.di.SingletonHolder
 import com.techbeloved.hymnbook.hymndetail.BY_NUMBER
 import com.techbeloved.hymnbook.hymndetail.BY_TITLE
 import com.techbeloved.hymnbook.hymndetail.SortBy
 import dagger.Reusable
+import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import javax.inject.Inject
 
 @Reusable
-class HymnsRepositoryImp @Inject constructor(private val hymnDatabase: HymnsDatabase) : HymnsRepository {
-    override fun loadHymnTitlesForIndices(indices: List<Int>, sortBy: Int): Observable<List<HymnTitle>> {
+class HymnsRepositoryImp @Inject constructor(private val hymnDatabase: HymnsDatabase) :
+    HymnsRepository {
+    override fun loadHymnTitlesForIndices(
+        indices: List<Int>,
+        sortBy: Int
+    ): Observable<List<HymnTitle>> {
         return when (sortBy) {
             BY_NUMBER -> hymnDatabase.hymnDao().getHymnTitlesForIndices(indices).toObservable()
             else -> hymnDatabase.hymnDao().getHymnTitlesForIndicesByTitle(indices).toObservable()
@@ -31,7 +42,7 @@ class HymnsRepositoryImp @Inject constructor(private val hymnDatabase: HymnsData
         return hymnDatabase.hymnDao().getHymnByNumber(hymnNo)
     }
 
-    override fun loadHymnIndices(sortBy: Int, topicId: Int): Flowable<List<Int>> {
+    override fun loadHymnIndices(sortBy: Int, topicId: Int): Flowable<List<HymnNumber>> {
         return when (sortBy) {
             BY_TITLE -> {
                 if (topicId == 0) {
@@ -56,7 +67,7 @@ class HymnsRepositoryImp @Inject constructor(private val hymnDatabase: HymnsData
     }
 
     override fun loadHymnTitles(@SortBy sortBy: Int, topicId: Int): Flowable<List<HymnTitle>> {
-        return when(sortBy) {
+        return when (sortBy) {
             BY_TITLE -> {
                 if (topicId == 0) {
                     hymnDatabase.hymnDao().getAllHymnTitlesSortedByTitles()
@@ -78,13 +89,16 @@ class HymnsRepositoryImp @Inject constructor(private val hymnDatabase: HymnsData
         hymnDatabase.hymnDao().updateSheetMusicDownloadProgress(hymnId, downloadStatus, progress)
     }
 
-    override fun updateHymnDownloadStatus(hymnId: Int,
-                                          progress: Int,
-                                          downloadStatus: Int,
-                                          remoteUri: String?,
-                                          localUri: String?) {
+    override fun updateHymnDownloadStatus(
+        hymnId: Int,
+        progress: Int,
+        downloadStatus: Int,
+        remoteUri: String?,
+        localUri: String?
+    ) {
 
-        hymnDatabase.hymnDao().updateSheetMusicStatus(hymnId, remoteUri, localUri, downloadStatus, progress)
+        hymnDatabase.hymnDao()
+            .updateSheetMusicStatus(hymnId, remoteUri, localUri, downloadStatus, progress)
     }
 
     override fun updateHymnMidiPath(hymnId: Int, midiPath: String) {
@@ -97,6 +111,11 @@ class HymnsRepositoryImp @Inject constructor(private val hymnDatabase: HymnsData
 
     override fun getTopicById(topicId: Int): Observable<Topic> {
         return hymnDatabase.topicDao().getTopicById(topicId).toObservable()
+    }
+
+    override fun synchroniseOnlineMusic(onlineHymns: List<OnlineHymn>): Completable {
+        return hymnDatabase.hymnDao()
+            .updateWithOnlineMusic(onlineHymns.map { OnlineMusicUpdate(it.id, it.sheetMusicUrl) })
     }
 
 }

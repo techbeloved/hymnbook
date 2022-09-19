@@ -127,4 +127,9 @@ class HymnbookActivity : AppCompatActivity() {
         super.onDestroy()
         viewModel.updateAppFirstStart(false)
     }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.onShown()
+    }
 }

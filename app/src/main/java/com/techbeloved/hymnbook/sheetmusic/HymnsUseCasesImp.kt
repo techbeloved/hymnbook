@@ -4,11 +4,9 @@ import com.techbeloved.hymnbook.data.download.Downloader
 import com.techbeloved.hymnbook.data.model.DOWNLOAD_FAILED
 import com.techbeloved.hymnbook.data.model.DOWNLOAD_IN_PROGRESS
 import com.techbeloved.hymnbook.data.model.Hymn
-import com.techbeloved.hymnbook.data.model.HymnTitle
 import com.techbeloved.hymnbook.data.model.READY
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
 import com.techbeloved.hymnbook.data.repo.OnlineRepo
-import com.techbeloved.hymnbook.hymnlisting.TitleItem
 import com.techbeloved.hymnbook.utils.SchedulerProvider
 import io.reactivex.FlowableTransformer
 import io.reactivex.Observable
@@ -27,18 +25,6 @@ class HymnsUseCasesImp @Inject constructor(
             .compose(resolveSheetMusicState()).toObservable()
             .observeOn(schedulerProvider.ui())
 
-    }
-
-
-    override fun hymnSheetMusicTitles(sortBy: Int): Observable<List<TitleItem>> {
-        return onlineRepo.hymnIds(sortBy)
-                .flatMap { ids -> hymnsRepository.loadHymnTitlesForIndices(ids, sortBy) }
-                .map { titles -> titles.map { it.toTitleItem() } }
-                .subscribeOn(schedulerProvider.io())
-    }
-
-    override fun hymnSheetMusicIndices(sortBy: Int): Observable<List<Int>> {
-        return onlineRepo.hymnIds(sortBy)
     }
 
     override fun downloadSheetMusic(hymnId: Int) {
@@ -75,9 +61,4 @@ class HymnsUseCasesImp @Inject constructor(
         }
     }
 
-}
-
-
-fun HymnTitle.toTitleItem(): TitleItem {
-    return TitleItem(id, title)
 }

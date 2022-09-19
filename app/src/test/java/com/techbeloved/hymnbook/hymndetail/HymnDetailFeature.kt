@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.whenever
 import com.techbeloved.hymnbook.data.model.HymnDetail
+import com.techbeloved.hymnbook.data.model.HymnNumber
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
 import com.techbeloved.hymnbook.data.repo.HymnsRepositoryImp
 import com.techbeloved.hymnbook.data.repo.local.HymnDao

@@ -1,11 +1,15 @@
 package com.techbeloved.hymnbook.hymndetail
 
 import androidx.annotation.IntDef
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModel
 import com.techbeloved.hymnbook.data.ShareLinkProvider
 import com.techbeloved.hymnbook.data.SharedPreferencesRepo
+import com.techbeloved.hymnbook.data.model.HymnNumber
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
-import com.techbeloved.hymnbook.data.repo.OnlineRepo
 import com.techbeloved.hymnbook.playlists.PlaylistsRepo
 import com.techbeloved.hymnbook.usecases.Lce
 import com.techbeloved.hymnbook.utils.CATEGORY_PLAYLISTS
@@ -25,13 +29,14 @@ import javax.inject.Inject
  * categoryUri holds information about the category we are currently browsing
  */
 @HiltViewModel
-class HymnPagerViewModel @Inject constructor(private val repository: HymnsRepository,
-                                             private val playlistsRepo: PlaylistsRepo,
-                                             private val onlineRepo: OnlineRepo,
-                                             savedStateHandle: SavedStateHandle,
-                                             private val schedulerProvider: SchedulerProvider,
-                                             private val shareLinkProvider: ShareLinkProvider,
-                                             private val preferencesRepo: SharedPreferencesRepo) : ViewModel() {
+class HymnPagerViewModel @Inject constructor(
+    private val repository: HymnsRepository,
+    private val playlistsRepo: PlaylistsRepo,
+    savedStateHandle: SavedStateHandle,
+    private val schedulerProvider: SchedulerProvider,
+    private val shareLinkProvider: ShareLinkProvider,
+    private val preferencesRepo: SharedPreferencesRepo
+) : ViewModel() {
 
     private val detailArgs = DetailPagerFragmentArgs.fromSavedStateHandle(savedStateHandle)
 
@@ -67,21 +72,16 @@ class HymnPagerViewModel @Inject constructor(private val repository: HymnsReposi
         val categoryId = detailArgs.categoryId
         val indicesObservable = when (detailArgs.category) {
             CATEGORY_PLAYLISTS -> playlistsRepo.loadHymnIndicesInPlaylist(categoryId, sortBy)
-            else -> repository.loadHymnIndices(sortBy,
-                    topicId = categoryId).toObservable()
+            else -> repository.loadHymnIndices(
+                sortBy,
+                topicId = categoryId
+            ).toObservable()
         }
-        indicesObservable.flatMap { localIndices ->
-            // Check online hymns and set the boolean variable to true if the given index has online entry.
-            // We use this to determine if it's possible to show sheet music.
-            onlineRepo.hymnIds(sortBy).map { onlineIndices ->
-                localIndices.map { HymnNumber(it, onlineIndices.contains(it)) }
-            }
-        }
-                .compose(indicesToLceMapper())
-                .startWith(Lce.Loading(true))
-                .observeOn(schedulerProvider.ui())
-                .subscribe(indicesConsumer, errorConsumer)
-                .let { compositeDisposable.add(it) }
+        indicesObservable.compose(indicesToLceMapper())
+            .startWith(Lce.Loading(true))
+            .observeOn(schedulerProvider.ui())
+            .subscribe(indicesConsumer, errorConsumer)
+            .let { compositeDisposable.add(it) }
     }
 
     private fun getCategoryHeader() {
@@ -94,16 +94,17 @@ class HymnPagerViewModel @Inject constructor(private val repository: HymnsReposi
         }
 
         titleObservable.observeOn(schedulerProvider.ui())
-                .subscribe({ _categoryHeader.value = it }, {
-                    Timber.w(it)
-                    _categoryHeader.value = "All Hymns"
-                })
-                .let { compositeDisposable.add(it) }
+            .subscribe({ _categoryHeader.value = it }, {
+                Timber.w(it)
+                _categoryHeader.value = "All Hymns"
+            })
+            .let { compositeDisposable.add(it) }
     }
 
-    private fun indicesToLceMapper(): ObservableTransformer<List<HymnNumber>, Lce<List<HymnNumber>>> = ObservableTransformer { upstream ->
-        upstream.map { Lce.Content(it) }
-    }
+    private fun indicesToLceMapper(): ObservableTransformer<List<HymnNumber>, Lce<List<HymnNumber>>> =
+        ObservableTransformer { upstream ->
+            upstream.map { Lce.Content(it) }
+        }
 
     override fun onCleared() {
         super.onCleared()
@@ -132,21 +133,27 @@ class HymnPagerViewModel @Inject constructor(private val repository: HymnsReposi
         _shareLinkStatus.value = ShareStatus.Loading
 
         repository.getHymnById(hymnId)
-                .firstOrError()
-                .flatMap { hymn ->
-                    shareLinkProvider.getShortLinkForItem(hymn, browsingCategory, description, minimumVersion, logoUrl)
-                            .subscribeOn(schedulerProvider.io())
-                }
-                .map { ShareStatus.Success(it) }.cast(ShareStatus::class.java)
-                .observeOn(schedulerProvider.ui())
-                .subscribe({ shareStatus ->
-                    _shareLinkStatus.value = shareStatus
-                    _shareLinkStatus.value = ShareStatus.None
-                }, {
-                    _shareLinkStatus.value = ShareStatus.Error(it)
-                    _shareLinkStatus.value = ShareStatus.None
-                })
-                .let { shareDisposable?.add(it) }
+            .firstOrError()
+            .flatMap { hymn ->
+                shareLinkProvider.getShortLinkForItem(
+                    hymn,
+                    browsingCategory,
+                    description,
+                    minimumVersion,
+                    logoUrl
+                )
+                    .subscribeOn(schedulerProvider.io())
+            }
+            .map { ShareStatus.Success(it) }.cast(ShareStatus::class.java)
+            .observeOn(schedulerProvider.ui())
+            .subscribe({ shareStatus ->
+                _shareLinkStatus.value = shareStatus
+                _shareLinkStatus.value = ShareStatus.None
+            }, {
+                _shareLinkStatus.value = ShareStatus.Error(it)
+                _shareLinkStatus.value = ShareStatus.None
+            })
+            .let { shareDisposable?.add(it) }
 
 
     }
@@ -156,10 +163,10 @@ class HymnPagerViewModel @Inject constructor(private val repository: HymnsReposi
 
     private fun setupHymnDisplayPreference() {
         preferencesRepo.preferSheetMusic()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ _preferSheetMusic.value = it }, { Timber.w(it) })
-                .also { compositeDisposable.add(it) }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ _preferSheetMusic.value = it }, { Timber.w(it) })
+            .also { compositeDisposable.add(it) }
     }
 
     companion object {

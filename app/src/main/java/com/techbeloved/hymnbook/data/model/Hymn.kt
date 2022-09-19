@@ -11,29 +11,41 @@ import java.io.Serializable
 
 @kotlinx.serialization.Serializable
 @Entity(tableName = "hymns")
-data class Hymn(var id: String, @PrimaryKey var num: Int, var title: String, var verses: List<String>, var first: String): Serializable {
+data class Hymn(
+    var id: String,
+    @PrimaryKey var num: Int,
+    var title: String,
+    var verses: List<String>,
+    var first: String
+) : Serializable {
 
     var chorus: String? = null
+
     @SerialName("topic")
     var topicId: Int = 0
+
     @Embedded
     var audio: Audio? = null
 
     @Embedded
     var sheetMusic: SheetMusic? = null
+
     @SerialName("video")
     var videoUrl: String? = null
+
     @Embedded
     var attribution: Attribution? = null
 
     @kotlinx.serialization.Serializable
-    data class SheetMusic(@Status val downloadStatus: Int,
-                          val downloadProgress: Int = 0,
-                          val remoteUri: String? = null,
-                          val localUri: String? = null)
+    data class SheetMusic(
+        @Status val downloadStatus: Int,
+        val downloadProgress: Int = 0,
+        val remoteUri: String? = null,
+        val localUri: String? = null
+    )
 
     @kotlinx.serialization.Serializable
-    class Audio: Serializable {
+    class Audio : Serializable {
         var midi: String? = null
         var mp3: String? = null
 
@@ -48,9 +60,10 @@ data class Hymn(var id: String, @PrimaryKey var num: Int, var title: String, var
     }
 
     @kotlinx.serialization.Serializable
-    class Attribution: Serializable {
+    class Attribution : Serializable {
         @SerialName("music_by")
         var musicBy: String? = null
+
         @SerialName("lyrics_by")
         var lyricsBy: String? = null
         var credits: String? = null

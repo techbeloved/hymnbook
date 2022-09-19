@@ -56,7 +56,7 @@ abstract class BaseDetailPagerFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_detail_pager, container, false)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.nowPlaying = nowPlayingViewModel
 
         NavigationUI.setupWithNavController(binding.toolbarDetail, findNavController())

@@ -169,7 +169,7 @@ abstract class BaseHymnListingFragment : Fragment(), PopupMenu.OnMenuItemClickLi
     ): View? {
         _binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_song_listing, container, false)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         //region Hide toolbar on first screen
         val isFirstScreen = navController.previousBackStackEntry == null

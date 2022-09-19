@@ -3,6 +3,7 @@ package com.techbeloved.hymnbook.data.repo
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.verify
 import com.techbeloved.hymnbook.data.model.Hymn
+import com.techbeloved.hymnbook.data.model.HymnNumber
 import com.techbeloved.hymnbook.data.repo.local.HymnDao
 import com.techbeloved.hymnbook.data.repo.local.HymnsDatabase
 import com.techbeloved.hymnbook.hymndetail.BY_NUMBER
@@ -64,7 +65,7 @@ class HymnsRepositoryImpShould {
     fun loadHymnIndices_throws_exception_when_given_a_wrong_sorting_term() {
         val wrongSortBy = -1
 
-        val testSubscriber = TestSubscriber<List<Int>>()
+        val testSubscriber = TestSubscriber<List<HymnNumber>>()
 
         hymnsRepository.loadHymnIndices(wrongSortBy).subscribe(testSubscriber)
 

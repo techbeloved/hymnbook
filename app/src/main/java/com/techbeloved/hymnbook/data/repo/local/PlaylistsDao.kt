@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import com.techbeloved.hymnbook.data.model.Favorite
+import com.techbeloved.hymnbook.data.model.HymnNumber
 import com.techbeloved.hymnbook.data.model.HymnTitle
 import com.techbeloved.hymnbook.data.model.Playlist
 import io.reactivex.Completable
@@ -25,11 +26,11 @@ interface PlaylistsDao {
     @Query("SELECT *, playlistId FROM playlists AS p, favorites AS f, hymn_titles AS t WHERE p.id=f.playlistId  AND f.hymnId=t.num AND f.playlistId =:playlistId ORDER BY t.title ASC")
     fun getHymnsInPlaylistSortByTitle(playlistId: Int): Flowable<List<HymnTitle>>
 
-    @Query("SELECT t.num FROM playlists AS p, favorites AS f, hymn_titles AS t WHERE p.id=f.playlistId  AND f.hymnId=t.num AND f.playlistId =:playlistId ORDER BY t.title ASC")
-    fun getHymnIndicesInPlaylistByTitle(playlistId: Int): Flowable<List<Int>>
+    @Query("SELECT t.num AS number,  CASE WHEN (remoteUri IS NULL) THEN 0 ELSE 1 END hasSheetMusic FROM hymns AS h, playlists AS p, favorites AS f, hymn_titles AS t WHERE p.id=f.playlistId  AND f.hymnId=t.num AND f.playlistId =:playlistId ORDER BY t.title ASC")
+    fun getHymnIndicesInPlaylistByTitle(playlistId: Int): Flowable<List<HymnNumber>>
 
-    @Query("SELECT t.num FROM playlists AS p, favorites AS f, hymn_titles AS t WHERE p.id=f.playlistId  AND f.hymnId=t.num AND f.playlistId =:playlistId ORDER BY t.num ASC")
-    fun getHymnIndicesInPlaylist(playlistId: Int): Flowable<List<Int>>
+    @Query("SELECT t.num AS number, CASE WHEN (remoteUri IS NULL) THEN 0 ELSE 1 END hasSheetMusic FROM hymns AS h, playlists AS p, favorites AS f, hymn_titles AS t WHERE p.id=f.playlistId  AND f.hymnId=t.num AND f.playlistId =:playlistId ORDER BY t.num ASC")
+    fun getHymnIndicesInPlaylist(playlistId: Int): Flowable<List<HymnNumber>>
 
     @Insert
     fun savePlaylist(playlist: Playlist): Completable

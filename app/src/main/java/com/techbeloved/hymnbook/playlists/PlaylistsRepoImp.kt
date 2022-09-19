@@ -5,6 +5,7 @@ import com.techbeloved.hymnbook.data.model.HymnTitle
 import com.techbeloved.hymnbook.data.model.Playlist
 import com.techbeloved.hymnbook.data.repo.local.PlaylistsDao
 import com.techbeloved.hymnbook.hymndetail.BY_TITLE
+import com.techbeloved.hymnbook.data.model.HymnNumber
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -46,7 +47,7 @@ class PlaylistsRepoImp @Inject constructor(private val playlistsDao: PlaylistsDa
         return playlistsDao.deletePlaylistById(playlistId)
     }
 
-    override fun loadHymnIndicesInPlaylist(playlistId: Int, sortBy: Int): Observable<List<Int>> {
+    override fun loadHymnIndicesInPlaylist(playlistId: Int, sortBy: Int): Observable<List<HymnNumber>> {
         return when (sortBy) {
             BY_TITLE -> playlistsDao.getHymnIndicesInPlaylistByTitle(playlistId).toObservable()
             else -> playlistsDao.getHymnIndicesInPlaylist(playlistId).toObservable()
