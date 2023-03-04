@@ -24,8 +24,6 @@ class MidiSyncWorker @AssistedInject constructor(@Assisted context: Context,
                                                      private val onlineRepo: OnlineRepo) : RxWorker(context, params) {
 
     override fun createWork(): Single<Result> {
-        Timber.i("MidiSyncWork: onGoing work")
-        makeStatusNotification("Checking midi archive version", applicationContext)
         return sharedPreferencesRepo.midiArchiveVersion()
                 .flatMapObservable { currentVersion ->
                     onlineRepo.latestMidiArchive()
@@ -39,7 +37,7 @@ class MidiSyncWorker @AssistedInject constructor(@Assisted context: Context,
                             KEY_FIREBASE_ARCHIVE_PATH to archivePath,
                             KEY_FIREBASE_ARCHIVE_VERSION to onlineMidi.version)
                     Result.success(outputData)
-                }
+                }.onErrorReturn { Result.retry() }
     }
 
 }

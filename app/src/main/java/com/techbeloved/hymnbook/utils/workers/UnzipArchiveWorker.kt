@@ -10,7 +10,6 @@ import com.techbeloved.hymnbook.data.FileManager
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import io.reactivex.Single
-import timber.log.Timber
 import java.io.File
 
 /**
@@ -20,8 +19,6 @@ import java.io.File
 @HiltWorker
 class UnzipArchiveWorker @AssistedInject constructor(@Assisted context: Context, @Assisted params: WorkerParameters, private val fileManager: FileManager) : RxWorker(context, params) {
     override fun createWork(): Single<Result> {
-        Timber.i("Unzip work: onGoing")
-        makeStatusNotification("Unzipping midi archive", applicationContext)
 
         val archivePath = inputData.getString(KEY_DOWNLOADED_ARCHIVE)
         val unzipDirPath = inputData.getString(KEY_UNZIP_FILES_DIRECTORY)
