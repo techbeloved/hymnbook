@@ -1,14 +1,19 @@
 package com.techbeloved.hymnbook
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
@@ -32,6 +37,11 @@ class HymnbookActivity : AppCompatActivity() {
 
     private val viewModel: HymnbookViewModel by viewModels()
     private val quickSettingsViewModel: QuickSettingsViewModel by viewModels()
+
+    private val permissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            Timber.i("Permission granted: $granted")
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
@@ -62,6 +72,20 @@ class HymnbookActivity : AppCompatActivity() {
 
         FirebaseAnalytics.getInstance(this.applicationContext)
         handleDynamicLinks(intent)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            checkNotificationPermission()
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun checkNotificationPermission() {
+        if (ActivityCompat.checkSelfPermission(
+                /* context = */ this,
+                android.Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            permissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

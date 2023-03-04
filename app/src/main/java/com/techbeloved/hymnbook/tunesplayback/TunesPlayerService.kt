@@ -1,11 +1,13 @@
 package com.techbeloved.hymnbook.tunesplayback
 
+import android.Manifest
 import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
@@ -16,8 +18,9 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import androidx.annotation.StringDef
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.app.ServiceCompat
 import androidx.core.content.ContextCompat
 import androidx.media.MediaBrowserServiceCompat
 import com.jakewharton.rxrelay2.PublishRelay
@@ -172,7 +175,7 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
         }.subscribe({
             Timber.i("About stopping service")
             notificationManager.cancelAll()
-            stopForeground(true)
+            ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE)
             stopSelf()
         }, { Timber.w(it) })
             .let { disposables.add(it) }
@@ -508,6 +511,13 @@ class TunesPlayerService : MediaBrowserServiceCompat() {
                         }
 
                         if (notification != null) {
+                            if (ActivityCompat.checkSelfPermission(
+                                    this@TunesPlayerService,
+                                    Manifest.permission.POST_NOTIFICATIONS
+                                ) != PackageManager.PERMISSION_GRANTED
+                            ) {
+                                return
+                            }
                             notificationManager.notify(NOW_PLAYING_NOTIFICATION, notification)
                         } else {
                             removeNowPlayingNotification()
@@ -555,15 +565,10 @@ private class BecomingNoisyReceiver(
     }
 }
 
-@StringDef(ACTION_PLAYBACK_RATE)
-@Retention(AnnotationRetention.SOURCE)
-annotation class MediaAction
-
 const val ACTION_PLAYBACK_RATE = "playbackTempo"
 
 const val ARGS_PLAYBACK_RATE = "argsPlaybackRate"
 
-const val EVENT_INVALID_ITEM = "eventInvalidItem"
 const val EVENT_PLAYABLE_MEDIA_NOT_AVAILABLE = "mediaNotAvailable"
 const val EVENT_MEDIA_FILE_NOT_FOUND = "mediaFileNotFound"
 

@@ -16,8 +16,6 @@ import java.io.File
 @HiltWorker
 class UpdateHymnDatabaseWithMidiFilesWorker @AssistedInject constructor(@Assisted context: Context, @Assisted params: WorkerParameters, private val hymnsRepository: HymnsRepository) : RxWorker(context, params) {
     override fun createWork(): Single<Result> {
-        makeStatusNotification("Updating database", applicationContext)
-
         return Single.create { emitter ->
             val midiFilesDirectory = inputData.getString(KEY_UNZIP_FILES_DIRECTORY)
                     ?: File(applicationContext.getExternalFilesDir(null), applicationContext.getString(R.string.file_path_midi)).absolutePath

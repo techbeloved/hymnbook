@@ -19,8 +19,6 @@ import java.io.File
 class DownloadFirebaseArchiveWorker @AssistedInject constructor(@Assisted context: Context, @Assisted params: WorkerParameters, private val downloader: Downloader) : RxWorker(context, params) {
 
     override fun createWork(): Single<Result> {
-        Timber.i("Downloading archive: onGoing")
-        makeStatusNotification("Downloading midi archive", applicationContext)
 
         val archivePath = inputData.getString(KEY_FIREBASE_ARCHIVE_PATH)
         val destination = inputData.getString(KEY_ARCHIVE_DESTINATION)
