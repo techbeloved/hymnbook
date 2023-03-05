@@ -27,14 +27,13 @@ class HymnSyncWorker @AssistedInject constructor(
                 hymnsRepository.synchroniseOnlineMusic(onlineHymns)
             }
             .subscribeOn(schedulerProvider.io())
-            .toSingleDefault(Result.failure())
+            .toSingleDefault(Result.retry())
     }
 
     companion object {
         fun create(): OneTimeWorkRequest {
             return OneTimeWorkRequestBuilder<HymnSyncWorker>().build()
         }
-        const val TAG = "HymnSyncWorker"
     }
 
 }
