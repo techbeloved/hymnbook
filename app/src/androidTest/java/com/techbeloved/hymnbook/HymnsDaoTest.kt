@@ -28,6 +28,7 @@ class HymnsDaoTest {
     private val testTopicSingleSubscriber = TestSubscriber<Topic>()
 
     private val testHymnDetailSubscriber = TestSubscriber<HymnDetail>()
+
     /**
      * Helps in running background task synchronously. Must be set if using RxJava and LiveData
      */
@@ -103,8 +104,11 @@ class HymnsDaoTest {
 
         val titlesSubscriber = TestSubscriber<List<HymnTitle>>()
 
-        val expected = listOf(HymnTitle(hymn1.num, hymn1.title),
-                HymnTitle(hymn2.num, hymn2.title), HymnTitle(hymn3.num, hymn3.title))
+        val expected = listOf(
+            HymnTitle(hymn1.num, hymn1.title, topic1.id),
+            HymnTitle(hymn2.num, hymn2.title, topic2.id),
+            HymnTitle(hymn3.num, hymn3.title, topic3.id)
+        )
         val result = hymnDao.getAllHymnTitles()
         result.subscribe(titlesSubscriber)
         titlesSubscriber.assertSubscribed()
@@ -153,9 +157,10 @@ class HymnsDaoTest {
     @Throws(Exception::class)
     fun get_hymn_indices_sorted_according_to_number() {
         // Setup
-        val expectedIndices = hymnList.sortedBy { it.num }.map { it.num }
+        val expectedIndices =
+            hymnList.sortedBy { it.num }.map { HymnNumber(it.num, it.sheetMusic != null) }
 
-        val indicesTestSubscriber = TestSubscriber<List<Int>>()
+        val indicesTestSubscriber = TestSubscriber<List<HymnNumber>>()
 
         // Execute
         hymnDao.getIndicesByNumber().subscribe(indicesTestSubscriber)
@@ -169,9 +174,10 @@ class HymnsDaoTest {
     @Throws(Exception::class)
     fun get_hymn_indices_sorted_according_to_title() {
         // Setup
-        val expectedIndices = hymnList.sortedBy { it.title }.map { it.num }
+        val expectedIndices =
+            hymnList.sortedBy { it.title }.map { HymnNumber(it.num, it.sheetMusic != null) }
 
-        val indicesTestSubscriber = TestSubscriber<List<Int>>()
+        val indicesTestSubscriber = TestSubscriber<List<HymnNumber>>()
 
         // Execute
         hymnDao.getIndicesByTitle().subscribe(indicesTestSubscriber)
