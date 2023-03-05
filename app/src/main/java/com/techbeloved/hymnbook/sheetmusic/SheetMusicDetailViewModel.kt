@@ -15,8 +15,6 @@ class SheetMusicDetailViewModel @Inject constructor(private val hymnUseCases: Hy
     private var disposableLoadHymn: CompositeDisposable? = CompositeDisposable()
     private val hymnDetailLce: MutableLiveData<Lce<SheetMusicState>> = MutableLiveData()
 
-    private val disposables = CompositeDisposable()
-
     val hymnDetail: LiveData<Lce<SheetMusicState>>
         get() = hymnDetailLce
 
@@ -36,17 +34,6 @@ class SheetMusicDetailViewModel @Inject constructor(private val hymnUseCases: Hy
                         })
                 .run { disposableLoadHymn!!.add(this) }
     }
-
-    fun checkForNewUpdate(hymnNo: Int) {
-        hymnUseCases.shouldDownloadUpdatedSheetMusic(hymnNo)
-                .subscribe({ updateAvailable ->
-                    if (updateAvailable) {
-                        hymnUseCases.downloadSheetMusic(hymnNo)
-                    }
-                }, { Timber.w(it, "Failed to get updates") })
-                .let { disposables.add(it) }
-    }
-
 
     private fun <T> contentToLceMapper(): ObservableTransformer<T, Lce<T>> = ObservableTransformer { upstream ->
         upstream.map { Lce.Content(it) }

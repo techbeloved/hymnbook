@@ -6,7 +6,6 @@ import com.techbeloved.hymnbook.data.model.DOWNLOAD_IN_PROGRESS
 import com.techbeloved.hymnbook.data.model.Hymn
 import com.techbeloved.hymnbook.data.model.READY
 import com.techbeloved.hymnbook.data.repo.HymnsRepository
-import com.techbeloved.hymnbook.data.repo.OnlineRepo
 import com.techbeloved.hymnbook.utils.SchedulerProvider
 import io.reactivex.FlowableTransformer
 import io.reactivex.Observable
@@ -14,7 +13,6 @@ import javax.inject.Inject
 
 class HymnsUseCasesImp @Inject constructor(
     private val hymnsRepository: HymnsRepository,
-    private val onlineRepo: OnlineRepo,
     private val schedulerProvider: SchedulerProvider,
     private val downloader: Downloader
 ) : HymnUseCases {
@@ -31,34 +29,32 @@ class HymnsUseCasesImp @Inject constructor(
         downloader.enqueueDownloadForHymn(hymnId)
     }
 
-    /**
-     * Returns true if music has been downloaded previously but the remote uri has changed
-     */
-    override fun shouldDownloadUpdatedSheetMusic(hymnId: Int): Observable<Boolean> {
-        return hymnsRepository.getHymnById(hymnId)
-                .toObservable()
-                .flatMap { hymn ->
-                    onlineRepo.getHymnById(hymnId)
-                            .map { onlineHymn ->
-                                (hymn.sheetMusic?.downloadStatus == READY)
-                                        && (hymn.sheetMusic?.remoteUri != onlineHymn.sheetMusicUrl)
-                            }
-                }.subscribeOn(schedulerProvider.io())
-    }
+    private fun resolveSheetMusicState(): FlowableTransformer<Hymn, SheetMusicState> =
+        FlowableTransformer { upstream ->
+            upstream.map { hymn ->
+                val sheetMusicState: SheetMusicState = hymn.sheetMusic?.let { sheetMusic ->
+                    when (sheetMusic.downloadStatus) {
+                        DOWNLOAD_IN_PROGRESS -> SheetMusicState.Downloading(
+                            hymn.num,
+                            hymn.title,
+                            sheetMusic.downloadProgress
+                        )
+                        DOWNLOAD_FAILED -> SheetMusicState.DownloadFailed(
+                            hymn.num,
+                            hymn.title,
+                            sheetMusic.remoteUri
+                        )
+                        READY -> SheetMusicState.Ready(hymn.num, hymn.title, sheetMusic.localUri)
+                        else -> SheetMusicState.NotDownloaded(
+                            hymn.num,
+                            hymn.title,
+                            sheetMusic.remoteUri
+                        )
+                    }
 
-    private fun resolveSheetMusicState(): FlowableTransformer<Hymn, SheetMusicState> = FlowableTransformer { upstream ->
-        upstream.map { hymn ->
-            val sheetMusicState: SheetMusicState = hymn.sheetMusic?.let { sheetMusic ->
-                when (sheetMusic.downloadStatus) {
-                    DOWNLOAD_IN_PROGRESS -> SheetMusicState.Downloading(hymn.num, hymn.title, sheetMusic.downloadProgress)
-                    DOWNLOAD_FAILED -> SheetMusicState.DownloadFailed(hymn.num, hymn.title, sheetMusic.remoteUri)
-                    READY -> SheetMusicState.Ready(hymn.num, hymn.title, sheetMusic.localUri)
-                    else -> SheetMusicState.NotDownloaded(hymn.num, hymn.title, sheetMusic.remoteUri)
-                }
-
-            } ?: SheetMusicState.NotDownloaded(hymn.num, hymn.title, null)
-            sheetMusicState
+                } ?: SheetMusicState.NotDownloaded(hymn.num, hymn.title, null)
+                sheetMusicState
+            }
         }
-    }
 
 }
