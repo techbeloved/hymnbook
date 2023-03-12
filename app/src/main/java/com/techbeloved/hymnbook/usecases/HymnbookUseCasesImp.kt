@@ -1,6 +1,7 @@
 package com.techbeloved.hymnbook.usecases
 
 import android.content.Context
+import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
@@ -21,6 +22,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.Observable
 import timber.log.Timber
 import java.io.File
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class HymnbookUseCasesImp @Inject constructor(
@@ -93,9 +95,11 @@ class HymnbookUseCasesImp @Inject constructor(
             OneTimeWorkRequestBuilder<UpdateMidiVersionPrefWorker>()
                 .build()
 
-        val syncOnlineHymns = OneTimeWorkRequestBuilder<HymnSyncWorker>().build()
+        val syncOnlineHymns = OneTimeWorkRequestBuilder<HymnSyncWorker>()
+            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 1, TimeUnit.DAYS)
+            .build()
 
-        val workOperation = workManager.beginUniqueWork(
+        workManager.beginUniqueWork(
             MIDI_ARCHIVE_DOWNLOAD_WORK_NAME,
             ExistingWorkPolicy.KEEP, midiSyncWork
         )

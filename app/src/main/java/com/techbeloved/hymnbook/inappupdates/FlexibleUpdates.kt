@@ -1,12 +1,15 @@
 package com.techbeloved.hymnbook.inappupdates
 
 import android.view.View
+import androidx.activity.ComponentActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.install.InstallStateUpdatedListener
+import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.ktx.installStatus
 import com.techbeloved.hymnbook.R
@@ -16,14 +19,18 @@ class FlexibleUpdates @Inject constructor(
     private val appUpdateManager: AppUpdateManager
 ) {
 
-    operator fun invoke(lifecycleOwner: LifecycleOwner, rootView: View) {
+    operator fun invoke(
+        appUpdateInfo: AppUpdateInfo,
+        activity: ComponentActivity,
+        rootView: View
+    ) {
         val listener = InstallStateUpdatedListener { installState ->
             if (installState.installStatus == InstallStatus.DOWNLOADED) {
                 popupSnackbarForCompleteUpdate(rootView)
             }
         }
 
-        lifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
+        activity.lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onStart(owner: LifecycleOwner) {
                 appUpdateManager.registerListener(listener)
             }
@@ -33,6 +40,12 @@ class FlexibleUpdates @Inject constructor(
             }
         })
 
+        appUpdateManager.startUpdateFlowForResult(
+            appUpdateInfo,
+            AppUpdateType.FLEXIBLE,
+            activity,
+            CheckAppUpdates.REQUEST_CODE
+        )
     }
 
     private fun popupSnackbarForCompleteUpdate(rootView: View) {

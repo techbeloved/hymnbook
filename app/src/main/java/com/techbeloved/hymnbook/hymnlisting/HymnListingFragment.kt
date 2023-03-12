@@ -95,8 +95,8 @@ class HymnListingFragment : BaseHymnListingFragment() {
 
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         checkAppUpdates(requireActivity(), requireView())
     }
 

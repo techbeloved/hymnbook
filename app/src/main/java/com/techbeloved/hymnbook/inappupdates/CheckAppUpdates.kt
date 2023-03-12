@@ -7,6 +7,7 @@ import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.android.play.core.ktx.clientVersionStalenessDays
+import com.google.android.play.core.ktx.updatePriority
 import javax.inject.Inject
 
 class CheckAppUpdates @Inject constructor(
@@ -18,7 +19,7 @@ class CheckAppUpdates @Inject constructor(
     operator fun invoke(activity: ComponentActivity, rootView: View) {
         appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
             when (checkUpdateStatus(appUpdateInfo)) {
-                AppUpdateStatus.Flexible -> flexibleUpdates(activity, rootView)
+                AppUpdateStatus.Flexible -> flexibleUpdates(appUpdateInfo, activity, rootView)
                 AppUpdateStatus.Immediate -> immediateUpdates(appUpdateInfo, activity)
                 AppUpdateStatus.Stalled -> immediateUpdates(appUpdateInfo, activity)
                 AppUpdateStatus.None -> {
@@ -33,6 +34,7 @@ class CheckAppUpdates @Inject constructor(
             UpdateAvailability.UPDATE_AVAILABLE -> {
                 if ((appUpdateInfo.clientVersionStalenessDays ?: -1) < DAYS_FOR_FLEXIBLE_UPDATE
                     && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
+                    && appUpdateInfo.updatePriority < HIGH_UPDATE_PRIORITY
                 ) AppUpdateStatus.Flexible
                 else AppUpdateStatus.Immediate
             }
@@ -45,5 +47,6 @@ class CheckAppUpdates @Inject constructor(
     companion object {
         private const val DAYS_FOR_FLEXIBLE_UPDATE = 7
         const val REQUEST_CODE = 12
+        private const val HIGH_UPDATE_PRIORITY = 4
     }
 }
