@@ -4,8 +4,17 @@ import android.os.Handler
 import android.os.Looper
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import androidx.lifecycle.*
-import com.techbeloved.hymnbook.tunesplayback.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.map
+import com.techbeloved.hymnbook.tunesplayback.currentPlaybackPosition
+import com.techbeloved.hymnbook.tunesplayback.id
+import com.techbeloved.hymnbook.tunesplayback.isPlayEnabled
+import com.techbeloved.hymnbook.tunesplayback.isPlaying
+import com.techbeloved.hymnbook.tunesplayback.isPrepared
 import dagger.hilt.android.lifecycle.HiltViewModel
 import timber.log.Timber
 import javax.inject.Inject
@@ -21,9 +30,9 @@ class NowPlayingViewModel @Inject constructor(mediaSessionConnection: MediaSessi
     /**
      * Playback controls
      */
-    private val _isPlaying = MutableLiveData<Boolean>(true)
+    private val _isPlaying = MutableLiveData(true)
     val isPlaying: LiveData<Boolean>
-        get() = Transformations.distinctUntilChanged(_isPlaying)
+        get() = _isPlaying.distinctUntilChanged()
     val playbackState: LiveData<PlaybackStateCompat>
         get() = mediaSessionConnection.playbackState
     val metadata: LiveData<MediaMetadataCompat>
@@ -31,7 +40,7 @@ class NowPlayingViewModel @Inject constructor(mediaSessionConnection: MediaSessi
     val isConnected: LiveData<Boolean>
         get() = mediaSessionConnection.isConnected
     val playbackTempo: LiveData<Int>
-        get() = Transformations.map(mediaSessionConnection.playbackRate) { rate ->
+        get() = mediaSessionConnection.playbackRate.map { rate ->
             Timber.i("Receiving playback rate: %s", rate)
             val progress = ((rate - 0.5f) * 10).toInt()
             Timber.i("Calculated progress: %s", progress)
@@ -48,16 +57,14 @@ class NowPlayingViewModel @Inject constructor(mediaSessionConnection: MediaSessi
         get() = mediaSessionConnection.playbackEvent
 
     // Media playback stuff
-    private val playbackStateObserver = Observer<PlaybackStateCompat> {
-        val playbackState = it ?: EMPTY_PLAYBACK_STATE
+    private val playbackStateObserver = Observer<PlaybackStateCompat> { playbackState ->
         val metadata = mediaSessionConnection.nowPlaying.value ?: NOTHING_PLAYING
         if (metadata.id != null) {
             updateState(playbackState)
         }
     }
 
-    private val mediaMetadataObserver = Observer<MediaMetadataCompat> {
-        val metadata = it ?: NOTHING_PLAYING
+    private val mediaMetadataObserver = Observer<MediaMetadataCompat> { metadata ->
         val playbackState = mediaSessionConnection.playbackState.value ?: EMPTY_PLAYBACK_STATE
         if (metadata.id != null) {
             updateState(playbackState)
