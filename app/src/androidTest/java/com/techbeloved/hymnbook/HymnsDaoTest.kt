@@ -64,8 +64,8 @@ class HymnsDaoTest {
         hymnList = listOf(hymn1, hymn2, hymn3)
         topicList = listOf(topic1, topic2, topic3)
 
-        hymnDao.insertAll(hymnList)
-        topicDao.insertAll(topicList)
+        hymnDao.insertAll(hymnList).blockingAwait()
+        topicDao.insertAll(topicList).blockingAwait()
     }
 
     @After

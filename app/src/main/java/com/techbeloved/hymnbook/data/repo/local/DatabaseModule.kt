@@ -2,12 +2,6 @@ package com.techbeloved.hymnbook.data.repo.local
 
 import android.content.Context
 import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.sqlite.db.SupportSQLiteDatabase
-import com.techbeloved.hymnbook.data.model.Hymn
-import com.techbeloved.hymnbook.data.repo.local.util.DataGenerator
-import com.techbeloved.hymnbook.data.repo.local.util.InitialDataUtil
-import com.techbeloved.hymnbook.usecases.HymnbookUseCases
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,7 +10,6 @@ import dagger.hilt.components.SingletonComponent
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 import javax.inject.Named
-import javax.inject.Provider
 import javax.inject.Singleton
 
 @Module
@@ -27,37 +20,11 @@ object DatabaseModule {
     @Singleton
     fun provideHymnDatabase(
         @ApplicationContext context: Context,
-        initialDataUtil: InitialDataUtil,
-        hymnbookUseCases: Provider<HymnbookUseCases>,
-        @Named("IO") executor: Executor
     ): HymnsDatabase {
         return Room.databaseBuilder(
             context,
             HymnsDatabase::class.java, "hymns.db"
         )
-            .addCallback(object : RoomDatabase.Callback() {
-                override fun onCreate(db: SupportSQLiteDatabase) {
-                    super.onCreate(db)
-                    executor.execute {
-                        val hymns: List<Hymn> = DataGenerator.generateHymns()
-                        val topics = DataGenerator.generateTopics()
-                        initialDataUtil.insertInitialData(hymns, topics)
-                        // Schedule download of midi archive here
-                        hymnbookUseCases.get().downloadLatestHymnMidiArchive()
-                    }
-                }
-
-                override fun onDestructiveMigration(db: SupportSQLiteDatabase) {
-                    super.onDestructiveMigration(db)
-                    executor.execute {
-                        val hymns: List<Hymn> = DataGenerator.generateHymns()
-                        val topics = DataGenerator.generateTopics()
-                        initialDataUtil.insertInitialData(hymns, topics)
-                        // Schedule download of midi archive here
-                        hymnbookUseCases.get().downloadLatestHymnMidiArchive()
-                    }
-                }
-            })
             .fallbackToDestructiveMigrationFrom(1,2,3,4,5)
             .build()
     }

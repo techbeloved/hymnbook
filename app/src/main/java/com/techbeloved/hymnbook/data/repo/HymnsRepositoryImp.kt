@@ -1,6 +1,7 @@
 package com.techbeloved.hymnbook.data.repo
 
 import com.techbeloved.hymnbook.data.model.Hymn
+import com.techbeloved.hymnbook.data.model.HymnAssetUpdate
 import com.techbeloved.hymnbook.data.model.HymnDetail
 import com.techbeloved.hymnbook.data.model.HymnNumber
 import com.techbeloved.hymnbook.data.model.HymnTitle
@@ -116,6 +117,10 @@ class HymnsRepositoryImp @Inject constructor(private val hymnDatabase: HymnsData
     override fun synchroniseOnlineMusic(onlineHymns: List<OnlineHymn>): Completable {
         return hymnDatabase.hymnDao()
             .updateWithOnlineMusic(onlineHymns.map { OnlineMusicUpdate(it.id, it.sheetMusicUrl) })
+    }
+
+    override fun updateHymnAsset(updates: List<HymnAssetUpdate>): Completable {
+        return hymnDatabase.hymnDao().updateHymnAsset(updates)
     }
 
 }

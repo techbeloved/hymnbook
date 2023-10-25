@@ -75,6 +75,7 @@ class HymnbookActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             checkNotificationPermission()
         }
+        viewModel.onShown()
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)

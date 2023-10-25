@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.techbeloved.hymnbook.data.model.Hymn
+import com.techbeloved.hymnbook.data.model.HymnAssetUpdate
 import com.techbeloved.hymnbook.data.model.HymnDetail
 import com.techbeloved.hymnbook.data.model.HymnNumber
 import com.techbeloved.hymnbook.data.model.HymnTitle
@@ -68,7 +69,7 @@ interface HymnDao {
 
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertAll(hymns: List<Hymn>)
+    fun insertAll(hymns: List<Hymn>): Completable
 
     @Insert
     fun insert(hymn: Hymn)
@@ -82,16 +83,16 @@ interface HymnDao {
     @Query("DELETE FROM hymns")
     fun deleteAll()
 
-    @Query("SELECT num AS number, CASE WHEN (remoteUri IS NULL) THEN 0 ELSE 1 END hasSheetMusic FROM hymns ORDER BY num ASC")
+    @Query("SELECT num AS number, CASE WHEN (localUri IS NULL) THEN 0 ELSE 1 END hasSheetMusic FROM hymns ORDER BY num ASC")
     fun getIndicesByNumber(): Flowable<List<HymnNumber>>
 
-    @Query("SELECT num AS number, CASE WHEN (remoteUri IS NULL) THEN 0 ELSE 1 END hasSheetMusic FROM hymns WHERE topicId=:topicId ORDER BY num ASC")
+    @Query("SELECT num AS number, CASE WHEN (localUri IS NULL) THEN 0 ELSE 1 END hasSheetMusic FROM hymns WHERE topicId=:topicId ORDER BY num ASC")
     fun getIndicesByNumberForTopic(topicId: Int): Flowable<List<HymnNumber>>
 
-    @Query("SELECT num AS number, CASE WHEN (remoteUri IS NULL) THEN 0 ELSE 1 END hasSheetMusic FROM hymns ORDER BY title ASC")
+    @Query("SELECT num AS number, CASE WHEN (localUri IS NULL) THEN 0 ELSE 1 END hasSheetMusic FROM hymns ORDER BY title ASC")
     fun getIndicesByTitle(): Flowable<List<HymnNumber>>
 
-    @Query("SELECT num AS number, CASE WHEN (remoteUri IS NULL) THEN 0 ELSE 1 END hasSheetMusic FROM hymns WHERE topicId=:topicId ORDER BY title ASC")
+    @Query("SELECT num AS number, CASE WHEN (localUri IS NULL) THEN 0 ELSE 1 END hasSheetMusic FROM hymns WHERE topicId=:topicId ORDER BY title ASC")
     fun getIndicesByTitleForTopic(topicId: Int): Flowable<List<HymnNumber>>
 
     @Query("SELECT hymns.num, hymns.title, hymns.verses, hymns.chorus FROM hymns JOIN hymnSearchFts ON (hymns.rowid = hymnSearchFts.docid) WHERE hymnSearchFts MATCH :query")
@@ -102,4 +103,10 @@ interface HymnDao {
 
     @Update(entity = Hymn::class)
     fun updateWithOnlineMusic(onlineMusicUpdate: List<OnlineMusicUpdate>): Completable
+
+    @Update(entity = Hymn::class)
+    fun updateHymnAsset(updates: List<HymnAssetUpdate>): Completable
+
+    @Update(entity = Hymn::class)
+    fun updateHymns(values: List<Hymn>): Completable
 }
