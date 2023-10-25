@@ -1,16 +1,15 @@
 plugins {
-    id 'com.android.application'
-    id 'kotlin-android'
-    id 'kotlin-parcelize'
-    id 'kotlin-kapt'
-    id 'androidx.navigation.safeargs.kotlin'
-    id 'com.github.triplet.play' version '3.7.0'
-    id 'org.jetbrains.kotlin.plugin.serialization'
+    alias libs.plugins.android.application
+    alias libs.plugins.kotlin.android
+    alias libs.plugins.kotlin.parcelize
+    alias libs.plugins.kotlin.serialization
+    alias libs.plugins.kotlin.kapt
+    alias libs.plugins.androidx.navigation.safe.args
+    alias libs.plugins.triplet.play
+    alias libs.plugins.google.services
+    alias libs.plugins.firebase.crashlytics
+    alias libs.plugins.hilt
 }
-
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.crashlytics'
-apply plugin: 'dagger.hilt.android.plugin'
 
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 
@@ -25,6 +24,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
+    namespace "com.techbeloved.hymnbook"
     signingConfigs {
         release_config {
             keyAlias keystoreProperties['keyAlias']
@@ -124,126 +124,114 @@ play {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation libs.androidx.appcompat
+    implementation libs.androidx.constraintlayout
+    implementation libs.androidx.legacy.support.v4
 
-    implementation 'com.google.firebase:firebase-crashlytics:18.5.0'
-    implementation 'com.google.firebase:firebase-analytics:21.4.0'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test:runner:1.5.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    implementation 'com.google.android.material:material:1.10.0'
-    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+    implementation libs.firebase.crashlytics
+    implementation libs.firebase.analytics
+    testImplementation libs.test.junit
+    androidTestImplementation libs.androidx.runner
+    androidTestImplementation libs.test.espresso
+    implementation libs.material
+    implementation libs.androidx.recyclerview
 
-    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation libs.androidx.cardview
 
     // RxJava2
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.10'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
-    implementation 'com.f2prateek.rx.preferences2:rx-preferences:2.0.0'
-    implementation 'com.jakewharton.rxrelay2:rxrelay:2.1.0'
+    implementation libs.rxjava
+    implementation libs.rxandroid
+    implementation libs.rx.preferences
+    implementation libs.rxrelay
 
-    def lifecycle_version = "2.6.2"
-    def room_version = "2.6.0"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
-    testImplementation "androidx.arch.core:core-testing:2.2.0"
-    androidTestImplementation "androidx.arch.core:core-testing:2.2.0"
-    implementation "androidx.room:room-runtime:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
-    implementation "androidx.palette:palette-ktx:1.0.0"
+    implementation libs.androidx.viewModel.ktx
+    implementation libs.androidx.livedata.ktx
+    implementation libs.androidx.viewModel.savedstate
+    testImplementation libs.core.testing
+    androidTestImplementation libs.core.testing
+    implementation libs.androidx.room.runtime
+    kapt libs.androidx.room.compiler
+    implementation libs.androidx.palette.ktx
 
     // For Kotlin use kapt instead of annotationProcessor
 
     // optional - RxJava support for Room
-    implementation "androidx.room:room-rxjava2:$room_version"
+    implementation libs.androidx.room.rxjava2
 
-    def nav_version = "2.7.4"
-
-    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation libs.androidx.navigation.fragment.ktx
     // For Kotlin use navigation-fragment-ktx
-    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
-    // For Kotlin use navigation-ui-ktx
-    // For Kotlin use navigation-ui-ktx
+    implementation libs.androidx.navigation.ui.ktx
 
     // Test helpers
-    testImplementation "androidx.room:room-testing:$room_version"
-    implementation 'androidx.core:core-ktx:1.12.0'
+    testImplementation libs.androidx.room.testing
+    implementation libs.androidx.core.ktx
 
     // Mockito kotlin
-    testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    testImplementation libs.mockito.kotlin
+    androidTestImplementation libs.test.androidx.junit
 
     // Timber
-    implementation 'com.jakewharton.timber:timber:5.0.1'
+    implementation libs.timber
 
     // Snippety for text styling
-    implementation 'com.github.fueled:snippety:1.1.1'
+    implementation libs.snippety
 
     // Preferences
-    implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
-    implementation 'androidx.preference:preference-ktx:1.2.1'
+    implementation libs.androidx.legacy.preference.v14
+    implementation libs.androidx.preference.ktx
 
     // Custom views
     implementation project(':edittextwithsortby')
 
     // RxBinding
-    implementation 'com.jakewharton.rxbinding3:rxbinding:3.0.0-alpha2'
-    implementation 'com.jakewharton.rxbinding3:rxbinding-core:3.0.0-alpha2'
-    implementation 'com.jakewharton.rxbinding3:rxbinding-appcompat:3.0.0-alpha2'
-    implementation 'com.jakewharton.rxbinding3:rxbinding-recyclerview:3.0.0-alpha2'
-    implementation 'com.jakewharton.rxbinding3:rxbinding-viewpager:3.0.0-alpha2'
-    implementation 'com.jakewharton.rxbinding3:rxbinding-material:3.0.0-alpha2'
+    implementation libs.rxbinding
+    implementation libs.rxbinding.core
+    implementation libs.rxbinding.appcompat
+    implementation libs.rxbinding.recyclerview
+    implementation libs.rxbinding.viewpager
+    implementation libs.rxbinding.material
 
     // Firebase
-    implementation 'com.google.firebase:firebase-core:21.1.1'
-    implementation 'com.google.firebase:firebase-firestore:24.9.0'
-    implementation 'com.google.firebase:firebase-storage:20.3.0'
-    implementation 'com.google.firebase:firebase-dynamic-links:21.2.0'
+    implementation libs.firebase.core
+    implementation libs.firebase.firestore
+    implementation libs.firebase.storage
+    implementation libs.firebase.dynamic.links
 
     // Play core
-    implementation 'com.google.android.play:app-update-ktx:2.1.0'
+    implementation libs.app.update.ktx
 
     // PdfViewer
-    implementation 'com.github.barteksc:android-pdf-viewer:3.1.0-beta.1'
-
-    // Work manager
-    def work_version = "2.8.1"
+    implementation libs.android.pdf.viewer
 
     // Kotlin + coroutines
-    implementation "androidx.work:work-runtime-ktx:$work_version"
+    implementation libs.androidx.work.runtime
 
     // optional - RxJava2 support
-    implementation "androidx.work:work-rxjava2:$work_version"
+    implementation libs.androidx.work.rxjava2
     // optional - Test helpers
-    androidTestImplementation "androidx.work:work-testing:$work_version"
+    androidTestImplementation libs.androidx.work.testing
 
     // Custom views
-    implementation 'com.budiyev.android:circular-progress-bar:1.2.2'
+    implementation libs.circular.progress.bar
 
     // Hilt
-    implementation "com.google.dagger:hilt-android:2.48"
-    kapt "com.google.dagger:hilt-android-compiler:2.48"
-    testImplementation 'com.google.dagger:hilt-android-testing:2.48'
-    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.48'
-    kaptTest 'com.google.dagger:hilt-compiler:2.48'
+    implementation libs.hilt.android
+    kapt libs.hilt.android.compiler
+    testImplementation libs.test.hilt
+    androidTestImplementation libs.test.hilt
+    kaptTest libs.hilt.compiler
 
     // When using Kotlin.
-    kapt 'androidx.hilt:hilt-compiler:1.0.0'
+    kapt libs.androidx.hilt.compiler
 
-    implementation 'androidx.hilt:hilt-work:1.0.0'
+    implementation libs.androidx.hilt.work
     // When using Kotlin.
-    kapt 'androidx.hilt:hilt-compiler:1.0.0'
+    kapt libs.androidx.hilt.compiler
 
     // Media
-    implementation "androidx.media:media:1.6.0"
+    implementation libs.androidx.media
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0'
+    implementation libs.kotlinx.serialization
 
-    implementation 'com.getkeepsafe.taptargetview:taptargetview:1.13.3'
-}
-repositories {
-    mavenCentral()
+    implementation libs.taptargetview
 }
