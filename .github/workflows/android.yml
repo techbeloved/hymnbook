@@ -28,6 +28,8 @@ jobs:
       WCCRM_TOPICS_JSON: "wccrm_topics.json"
       WCCRM_TUNES_ASSET_DOWNLOAD_URL: ${{ secrets.WCCRM_TUNES_ASSET }}
       WCCRM_SHEET_MUSIC_ASSET_DOWNLOAD_URL: ${{ secrets.WCCRM_CATALOG_ASSET }}
+      WCCRM_SHEET_MUSIC_ARCHIVE: "wccrm_sheet_music_v2.zip"
+      WCCRM_TUNES_ARCHIVE: "wccrm_hymns_v1.zip"
       INTERNAL_DOWNLOAD_URL: ""
       IS_RELEASE: ${{ github.event_name == 'release' }}
     steps:
@@ -48,10 +50,12 @@ jobs:
           echo "$HYMBOOK_GOOGLE_JSON" | base64 -d > app/google-services.json
 
           rm -rf app/src/main/assets/*.json
+          mkdir app/src/main/assets/tunes
+          mkdir app/src/main/assets/sheets
           wget -q -O app/src/main/assets/"$WCCRM_HYMNS_JSON" $WCCRM_HYMNS_JSON_URL
           wget -q -O app/src/main/assets/"$WCCRM_TOPICS_JSON" $WCCRM_TOPICS_JSON_URL
-          wget -q -P app/src/main/assets/tunes $WCCRM_TUNES_ASSET_DOWNLOAD_URL
-          wget -q -P app/src/main/assets/sheets $WCCRM_SHEET_MUSIC_ASSET_DOWNLOAD_URL
+          wget -q -O app/src/main/assets/tunes/"$WCCRM_TUNES_ARCHIVE" $WCCRM_TUNES_ASSET_DOWNLOAD_URL
+          wget -q -O app/src/main/assets/sheets/"$WCCRM_SHEET_MUSIC_ARCHIVE" $WCCRM_SHEET_MUSIC_ASSET_DOWNLOAD_URL
 
       - name: Publish to play store
         if: github.event_name == 'release'
