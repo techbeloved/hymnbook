@@ -4,8 +4,8 @@ import androidx.annotation.IntDef
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.distinctUntilChanged
 import com.techbeloved.hymnbook.data.ShareLinkProvider
 import com.techbeloved.hymnbook.data.SharedPreferencesRepo
 import com.techbeloved.hymnbook.data.analytics.AppAnalytics
@@ -52,7 +52,7 @@ class HymnPagerViewModel @Inject constructor(
     val header: LiveData<String> get() = _categoryHeader
 
     val hymnIndicesLiveData: LiveData<Lce<List<HymnNumber>>>
-        get() = Transformations.distinctUntilChanged(_hymnIndicesLiveData)
+        get() = _hymnIndicesLiveData.distinctUntilChanged()
 
     private val indicesConsumer: Consumer<in Lce<List<HymnNumber>>> = Consumer {
         _hymnIndicesLiveData.value = it

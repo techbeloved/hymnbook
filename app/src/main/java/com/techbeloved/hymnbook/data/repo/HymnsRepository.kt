@@ -2,11 +2,12 @@ package com.techbeloved.hymnbook.data.repo
 
 import com.techbeloved.hymnbook.data.model.DOWNLOAD_IN_PROGRESS
 import com.techbeloved.hymnbook.data.model.Hymn
+import com.techbeloved.hymnbook.data.model.HymnAssetUpdate
 import com.techbeloved.hymnbook.data.model.HymnDetail
+import com.techbeloved.hymnbook.data.model.HymnNumber
 import com.techbeloved.hymnbook.data.model.HymnTitle
 import com.techbeloved.hymnbook.data.model.SearchResult
 import com.techbeloved.hymnbook.data.model.Topic
-import com.techbeloved.hymnbook.data.model.HymnNumber
 import com.techbeloved.hymnbook.hymndetail.SortBy
 import io.reactivex.Completable
 import io.reactivex.Flowable
@@ -41,4 +42,5 @@ interface HymnsRepository {
 
     fun getTopicById(topicId: Int): Observable<Topic>
     fun synchroniseOnlineMusic(onlineHymns: List<OnlineHymn>): Completable
+    fun updateHymnAsset(updates: List<HymnAssetUpdate>): Completable
 }

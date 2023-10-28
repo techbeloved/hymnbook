@@ -1,6 +1,7 @@
 package com.techbeloved.hymnbook
 
 import androidx.lifecycle.ViewModel
+import com.techbeloved.hymnbook.usecases.ExtractBundledAssetsUseCase
 import com.techbeloved.hymnbook.usecases.HymnbookUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
@@ -12,7 +13,14 @@ import javax.inject.Inject
 @HiltViewModel
 class HymnbookViewModel @Inject constructor(
     private val useCases: HymnbookUseCases,
+    extractBundledAssetsUseCase: ExtractBundledAssetsUseCase,
 ) : ViewModel() {
+
+    init {
+        extractBundledAssetsUseCase()
+    }
+
+    fun onShown() = Unit
 
     private val disposables = CompositeDisposable()
 

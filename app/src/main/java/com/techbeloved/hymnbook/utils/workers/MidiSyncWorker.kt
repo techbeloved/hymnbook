@@ -13,10 +13,6 @@ import dagger.assisted.AssistedInject
 import io.reactivex.Single
 import timber.log.Timber
 
-/**
- * Should use this to schedule hymns midi download and database sync. Periodically,
- * like once a week checks for new update. If there is any update, downloads, it, extracts it and populate the database
- */
 @HiltWorker
 class MidiSyncWorker @AssistedInject constructor(@Assisted context: Context,
                                                      @Assisted params: WorkerParameters,
@@ -59,8 +55,6 @@ const val KEY_DEFAULT_PREFERENCE_NAME = "defaultPreferenceName"
  * Worker [Data] key for supplying the midiVersionPreference key
  */
 const val KEY_PREF_MIDI_VERSION = "keyMidiVersion"
-
-const val KEY_FIREBASE_ARCHIVE_COLLECTION = "archiveCollection"
 
 const val KEY_FIREBASE_ARCHIVE_VERSION = "midiFirebaseArchiveVersion"
 

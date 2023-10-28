@@ -2,6 +2,7 @@ package com.techbeloved.hymnbook.data.repo.local
 
 import androidx.room.*
 import com.techbeloved.hymnbook.data.model.Topic
+import io.reactivex.Completable
 import io.reactivex.Flowable
 
 @Dao
@@ -16,8 +17,8 @@ interface TopicDao {
     @Insert
     fun insertTopic(topic: Topic)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertAll(topics: List<Topic>)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(topics: List<Topic>): Completable
 
     @Delete
     fun delete(topic: Topic)
