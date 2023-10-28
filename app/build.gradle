@@ -38,8 +38,8 @@ android {
         applicationId "com.techbeloved.hymnbook"
         minSdkVersion 21
         targetSdkVersion 34
-        versionCode 31
-        versionName "2.3.8"
+        versionCode 32
+        versionName "2.3.9"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary true

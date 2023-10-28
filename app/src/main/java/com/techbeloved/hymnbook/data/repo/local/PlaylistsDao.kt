@@ -20,23 +20,28 @@ interface PlaylistsDao {
     fun getPlaylist(playlistId: Int): Flowable<Playlist>
 
     // The following two queries does the same thing except ordering, one uses INNER JOIN while the other uses only WHERE clauses
-    @Query("SELECT *, playlistId FROM playlists AS p INNER JOIN favorites AS f ON p.id=f.playlistId INNER JOIN hymn_titles AS t ON f.hymnId=t.num WHERE f.playlistId =:playlistId ORDER BY t.num ASC")
+    @Query("SELECT t.*,  f.playlistId FROM playlists AS p INNER JOIN favorites AS f ON p.id=f.playlistId INNER JOIN hymn_titles AS t ON f.hymnId=t.num WHERE f.playlistId =:playlistId ORDER BY t.num ASC")
     fun getHymnsInPlaylist(playlistId: Int): Flowable<List<HymnTitle>>
 
-    @Query("SELECT *, playlistId FROM playlists AS p, favorites AS f, hymn_titles AS t WHERE p.id=f.playlistId  AND f.hymnId=t.num AND f.playlistId =:playlistId ORDER BY t.title ASC")
+    @Query("SELECT t.*, playlistId FROM playlists AS p, favorites AS f, hymn_titles AS t WHERE p.id=f.playlistId  AND f.hymnId=t.num AND f.playlistId =:playlistId ORDER BY t.title ASC")
     fun getHymnsInPlaylistSortByTitle(playlistId: Int): Flowable<List<HymnTitle>>
 
-    @Query("SELECT t.num AS number,  CASE WHEN (remoteUri IS NULL) THEN 0 ELSE 1 END hasSheetMusic FROM hymns AS h, playlists AS p, favorites AS f, hymn_titles AS t WHERE p.id=f.playlistId  AND f.hymnId=t.num AND f.playlistId =:playlistId ORDER BY t.title ASC")
+    @Query("SELECT t.num AS number, CASE WHEN (localUri IS NULL) THEN 0 ELSE 1 END hasSheetMusic FROM playlists AS p, hymns as h, favorites AS f, hymn_titles AS t WHERE p.id=f.playlistId  AND f.hymnId=t.num AND h.num=f.hymnId AND f.playlistId =:playlistId ORDER BY t.title ASC")
     fun getHymnIndicesInPlaylistByTitle(playlistId: Int): Flowable<List<HymnNumber>>
 
-    @Query("SELECT t.num AS number, CASE WHEN (remoteUri IS NULL) THEN 0 ELSE 1 END hasSheetMusic FROM hymns AS h, playlists AS p, favorites AS f, hymn_titles AS t WHERE p.id=f.playlistId  AND f.hymnId=t.num AND f.playlistId =:playlistId ORDER BY t.num ASC")
+    @Query("SELECT t.num AS number, CASE WHEN (localUri IS NULL) THEN 0 ELSE 1 END hasSheetMusic FROM hymns AS h, playlists AS p, favorites AS f, hymn_titles AS t WHERE p.id=f.playlistId  AND f.hymnId=t.num AND h.num=f.hymnId AND f.playlistId =:playlistId ORDER BY t.num ASC")
     fun getHymnIndicesInPlaylist(playlistId: Int): Flowable<List<HymnNumber>>
 
     @Insert
     fun savePlaylist(playlist: Playlist): Completable
 
     @Query("UPDATE playlists SET title =:title, description =:description, updated =:updated WHERE id =:playlistId")
-    fun updatePlaylist(playlistId: Int, title: String, description: String, updated: Date = Date()): Completable
+    fun updatePlaylist(
+        playlistId: Int,
+        title: String,
+        description: String,
+        updated: Date = Date(),
+    ): Completable
 
     @Insert
     fun saveFavorite(favorite: Favorite): Completable
