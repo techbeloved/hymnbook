@@ -20,11 +20,12 @@ appUpdateKtx = "2.1.0"
 cardview = "1.0.0"
 circularProgressBar = "1.2.2"
 coil = "2.4.0"
-compose_compiler = "1.5.1"
+compose_compiler = "1.5.4"
 compose_constraintlayout = "1.0.1"
 compose_material3 = "1.1.2"
 compose_ui = "1.5.4"
 composeBom = "2023.10.01"
+compose_jetbrains = "1.5.10"
 constraintlayout = "2.1.4"
 core_library_desugaring = "2.0.4"
 coreTestingVersion = "2.2.0"
@@ -44,9 +45,8 @@ googleServices = "4.4.0"
 hilt_android = "2.48"
 hilt_navigation = "1.0.0"
 hiltAndroidCompiler = "2.48"
-jetbrains_compose = "1.5.3"
 koin = "3.4.3"
-kotlin = "1.9.10"
+kotlin = "1.9.20"
 ktor = "2.3.3"
 legacyPreferenceV14 = "1.0.0"
 legacySupportV4 = "1.0.0"
@@ -209,7 +209,7 @@ test-hilt = { group = "com.google.dagger", name = "hilt-android-testing", versio
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
-jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "jetbrains_compose" }
+jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose_jetbrains" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
