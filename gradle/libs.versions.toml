@@ -1,6 +1,6 @@
 [versions]
 accompanist = "0.32.0"
-agp = "8.1.2"
+agp = "8.1.4"
 androidPdfViewer = "3.1.0-beta.1"
 androidx_activity = "1.8.0"
 androidx_appcompat = "1.6.1"
@@ -25,7 +25,7 @@ compose_constraintlayout = "1.0.1"
 compose_material3 = "1.1.2"
 compose_ui = "1.5.4"
 composeBom = "2023.10.01"
-compose_jetbrains = "1.5.10"
+compose_jetbrains = "1.5.11"
 constraintlayout = "2.1.4"
 core_library_desugaring = "2.0.4"
 coreTestingVersion = "2.2.0"
@@ -46,7 +46,8 @@ hilt_android = "2.48"
 hilt_navigation = "1.0.0"
 hiltAndroidCompiler = "2.48"
 koin = "3.4.3"
-kotlin = "1.9.20"
+kotlin = "1.9.21"
+kotlinxCollectionsImmutable = "0.3.6"
 ktor = "2.3.3"
 legacyPreferenceV14 = "1.0.0"
 legacySupportV4 = "1.0.0"
@@ -55,8 +56,8 @@ lottie_compose = "6.1.0"
 material = "1.10.0"
 media = "1.6.0"
 mockitoKotlin = "2.1.0"
-navigation_compose = "2.7.4"
-navigationFragmentKtx = "2.7.4"
+navigation_compose = "2.7.5"
+navigationFragmentKtx = "2.7.5"
 navigationSafeArgsGradlePlugin = "2.7.4"
 okhttp = "4.11.0"
 paletteKtx = "1.0.0"
@@ -81,6 +82,7 @@ taptargetview = "1.13.3"
 test_junit = "4.13.2"
 timber = "5.0.1"
 triplet = "3.7.0"
+voyager = "1.0.0-rc10"
 
 [libraries]
 android-pdf-viewer = { module = "com.github.barteksc:android-pdf-viewer", version.ref = "androidPdfViewer" }
@@ -148,6 +150,7 @@ firebase-dynamic-links = { module = "com.google.firebase:firebase-dynamic-links"
 firebase-firestore = { module = "com.google.firebase:firebase-firestore", version.ref = "firebaseFirestore" }
 firebase-storage = { module = "com.google.firebase:firebase-storage", version.ref = "firebaseStorage" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
+kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "dateTime" }
 kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 
@@ -179,6 +182,11 @@ sqldelight-runtime = { group = "app.cash.sqldelight", name = "runtime", version.
 sqldelight-android = { group = "app.cash.sqldelight", name = "android-driver", version.ref = "sqlDelight" }
 sqldelight-native = { group = "app.cash.sqldelight", name = "native-driver", version.ref = "sqlDelight" }
 sqldelight-jvm = { group = "app.cash.sqldelight", name = "sqlite-driver", version.ref = "sqlDelight" }
+voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
+voyager-bottomSheetNavigator = { module = "cafe.adriel.voyager:voyager-bottom-sheet-navigator", version.ref = "voyager" }
+voyager-tabNavigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
+voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
+voyager-androidx = { module = "cafe.adriel.voyager:voyager-androidx", version.ref = "voyager" }
 
 kotlin-test = { group = "org.jetbrains.kotlin", name = "test", version.ref = "kotlin" }
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
