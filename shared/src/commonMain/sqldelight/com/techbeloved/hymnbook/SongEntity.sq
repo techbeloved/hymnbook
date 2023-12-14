@@ -1,0 +1,31 @@
+import com.techbeloved.hymnbook.shared.model.Lyric;
+import kotlin.collections.List;
+import kotlinx.datetime.Instant;
+CREATE TABLE SongEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    title TEXT NOT NULL,
+    alternate_title TEXT,
+    lyrics TEXT AS List<Lyric> NOT NULL,
+    verse_order TEXT,
+    copyright TEXT,
+    comments TEXT,
+    search_title TEXT NOT NULL COLLATE NOCASE,
+    search_lyrics TEXT NOT NULL COLLATE NOCASE,
+    created INTEGER AS Instant NOT NULL,
+    modified INTEGER AS Instant NOT NULL
+);
+
+insert:
+INSERT OR REPLACE INTO SongEntity(title, alternate_title, lyrics, verse_order, copyright, comments, search_title, search_lyrics, created, modified)
+VALUES(?,?,?,?,?,?,?,?,?,?);
+
+lastInsertRowId:
+SELECT last_insert_rowid();
+
+getAllTitles:
+SELECT S.id, S.title, S.alternate_title, B.songbook, B.entry FROM SongEntity AS S
+LEFT JOIN SongbookSongs AS B
+ON S.id = B.song_id;
+
+deleteAll:
+DELETE FROM SongEntity;

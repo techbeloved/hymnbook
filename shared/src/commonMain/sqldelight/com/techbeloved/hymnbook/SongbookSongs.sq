@@ -1,0 +1,12 @@
+CREATE TABLE SongbookSongs (
+    songbook TEXT COLLATE NOCASE,
+    song_id INTEGER,
+    entry TEXT,
+    PRIMARY KEY (songbook, song_id, entry),
+    FOREIGN KEY (songbook) REFERENCES SongbookEntity(name) ON DELETE CASCADE,
+    FOREIGN KEY (song_id) REFERENCES SongEntity(id) ON DELETE CASCADE
+);
+
+insert:
+INSERT OR REPLACE INTO SongbookSongs(songbook, song_id, entry)
+VALUES (?, ?, ?);

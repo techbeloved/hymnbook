@@ -1,0 +1,13 @@
+CREATE TABLE AuthorSongs (
+    author TEXT COLLATE NOCASE,
+    song_id INTEGER,
+    author_type TEXT,
+    comment TEXT,
+    PRIMARY KEY (author, song_id, author_type),
+    FOREIGN KEY (author) REFERENCES AuthorEntity (displayname) ON DELETE CASCADE,
+    FOREIGN KEY (song_id) REFERENCES SongEntity (id) ON DELETE CASCADE
+);
+
+insert:
+INSERT OR REPLACE INTO AuthorSongs(author, song_id, author_type, comment)
+VALUES (?, ?, ?, ?);

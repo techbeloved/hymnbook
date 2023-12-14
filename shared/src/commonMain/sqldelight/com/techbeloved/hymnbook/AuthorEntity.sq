@@ -1,0 +1,13 @@
+CREATE TABLE AuthorEntity (
+    displayname TEXT PRIMARY KEY NOT NULL COLLATE NOCASE,
+    firstname TEXT,
+    lastname TEXT,
+    comment TEXT
+);
+
+insert:
+INSERT OR IGNORE INTO AuthorEntity(displayname, firstname, lastname, comment)
+VALUES (?, ?, ?, ?);
+
+deleteAll:
+DELETE FROM AuthorEntity;
