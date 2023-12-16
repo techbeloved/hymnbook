@@ -1,40 +1,65 @@
 [versions]
-agp = "8.1.2"
+accompanist = "0.32.0"
+agp = "8.1.4"
 androidPdfViewer = "3.1.0-beta.1"
+androidx_activity = "1.8.0"
+androidx_appcompat = "1.6.1"
+androidx_core_ktx = "1.12.0"
+androidx_datastore = "1.1.0-alpha06"
+androidx_fragment = "1.6.2"
+androidx_hilt_compiler = "1.0.0"
+androidx_hilt_work = "1.0.0"
+androidx_lifecycle = "2.6.2"
+androidx_savedstate = "1.2.1"
+androidx_splashscreen = "1.0.1"
+androidx_test_core = "1.5.0"
+androidx_test_junit = "1.1.5"
+androidx_work = "2.8.1"
+androidx_work_runtime = "2.8.1"
 appUpdateKtx = "2.1.0"
 cardview = "1.0.0"
 circularProgressBar = "1.2.2"
-constraintlayout = "2.1.4"
-coreTestingVersion = "2.2.0"
-firebaseAnalytics = "21.4.0"
-firebaseCore = "21.1.1"
-firebaseCrashlytics = "18.5.0"
-firebaseCrashlyticsGradle = "2.9.9"
-firebaseDynamicLinks = "21.2.0"
-firebaseFirestore = "24.9.0"
-firebaseStorage = "20.3.0"
-googleServices = "4.4.0"
-hiltAndroidCompiler = "2.48"
-kotlin = "1.9.0"
-core_library_desugaring = "2.0.3"
 coil = "2.4.0"
-espresso = "3.5.1"
-accompanist = "0.32.0"
+compose_compiler = "1.5.4"
 compose_constraintlayout = "1.0.1"
 compose_material3 = "1.1.2"
+compose_ui = "1.5.4"
+composeBom = "2023.10.01"
+compose_jetbrains = "1.5.11"
+constraintlayout = "2.1.4"
+core_library_desugaring = "2.0.4"
+coreTestingVersion = "2.2.0"
+coroutines = "1.7.3"
+coroutinesTest = "1.7.3"
+dateTime = "0.4.1"
+detekt = "1.23.0"
+espresso = "3.5.1"
+firebaseAnalytics = "21.4.0"
+firebaseCore = "21.1.1"
+firebaseCrashlytics = "18.5.1"
+firebaseCrashlyticsGradle = "2.9.9"
+firebaseDynamicLinks = "21.2.0"
+firebaseFirestore = "24.9.1"
+firebaseStorage = "20.3.0"
+googleServices = "4.4.0"
+hilt_android = "2.48"
+hilt_navigation = "1.0.0"
+hiltAndroidCompiler = "2.48"
+koin = "3.4.3"
+kotlin = "1.9.21"
+kotlinxCollectionsImmutable = "0.3.6"
+ktor = "2.3.3"
 legacyPreferenceV14 = "1.0.0"
 legacySupportV4 = "1.0.0"
+libphonenumber = "8.13.22"
 lottie_compose = "6.1.0"
-androidx_appcompat = "1.6.1"
-androidx_savedstate = "1.2.1"
-androidx_lifecycle = "2.6.2"
-androidx_core_ktx = "1.12.0"
-androidx_test_core = "1.5.0"
 material = "1.10.0"
 media = "1.6.0"
 mockitoKotlin = "2.1.0"
-navigationFragmentKtx = "2.7.4"
+navigation_compose = "2.7.5"
+navigationFragmentKtx = "2.7.5"
 navigationSafeArgsGradlePlugin = "2.7.4"
+okhttp = "4.11.0"
 paletteKtx = "1.0.0"
 preferenceKtx = "1.2.1"
 recyclerview = "1.3.2"
@@ -50,36 +75,14 @@ rxbindingViewpager = "3.0.0-alpha2"
 rxjava = "2.2.10"
 rxPreferences = "2.0.0"
 rxrelay = "2.1.0"
+serialization = "1.6.0"
 snippety = "1.1.1"
+sqlDelight = "2.0.0-rc02"
 taptargetview = "1.13.3"
 test_junit = "4.13.2"
-androidx_test_junit = "1.1.5"
-androidx_hilt_work = "1.0.0"
-androidx_hilt_compiler = "1.0.0"
-androidx_work = "2.8.1"
-androidx_datastore = "1.1.0-alpha05"
-androidx_work_runtime = "2.8.1"
-androidx_splashscreen = "1.0.1"
 timber = "5.0.1"
-koin = "3.4.3"
-okhttp = "4.11.0"
-coroutines = "1.7.3"
-coroutinesTest = "1.7.3"
-androidx_activity = "1.7.2"
-androidx_fragment = "1.6.1"
-ktor = "2.3.3"
-sqlDelight = "2.0.0-rc02"
-dateTime = "0.4.1"
-serialization = "1.6.0"
-composeBom = "2023.09.02"
-compose_compiler = "1.5.1"
-compose_ui = "1.5.2"
-hilt_navigation = "1.0.0"
-navigation_compose = "2.7.3"
-hilt_android = "2.48"
-libphonenumber = "8.13.22"
-detekt = "1.23.0"
 triplet = "3.7.0"
+voyager = "1.0.0-rc10"
 
 [libraries]
 android-pdf-viewer = { module = "com.github.barteksc:android-pdf-viewer", version.ref = "androidPdfViewer" }
@@ -147,6 +150,7 @@ firebase-dynamic-links = { module = "com.google.firebase:firebase-dynamic-links"
 firebase-firestore = { module = "com.google.firebase:firebase-firestore", version.ref = "firebaseFirestore" }
 firebase-storage = { module = "com.google.firebase:firebase-storage", version.ref = "firebaseStorage" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
+kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "dateTime" }
 kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 
@@ -178,7 +182,13 @@ sqldelight-runtime = { group = "app.cash.sqldelight", name = "runtime", version.
 sqldelight-android = { group = "app.cash.sqldelight", name = "android-driver", version.ref = "sqlDelight" }
 sqldelight-native = { group = "app.cash.sqldelight", name = "native-driver", version.ref = "sqlDelight" }
 sqldelight-jvm = { group = "app.cash.sqldelight", name = "sqlite-driver", version.ref = "sqlDelight" }
+voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
+voyager-bottomSheetNavigator = { module = "cafe.adriel.voyager:voyager-bottom-sheet-navigator", version.ref = "voyager" }
+voyager-tabNavigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
+voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
+voyager-androidx = { module = "cafe.adriel.voyager:voyager-androidx", version.ref = "voyager" }
 
+kotlin-test = { group = "org.jetbrains.kotlin", name = "test", version.ref = "kotlin" }
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
 koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin" }
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
@@ -207,6 +217,7 @@ test-hilt = { group = "com.google.dagger", name = "hilt-android-testing", versio
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose_jetbrains" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
