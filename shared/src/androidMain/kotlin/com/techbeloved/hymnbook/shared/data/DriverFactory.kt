@@ -7,7 +7,7 @@ import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.techbeloved.hymnbook.Database
 import com.techbeloved.hymnbook.shared.di.AndroidInjector
 
-actual class DriverFactory(private val context: Context) {
+internal actual class DriverFactory(private val context: Context) {
     actual fun createDriver(): SqlDriver {
         return AndroidSqliteDriver(
             schema = Database.Schema,

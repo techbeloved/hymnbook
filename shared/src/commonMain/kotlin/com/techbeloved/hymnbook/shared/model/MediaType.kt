@@ -1,6 +1,6 @@
 package com.techbeloved.hymnbook.shared.model
 
-enum class MediaType {
+public enum class MediaType {
     Audio,
     Midi,
     Video,

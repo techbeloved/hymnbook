@@ -4,13 +4,13 @@ import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class OpenLyricsSong(
+public data class OpenLyricsSong(
     val metadata: Metadata,
     val properties: Properties,
     val lyrics: List<Verse>,
 ) {
     @Serializable
-    data class Properties(
+    public data class Properties(
         val titles: List<Title>,
         val authors: List<Author>? = null,
         val songbooks: List<Songbook>? = null,
@@ -23,10 +23,10 @@ data class OpenLyricsSong(
     )
 
     @Serializable
-    data class Author(val name: String, val type: String? = null, val comment: String? = null)
+    public data class Author(val name: String, val type: String? = null, val comment: String? = null)
 
     @Serializable
-    data class Title(
+    public data class Title(
         val name: String,
         val lang: String? = null,
         val original: Boolean? = null,
@@ -34,7 +34,7 @@ data class OpenLyricsSong(
     )
 
     @Serializable
-    data class Metadata(
+    public data class Metadata(
         val lang: String = "en",
         val chordNotation: String = "english",
         val version: String = "0.9", // open lyrics version
@@ -44,22 +44,22 @@ data class OpenLyricsSong(
     )
 
     @Serializable
-    data class Songbook(
+    public data class Songbook(
         val name: String,
         val entry: String? = null,
     )
 
     @Serializable
-    data class Theme(val name: String, val lang: String? = null)
+    public data class Theme(val name: String, val lang: String? = null)
 
     @Serializable
-    data class Verse(
+    public data class Verse(
         val name: String,
         val lines: List<Line>,
     )
 
     @Serializable
-    data class Line(
+    public data class Line(
         val content: String,
         val part: String? = null, // e.g. men, women, alto (etc)
     )

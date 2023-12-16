@@ -7,7 +7,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class HomeScreenModel : ScreenModel {
+internal class HomeScreenModel : ScreenModel {
     val state: StateFlow<ImmutableList<HymnItem>> = MutableStateFlow(sampleHymnItems)
 
     companion object {

@@ -6,7 +6,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import com.techbeloved.hymnbook.shared.ui.home.HomeScreen
 import com.techbeloved.hymnbook.shared.ui.home.HomeScreenModel
 
-object HomeScreen : Screen {
+internal object HomeScreen : Screen {
     @Composable
     override fun Content() {
         HomeScreen(screenModel = rememberScreenModel { HomeScreenModel() })

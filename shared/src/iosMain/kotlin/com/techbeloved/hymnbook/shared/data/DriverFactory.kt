@@ -4,7 +4,7 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import com.techbeloved.hymnbook.Database
 
-actual class DriverFactory {
+internal actual class DriverFactory {
     actual fun createDriver(): SqlDriver {
         return NativeSqliteDriver(Database.Schema, "songs.db")
     }

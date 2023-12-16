@@ -29,7 +29,7 @@ import kotlinx.collections.immutable.persistentListOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun App() {
+public fun App() {
     AppTheme {
         Navigator(screen = HomeScreen) { navigator ->
             Scaffold(

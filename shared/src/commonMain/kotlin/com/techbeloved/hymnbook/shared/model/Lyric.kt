@@ -8,7 +8,7 @@ public data class Lyric(
     val label: String,
     val content: String,
 ) {
-    enum class Type {
+    public enum class Type {
         Chorus,
         Verse,
         PreChorus,

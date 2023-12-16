@@ -27,7 +27,7 @@ import androidx.compose.ui.zIndex
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppSearchBar(onSearch: (String) -> Unit) {
+internal fun AppSearchBar(onSearch: (String) -> Unit) {
     val (searchQuery, updateSearchQuery) = rememberSaveable { mutableStateOf("") }
     val (isActive, updateIsActive) = rememberSaveable { mutableStateOf(false) }
     Box(
