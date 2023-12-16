@@ -56,6 +56,10 @@ kotlin {
 
                 // okio
                 implementation(libs.squareup.okio)
+
+                // xmlutil
+                implementation(libs.xmlutil.core)
+                implementation(libs.xmlutil.serialization)
             }
         }
 
