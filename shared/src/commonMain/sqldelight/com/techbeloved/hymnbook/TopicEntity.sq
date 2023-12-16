@@ -1,0 +1,10 @@
+CREATE TABLE TopicEntity (
+     name TEXT PRIMARY KEY NOT NULL COLLATE NOCASE
+);
+
+insert:
+INSERT OR REPLACE INTO TopicEntity(name)
+VALUES(?);
+
+deleteAll:
+DELETE FROM TopicEntity;

@@ -1,0 +1,19 @@
+CREATE TABLE SongbookEntity (
+    name TEXT PRIMARY KEY NOT NULL COLLATE NOCASE,
+    publisher TEXT
+);
+
+CREATE INDEX Songbook_name ON SongbookEntity(name);
+
+insert:
+INSERT OR REPLACE INTO SongbookEntity(name, publisher)
+VALUES (?, ?);
+
+byName:
+SELECT * FROM SongbookEntity WHERE name = ? LIMIT 1;
+
+getAll:
+SELECT * FROM SongbookEntity;
+
+deleteAll:
+DELETE FROM SongbookEntity;
