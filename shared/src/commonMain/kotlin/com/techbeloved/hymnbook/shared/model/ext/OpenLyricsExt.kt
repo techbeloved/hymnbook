@@ -7,5 +7,5 @@ public fun OpenLyricsSong.Verse.toLyric(): Lyric = Lyric(
         name.first().equals(it.name.first(), ignoreCase = true)
     } ?: Lyric.Type.Verse,
     label = name,
-    content = lines.joinToString(separator = "\n") { it.content },
+    content = lines.joinToString(separator = "\n") { it.content.trimIndent() },
 )

@@ -27,13 +27,13 @@ internal class SongRepository(
         database.transaction {
 
             database.songEntityQueries.insert(
-                title = song.properties.titles.first().name,
-                alternate_title = song.properties.titles.getOrNull(1)?.name,
+                title = song.properties.titles.first().value,
+                alternate_title = song.properties.titles.getOrNull(1)?.value,
                 lyrics = lyrics,
                 verse_order = song.properties.verseOrder,
                 comments = song.properties.comments?.joinToString(),
                 copyright = song.properties.copyright,
-                search_title = song.properties.titles.joinToString(separator = " ") { it.name },
+                search_title = song.properties.titles.joinToString(separator = " ") { it.value },
                 search_lyrics = lyrics.joinToString(separator = " ") { it.content },
                 created = created,
                 modified = created,

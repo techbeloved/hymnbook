@@ -21,6 +21,9 @@ internal fun HymnListingUi(
                     Text(text = item.title)
                 },
                 leadingContent = { Text(text = "${item.id}") },
+                supportingContent = {
+                    Text(text = item.subtitle)
+                }
             )
         }
     }
