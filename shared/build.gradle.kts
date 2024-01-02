@@ -1,9 +1,12 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.BitcodeEmbeddingMode
+
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.sqldelight)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.native.cocoapods)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -95,6 +98,25 @@ kotlin {
             }
         }
     }
+
+    cocoapods {
+        version = "1.0"
+        summary = "Hymnbook multiplatform"
+        homepage = "none.for.now"
+        name = "hymnbook-shared"
+        ios.deploymentTarget = "13.5" // minSdk
+
+        framework {
+            baseName = "shared"
+            embedBitcode(BitcodeEmbeddingMode.BITCODE)
+        }
+
+        pod("ZIPFoundation") {
+            source = git("https://github.com/weichsel/ZIPFoundation") {
+                tag = "0.9.17"
+            }
+        }
+    }
 }
 
 android {
@@ -106,6 +128,10 @@ android {
 
     kotlin {
         jvmToolchain(17)
+    }
+
+    sourceSets["main"].apply {
+        res.srcDirs("src/androidMain/res", "src/commonMain/resources")
     }
 }
 
