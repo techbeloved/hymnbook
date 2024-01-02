@@ -111,10 +111,8 @@ kotlin {
             embedBitcode(BitcodeEmbeddingMode.BITCODE)
         }
 
-        pod("ZIPFoundation") {
-            source = git("https://github.com/weichsel/ZIPFoundation") {
-                tag = "0.9.17"
-            }
+        pod("UnzipKit") {
+            version = "1.9"
         }
     }
 }
