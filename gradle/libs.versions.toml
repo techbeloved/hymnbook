@@ -20,7 +20,7 @@ appUpdateKtx = "2.1.0"
 cardview = "1.0.0"
 circularProgressBar = "1.2.2"
 coil = "2.4.0"
-compose_compiler = "1.5.4"
+compose_compiler = "1.5.6"
 compose_constraintlayout = "1.0.1"
 compose_material3 = "1.1.2"
 compose_ui = "1.5.4"
@@ -144,6 +144,7 @@ compose-activity = { group = "androidx.activity", name = "activity-compose", ver
 
 core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTestingVersion" }
 coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "coroutines" }
 coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
 
 firebase-analytics = { module = "com.google.firebase:firebase-analytics", version.ref = "firebaseAnalytics" }
@@ -188,6 +189,7 @@ sqldelight-android = { group = "app.cash.sqldelight", name = "android-driver", v
 sqldelight-native = { group = "app.cash.sqldelight", name = "native-driver", version.ref = "sqlDelight" }
 sqldelight-jvm = { group = "app.cash.sqldelight", name = "sqlite-driver", version.ref = "sqlDelight" }
 squareup-okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
+squareup-okio-fakefilesystem = { group = "com.squareup.okio", name = "okio-fakefilesystem", version.ref = "okio" }
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
 voyager-bottomSheetNavigator = { module = "cafe.adriel.voyager:voyager-bottom-sheet-navigator", version.ref = "voyager" }
 voyager-tabNavigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }

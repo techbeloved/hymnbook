@@ -1,21 +1,33 @@
 package com.techbeloved.hymnbook.shared.ui.home
 
 import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.screenModelScope
 import com.techbeloved.hymnbook.shared.di.Injector
 import com.techbeloved.hymnbook.shared.model.HymnItem
 import com.techbeloved.hymnbook.shared.model.ext.OpenLyricsSong
+import com.techbeloved.hymnbook.shared.tools.HashAssetFileUseCase
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.plus
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
-internal class HomeScreenModel : ScreenModel {
-    val state: StateFlow<ImmutableList<HymnItem>> = MutableStateFlow(sampleHymnItems)
+internal class HomeScreenModel(
+    private val hashAssetFileUseCase: HashAssetFileUseCase = HashAssetFileUseCase(),
+) : ScreenModel {
+    val state: MutableStateFlow<ImmutableList<HymnItem>> = MutableStateFlow(persistentListOf())
 
+    init {
+        screenModelScope.launch {
+
+            val assetFileHash = hashAssetFileUseCase("assets/openlyrics/ten_thousand_reason.xml")
+            val item1 = HymnItem(id = 1, title = "Asset file", subtitle = "${assetFileHash.sha256}, path: ${assetFileHash.path}")
+            state.value = persistentListOf(item1) + sampleHymnItems
+        }
+    }
     companion object {
         val sampleSong = xmlDecoding()
         private val sampleHymnItems = persistentListOf(
-            HymnItem(id = 1, title = "Hymn 1", subtitle = xmEncoding()),
             HymnItem(
                 id = 2,
                 title = sampleSong.properties.titles.first().value,
@@ -78,11 +90,17 @@ private val sampleOpenLyricsSongWithSongbook = OpenLyricsSong(
 
 private fun xmEncoding(): String {
 
-    return Injector.xml.encodeToString(OpenLyricsSong.serializer(), sampleOpenLyricsSongWithSongbook)
+    return Injector.xml.encodeToString(
+        OpenLyricsSong.serializer(),
+        sampleOpenLyricsSongWithSongbook
+    )
 }
 
 private fun xmlDecoding(): OpenLyricsSong =
-    Injector.xml.decodeFromString(OpenLyricsSong.serializer(), SAMPLE_TWO.replace("<\\?xml.*\\?>".toRegex(), "").also(::println))
+    Injector.xml.decodeFromString(
+        OpenLyricsSong.serializer(),
+        SAMPLE_TWO.replace("<\\?xml.*\\?>".toRegex(), "").also(::println)
+    )
 
 private const val SIMPLE_SONG = """
 <song xmlns="http://openlyrics.info/namespace/2009/song"

@@ -49,6 +49,7 @@ kotlin {
                 implementation(libs.kotlinx.serialization)
                 implementation(libs.kotlinx.io)
                 implementation(libs.kotlinx.datetime)
+                implementation(libs.coroutines)
 
                 // Voyager
                 implementation(libs.voyager.navigator)
@@ -78,6 +79,7 @@ kotlin {
             dependencies {
                 implementation(compose.desktop.common)
                 implementation(libs.sqldelight.jvm)
+                implementation(libs.coroutines.swing)
             }
         }
 
@@ -89,6 +91,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(libs.coroutines.test)
+                implementation(libs.squareup.okio.fakefilesystem)
             }
         }
 
@@ -111,9 +114,9 @@ kotlin {
             embedBitcode(BitcodeEmbeddingMode.BITCODE)
         }
 
-        pod("UnzipKit") {
-            version = "1.9"
-        }
+//        pod("UnzipKit") {
+//            version = "1.9"
+//        }
     }
 }
 
@@ -129,7 +132,8 @@ android {
     }
 
     sourceSets["main"].apply {
-        res.srcDirs("src/androidMain/res", "src/commonMain/resources")
+        res.srcDirs("src/androidMain/res", "src/commonMain/resources/res")
+        assets.srcDirs("src/commonMain/resources/assets")
     }
 }
 
