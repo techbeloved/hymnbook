@@ -11,8 +11,6 @@ plugins {
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
-    applyDefaultHierarchyTemplate()
-
     androidTarget {
         compilations.all {
             kotlinOptions {
@@ -22,58 +20,66 @@ kotlin {
     }
 
     jvm("desktop")
-    
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach {
-        it.binaries.framework {
-            baseName = "shared"
-        }
-    }
+
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
 
     explicitApi()
 
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                //put your multiplatform dependencies here
-                implementation(compose.runtime)
-                implementation(compose.foundation)
-                implementation(compose.material3)
-                implementation(compose.material)
-                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
-                implementation(compose.components.resources)
-                implementation(libs.kotlinx.collections.immutable)
-                implementation(libs.kotlinx.serialization)
-                implementation(libs.kotlinx.io)
-                implementation(libs.kotlinx.datetime)
-                implementation(libs.coroutines)
-
-                // Voyager
-                implementation(libs.voyager.navigator)
-                implementation(libs.voyager.transitions)
-                implementation(libs.voyager.bottomSheetNavigator)
-
-                // Sqldelight
-                implementation(libs.sqldelight.runtime)
-                implementation(libs.sqldelight.adapters)
-
-                // okio
-                implementation(libs.squareup.okio)
-
-                // xmlutil
-                implementation(libs.xmlutil.core)
-                implementation(libs.xmlutil.serialization)
-            }
+    cocoapods {
+        version = "1.0"
+        summary = "Hymnbook multiplatform"
+        homepage = "none.for.now"
+        license = "Apache"
+        ios.deploymentTarget = "15.5" // minSdk
+        podfile = project.file("../iosApp/Podfile")
+        framework {
+            isStatic = false
+            baseName = "shared"
+            embedBitcode(BitcodeEmbeddingMode.BITCODE)
         }
 
-        val androidMain by getting {
-            dependencies {
-                api(libs.compose.activity)
-                implementation(libs.sqldelight.android)
-            }
+        pod("SSZipArchive") {
+            version = "2.5.5"
+        }
+    }
+
+    sourceSets {
+        commonMain.dependencies {
+            //put your multiplatform dependencies here
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.material3)
+            implementation(compose.material)
+            @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+            implementation(compose.components.resources)
+            implementation(libs.kotlinx.collections.immutable)
+            implementation(libs.kotlinx.serialization)
+            implementation(libs.kotlinx.io)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.coroutines)
+
+            // Voyager
+            implementation(libs.voyager.navigator)
+            implementation(libs.voyager.transitions)
+            implementation(libs.voyager.bottomSheetNavigator)
+
+            // Sqldelight
+            implementation(libs.sqldelight.runtime)
+            implementation(libs.sqldelight.adapters)
+
+            // okio
+            implementation(libs.squareup.okio)
+
+            // xmlutil
+            implementation(libs.xmlutil.core)
+            implementation(libs.xmlutil.serialization)
+        }
+
+        androidMain.dependencies {
+            api(libs.compose.activity)
+            implementation(libs.sqldelight.android)
         }
         val desktopMain by getting {
             dependencies {
@@ -87,12 +93,10 @@ kotlin {
             implementation(libs.sqldelight.native)
         }
 
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-                implementation(libs.coroutines.test)
-                implementation(libs.squareup.okio.fakefilesystem)
-            }
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+            implementation(libs.coroutines.test)
+            implementation(libs.squareup.okio.fakefilesystem)
         }
 
         val androidUnitTest by getting {
@@ -100,23 +104,6 @@ kotlin {
                 implementation(libs.sqldelight.jvm)
             }
         }
-    }
-
-    cocoapods {
-        version = "1.0"
-        summary = "Hymnbook multiplatform"
-        homepage = "none.for.now"
-        name = "hymnbook-shared"
-        ios.deploymentTarget = "13.5" // minSdk
-
-        framework {
-            baseName = "shared"
-            embedBitcode(BitcodeEmbeddingMode.BITCODE)
-        }
-
-//        pod("UnzipKit") {
-//            version = "1.9"
-//        }
     }
 }
 
@@ -142,5 +129,8 @@ sqldelight {
         create("Database") {
             packageName.set("com.techbeloved.hymnbook")
         }
+        // needs to be set otherwise, with cocoapods, iosApp fails to build.
+        // See https://github.com/cashapp/sqldelight/issues/1442
+        linkSqlite = true
     }
 }

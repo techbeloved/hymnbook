@@ -1,15 +1,15 @@
 Pod::Spec.new do |spec|
     spec.name                     = 'shared'
     spec.version                  = '1.0'
-    spec.homepage                 = ''
+    spec.homepage                 = 'none.for.now'
     spec.source                   = { :http=> ''}
     spec.authors                  = ''
-    spec.license                  = ''
-    spec.summary                  = ''
+    spec.license                  = 'Apache'
+    spec.summary                  = 'Hymnbook multiplatform'
     spec.vendored_frameworks      = 'build/cocoapods/framework/shared.framework'
     spec.libraries                = 'c++'
-                
-                
+    spec.ios.deployment_target = '15.5'
+    spec.dependency 'SSZipArchive', '2.5.5'
                 
     if !Dir.exist?('build/cocoapods/framework/shared.framework') || Dir.empty?('build/cocoapods/framework/shared.framework')
         raise "
