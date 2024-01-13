@@ -24,6 +24,7 @@ kotlin {
     iosX64()
     iosArm64()
     iosSimulatorArm64()
+    applyDefaultHierarchyTemplate()
 
     explicitApi()
 
@@ -92,6 +93,13 @@ kotlin {
         iosMain.dependencies {
             implementation(libs.sqldelight.native)
         }
+
+        // Share code between android and desktop targets
+        val androidAndDesktop by creating {
+            dependsOn(commonMain.get())
+        }
+        desktopMain.dependsOn(androidAndDesktop)
+        androidMain.get().dependsOn(androidAndDesktop)
 
         commonTest.dependencies {
             implementation(kotlin("test"))

@@ -3,9 +3,11 @@ package com.techbeloved.hymnbook.shared.ui.home
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.techbeloved.hymnbook.shared.di.Injector
+import com.techbeloved.hymnbook.shared.files.ExtractArchiveUseCase
+import com.techbeloved.hymnbook.shared.files.HashAssetFileUseCase
+import com.techbeloved.hymnbook.shared.files.fileSystemProvider
 import com.techbeloved.hymnbook.shared.model.HymnItem
 import com.techbeloved.hymnbook.shared.model.ext.OpenLyricsSong
-import com.techbeloved.hymnbook.shared.tools.HashAssetFileUseCase
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.plus
@@ -14,6 +16,7 @@ import kotlinx.coroutines.launch
 
 internal class HomeScreenModel(
     private val hashAssetFileUseCase: HashAssetFileUseCase = HashAssetFileUseCase(),
+    private val extractArchiveUseCase: ExtractArchiveUseCase = ExtractArchiveUseCase(),
 ) : ScreenModel {
     val state: MutableStateFlow<ImmutableList<HymnItem>> = MutableStateFlow(persistentListOf())
 
@@ -23,6 +26,14 @@ internal class HomeScreenModel(
             val assetFileHash = hashAssetFileUseCase("assets/openlyrics/ten_thousand_reason.xml")
             val item1 = HymnItem(id = 1, title = "Asset file", subtitle = "${assetFileHash.sha256}, path: ${assetFileHash.path}")
             state.value = persistentListOf(item1) + sampleHymnItems
+            val fileSystem = fileSystemProvider.get()
+            val tempDir =  fileSystem.tempDir / "lyrics/"
+            fileSystem.fileSystem.createDirectory(tempDir)
+
+            extractArchiveUseCase(assetFilePath = "assets/openlyrics/sample_songs.zip", destination = tempDir)
+            fileSystem.fileSystem.listRecursively(tempDir).forEach {
+                println("File: $it")
+            }
         }
     }
     companion object {

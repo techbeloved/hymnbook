@@ -1,4 +1,4 @@
-package com.techbeloved.hymnbook.shared.tools
+package com.techbeloved.hymnbook.shared.files
 
 import com.techbeloved.hymnbook.shared.model.file.FileHash
 import kotlinx.coroutines.Dispatchers

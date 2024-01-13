@@ -1,9 +1,7 @@
-package com.techbeloved.hymnbook.shared.tools
-
-import okio.FileSystem
+package com.techbeloved.hymnbook.shared.files
 
 internal expect val fileSystemProvider: OkioFileSystemProvider
 internal fun interface OkioFileSystemProvider {
 
-    fun get(): FileSystem
+    fun get(): SharedFileSystem
 }

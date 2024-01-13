@@ -30,3 +30,5 @@ src/main/res/menu-night/
 /shared/build
 /desktopApp/build
 /iosApp/iosApp.xcworkspace/xcuserdata
+/desktopApp/.appdata
+/desktopApp/.tmp
