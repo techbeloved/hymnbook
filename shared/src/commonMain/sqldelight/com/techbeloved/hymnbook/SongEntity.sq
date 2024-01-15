@@ -1,7 +1,7 @@
 import com.techbeloved.hymnbook.shared.model.Lyric;
 import kotlin.collections.List;
 import kotlinx.datetime.Instant;
-CREATE TABLE SongEntity (
+CREATE TABLE IF NOT EXISTS SongEntity (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
     alternate_title TEXT,
@@ -15,7 +15,7 @@ CREATE TABLE SongEntity (
     modified INTEGER AS Instant NOT NULL
 );
 
-CREATE INDEX Song_title ON SongEntity(title);
+CREATE INDEX IF NOT EXISTS Song_title ON SongEntity(title);
 
 insert:
 INSERT OR REPLACE INTO SongEntity(id, title, alternate_title, lyrics, verse_order, copyright, comments, search_title, search_lyrics, created, modified)

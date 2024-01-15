@@ -12,8 +12,6 @@ import com.techbeloved.hymnbook.shared.model.ext.OpenLyricsSong
 import com.techbeloved.hymnbook.shared.model.ext.toLyric
 import com.techbeloved.hymnbook.shared.time.DefaultInstantProvider
 import com.techbeloved.hymnbook.shared.time.InstantProvider
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.withContext
 
 internal class SongRepository(
@@ -88,8 +86,7 @@ internal class SongRepository(
         }
     }
 
-    suspend fun allTitles(): ImmutableList<SongTitle> = withContext(dispatchersProvider.io()) {
+    suspend fun allTitles(): List<SongTitle> = withContext(dispatchersProvider.io()) {
         database.songEntityQueries.getAllTitles(::SongTitle).executeAsList()
-            .toImmutableList()
     }
 }

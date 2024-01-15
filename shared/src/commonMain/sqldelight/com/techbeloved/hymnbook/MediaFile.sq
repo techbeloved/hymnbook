@@ -1,6 +1,6 @@
 import com.techbeloved.hymnbook.shared.model.MediaType;
 
-CREATE TABLE MediaFile (
+CREATE TABLE IF NOT EXISTS MediaFile (
      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
      song_id INTEGER,
      file_path TEXT,

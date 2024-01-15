@@ -1,4 +1,4 @@
-CREATE TABLE SongbookSongs (
+CREATE TABLE IF NOT EXISTS SongbookSongs (
     songbook TEXT COLLATE NOCASE,
     song_id INTEGER,
     entry TEXT,

@@ -1,9 +1,9 @@
-CREATE TABLE SongbookEntity (
+CREATE TABLE IF NOT EXISTS SongbookEntity (
     name TEXT PRIMARY KEY NOT NULL COLLATE NOCASE,
     publisher TEXT
 );
 
-CREATE INDEX Songbook_name ON SongbookEntity(name);
+CREATE INDEX IF NOT EXISTS Songbook_name ON SongbookEntity(name);
 
 insert:
 INSERT OR IGNORE INTO SongbookEntity(name, publisher)

@@ -1,4 +1,4 @@
-CREATE TABLE TopicSongs (
+CREATE TABLE IF NOT EXISTS TopicSongs (
     topic TEXT COLLATE NOCASE,
     song_id INTEGER,
     PRIMARY KEY (topic, song_id),

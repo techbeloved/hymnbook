@@ -1,4 +1,4 @@
-CREATE TABLE AuthorSongs (
+CREATE TABLE IF NOT EXISTS AuthorSongs (
     author TEXT COLLATE NOCASE,
     song_id INTEGER,
     author_type TEXT,

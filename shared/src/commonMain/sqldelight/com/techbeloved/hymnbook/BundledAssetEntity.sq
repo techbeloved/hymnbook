@@ -1,4 +1,4 @@
-CREATE TABLE BundledAssetEntity (
+CREATE TABLE IF NOT EXISTS BundledAssetEntity (
     path TEXT PRIMARY KEY NOT NULL,
     hash TEXT
 );
