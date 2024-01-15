@@ -3,7 +3,7 @@ CREATE TABLE TopicEntity (
 );
 
 insert:
-INSERT OR REPLACE INTO TopicEntity(name)
+INSERT OR IGNORE INTO TopicEntity(name)
 VALUES(?);
 
 deleteAll:

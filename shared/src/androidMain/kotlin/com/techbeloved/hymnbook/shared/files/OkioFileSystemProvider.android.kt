@@ -4,7 +4,7 @@ import com.techbeloved.hymnbook.shared.di.AndroidInjector
 import okio.FileSystem
 import okio.Path.Companion.toOkioPath
 
-internal actual val fileSystemProvider: OkioFileSystemProvider = AndroidFileSystemProvider()
+internal actual val defaultOkioFileSystemProvider: OkioFileSystemProvider = AndroidFileSystemProvider()
 
 private class AndroidFileSystemProvider : OkioFileSystemProvider {
 

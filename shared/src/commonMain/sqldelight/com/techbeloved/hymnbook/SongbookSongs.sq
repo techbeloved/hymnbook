@@ -8,5 +8,5 @@ CREATE TABLE SongbookSongs (
 );
 
 insert:
-INSERT OR REPLACE INTO SongbookSongs(songbook, song_id, entry)
+INSERT OR IGNORE INTO SongbookSongs(songbook, song_id, entry)
 VALUES (?, ?, ?);

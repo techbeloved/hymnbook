@@ -6,7 +6,7 @@ CREATE TABLE SongbookEntity (
 CREATE INDEX Songbook_name ON SongbookEntity(name);
 
 insert:
-INSERT OR REPLACE INTO SongbookEntity(name, publisher)
+INSERT OR IGNORE INTO SongbookEntity(name, publisher)
 VALUES (?, ?);
 
 byName:

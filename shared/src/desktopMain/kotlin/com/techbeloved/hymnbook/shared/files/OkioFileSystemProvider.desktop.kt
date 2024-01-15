@@ -3,7 +3,7 @@ package com.techbeloved.hymnbook.shared.files
 import okio.FileSystem
 import okio.Path.Companion.toPath
 
-internal actual val fileSystemProvider: OkioFileSystemProvider = DesktopFileSystemProvider()
+internal actual val defaultOkioFileSystemProvider: OkioFileSystemProvider = DesktopFileSystemProvider()
 
 private class DesktopFileSystemProvider : OkioFileSystemProvider {
     val sharedFileSystem by lazy {

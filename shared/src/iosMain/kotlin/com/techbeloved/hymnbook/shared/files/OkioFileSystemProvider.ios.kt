@@ -7,7 +7,7 @@ import platform.Foundation.NSSearchPathForDirectoriesInDomains
 import platform.Foundation.NSTemporaryDirectory
 import platform.Foundation.NSUserDomainMask
 
-internal actual val fileSystemProvider: OkioFileSystemProvider = IosFileSystemProvider()
+internal actual val defaultOkioFileSystemProvider: OkioFileSystemProvider = IosFileSystemProvider()
 
 private class IosFileSystemProvider : OkioFileSystemProvider {
     val sharedFileSystem by lazy {

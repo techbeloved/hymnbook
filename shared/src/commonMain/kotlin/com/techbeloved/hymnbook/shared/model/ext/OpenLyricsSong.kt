@@ -3,6 +3,7 @@ package com.techbeloved.hymnbook.shared.model.ext
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import nl.adaptivity.xmlutil.serialization.XmlChildrenName
+import nl.adaptivity.xmlutil.serialization.XmlElement
 import nl.adaptivity.xmlutil.serialization.XmlSerialName
 import nl.adaptivity.xmlutil.serialization.XmlValue
 
@@ -31,18 +32,26 @@ public data class OpenLyricsSong(
         val authors: List<Author>? = null,
         @XmlChildrenName("songbook")
         val songbooks: List<Songbook>? = null,
+        @XmlElement
         val verseOrder: String? = null,
+        @XmlElement
         val keywords: String? = null,
         @XmlChildrenName("theme")
         val themes: List<Theme>? = null,
         @XmlChildrenName("comment")
         val comments: List<String>? = null,
+        @XmlElement
         val copyright: String? = null,
+        @XmlElement
         val publisher: String? = null,
     )
 
     @Serializable
-    public data class Author(val name: String, val type: String? = null, val comment: String? = null)
+    public data class Author(
+        @XmlValue val value: String,
+        val type: String? = null,
+        val comment: String? = null,
+    )
 
     @Serializable
     public data class Title(
@@ -62,6 +71,8 @@ public data class OpenLyricsSong(
     public data class Theme(@XmlValue val name: String, val lang: String? = null)
 
     @Serializable
+    @XmlSerialName("verse")
+    @SerialName("verse")
     public data class Verse(
         val name: String,
         val lines: List<Lines>,
@@ -69,6 +80,8 @@ public data class OpenLyricsSong(
 
     @Serializable
     @SerialName("lines")
+    // Workaround for issue https://github.com/pdvrieze/xmlutil/issues/194
+    @XmlSerialName("lines", namespace = "http://openlyrics.info/namespace/2009/song")
     public data class Lines(
         @XmlValue val content: String,
         val part: String? = null, // e.g. men, women, alto (etc)
