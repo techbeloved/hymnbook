@@ -1,32 +1,33 @@
 [versions]
 accompanist = "0.32.0"
-agp = "8.1.4"
+agp = "8.2.0"
 androidPdfViewer = "3.1.0-beta.1"
-androidx_activity = "1.8.0"
+androidx_activity = "1.8.2"
 androidx_appcompat = "1.6.1"
 androidx_core_ktx = "1.12.0"
-androidx_datastore = "1.1.0-alpha06"
+androidx_datastore = "1.1.0-alpha07"
 androidx_fragment = "1.6.2"
-androidx_hilt_compiler = "1.0.0"
-androidx_hilt_work = "1.0.0"
+androidx_hilt_compiler = "1.1.0"
+androidx_hilt_work = "1.1.0"
 androidx_lifecycle = "2.6.2"
 androidx_savedstate = "1.2.1"
 androidx_splashscreen = "1.0.1"
 androidx_test_core = "1.5.0"
 androidx_test_junit = "1.1.5"
-androidx_work = "2.8.1"
-androidx_work_runtime = "2.8.1"
+androidx_work = "2.9.0"
+androidx_work_runtime = "2.9.0"
 appUpdateKtx = "2.1.0"
 cardview = "1.0.0"
 circularProgressBar = "1.2.2"
 coil = "2.4.0"
-compose_compiler = "1.5.4"
+compose_compiler = "1.5.6"
 compose_constraintlayout = "1.0.1"
 compose_material3 = "1.1.2"
 compose_ui = "1.5.4"
 composeBom = "2023.10.01"
 compose_jetbrains = "1.5.11"
 constraintlayout = "2.1.4"
+xmlutil = "0.86.3"
 core_library_desugaring = "2.0.4"
 coreTestingVersion = "2.2.0"
 coroutines = "1.7.3"
@@ -34,16 +35,16 @@ coroutinesTest = "1.7.3"
 dateTime = "0.4.1"
 detekt = "1.23.0"
 espresso = "3.5.1"
-firebaseAnalytics = "21.4.0"
+firebaseAnalytics = "21.5.0"
 firebaseCore = "21.1.1"
-firebaseCrashlytics = "18.5.1"
+firebaseCrashlytics = "18.6.0"
 firebaseCrashlyticsGradle = "2.9.9"
 firebaseDynamicLinks = "21.2.0"
-firebaseFirestore = "24.9.1"
+firebaseFirestore = "24.10.0"
 firebaseStorage = "20.3.0"
 googleServices = "4.4.0"
 hilt_android = "2.48"
-hilt_navigation = "1.0.0"
+hilt_navigation = "1.1.0"
 hiltAndroidCompiler = "2.48"
 koin = "3.4.3"
 kotlin = "1.9.21"
@@ -54,18 +55,18 @@ legacyPreferenceV14 = "1.0.0"
 legacySupportV4 = "1.0.0"
 libphonenumber = "8.13.22"
 lottie_compose = "6.1.0"
-material = "1.10.0"
-media = "1.6.0"
+material = "1.11.0"
+media = "1.7.0"
 mockitoKotlin = "2.1.0"
-navigation_compose = "2.7.5"
-navigationFragmentKtx = "2.7.5"
-navigationSafeArgsGradlePlugin = "2.7.4"
+navigation_compose = "2.7.6"
+navigationFragmentKtx = "2.7.6"
+navigationSafeArgsGradlePlugin = "2.7.6"
 okhttp = "4.11.0"
 okio = "3.6.0"
 paletteKtx = "1.0.0"
 preferenceKtx = "1.2.1"
 recyclerview = "1.3.2"
-roomRuntime = "2.6.0"
+roomRuntime = "2.6.1"
 runner = "1.5.2"
 rxandroid = "2.1.0"
 rxbinding = "3.0.0-alpha2"
@@ -77,7 +78,7 @@ rxbindingViewpager = "3.0.0-alpha2"
 rxjava = "2.2.10"
 rxPreferences = "2.0.0"
 rxrelay = "2.1.0"
-serialization = "1.6.0"
+serialization = "1.6.2"
 snippety = "1.1.1"
 sqlDelight = "2.0.0"
 taptargetview = "1.13.3"
@@ -143,6 +144,7 @@ compose-activity = { group = "androidx.activity", name = "activity-compose", ver
 
 core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTestingVersion" }
 coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "coroutines" }
 coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
 
 firebase-analytics = { module = "com.google.firebase:firebase-analytics", version.ref = "firebaseAnalytics" }
@@ -187,11 +189,14 @@ sqldelight-android = { group = "app.cash.sqldelight", name = "android-driver", v
 sqldelight-native = { group = "app.cash.sqldelight", name = "native-driver", version.ref = "sqlDelight" }
 sqldelight-jvm = { group = "app.cash.sqldelight", name = "sqlite-driver", version.ref = "sqlDelight" }
 squareup-okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
+squareup-okio-fakefilesystem = { group = "com.squareup.okio", name = "okio-fakefilesystem", version.ref = "okio" }
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
 voyager-bottomSheetNavigator = { module = "cafe.adriel.voyager:voyager-bottom-sheet-navigator", version.ref = "voyager" }
 voyager-tabNavigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
 voyager-androidx = { module = "cafe.adriel.voyager:voyager-androidx", version.ref = "voyager" }
+xmlutil-core = { module = "io.github.pdvrieze.xmlutil:core", version.ref = "xmlutil" }
+xmlutil-serialization = { module = "io.github.pdvrieze.xmlutil:serialization", version.ref = "xmlutil" }
 
 kotlin-test = { group = "org.jetbrains.kotlin", name = "test", version.ref = "kotlin" }
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
@@ -229,6 +234,7 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt_android" }
+native-cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqlDelight" }
 androidx-navigation-safe-args = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigationSafeArgsGradlePlugin" }

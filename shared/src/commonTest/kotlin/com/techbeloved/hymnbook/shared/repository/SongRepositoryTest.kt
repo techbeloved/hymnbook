@@ -105,20 +105,18 @@ class SongRepositoryTest {
 
     companion object {
         private val sampleOpenLyricsSong = OpenLyricsSong(
-            metadata = OpenLyricsSong.Metadata(),
             properties = OpenLyricsSong.Properties(
                 titles = listOf(OpenLyricsSong.Title("Song 1")),
             ),
             lyrics = listOf(
                 OpenLyricsSong.Verse(
                     name = "v1",
-                    lines = listOf(OpenLyricsSong.Line("Line 1\nLine 2")),
+                    lines = listOf(OpenLyricsSong.Lines("Line 1\nLine 2")),
                 )
             )
         )
 
         private val sampleOpenLyricsSongWithSongbook = OpenLyricsSong(
-            metadata = OpenLyricsSong.Metadata(),
             properties = OpenLyricsSong.Properties(
                 titles = listOf(OpenLyricsSong.Title("Song 1")),
                 songbooks = listOf(OpenLyricsSong.Songbook(name = "songbook1", entry = "1"))
@@ -126,7 +124,7 @@ class SongRepositoryTest {
             lyrics = listOf(
                 OpenLyricsSong.Verse(
                     name = "v1",
-                    lines = listOf(OpenLyricsSong.Line("Line 1\nLine 2")),
+                    lines = listOf(OpenLyricsSong.Lines("Line 1\nLine 2")),
                 )
             )
         )

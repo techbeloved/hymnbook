@@ -7,6 +7,7 @@ import androidx.hilt.work.HiltWorkerFactory
 import com.google.firebase.FirebaseApp
 import com.techbeloved.hymnbook.data.SharedPreferencesRepo
 import com.techbeloved.hymnbook.data.model.NightMode
+import com.techbeloved.hymnbook.shared.di.AndroidInjector
 import dagger.hilt.android.HiltAndroidApp
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -29,13 +30,14 @@ class HymnbookApp : Application(), WorkerConfig.Provider {
 
         instance = this
 
-        setupNightMode()
+//        setupNightMode()
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
 
         FirebaseApp.initializeApp(this)
+        AndroidInjector.init(this)
     }
 
     private val disposables = CompositeDisposable()
@@ -82,7 +84,9 @@ class HymnbookApp : Application(), WorkerConfig.Provider {
 
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
-    override fun getWorkManagerConfiguration(): WorkerConfig = WorkerConfig.Builder()
-        .setWorkerFactory(workerFactory)
-        .build()
+
+    override val workManagerConfiguration: androidx.work.Configuration
+        get() = WorkerConfig.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
 }

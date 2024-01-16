@@ -5,7 +5,7 @@ import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import com.techbeloved.hymnbook.Database
 import java.io.File
 
-actual class DriverFactory {
+internal actual class DriverFactory {
     actual fun createDriver(): SqlDriver {
         val databasePath = File(System.getProperty("user.home"), "hymnbook_songs.db")
         val driver: SqlDriver = JdbcSqliteDriver("jdbc:sqlite:" + databasePath.absolutePath)

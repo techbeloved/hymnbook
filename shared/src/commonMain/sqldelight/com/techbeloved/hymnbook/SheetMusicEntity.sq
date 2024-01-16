@@ -1,16 +1,17 @@
 import com.techbeloved.hymnbook.shared.model.SheetMusic;
 
-CREATE TABLE SheetMusicEntity (
+CREATE TABLE IF NOT EXISTS SheetMusicEntity (
      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
      song_id INTEGER,
      file_path TEXT,
+     file_hash TEXT,
      type TEXT AS SheetMusic.Type,
      FOREIGN KEY (song_id) REFERENCES SongEntity (id) ON DELETE CASCADE
 );
 
 insert:
-INSERT OR REPLACE INTO SheetMusicEntity(song_id, file_path, type)
-VALUES (:song_id, :file_path, :type);
+INSERT OR REPLACE INTO SheetMusicEntity(song_id, file_path, file_hash, type)
+VALUES (:song_id, :file_path,  :file_hash, :type);
 
 lastInsertRowId:
 SELECT last_insert_rowid();

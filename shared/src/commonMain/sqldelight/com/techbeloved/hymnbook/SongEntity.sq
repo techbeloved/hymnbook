@@ -1,8 +1,8 @@
 import com.techbeloved.hymnbook.shared.model.Lyric;
 import kotlin.collections.List;
 import kotlinx.datetime.Instant;
-CREATE TABLE SongEntity (
-    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+CREATE TABLE IF NOT EXISTS SongEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
     alternate_title TEXT,
     lyrics TEXT AS List<Lyric> NOT NULL,
@@ -15,9 +15,11 @@ CREATE TABLE SongEntity (
     modified INTEGER AS Instant NOT NULL
 );
 
+CREATE INDEX IF NOT EXISTS Song_title ON SongEntity(title);
+
 insert:
-INSERT OR REPLACE INTO SongEntity(title, alternate_title, lyrics, verse_order, copyright, comments, search_title, search_lyrics, created, modified)
-VALUES(?,?,?,?,?,?,?,?,?,?);
+INSERT OR REPLACE INTO SongEntity(id, title, alternate_title, lyrics, verse_order, copyright, comments, search_title, search_lyrics, created, modified)
+VALUES(?, ?,?,?,?,?,?,?,?,?,?);
 
 lastInsertRowId:
 SELECT last_insert_rowid();
@@ -26,6 +28,12 @@ getAllTitles:
 SELECT S.id, S.title, S.alternate_title, B.songbook, B.entry FROM SongEntity AS S
 LEFT JOIN SongbookSongs AS B
 ON S.id = B.song_id;
+
+-- Select a song matching the title and songbook.
+getSongByTitleAndSongbook:
+SELECT S.id, S.title FROM SongEntity AS S INNER JOIN SongbookSongs AS B
+ON S.id = B.song_id
+WHERE S.title = ? AND B.songbook = ?;
 
 deleteAll:
 DELETE FROM SongEntity;

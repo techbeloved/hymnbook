@@ -1,4 +1,4 @@
-CREATE TABLE AuthorEntity (
+CREATE TABLE IF NOT EXISTS AuthorEntity (
     displayname TEXT PRIMARY KEY NOT NULL COLLATE NOCASE,
     firstname TEXT,
     lastname TEXT,

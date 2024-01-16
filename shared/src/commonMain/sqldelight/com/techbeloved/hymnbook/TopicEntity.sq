@@ -1,9 +1,9 @@
-CREATE TABLE TopicEntity (
+CREATE TABLE IF NOT EXISTS TopicEntity (
      name TEXT PRIMARY KEY NOT NULL COLLATE NOCASE
 );
 
 insert:
-INSERT OR REPLACE INTO TopicEntity(name)
+INSERT OR IGNORE INTO TopicEntity(name)
 VALUES(?);
 
 deleteAll:

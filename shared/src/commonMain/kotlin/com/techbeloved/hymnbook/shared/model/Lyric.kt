@@ -5,10 +5,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 public data class Lyric(
     val type: Type,
-    val label: String,
+    val label: String?,
     val content: String,
 ) {
-    enum class Type {
+    public enum class Type {
         Chorus,
         Verse,
         PreChorus,

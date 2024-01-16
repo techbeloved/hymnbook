@@ -1,9 +1,9 @@
 package com.techbeloved.hymnbook.shared
 
-class DesktopPlatform : Platform {
+public class DesktopPlatform : Platform {
     override val name: String
         get() = "Desktop Platform"
 
 }
 
-actual fun getPlatform(): Platform  = DesktopPlatform()
+public actual fun getPlatform(): Platform  = DesktopPlatform()

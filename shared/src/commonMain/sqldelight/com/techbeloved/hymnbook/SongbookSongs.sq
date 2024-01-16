@@ -1,4 +1,4 @@
-CREATE TABLE SongbookSongs (
+CREATE TABLE IF NOT EXISTS SongbookSongs (
     songbook TEXT COLLATE NOCASE,
     song_id INTEGER,
     entry TEXT,
@@ -8,5 +8,5 @@ CREATE TABLE SongbookSongs (
 );
 
 insert:
-INSERT OR REPLACE INTO SongbookSongs(songbook, song_id, entry)
+INSERT OR IGNORE INTO SongbookSongs(songbook, song_id, entry)
 VALUES (?, ?, ?);

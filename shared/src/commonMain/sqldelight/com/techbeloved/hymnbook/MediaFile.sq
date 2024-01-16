@@ -1,16 +1,17 @@
 import com.techbeloved.hymnbook.shared.model.MediaType;
 
-CREATE TABLE MediaFile (
+CREATE TABLE IF NOT EXISTS MediaFile (
      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
      song_id INTEGER,
      file_path TEXT,
+     file_hash TEXT,
      type TEXT AS MediaType,
      FOREIGN KEY (song_id) REFERENCES SongEntity (id) ON DELETE CASCADE
 );
 
 insert:
-INSERT OR REPLACE INTO MediaFile (song_id, file_path, type)
-VALUES (?, ?, ?);
+INSERT OR REPLACE INTO MediaFile (song_id, file_path, file_hash, type)
+VALUES (?, ?, ?, ?);
 
 lastInsertRowId:
 SELECT last_insert_rowid();

@@ -29,3 +29,6 @@ src/main/res/menu-night/
 /app/src/main/assets/sheets/wccrm_hymns_v2.zip
 /shared/build
 /desktopApp/build
+/iosApp/iosApp.xcworkspace/xcuserdata
+/desktopApp/.appdata
+/desktopApp/.tmp

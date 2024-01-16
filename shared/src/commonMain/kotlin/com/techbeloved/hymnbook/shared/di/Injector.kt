@@ -10,6 +10,9 @@ import com.techbeloved.hymnbook.shared.data.dateColumnAdapter
 import com.techbeloved.hymnbook.shared.data.getDriverFactory
 import com.techbeloved.hymnbook.shared.data.listColumnAdapter
 import kotlinx.serialization.json.Json
+import nl.adaptivity.xmlutil.XmlDeclMode
+import nl.adaptivity.xmlutil.core.XmlVersion
+import nl.adaptivity.xmlutil.serialization.XML
 
 internal object Injector {
 
@@ -26,6 +29,15 @@ internal object Injector {
         }
     }
 
+    val xml: XML by lazy {
+        XML {
+            xmlVersion = XmlVersion.XML10
+            xmlDeclMode = XmlDeclMode.Auto
+            indentString = "  "
+            repairNamespaces = true
+        }
+    }
+
     fun getDatabase(driver: SqlDriver): Database {
         return Database(
             driver = driver,
@@ -38,4 +50,5 @@ internal object Injector {
             ),
         )
     }
+
 }

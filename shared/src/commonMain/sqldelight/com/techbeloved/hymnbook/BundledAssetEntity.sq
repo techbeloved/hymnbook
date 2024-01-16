@@ -1,0 +1,14 @@
+CREATE TABLE IF NOT EXISTS BundledAssetEntity (
+    path TEXT PRIMARY KEY NOT NULL,
+    hash TEXT
+);
+
+insert:
+INSERT OR REPLACE INTO BundledAssetEntity(path, hash)
+VALUES (?, ?);
+
+getByFilePath:
+SELECT path, hash FROM BundledAssetEntity WHERE path = ? LIMIT 1;
+
+getByHash:
+SELECT path, hash FROM BundledAssetEntity WHERE hash = ? LIMIT 1;

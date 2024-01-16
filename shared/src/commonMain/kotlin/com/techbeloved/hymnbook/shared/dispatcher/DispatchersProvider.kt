@@ -1,13 +1,15 @@
 package com.techbeloved.hymnbook.shared.dispatcher
 
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 
-internal expect class DispatchersProvider {
-    fun main(): CoroutineDispatcher
+internal class DispatchersProvider {
+    fun main(): CoroutineDispatcher = Dispatchers.Main
 
-    fun io(): CoroutineDispatcher
+    fun io(): CoroutineDispatcher = Dispatchers.IO
 
-    fun default(): CoroutineDispatcher
+    fun default(): CoroutineDispatcher = Dispatchers.Default
 }
 
-internal expect fun getPlatformDispatcherProvider(): DispatchersProvider
+internal fun getPlatformDispatcherProvider(): DispatchersProvider = DispatchersProvider()
