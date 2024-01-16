@@ -22,25 +22,27 @@ internal class ImportOpenLyricsUseCase(
 ) {
     suspend operator fun invoke(directory: Path) = withContext(dispatchersProvider.io()) {
         val fileSystem = fileSystemProvider.get().fileSystem
-        fileSystem.listRecursively(directory)
-            .filter { it.name.endsWith(".xml") }
-            .forEach { lyricsPath ->
-                val lyricsXmlContent = fileSystem.source(lyricsPath).use { fileSource ->
-                    fileSource.buffer().use { bufferedSource ->
-                        bufferedSource.readUtf8()
+        runCatching {
+            fileSystem.listRecursively(directory)
+                .filter { it.name.endsWith(".xml") }
+                .forEach { lyricsPath ->
+                    val lyricsXmlContent = fileSystem.source(lyricsPath).use { fileSource ->
+                        fileSource.buffer().use { bufferedSource ->
+                            bufferedSource.readUtf8()
+                        }
+                    }
+                    try {
+                        val openLyricsSong = xml.decodeFromString(
+                            deserializer = OpenLyricsSong.serializer(),
+                            string = lyricsXmlContent
+                                .replace("<br/>", "\n"),
+                            rootName = QName("http://openlyrics.info/namespace/2009/song", "song"),
+                        )
+                        repository.saveOpenLyrics(openLyricsSong)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
                 }
-                try {
-                    val openLyricsSong = xml.decodeFromString(
-                        deserializer = OpenLyricsSong.serializer(),
-                        string = lyricsXmlContent
-                            .replace("<br/>", "\n"),
-                        rootName = QName("http://openlyrics.info/namespace/2009/song", "song"),
-                    )
-                    repository.saveOpenLyrics(openLyricsSong)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
+        }
     }
 }
