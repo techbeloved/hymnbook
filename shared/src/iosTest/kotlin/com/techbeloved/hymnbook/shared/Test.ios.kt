@@ -5,16 +5,6 @@ import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import app.cash.sqldelight.driver.native.wrapConnection
 import co.touchlab.sqliter.DatabaseConfiguration
 import com.techbeloved.hymnbook.Database
-import kotlin.test.Test
-import kotlin.test.assertTrue
-
-class IosGreetingTest {
-
-    @Test
-    fun testExample() {
-        assertTrue(Greeting().greet().contains("iOS"), "Check iOS is mentioned")
-    }
-}
 
 actual fun testDatabaseDriver(): SqlDriver = NativeSqliteDriver(
     Database.Schema,
