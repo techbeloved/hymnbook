@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.techbeloved.hymnbook.shared.model.HymnItem
+import com.techbeloved.hymnbook.shared.model.SongTitle
 import com.techbeloved.hymnbook.shared.ui.listing.HymnListingUi
 import kotlinx.collections.immutable.ImmutableList
 
@@ -19,7 +19,7 @@ internal fun HomeScreen(
 
 @Composable
 internal fun HomeUi(
-    state: ImmutableList<HymnItem>,
+    state: ImmutableList<SongTitle>,
     modifier: Modifier = Modifier,
 ) {
     HymnListingUi(state, modifier = modifier.fillMaxSize())

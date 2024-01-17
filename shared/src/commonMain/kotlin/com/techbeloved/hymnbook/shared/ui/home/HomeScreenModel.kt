@@ -8,7 +8,7 @@ import com.techbeloved.hymnbook.shared.files.HashAssetFileUseCase
 import com.techbeloved.hymnbook.shared.files.OkioFileSystemProvider
 import com.techbeloved.hymnbook.shared.files.SaveFileHashUseCase
 import com.techbeloved.hymnbook.shared.files.defaultOkioFileSystemProvider
-import com.techbeloved.hymnbook.shared.model.HymnItem
+import com.techbeloved.hymnbook.shared.model.SongTitle
 import com.techbeloved.hymnbook.shared.openlyrics.ImportOpenLyricsUseCase
 import com.techbeloved.hymnbook.shared.titles.GetHymnTitlesUseCase
 import kotlinx.collections.immutable.ImmutableList
@@ -25,7 +25,7 @@ internal class HomeScreenModel(
     private val getSavedFileHashUseCase: GetSavedFileHashUseCase = GetSavedFileHashUseCase(),
     private val saveFileHashUseCase: SaveFileHashUseCase = SaveFileHashUseCase(),
 ) : ScreenModel {
-    val state: MutableStateFlow<ImmutableList<HymnItem>> = MutableStateFlow(persistentListOf())
+    val state: MutableStateFlow<ImmutableList<SongTitle>> = MutableStateFlow(persistentListOf())
 
     init {
         screenModelScope.launch {
