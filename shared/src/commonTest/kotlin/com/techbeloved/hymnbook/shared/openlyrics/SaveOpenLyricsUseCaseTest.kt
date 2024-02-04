@@ -1,4 +1,4 @@
-package com.techbeloved.hymnbook.shared.repository
+package com.techbeloved.hymnbook.shared.openlyrics
 
 import com.techbeloved.hymnbook.Database
 import com.techbeloved.hymnbook.shared.deleteAll
@@ -6,6 +6,7 @@ import com.techbeloved.hymnbook.shared.di.Injector
 import com.techbeloved.hymnbook.shared.model.SongTitle
 import com.techbeloved.hymnbook.shared.model.ext.OpenLyricsSong
 import com.techbeloved.hymnbook.shared.testDatabaseDriver
+import com.techbeloved.hymnbook.shared.titles.GetHymnTitlesUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
@@ -18,17 +19,17 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class SongRepositoryTest {
-
+class SaveOpenLyricsUseCaseTest {
     private val scope = TestScope()
-    private lateinit var repository: SongRepository
+    private lateinit var useCase: SaveOpenLyricsUseCase
     private lateinit var database: Database
+    private val getHymnTitlesUseCase: GetHymnTitlesUseCase = GetHymnTitlesUseCase(database)
 
     @BeforeTest
     fun setUp() {
         Dispatchers.setMain(StandardTestDispatcher(scope.testScheduler))
         database = Injector.getDatabase(testDatabaseDriver())
-        repository = SongRepository(
+        useCase = SaveOpenLyricsUseCase(
             database,
             instantProvider = { Instant.parse(isoString = "2023-01-01T00:00:00Z") },
         )
@@ -43,8 +44,8 @@ class SongRepositoryTest {
     @Test
     fun `Given an empty database_When a single song is inserted_Then allTitles returns the single song inserted`() =
         runTest {
-            assertEquals(expected = emptyList(), actual = repository.allTitles())
-            repository.saveOpenLyrics(sampleOpenLyricsSong)
+            assertEquals(expected = emptyList(), actual = getHymnTitlesUseCase())
+            useCase(sampleOpenLyricsSong)
             assertEquals(
                 expected = listOf(
                     SongTitle(
@@ -54,15 +55,15 @@ class SongRepositoryTest {
                         songbook = null,
                         songbookEntry = null
                     )
-                ), actual = repository.allTitles()
+                ), actual = getHymnTitlesUseCase()
             )
         }
 
     @Test
     fun `Given an empty database_When a single song with songbook is inserted_Then allTitles returns the single song`() =
         runTest {
-            assertEquals(expected = emptyList(), actual = repository.allTitles())
-            repository.saveOpenLyrics(sampleOpenLyricsSongWithSongbook)
+            assertEquals(expected = emptyList(), actual = getHymnTitlesUseCase())
+            useCase(sampleOpenLyricsSongWithSongbook)
             assertEquals(
                 expected = listOf(
                     SongTitle(
@@ -72,16 +73,16 @@ class SongRepositoryTest {
                         songbook = "songbook1",
                         songbookEntry = "1"
                     )
-                ), actual = repository.allTitles()
+                ), actual = getHymnTitlesUseCase()
             )
         }
 
     @Test
     fun `Given an empty database_When a two songs are inserted_Then allTitles returns the all songs`() =
         runTest {
-            assertEquals(expected = emptyList(), actual = repository.allTitles())
-            repository.saveOpenLyrics(sampleOpenLyricsSongWithSongbook)
-            repository.saveOpenLyrics(sampleOpenLyricsSong)
+            assertEquals(expected = emptyList(), actual = getHymnTitlesUseCase())
+            useCase(sampleOpenLyricsSongWithSongbook)
+            useCase(sampleOpenLyricsSong)
             assertEquals(
                 expected = listOf(
                     SongTitle(
@@ -98,7 +99,7 @@ class SongRepositoryTest {
                         songbook = null,
                         songbookEntry = null,
                     ),
-                ), actual = repository.allTitles()
+                ), actual = getHymnTitlesUseCase()
             )
         }
 

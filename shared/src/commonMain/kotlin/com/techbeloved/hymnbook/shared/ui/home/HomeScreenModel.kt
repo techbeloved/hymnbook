@@ -13,6 +13,7 @@ import com.techbeloved.hymnbook.shared.openlyrics.ImportOpenLyricsUseCase
 import com.techbeloved.hymnbook.shared.titles.GetHymnTitlesUseCase
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
@@ -31,7 +32,7 @@ internal class HomeScreenModel(
         screenModelScope.launch {
 
             importBundledAssets()
-            state.value = getHymnTitlesUseCase()
+            state.value = getHymnTitlesUseCase().toImmutableList()
         }
     }
 

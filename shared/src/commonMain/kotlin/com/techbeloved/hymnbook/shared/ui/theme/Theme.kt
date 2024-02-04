@@ -218,7 +218,7 @@ internal fun AppTheme(
 
   MaterialTheme(
     colorScheme = colorScheme,
-    content = content
+    content = content,
   )
 }
 

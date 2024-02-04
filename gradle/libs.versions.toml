@@ -1,6 +1,6 @@
 [versions]
 accompanist = "0.32.0"
-agp = "8.2.0"
+agp = "8.3.0"
 androidPdfViewer = "3.1.0-beta.1"
 androidx_activity = "1.8.2"
 androidx_appcompat = "1.6.1"

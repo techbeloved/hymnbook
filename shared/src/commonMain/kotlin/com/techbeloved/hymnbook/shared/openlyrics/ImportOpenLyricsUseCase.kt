@@ -6,7 +6,6 @@ import com.techbeloved.hymnbook.shared.dispatcher.getPlatformDispatcherProvider
 import com.techbeloved.hymnbook.shared.files.OkioFileSystemProvider
 import com.techbeloved.hymnbook.shared.files.defaultOkioFileSystemProvider
 import com.techbeloved.hymnbook.shared.model.ext.OpenLyricsSong
-import com.techbeloved.hymnbook.shared.repository.SongRepository
 import kotlinx.coroutines.withContext
 import nl.adaptivity.xmlutil.QName
 import nl.adaptivity.xmlutil.serialization.XML
@@ -17,7 +16,7 @@ import okio.use
 internal class ImportOpenLyricsUseCase(
     private val fileSystemProvider: OkioFileSystemProvider = defaultOkioFileSystemProvider,
     private val dispatchersProvider: DispatchersProvider = getPlatformDispatcherProvider(),
-    private val repository: SongRepository = SongRepository(),
+    private val saveOpenLyricsUseCase: SaveOpenLyricsUseCase = SaveOpenLyricsUseCase(),
     private val xml: XML = Injector.xml,
 ) {
     suspend operator fun invoke(directory: Path) = withContext(dispatchersProvider.io()) {
@@ -38,7 +37,7 @@ internal class ImportOpenLyricsUseCase(
                                 .replace("<br/>", "\n"),
                             rootName = QName("http://openlyrics.info/namespace/2009/song", "song"),
                         )
-                        repository.saveOpenLyrics(openLyricsSong)
+                        saveOpenLyricsUseCase(openLyricsSong)
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
