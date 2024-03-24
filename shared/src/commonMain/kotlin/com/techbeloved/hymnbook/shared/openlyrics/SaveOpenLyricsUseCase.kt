@@ -1,4 +1,4 @@
-package com.techbeloved.hymnbook.shared.repository
+package com.techbeloved.hymnbook.shared.openlyrics
 
 import com.techbeloved.hymnbook.AuthorSongs
 import com.techbeloved.hymnbook.Database
@@ -7,20 +7,18 @@ import com.techbeloved.hymnbook.TopicSongs
 import com.techbeloved.hymnbook.shared.di.Injector
 import com.techbeloved.hymnbook.shared.dispatcher.DispatchersProvider
 import com.techbeloved.hymnbook.shared.dispatcher.getPlatformDispatcherProvider
-import com.techbeloved.hymnbook.shared.model.SongTitle
 import com.techbeloved.hymnbook.shared.model.ext.OpenLyricsSong
 import com.techbeloved.hymnbook.shared.model.ext.toLyric
 import com.techbeloved.hymnbook.shared.time.DefaultInstantProvider
 import com.techbeloved.hymnbook.shared.time.InstantProvider
 import kotlinx.coroutines.withContext
 
-internal class SongRepository(
+internal class SaveOpenLyricsUseCase(
     private val database: Database = Injector.database,
     private val dispatchersProvider: DispatchersProvider = getPlatformDispatcherProvider(),
     private val instantProvider: InstantProvider = DefaultInstantProvider(),
 ) {
-
-    suspend fun saveOpenLyrics(song: OpenLyricsSong) = withContext(dispatchersProvider.io()) {
+    suspend operator fun invoke(song: OpenLyricsSong) = withContext(dispatchersProvider.io()) {
         val lyrics = song.lyrics.map { it.toLyric() }
         val created = instantProvider.get()
         database.transaction {
@@ -84,9 +82,5 @@ internal class SongRepository(
                 )
             }
         }
-    }
-
-    suspend fun allTitles(): List<SongTitle> = withContext(dispatchersProvider.io()) {
-        database.songEntityQueries.getAllTitles(::SongTitle).executeAsList()
     }
 }

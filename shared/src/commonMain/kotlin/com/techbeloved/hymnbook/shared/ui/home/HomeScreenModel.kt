@@ -8,11 +8,12 @@ import com.techbeloved.hymnbook.shared.files.HashAssetFileUseCase
 import com.techbeloved.hymnbook.shared.files.OkioFileSystemProvider
 import com.techbeloved.hymnbook.shared.files.SaveFileHashUseCase
 import com.techbeloved.hymnbook.shared.files.defaultOkioFileSystemProvider
-import com.techbeloved.hymnbook.shared.model.HymnItem
+import com.techbeloved.hymnbook.shared.model.SongTitle
 import com.techbeloved.hymnbook.shared.openlyrics.ImportOpenLyricsUseCase
 import com.techbeloved.hymnbook.shared.titles.GetHymnTitlesUseCase
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
@@ -25,13 +26,13 @@ internal class HomeScreenModel(
     private val getSavedFileHashUseCase: GetSavedFileHashUseCase = GetSavedFileHashUseCase(),
     private val saveFileHashUseCase: SaveFileHashUseCase = SaveFileHashUseCase(),
 ) : ScreenModel {
-    val state: MutableStateFlow<ImmutableList<HymnItem>> = MutableStateFlow(persistentListOf())
+    val state: MutableStateFlow<ImmutableList<SongTitle>> = MutableStateFlow(persistentListOf())
 
     init {
         screenModelScope.launch {
 
             importBundledAssets()
-            state.value = getHymnTitlesUseCase()
+            state.value = getHymnTitlesUseCase().toImmutableList()
         }
     }
 
@@ -39,7 +40,7 @@ internal class HomeScreenModel(
         val fileSystem = fileSystemProvider.get()
 
         // Lyrics assets
-        val lyricsBundledAsset = "assets/openlyrics/sample_songs.zip"
+        val lyricsBundledAsset = "files/openlyrics/sample_songs.zip"
         val lyricsAssetFileHash = hashAssetFileUseCase(lyricsBundledAsset)
         val savedLyricsArchiveHash = getSavedFileHashUseCase(lyricsBundledAsset)
 

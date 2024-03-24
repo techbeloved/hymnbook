@@ -1,19 +1,18 @@
 package com.techbeloved.hymnbook.shared.titles
 
-import com.techbeloved.hymnbook.shared.model.HymnItem
-import com.techbeloved.hymnbook.shared.repository.SongRepository
-import kotlinx.collections.immutable.toImmutableList
+import com.techbeloved.hymnbook.Database
+import com.techbeloved.hymnbook.shared.di.Injector
+import com.techbeloved.hymnbook.shared.dispatcher.DispatchersProvider
+import com.techbeloved.hymnbook.shared.dispatcher.getPlatformDispatcherProvider
+import com.techbeloved.hymnbook.shared.model.SongTitle
+import kotlinx.coroutines.withContext
 
 internal class GetHymnTitlesUseCase(
-    private val repository: SongRepository = SongRepository(),
+    private val database: Database = Injector.database,
+    private val dispatchersProvider: DispatchersProvider = getPlatformDispatcherProvider(),
 ) {
-    suspend operator fun invoke() =
-        repository.allTitles().map {
-            HymnItem(
-                id = it.id,
-                title = it.title,
-                subtitle = it.alternateTitle
-                    ?: "${it.songbook}. No. ${it.songbookEntry}",
-            )
-        }.toImmutableList()
+    suspend operator fun invoke() = withContext(dispatchersProvider.io()) {
+        database.songEntityQueries.getAllTitles(::SongTitle)
+            .executeAsList()
+    }
 }

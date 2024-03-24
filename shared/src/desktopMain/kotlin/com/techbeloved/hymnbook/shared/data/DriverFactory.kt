@@ -4,11 +4,15 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import com.techbeloved.hymnbook.Database
 import java.io.File
+import java.util.Properties
 
 internal actual class DriverFactory {
     actual fun createDriver(): SqlDriver {
         val databasePath = File(System.getProperty("user.home"), "hymnbook_songs.db")
-        val driver: SqlDriver = JdbcSqliteDriver("jdbc:sqlite:" + databasePath.absolutePath)
+        val driver: SqlDriver = JdbcSqliteDriver(
+            url = "jdbc:sqlite:" + databasePath.absolutePath,
+            properties = Properties().apply { put("foreign_keys", "true") },
+        )
         Database.Schema.create(driver)
         return driver
     }
