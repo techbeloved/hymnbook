@@ -35,7 +35,7 @@ class HashFileUseCaseTest {
 
     @Test
     fun hashing() = runTest {
-        val assetsDirectory = "/resources/assets".toPath()
+        val assetsDirectory = "/composeResources/assets".toPath()
         val sampleFile = assetsDirectory / "sample_file"
         val sampleContent = "email@email.com"
         val sampleHasValue = "f3273dd18d95bc19d51d3e6356e4a679e6f13824497272a270e7bb540b0abb9d"

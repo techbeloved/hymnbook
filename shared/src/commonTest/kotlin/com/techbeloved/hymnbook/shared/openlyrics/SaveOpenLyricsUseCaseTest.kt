@@ -23,12 +23,13 @@ class SaveOpenLyricsUseCaseTest {
     private val scope = TestScope()
     private lateinit var useCase: SaveOpenLyricsUseCase
     private lateinit var database: Database
-    private val getHymnTitlesUseCase: GetHymnTitlesUseCase = GetHymnTitlesUseCase(database)
+    private lateinit var getHymnTitlesUseCase: GetHymnTitlesUseCase
 
     @BeforeTest
     fun setUp() {
         Dispatchers.setMain(StandardTestDispatcher(scope.testScheduler))
         database = Injector.getDatabase(testDatabaseDriver())
+        getHymnTitlesUseCase = GetHymnTitlesUseCase(database)
         useCase = SaveOpenLyricsUseCase(
             database,
             instantProvider = { Instant.parse(isoString = "2023-01-01T00:00:00Z") },

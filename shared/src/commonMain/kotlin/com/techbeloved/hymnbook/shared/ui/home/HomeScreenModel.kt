@@ -40,7 +40,7 @@ internal class HomeScreenModel(
         val fileSystem = fileSystemProvider.get()
 
         // Lyrics assets
-        val lyricsBundledAsset = "assets/openlyrics/sample_songs.zip"
+        val lyricsBundledAsset = "files/openlyrics/sample_songs.zip"
         val lyricsAssetFileHash = hashAssetFileUseCase(lyricsBundledAsset)
         val savedLyricsArchiveHash = getSavedFileHashUseCase(lyricsBundledAsset)
 

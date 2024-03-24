@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
-import com.techbeloved.hymnbook.shared.ui.theme.crimsonTextFont
+import com.techbeloved.hymnbook.shared.ui.theme.crimsonText
 
 internal class SongDetailScreen(private val songId: Long) : Screen {
     @Composable
@@ -60,7 +60,7 @@ private fun SongDetailUi(state: SongUiDetail) {
             Text(
                 state.content,
                 modifier = Modifier.fillMaxWidth(),
-                fontFamily = crimsonTextFont,
+                fontFamily = crimsonText,
                 fontSize = 18.sp
             )
         }

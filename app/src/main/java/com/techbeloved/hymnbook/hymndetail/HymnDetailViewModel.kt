@@ -128,7 +128,7 @@ class HymnDetailViewModel @Inject constructor(
 
                 if (chorus != null) {
                     truss.pushSpan(Snippety().fontStyle(Snippety.FontStyle.ITALIC))
-                            //.pushSpan(Snippety().textColor(context.resources.getColor(R.color.colorFadedText)))
+                            //.pushSpan(Snippety().textColor(context.composeResources.getColor(R.color.colorFadedText)))
                             .appendln(chorus)
                             .appendln()
                             //.popSpan()
