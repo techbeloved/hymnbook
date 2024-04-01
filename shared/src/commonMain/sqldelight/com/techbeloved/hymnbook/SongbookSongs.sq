@@ -10,3 +10,7 @@ CREATE TABLE IF NOT EXISTS SongbookSongs (
 insert:
 INSERT OR IGNORE INTO SongbookSongs(songbook, song_id, entry)
 VALUES (?, ?, ?);
+
+getSongbookEntries:
+SELECT * FROM SongbookSongs
+WHERE songbook = ?;
