@@ -2,9 +2,9 @@ name: Android CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "release/**" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "release/**" ]
   release:
     types: [ published ]
 
@@ -24,7 +24,7 @@ jobs:
       WCCRM_HYMNS_JSON_URL: ${{ secrets.WCCRM_HYMN_CATALOG }}
       WCCRM_TOPICS_JSON_URL: ${{ secrets.WCCRM_TOPICS }}
       HYMN_ASSET_TOKEN: ${{ secrets.HYMN_ASSET_TOKEN_CLASSIC }}
-      WCCRM_HYMNS_JSON: "wccrm_hymns.json"
+      WCCRM_HYMNS_JSON: "wccrm_hymns_v6.json"
       WCCRM_TOPICS_JSON: "wccrm_topics.json"
       WCCRM_TUNES_ASSET_DOWNLOAD_URL: ${{ secrets.WCCRM_TUNES_ASSET }}
       WCCRM_SHEET_MUSIC_ASSET_DOWNLOAD_URL: ${{ secrets.WCCRM_CATALOG_ASSET }}

@@ -3,7 +3,7 @@ agp = "8.1.2"
 androidPdfViewer = "3.1.0-beta.1"
 appUpdateKtx = "2.1.0"
 cardview = "1.0.0"
-circularProgressBar = "1.2.2"
+circularProgressBar = "1.2.3"
 constraintlayout = "2.1.4"
 coreTestingVersion = "2.2.0"
 firebaseAnalytics = "21.4.0"
@@ -82,7 +82,7 @@ detekt = "1.23.0"
 triplet = "3.7.0"
 
 [libraries]
-android-pdf-viewer = { module = "com.github.barteksc:android-pdf-viewer", version.ref = "androidPdfViewer" }
+android-pdf-viewer = { module = "com.github.DImuthuUpe:AndroidPdfViewer", version.ref = "androidPdfViewer" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx_appcompat" }
 androidx-cardview = { module = "androidx.cardview:cardview", version.ref = "cardview" }
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
@@ -119,7 +119,7 @@ androidx-datastore-android = { group = "androidx.datastore", name = "datastore-p
 androidx-work-rxjava2 = { module = "androidx.work:work-rxjava2", version.ref = "androidx_work" }
 androidx-work-testing = { module = "androidx.work:work-testing", version.ref = "androidx_work" }
 app-update-ktx = { module = "com.google.android.play:app-update-ktx", version.ref = "appUpdateKtx" }
-circular-progress-bar = { module = "com.budiyev.android:circular-progress-bar", version.ref = "circularProgressBar" }
+circular-progress-bar = { module = "com.github.yuriy-budiyev:circular-progress-bar", version.ref = "circularProgressBar" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
