@@ -5,5 +5,5 @@ import okio.Path
 internal expect val defaultAssetArchiveExtractor: AssetArchiveExtractor
 
 internal fun interface AssetArchiveExtractor {
-    fun extract(assetFile: String, destination: Path)
+    suspend fun extract(assetFile: String, destination: Path)
 }

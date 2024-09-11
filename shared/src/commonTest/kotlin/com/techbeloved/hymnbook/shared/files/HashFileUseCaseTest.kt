@@ -1,36 +1,24 @@
 package com.techbeloved.hymnbook.shared.files
 
 import com.techbeloved.hymnbook.shared.model.file.FileHash
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import okio.Path.Companion.toPath
 import okio.fakefilesystem.FakeFileSystem
 import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class HashFileUseCaseTest {
 
-    private val scope = TestScope()
     private val fakeFileSystem = FakeFileSystem()
-    private val useCase = HashAssetFileUseCase(defaultAssetFileProvider = {
-        fakeFileSystem.source(it.toPath())
-    })
-
-    @BeforeTest
-    fun setUp() {
-        Dispatchers.setMain(StandardTestDispatcher(scope.testScheduler))
-    }
+    private val useCase = HashAssetFileUseCase(
+        defaultAssetFileSourceProvider = {
+            fakeFileSystem.source(it.toPath())
+        })
 
     @AfterTest
     fun tearDown() {
         fakeFileSystem.checkNoOpenFiles()
-        Dispatchers.resetMain()
     }
 
     @Test

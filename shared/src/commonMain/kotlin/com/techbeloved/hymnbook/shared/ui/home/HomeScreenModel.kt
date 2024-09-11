@@ -45,6 +45,7 @@ internal class HomeScreenModel(
         val savedLyricsArchiveHash = getSavedFileHashUseCase(lyricsBundledAsset)
 
         // Check if file has been imported already. Otherwise, we ignore
+         println(fileSystem.userData)
         if (savedLyricsArchiveHash?.sha256 != lyricsAssetFileHash.sha256) {
             val lyricsDir = fileSystem.tempDir / "lyrics/"
             fileSystem.fileSystem.createDirectory(lyricsDir)

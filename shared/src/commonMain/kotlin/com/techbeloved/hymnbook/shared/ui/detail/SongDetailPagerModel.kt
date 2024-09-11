@@ -8,7 +8,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 internal class SongDetailPagerModel(
-    private val songBookEntry: SongBookEntry,
+    private val songbook: String,
+    private val entry: String,
     private val getSongEntriesForSongbookUseCase: GetSongEntriesForSongbookUseCase = GetSongEntriesForSongbookUseCase(),
 ) : ScreenModel {
 
@@ -16,10 +17,11 @@ internal class SongDetailPagerModel(
 
     init {
         screenModelScope.launch {
-            val songEntries = getSongEntriesForSongbookUseCase(songBookEntry)
+            val songbookEntry = SongBookEntry(songbook, entry)
+            val songEntries = getSongEntriesForSongbookUseCase(songbookEntry)
             state.update {
                 SongDetailPagerState.Content(
-                    initialPage = songEntries.indexOfFirst { it.songBook == songBookEntry },
+                    initialPage = songEntries.indexOfFirst { it.songBook == songbookEntry },
                     pageCount = songEntries.size,
                     pages = songEntries,
                 )

@@ -11,11 +11,11 @@ import okio.use
 
 internal class HashAssetFileUseCase(
     private val dispatchersProvider: DispatchersProvider = getPlatformDispatcherProvider(),
-    private val defaultAssetFileProvider: AssetFileProvider = assetFileProvider,
+    private val defaultAssetFileSourceProvider: AssetFileSourceProvider = assetFileSourceProvider,
 ) {
     suspend operator fun invoke(filePath: String): FileHash = withContext(dispatchersProvider.io()){
         val hash = HashingSink.sha256(blackholeSink()).use { hashingSink ->
-            defaultAssetFileProvider.get(filePath).buffer().use { source ->
+            defaultAssetFileSourceProvider.get(filePath).buffer().use { source ->
                 source.readAll(hashingSink)
                 hashingSink.hash.hex()
             }

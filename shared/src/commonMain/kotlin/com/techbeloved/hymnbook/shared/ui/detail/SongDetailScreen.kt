@@ -1,6 +1,5 @@
 package com.techbeloved.hymnbook.shared.ui.detail
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,8 +10,8 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.LocalContentColor
-import androidx.compose.material.Text
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.Text
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -28,7 +27,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
-import com.techbeloved.hymnbook.shared.model.SongBookEntry
 import com.techbeloved.hymnbook.shared.model.SongPageEntry
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
 import com.techbeloved.hymnbook.shared.ui.theme.crimsonText
@@ -37,7 +35,7 @@ internal class SongDetailScreen(private val songbook: String, private val entry:
     @Composable
     override fun Content() {
         val pagerModel =
-            rememberScreenModel { SongDetailPagerModel(SongBookEntry(songbook, entry)) }
+            rememberScreenModel { SongDetailPagerModel(songbook, entry) }
         val pagerState by pagerModel.state.collectAsState()
         when (val state = pagerState) {
             is SongDetailPagerState.Content -> {
@@ -79,7 +77,7 @@ private fun SongDetailUi(state: SongUiDetail, modifier: Modifier = Modifier) {
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SongPager(
     state: SongDetailPagerState.Content,
@@ -96,7 +94,7 @@ private fun SongPager(
         HorizontalPager(
             state = rememberPagerState(state.initialPage, pageCount = { state.pages.size }),
             modifier = modifier.padding(paddingValues),
-            key = { state.pages[it] }
+            key = { state.pages[it].id }
         ) { page ->
             pageContent(state.pages[page])
         }
