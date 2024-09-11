@@ -69,7 +69,7 @@ class UpdateHymnDatabaseWithMidiFilesWorker @AssistedInject constructor(
                     updateHymnsUseCase(updatedHymns).blockingAwait()
                 }
             }
-            if (newTunes.isNotEmpty() || newCatalogs.isNotEmpty()) {
+            if (newTunes.isNotEmpty() || newCatalogs.isNotEmpty() || newHymns.isNotEmpty()) {
                 val hymnAssetUpdates = hymnAssetUpdates()
                 hymnsRepository.updateHymnAsset(hymnAssetUpdates).blockingAwait()
             }
