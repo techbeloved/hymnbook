@@ -9,6 +9,7 @@ plugins {
     alias libs.plugins.google.services
     alias libs.plugins.firebase.crashlytics
     alias libs.plugins.hilt
+    alias libs.plugins.jetbrains.compose.compiler
 }
 
 def keystorePropertiesFile = rootProject.file("keystore.properties")
@@ -33,7 +34,7 @@ android {
             storePassword keystoreProperties['storePassword']
         }
     }
-    compileSdk 34
+    compileSdk 35
     defaultConfig {
         applicationId "com.techbeloved.hymnbook"
         minSdkVersion 21

@@ -1,15 +1,20 @@
 package com.techbeloved.hymnbook.shared.files
 
-import cocoapods.SSZipArchive.SSZipArchive
-import kotlinx.cinterop.ExperimentalForeignApi
+import okio.FileSystem
 import okio.Path
+import okio.Path.Companion.toPath
 
 internal actual val defaultAssetArchiveExtractor: AssetArchiveExtractor by lazy { IosArchiveExtractor() }
 
-@OptIn(ExperimentalForeignApi::class)
-private class IosArchiveExtractor : AssetArchiveExtractor {
-    override fun extract(assetFile: String, destination: Path) {
-        val extracted = SSZipArchive.unzipFileAtPath(getAssetFilePath(assetFile), destination.toString())
-        println("File extracted to $destination: $extracted")
+private class IosArchiveExtractor(
+    private val systemArchiveExtractor: SystemArchiveExtractor = SystemArchiveExtractor(),
+) : AssetArchiveExtractor {
+    override suspend fun extract(assetFile: String, destination: Path) {
+        systemArchiveExtractor.extract(
+            sourceFile = getAssetFilePath(assetFile).toPath(),
+            destination = destination,
+            sourceFileSystem = FileSystem.SYSTEM,
+            destinationFileSystem = FileSystem.SYSTEM
+        )
     }
 }

@@ -1,9 +1,12 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.BitcodeEmbeddingMode
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.compose)
+    alias(libs.plugins.jetbrains.compose.compiler)
     alias(libs.plugins.sqldelight)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.native.cocoapods)
@@ -12,10 +15,8 @@ plugins {
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
     androidTarget {
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "17"
-            }
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17)
         }
     }
 
@@ -33,16 +34,12 @@ kotlin {
         summary = "Hymnbook multiplatform"
         homepage = "none.for.now"
         license = "Apache"
-        ios.deploymentTarget = "15.5" // minSdk
+        ios.deploymentTarget = "16.0" // minSdk
         podfile = project.file("../iosApp/Podfile")
         framework {
             isStatic = false
             baseName = "shared"
             embedBitcode(BitcodeEmbeddingMode.BITCODE)
-        }
-
-        pod("SSZipArchive") {
-            version = "2.5.5"
         }
     }
 
@@ -117,7 +114,7 @@ kotlin {
 
 android {
     namespace = "com.techbeloved.hymnbook.shared"
-    compileSdk = 34
+    compileSdk = 35
     defaultConfig {
         minSdk = 21
     }

@@ -7,12 +7,7 @@ import com.techbeloved.hymnbook.shared.model.SongTitle
 import com.techbeloved.hymnbook.shared.model.ext.OpenLyricsSong
 import com.techbeloved.hymnbook.shared.testDatabaseDriver
 import com.techbeloved.hymnbook.shared.titles.GetHymnTitlesUseCase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import kotlinx.datetime.Instant
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -20,26 +15,23 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class SaveOpenLyricsUseCaseTest {
-    private val scope = TestScope()
     private lateinit var useCase: SaveOpenLyricsUseCase
     private lateinit var database: Database
     private lateinit var getHymnTitlesUseCase: GetHymnTitlesUseCase
 
     @BeforeTest
     fun setUp() {
-        Dispatchers.setMain(StandardTestDispatcher(scope.testScheduler))
         database = Injector.getDatabase(testDatabaseDriver())
         getHymnTitlesUseCase = GetHymnTitlesUseCase(database)
         useCase = SaveOpenLyricsUseCase(
             database,
-            instantProvider = { Instant.parse(isoString = "2023-01-01T00:00:00Z") },
+            instantProvider = { Instant.parse("2023-01-01T00:00:00Z") },
         )
     }
 
     @AfterTest
     fun tearDown() {
         database.deleteAll()
-        Dispatchers.resetMain()
     }
 
     @Test

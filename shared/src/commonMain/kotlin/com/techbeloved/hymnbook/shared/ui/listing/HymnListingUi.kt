@@ -26,7 +26,7 @@ internal fun HymnListingUi(
         items(hymnItems, SongTitle::id) { item ->
             ListItem(
                 modifier = Modifier.clickable {
-                    navigator.push(SongDetailScreen(item.id))
+                    navigator.push(SongDetailScreen(checkNotNull(item.songbook), checkNotNull(item.songbookEntry)))
                 },
                 headlineContent = {
                     Text(text = item.title)

@@ -3,7 +3,7 @@ package com.techbeloved.hymnbook.shared.files
 import com.techbeloved.hymnbook.shared.di.AndroidInjector
 import okio.source
 
-internal actual val assetFileProvider: AssetFileProvider = AssetFileProvider { path ->
+internal actual val assetFileSourceProvider: AssetFileSourceProvider = AssetFileSourceProvider { path ->
     openAndroidAsset(path).source()
 }
 

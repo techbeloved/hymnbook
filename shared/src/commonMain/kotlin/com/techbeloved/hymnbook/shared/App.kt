@@ -1,6 +1,5 @@
 package com.techbeloved.hymnbook.shared
 
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.navigator.Navigator
 import com.techbeloved.hymnbook.shared.ui.home.HomeScreen

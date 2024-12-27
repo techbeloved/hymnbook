@@ -1,8 +1,16 @@
+@file:OptIn(ExperimentalResourceApi::class)
+
 package com.techbeloved.hymnbook.shared.files
 
+import hymnbook.shared.generated.resources.Res
 import okio.FileSystem
 import okio.Path.Companion.toPath
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 
-internal actual val assetFileProvider: AssetFileProvider = AssetFileProvider {
-    FileSystem.RESOURCES.source(it.toPath())
+internal actual val assetFileSourceProvider: AssetFileSourceProvider = AssetFileSourceProvider {
+    val resourcePath = getResourcePath(it)
+    FileSystem.RESOURCES.source(resourcePath.toPath())
 }
+
+@OptIn(ExperimentalResourceApi::class)
+internal fun getResourcePath(assetFile: String) = Res.getUri(assetFile).split("!").last()

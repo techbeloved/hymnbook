@@ -35,6 +35,10 @@ internal class GetSongDetailUseCase(
         val content = buildAnnotatedString {
             val bookEntries = songbookEntries()
 
+            pushStyle(SpanStyle(fontSize = 24.sp))
+            append(title.trim())
+            pop() // end title line
+
             pushStyle(ParagraphStyle(textIndent = TextIndent(restLine = lineOverflowIndent)))
             pushStyle(SpanStyle(fontStyle = FontStyle.Italic, fontSize = 16.sp))
             for (entry in bookEntries) {
