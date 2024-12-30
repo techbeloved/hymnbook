@@ -2,6 +2,8 @@ package com.techbeloved.hymnbook.shared.ui.detail
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -39,11 +41,14 @@ internal class SongDetailScreen(private val songbook: String, private val entry:
         val pagerState by pagerModel.state.collectAsState()
         when (val state = pagerState) {
             is SongDetailPagerState.Content -> {
-                SongPager(state, pageContent = { pageEntry ->
+                SongPager(state, pageContent = { pageEntry, contentPadding ->
                     val screenModel =
                         rememberScreenModel(pageEntry.toString()) { SongDetailScreenModel(pageEntry.id) }
                     val uiDetail by screenModel.state.collectAsState()
-                    SongDetailUi(uiDetail)
+                    SongDetailUi(
+                        state = uiDetail,
+                        contentPadding = contentPadding,
+                    )
                 })
             }
 
@@ -58,7 +63,11 @@ internal class SongDetailScreen(private val songbook: String, private val entry:
 }
 
 @Composable
-private fun SongDetailUi(state: SongUiDetail, modifier: Modifier = Modifier) {
+private fun SongDetailUi(
+    state: SongUiDetail,
+    contentPadding: PaddingValues,
+    modifier: Modifier = Modifier,
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -68,7 +77,8 @@ private fun SongDetailUi(state: SongUiDetail, modifier: Modifier = Modifier) {
         CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
             Text(
                 state.content,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth()
+                    .padding(contentPadding),
                 fontFamily = crimsonText,
                 fontSize = 18.sp,
             )
@@ -81,22 +91,22 @@ private fun SongDetailUi(state: SongUiDetail, modifier: Modifier = Modifier) {
 @Composable
 private fun SongPager(
     state: SongDetailPagerState.Content,
-    pageContent: @Composable (entry: SongPageEntry) -> Unit,
+    pageContent: @Composable (entry: SongPageEntry, contentPadding: PaddingValues) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             AppTopBar("", scrollBehaviour = scrollBehavior)
         },
-    ) { paddingValues ->
+    ) { innerPadding ->
         HorizontalPager(
             state = rememberPagerState(state.initialPage, pageCount = { state.pages.size }),
-            modifier = modifier.padding(paddingValues),
-            key = { state.pages[it].id }
+            key = { state.pages[it].id },
+            modifier = modifier.consumeWindowInsets(innerPadding)
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
         ) { page ->
-            pageContent(state.pages[page])
+            pageContent(state.pages[page], innerPadding)
         }
     }
 }

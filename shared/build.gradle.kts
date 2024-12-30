@@ -1,6 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.BitcodeEmbeddingMode
-import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
