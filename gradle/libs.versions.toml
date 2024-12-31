@@ -1,6 +1,8 @@
 [versions]
-accompanist = "0.32.0"
 agp = "8.7.3"
+android-compileSdk = "35"
+android-minSdk = "21"
+android-targetSdk = "35"
 androidPdfViewer = "3.1.0-beta.1"
 androidx_activity = "1.9.3"
 androidx_appcompat = "1.7.0"
@@ -31,7 +33,7 @@ xmlutil = "0.86.3"
 core_library_desugaring = "2.1.4"
 coreTestingVersion = "2.2.0"
 coroutines = "1.9.0"
-coroutinesTest = "1.8.1"
+coroutinesTest = "1.9.0"
 dateTime = "0.6.1"
 detekt = "1.23.0"
 espresso = "3.6.1"
@@ -47,10 +49,11 @@ hilt_android = "2.49"
 hilt_navigation = "1.2.0"
 hiltAndroidCompiler = "2.48"
 koin = "3.4.3"
-kotlin = "2.0.0"
+kotlin = "2.1.0"
 kotlinxCollectionsImmutable = "0.3.7"
 kotlinxIo = "0.6.0"
-ktor = "2.3.3"
+ktor = "2.3.11"
+ksp = "2.1.0-1.0.29"
 legacyPreferenceV14 = "1.0.0"
 legacySupportV4 = "1.0.0"
 libphonenumber = "8.13.22"
@@ -85,7 +88,7 @@ taptargetview = "1.13.3"
 test_junit = "4.13.2"
 timber = "5.0.1"
 triplet = "3.7.0"
-voyager = "1.0.0-rc10"
+voyager = "1.0.1"
 
 [libraries]
 android-pdf-viewer = { module = "com.github.DImuthuUpe:AndroidPdfViewer", version.ref = "androidPdfViewer" }
@@ -138,7 +141,6 @@ compose-hilt-navigation = { group = "androidx.hilt", name = "hilt-navigation-com
 compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation_compose" }
 compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "compose_material3" }
 compose-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "compose_constraintlayout" }
-compose-accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
 compose-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidx_lifecycle" }
 compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx_activity" }
 
@@ -191,6 +193,7 @@ sqldelight-jvm = { group = "app.cash.sqldelight", name = "sqlite-driver", versio
 squareup-okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
 squareup-okio-fakefilesystem = { group = "com.squareup.okio", name = "okio-fakefilesystem", version.ref = "okio" }
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
+voyager-screenmodel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyager" }
 voyager-bottomSheetNavigator = { module = "cafe.adriel.voyager:voyager-bottom-sheet-navigator", version.ref = "voyager" }
 voyager-tabNavigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
@@ -231,6 +234,7 @@ jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose_jetbr
 jetbrains-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
