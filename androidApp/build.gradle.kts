@@ -42,6 +42,7 @@ android {
 dependencies {
 
     implementation(project(":shared"))
+    implementation(project(":modules:media"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.ktx)
     implementation(libs.compose.activity)

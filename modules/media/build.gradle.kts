@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
@@ -56,14 +55,21 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.compose.activity)
+            implementation(libs.androidx.media3.common.ktx)
+            implementation(libs.androidx.media3.exoplayer)
+            implementation(libs.androidx.media3.exoplayer.midi)
+            implementation(libs.androidx.media3.session)
+            implementation(libs.androidx.media3.ui)
+            implementation(libs.coroutines.guava)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
-            implementation(compose.material)
+            implementation(compose.materialIconsExtended)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+            implementation(libs.kotlinx.collections.immutable)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -98,16 +104,4 @@ android {
 
 dependencies {
     debugImplementation(compose.uiTooling)
-}
-
-compose.desktop {
-    application {
-        mainClass = "com.techbeloved.media.MainKt"
-
-        nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.techbeloved.media"
-            packageVersion = "1.0.0"
-        }
-    }
 }
