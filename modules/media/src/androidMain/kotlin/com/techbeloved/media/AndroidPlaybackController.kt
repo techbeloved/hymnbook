@@ -23,12 +23,16 @@ class AndroidPlaybackController(
             playerState = playerState()
             isPlaying = mediaController.isPlaying
             itemIndex = mediaController.currentMediaItemIndex
-            duration = mediaController.contentDuration
             position = mediaController.currentPosition
+            updateDuration()
         }
 
         scope.launch {
             while (isActive) {
+                // Ensure position is never more than duration
+                if (mediaController.currentPosition > state.duration) {
+                    updateDuration()
+                }
                 state.position = mediaController.currentPosition
                 delay(timeMillis = 100)
             }
@@ -38,28 +42,34 @@ class AndroidPlaybackController(
             mediaController.listen { events ->
                 if (events.contains(Player.EVENT_IS_PLAYING_CHANGED)) {
                     state.isPlaying = mediaController.isPlaying
-                    state.duration = mediaController.contentDuration
                 }
 
                 if (events.contains(Player.EVENT_MEDIA_ITEM_TRANSITION)) {
                     state.itemIndex = mediaController.currentMediaItemIndex
-                    state.duration = mediaController.contentDuration
+                    updateDuration()
                 }
                 if (events.contains(Player.EVENT_TRACKS_CHANGED)) {
                     state.itemIndex = mediaController.currentMediaItemIndex
-                    state.duration = mediaController.contentDuration
+                    updateDuration()
 
                 }
                 if (events.contains(Player.EVENT_POSITION_DISCONTINUITY)) {
                     state.position = mediaController.currentPosition
-                    state.duration = mediaController.contentDuration
+                    updateDuration()
                 }
 
                 if (events.contains(Player.EVENT_PLAYBACK_STATE_CHANGED)) {
                     state.playerState = playerState()
                 }
+                if (events.contains(Player.EVENT_TIMELINE_CHANGED)) {
+                    updateDuration()
+                }
             }
         }
+    }
+
+    private fun updateDuration() {
+        state.duration = maxOf(mediaController.contentDuration, mediaController.contentPosition, 1)
     }
 
     private fun playerState() = when (mediaController.playbackState) {

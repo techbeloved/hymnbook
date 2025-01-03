@@ -124,7 +124,7 @@ private fun loadMediaItems(mediaController: PlaybackController?) {
     mediaController?.setItems(
         persistentListOf(
             AudioItem(
-                uri = Res.getUri("files/sample1.mp3"),
+                uri = Res.getUri("files/sample5.mid"),
                 title = "",
                 artist = "",
                 album = ""
@@ -136,7 +136,7 @@ private fun loadMediaItems(mediaController: PlaybackController?) {
                 album = ""
             ),
             AudioItem(
-                uri = Res.getUri("files/sample3.mp3"),
+                uri = Res.getUri("files/sample3.mp3").also { println(it) },
                 title = "",
                 artist = "",
                 album = ""
