@@ -2,7 +2,6 @@ package com.techbeloved.media
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -26,7 +25,7 @@ fun rememberPlaybackState(): PlaybackState =
 @Composable
 expect fun rememberPlaybackController(
     playbackState: PlaybackState = rememberPlaybackState(),
-): State<PlaybackController?>
+): PlaybackController?
 
 @Stable
 class PlaybackState(

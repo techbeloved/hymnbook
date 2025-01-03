@@ -10,6 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 
 class AndroidPlaybackController(
     private val mediaController: MediaController,
@@ -34,6 +35,7 @@ class AndroidPlaybackController(
                     updateDuration()
                 }
                 state.position = mediaController.currentPosition
+                println("Current position: ${mediaController.currentPosition}, controller: $this@AndroidPlaybackController")
                 delay(timeMillis = 100)
             }
         }
@@ -69,7 +71,7 @@ class AndroidPlaybackController(
     }
 
     private fun updateDuration() {
-        state.duration = maxOf(mediaController.contentDuration, mediaController.contentPosition, 1)
+        state.duration = abs(mediaController.contentDuration)
     }
 
     private fun playerState() = when (mediaController.playbackState) {
