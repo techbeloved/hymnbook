@@ -33,3 +33,4 @@ src/main/res/menu-night/
 /desktopApp/.appdata
 /desktopApp/.tmp
 /.kotlin/
+/modules/media/build/

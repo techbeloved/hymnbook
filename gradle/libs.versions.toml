@@ -1,6 +1,8 @@
 [versions]
-accompanist = "0.32.0"
 agp = "8.7.3"
+android-compileSdk = "35"
+android-minSdk = "21"
+android-targetSdk = "35"
 androidPdfViewer = "3.1.0-beta.1"
 androidx_activity = "1.9.3"
 androidx_appcompat = "1.7.0"
@@ -10,6 +12,7 @@ androidx_fragment = "1.8.5"
 androidx_hilt_compiler = "1.2.0"
 androidx_hilt_work = "1.2.0"
 androidx_lifecycle = "2.8.7"
+androidx_media3 = "1.5.1"
 androidx_savedstate = "1.2.1"
 androidx_splashscreen = "1.0.1"
 androidx_test_core = "1.6.1"
@@ -31,7 +34,7 @@ xmlutil = "0.86.3"
 core_library_desugaring = "2.1.4"
 coreTestingVersion = "2.2.0"
 coroutines = "1.9.0"
-coroutinesTest = "1.8.1"
+coroutinesTest = "1.9.0"
 dateTime = "0.6.1"
 detekt = "1.23.0"
 espresso = "3.6.1"
@@ -47,10 +50,11 @@ hilt_android = "2.49"
 hilt_navigation = "1.2.0"
 hiltAndroidCompiler = "2.48"
 koin = "3.4.3"
-kotlin = "2.0.0"
+kotlin = "2.1.0"
 kotlinxCollectionsImmutable = "0.3.7"
 kotlinxIo = "0.6.0"
-ktor = "2.3.3"
+ktor = "2.3.11"
+ksp = "2.1.0-1.0.29"
 legacyPreferenceV14 = "1.0.0"
 legacySupportV4 = "1.0.0"
 libphonenumber = "8.13.22"
@@ -85,7 +89,7 @@ taptargetview = "1.13.3"
 test_junit = "4.13.2"
 timber = "5.0.1"
 triplet = "3.7.0"
-voyager = "1.0.0-rc10"
+voyager = "1.0.1"
 
 [libraries]
 android-pdf-viewer = { module = "com.github.DImuthuUpe:AndroidPdfViewer", version.ref = "androidPdfViewer" }
@@ -96,6 +100,12 @@ androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscree
 androidx-legacy-preference-v14 = { module = "androidx.legacy:legacy-preference-v14", version.ref = "legacyPreferenceV14" }
 androidx-legacy-support-v4 = { module = "androidx.legacy:legacy-support-v4", version.ref = "legacySupportV4" }
 androidx-media = { module = "androidx.media:media", version.ref = "media" }
+androidx-media3-common-ktx = { module = "androidx.media3:media3-common-ktx", version.ref = "androidx_media3" }
+androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "androidx_media3" }
+androidx-media3-exoplayer-midi = { module = "androidx.media3:media3-exoplayer-midi", version.ref = "androidx_media3" }
+androidx-media3-exoplayer-smoothstreaming = { module = "androidx.media3:media3-exoplayer-smoothstreaming", version.ref = "androidx_media3" }
+androidx-media3-session = { module = "androidx.media3:media3-session", version.ref = "androidx_media3" }
+androidx-media3-ui = { module = "androidx.media3:media3-ui", version.ref = "androidx_media3" }
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationFragmentKtx" }
 androidx-palette-ktx = { module = "androidx.palette:palette-ktx", version.ref = "paletteKtx" }
@@ -109,7 +119,6 @@ androidx-runner = { module = "androidx.test:runner", version.ref = "runner" }
 androidx-work-runtime = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "androidx_work_runtime" }
 androidx-hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "androidx_hilt_work" }
 androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "androidx_hilt_compiler" }
-androidx-work = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "androidx_work" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "androidx_activity" }
 androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "androidx_fragment" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx_core_ktx" }
@@ -138,12 +147,12 @@ compose-hilt-navigation = { group = "androidx.hilt", name = "hilt-navigation-com
 compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation_compose" }
 compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "compose_material3" }
 compose-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "compose_constraintlayout" }
-compose-accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
 compose-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidx_lifecycle" }
 compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx_activity" }
 
 core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTestingVersion" }
 coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+coroutines-guava = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-guava", version.ref = "coroutines" }
 coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "coroutines" }
 coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
 
@@ -171,6 +180,7 @@ ktor-darwin_client = { group = "io.ktor", name = "ktor-client-darwin", version.r
 ktor-android_okhttp_logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 
 material = { module = "com.google.android.material:material", version.ref = "material" }
+material-icons = { module = "androidx.compose.material:material-icons-extended" }
 mockito-kotlin = { module = "com.nhaarman.mockitokotlin2:mockito-kotlin", version.ref = "mockitoKotlin" }
 rx-preferences = { module = "com.f2prateek.rx.preferences2:rx-preferences", version.ref = "rxPreferences" }
 rxandroid = { module = "io.reactivex.rxjava2:rxandroid", version.ref = "rxandroid" }
@@ -191,6 +201,7 @@ sqldelight-jvm = { group = "app.cash.sqldelight", name = "sqlite-driver", versio
 squareup-okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
 squareup-okio-fakefilesystem = { group = "com.squareup.okio", name = "okio-fakefilesystem", version.ref = "okio" }
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
+voyager-screenmodel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyager" }
 voyager-bottomSheetNavigator = { module = "cafe.adriel.voyager:voyager-bottom-sheet-navigator", version.ref = "voyager" }
 voyager-tabNavigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
@@ -231,6 +242,7 @@ jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose_jetbr
 jetbrains-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }

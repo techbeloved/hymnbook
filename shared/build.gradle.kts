@@ -61,6 +61,7 @@ kotlin {
             implementation(libs.voyager.navigator)
             implementation(libs.voyager.transitions)
             implementation(libs.voyager.bottomSheetNavigator)
+            implementation(libs.voyager.screenmodel)
 
             // Sqldelight
             implementation(libs.sqldelight.runtime)

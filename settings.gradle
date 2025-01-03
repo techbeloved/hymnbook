@@ -25,3 +25,5 @@ dependencyResolutionManagement {
 include ':app', ':edittextwithsortby'
 include ':shared'
 include ':desktopApp'
+include ':modules:media'
+include ':androidApp'
