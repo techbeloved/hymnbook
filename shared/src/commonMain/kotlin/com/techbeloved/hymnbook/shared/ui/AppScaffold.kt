@@ -3,8 +3,6 @@
 package com.techbeloved.hymnbook.shared.ui
 
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -15,8 +13,11 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+
+internal expect val navigationArrowBack: ImageVector
 
 @Composable
 internal fun AppTopBar(
@@ -32,7 +33,7 @@ internal fun AppTopBar(
             if (showUpButton) {
                 val navigator = LocalNavigator.currentOrThrow
                 IconButton(onClick = navigator::pop) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Navigate up")
+                    Icon(navigationArrowBack, contentDescription = "Navigate up")
                 }
             }
         },

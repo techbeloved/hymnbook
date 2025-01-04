@@ -35,7 +35,6 @@ class AndroidPlaybackController(
                     updateDuration()
                 }
                 state.position = mediaController.currentPosition
-                println("Current position: ${mediaController.currentPosition}, controller: $this@AndroidPlaybackController")
                 delay(timeMillis = 100)
             }
         }

@@ -41,11 +41,8 @@ fun MediaPlayerControls(modifier: Modifier = Modifier) {
     var progress by remember { mutableFloatStateOf(0f) }
     LaunchedEffect(playbackState) {
         snapshotFlow {
-            playbackState.duration to playbackState.position
-        }
-            .collect {
-                progress = it.second.toFloat() / it.first
-            }
+            playbackState.position.toFloat() / playbackState.duration
+        }.collect { progress = it }
     }
     LaunchedEffect(playbackState) {
         snapshotFlow { playbackState.playerState }

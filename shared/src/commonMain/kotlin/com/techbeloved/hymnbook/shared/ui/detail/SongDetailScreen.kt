@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalResourceApi::class)
+
 package com.techbeloved.hymnbook.shared.ui.detail
 
 import androidx.compose.foundation.layout.Box
@@ -12,12 +14,14 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.Text
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -32,6 +36,9 @@ import cafe.adriel.voyager.core.screen.Screen
 import com.techbeloved.hymnbook.shared.model.SongPageEntry
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
 import com.techbeloved.hymnbook.shared.ui.theme.crimsonText
+import com.techbeloved.media.AudioItem
+import hymnbook.shared.generated.resources.Res
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 internal class SongDetailScreen(private val songbook: String, private val entry: String) : Screen {
     @Composable
@@ -53,8 +60,10 @@ internal class SongDetailScreen(private val songbook: String, private val entry:
             }
 
             SongDetailPagerState.Loading -> {
-                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
+                Surface(Modifier.fillMaxSize()) {
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
                 }
             }
         }
@@ -99,6 +108,22 @@ private fun SongPager(
         topBar = {
             AppTopBar("", scrollBehaviour = scrollBehavior)
         },
+        bottomBar = {
+            BottomAppBar() {
+                BottomControlsUi(
+                    audioItem = AudioItem(
+                        uri = Res.getUri("files/tunes/sample3.mp3"),
+                        title = "Hymn of the ages",
+                        album = "Hymnbook",
+                        artist = "Gospel",
+                    ),
+                    title = "Hymn 1",
+                    onPreviousButtonClick = {},
+                    onNextButtonClick = {},
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+        }
     ) { innerPadding ->
         HorizontalPager(
             state = rememberPagerState(state.initialPage, pageCount = { state.pages.size }),

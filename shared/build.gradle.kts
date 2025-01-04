@@ -50,6 +50,7 @@ kotlin {
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.material)
+            implementation(compose.materialIconsExtended)
             @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
             implementation(libs.kotlinx.collections.immutable)
@@ -79,6 +80,8 @@ kotlin {
         androidMain.dependencies {
             api(libs.compose.activity)
             implementation(libs.sqldelight.android)
+            implementation(compose.preview)
+            implementation(compose.uiTooling)
         }
         val desktopMain by getting {
             dependencies {
