@@ -44,9 +44,12 @@ fun MediaPlayerControls(modifier: Modifier = Modifier) {
             playbackState.duration to playbackState.position
         }
             .collect {
-                println("Duration: ${it.first}, position: ${it.second}")
                 progress = it.second.toFloat() / it.first
             }
+    }
+    LaunchedEffect(playbackState) {
+        snapshotFlow { playbackState.playerState }
+            .collect { println("State: $it") }
     }
     if (mediaController != null) {
         Column(

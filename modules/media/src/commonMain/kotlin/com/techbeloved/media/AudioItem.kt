@@ -5,4 +5,6 @@ data class AudioItem(
     val title: String,
     val artist: String,
     val album: String,
-)
+) {
+    fun isMidi() = uri.endsWith(".mid")
+}
