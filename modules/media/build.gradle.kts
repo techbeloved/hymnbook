@@ -70,6 +70,9 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.kotlinx.collections.immutable)
+
+            implementation(libs.kaluga.base)
+            implementation(libs.kaluga.media)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
