@@ -44,7 +44,7 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 internal fun BottomControlsUi(
     title: String,
-    audioItem: AudioItem,
+    audioItem: AudioItem?,
     onPreviousButtonClick: () -> Unit,
     onNextButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -77,7 +77,9 @@ internal fun BottomControlsUi(
             }
         }
 
-        PlayButton(audioItem)
+        if (audioItem != null) {
+            PlayButton(audioItem)
+        }
     }
 }
 
