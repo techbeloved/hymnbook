@@ -129,11 +129,14 @@ class KalugaPlaybackController(
         val currentItemIndex = state.itemIndex
         if (!queue.indices.contains(currentItemIndex)) return
 
-        val currentPlayerItem = mediaSourceFromUrl(queue[currentItemIndex].uri) ?: return
+        val audioItem = queue[currentItemIndex]
+        val currentPlayerItem = mediaSourceFromUrl(audioItem.uri) ?: return
 
         controllerScope.launch {
             mediaPlayer.reset()
             mediaPlayer.initializeFor(currentPlayerItem)
+            // Update the current playing media id
+            state.mediaId = audioItem.mediaId
 
             controls.value.play?.perform()
         }

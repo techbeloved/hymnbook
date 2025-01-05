@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.techbeloved.media.AudioItem
+import com.techbeloved.media.PlaybackController
 import com.techbeloved.media.PlayerState
 import com.techbeloved.media.rememberPlaybackController
 import com.techbeloved.media.rememberPlaybackState
@@ -102,6 +103,20 @@ private fun PlayButton(
             progressVisible = it.isPlaying
         }
     }
+
+    LaunchedEffect(audioItem) {
+        // Decide if we need to play the new track automatically.
+        // For example, the user swipes to the next page while the current song is still playing.
+        if (audioItem.mediaId != playbackState.mediaId) {
+            controller?.run {
+                if (playbackState.isPlaying) {
+                    playNew(audioItem)
+                } else if (playbackState.playerState != PlayerState.Idle) {
+                    prepareNew(audioItem)
+                }
+            }
+        }
+    }
     AnimatedVisibility(
         visible = controller != null,
         modifier = modifier.size(44.dp),
@@ -111,9 +126,7 @@ private fun PlayButton(
                 controller?.run {
                     when (playbackState.playerState) {
                         PlayerState.Idle -> {
-                            setItems(persistentListOf(audioItem))
-                            prepare()
-                            playWhenReady()
+                            playNew(audioItem)
                         }
 
                         PlayerState.Ended -> {
@@ -149,4 +162,16 @@ private fun PlayButton(
             CircularProgressIndicator(strokeWidth = 2.dp, progress = { progress })
         }
     }
+}
+
+private fun PlaybackController.playNew(audioItem: AudioItem) {
+    pause()
+    prepareNew(audioItem)
+    playWhenReady()
+}
+
+private fun PlaybackController.prepareNew(audioItem: AudioItem) {
+    setItems(persistentListOf(audioItem))
+    prepare()
+    seekTo(position = 0)
 }

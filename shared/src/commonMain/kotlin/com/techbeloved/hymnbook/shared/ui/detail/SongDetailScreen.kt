@@ -116,6 +116,7 @@ private fun SongPager(
                         title = "Hymn of the ages",
                         album = "Hymnbook",
                         artist = "Gospel",
+                        mediaId = "sample3",
                     ),
                     title = "Hymn 1",
                     onPreviousButtonClick = {},

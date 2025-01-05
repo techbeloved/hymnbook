@@ -25,6 +25,7 @@ class AndroidPlaybackController(
             isPlaying = mediaController.isPlaying
             itemIndex = mediaController.currentMediaItemIndex
             position = mediaController.currentPosition
+            mediaId = mediaController.currentMediaItem?.mediaId
             updateDuration()
         }
 
@@ -43,14 +44,17 @@ class AndroidPlaybackController(
             mediaController.listen { events ->
                 if (events.contains(Player.EVENT_IS_PLAYING_CHANGED)) {
                     state.isPlaying = mediaController.isPlaying
+                    state.mediaId = mediaController.currentMediaItem?.mediaId
                 }
 
                 if (events.contains(Player.EVENT_MEDIA_ITEM_TRANSITION)) {
                     state.itemIndex = mediaController.currentMediaItemIndex
+                    state.mediaId = mediaController.currentMediaItem?.mediaId
                     updateDuration()
                 }
                 if (events.contains(Player.EVENT_TRACKS_CHANGED)) {
                     state.itemIndex = mediaController.currentMediaItemIndex
+                    state.mediaId = mediaController.currentMediaItem?.mediaId
                     updateDuration()
 
                 }
@@ -106,6 +110,7 @@ class AndroidPlaybackController(
             items.map { item ->
                 MediaItem.Builder()
                     .setUri(item.uri)
+                    .setMediaId(item.mediaId)
                     .setMediaMetadata(
                         MediaMetadata.Builder()
                             .setTitle(item.title)
