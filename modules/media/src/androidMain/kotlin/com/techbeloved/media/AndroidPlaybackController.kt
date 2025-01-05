@@ -65,6 +65,7 @@ class AndroidPlaybackController(
 
                 if (events.contains(Player.EVENT_PLAYBACK_STATE_CHANGED)) {
                     state.playerState = playerState()
+                    state.isPlaying = mediaController.isPlaying
                 }
                 if (events.contains(Player.EVENT_TIMELINE_CHANGED)) {
                     updateDuration()

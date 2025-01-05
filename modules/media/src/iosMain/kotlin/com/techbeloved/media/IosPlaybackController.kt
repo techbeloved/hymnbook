@@ -82,4 +82,6 @@ class IosPlaybackController(
         prepare()
         player?.play()
     }
+
+    fun onDispose() = player?.onDispose()
 }

@@ -106,7 +106,7 @@ private fun PlayButton(
         }
     }
 
-    LaunchedEffect(audioItem) {
+    LaunchedEffect(audioItem, playbackState.mediaId) {
         // Decide if we need to play the new track automatically.
         // For example, the user swipes to the next page while the current song is still playing.
         if (audioItem.mediaId != playbackState.mediaId) {
