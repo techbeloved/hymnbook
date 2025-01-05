@@ -14,3 +14,7 @@ VALUES (?, ?, ?);
 getSongbookEntries:
 SELECT * FROM SongbookSongs
 WHERE songbook = ?;
+
+getSongbookEntry:
+SELECT * FROM SongbookSongs
+WHERE songbook = ? AND entry = ? LIMIT 1;
