@@ -2,14 +2,17 @@
 
 package com.techbeloved.hymnbook.shared.ui.home
 
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import com.techbeloved.hymnbook.shared.model.SongTitle
@@ -23,12 +26,18 @@ internal object HomeScreen : Screen {
 
         val screenModel = rememberScreenModel { HomeScreenModel() }
         val state by screenModel.state.collectAsState()
+        val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
         Scaffold(
             topBar = {
-                AppTopBar("Hymnbook", showUpButton = false,)
+                AppTopBar("Hymnbook", showUpButton = false, scrollBehaviour = scrollBehavior)
             },
-        ) { paddingValues ->
-            HomeUi(state, Modifier.padding(paddingValues))
+        ) { innerPadding ->
+            HomeUi(
+                state = state,
+                modifier = Modifier.consumeWindowInsets(innerPadding)
+                    .nestedScroll(scrollBehavior.nestedScrollConnection),
+                contentPadding = innerPadding,
+            )
         }
     }
 
@@ -37,7 +46,12 @@ internal object HomeScreen : Screen {
 @Composable
 internal fun HomeUi(
     state: ImmutableList<SongTitle>,
+    contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
-    HymnListingUi(state, modifier = modifier.fillMaxSize())
+    HymnListingUi(
+        hymnItems = state,
+        modifier = modifier.fillMaxSize(),
+        contentPadding = contentPadding,
+    )
 }

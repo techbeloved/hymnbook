@@ -1,6 +1,7 @@
 package com.techbeloved.hymnbook.shared.ui.listing
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -19,10 +20,11 @@ import kotlinx.collections.immutable.ImmutableList
 @Composable
 internal fun HymnListingUi(
     hymnItems: ImmutableList<SongTitle>,
+    contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
     val navigator = LocalNavigator.currentOrThrow
-    LazyColumn(modifier = modifier) {
+    LazyColumn(modifier = modifier, contentPadding = contentPadding) {
         items(hymnItems, SongTitle::id) { item ->
             ListItem(
                 modifier = Modifier.clickable {

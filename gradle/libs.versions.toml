@@ -20,6 +20,7 @@ androidx_test_junit = "1.2.1"
 androidx_work = "2.10.0"
 androidx_work_runtime = "2.10.0"
 appUpdateKtx = "2.1.0"
+haze = "1.1.1"
 kaluga = "1.5.1"
 cardview = "1.0.0"
 circularProgressBar = "1.2.3"
@@ -135,6 +136,8 @@ androidx-datastore-android = { group = "androidx.datastore", name = "datastore-p
 androidx-work-rxjava2 = { module = "androidx.work:work-rxjava2", version.ref = "androidx_work" }
 androidx-work-testing = { module = "androidx.work:work-testing", version.ref = "androidx_work" }
 app-update-ktx = { module = "com.google.android.play:app-update-ktx", version.ref = "appUpdateKtx" }
+haze = { module = "dev.chrisbanes.haze:haze", version.ref = "haze" }
+haze-materials = { module = "dev.chrisbanes.haze:haze-materials", version.ref = "haze" }
 kaluga-base = { module = "com.splendo.kaluga:base", version.ref = "kaluga" }
 kaluga-media = { module = "com.splendo.kaluga:media", version.ref = "kaluga" }
 circular-progress-bar = { module = "com.github.yuriy-budiyev:circular-progress-bar", version.ref = "circularProgressBar" }

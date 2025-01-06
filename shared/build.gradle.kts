@@ -75,6 +75,10 @@ kotlin {
             // xmlutil
             implementation(libs.xmlutil.core)
             implementation(libs.xmlutil.serialization)
+
+            // Haze
+            implementation(libs.haze)
+            implementation(libs.haze.materials)
         }
 
         androidMain.dependencies {

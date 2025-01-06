@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -26,16 +25,24 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import com.techbeloved.hymnbook.shared.model.SongPageEntry
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
 import com.techbeloved.hymnbook.shared.ui.theme.crimsonText
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.haze
+import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
+import dev.chrisbanes.haze.materials.HazeMaterials
 import kotlinx.coroutines.launch
 
 internal class SongDetailScreen(private val songbook: String, private val entry: String) : Screen {
@@ -85,13 +92,16 @@ private fun SongDetailUi(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .safeContentPadding(),
+            .padding(
+                top = contentPadding.calculateTopPadding(),
+                bottom = contentPadding.calculateBottomPadding(),
+            ),
     ) {
         CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
             Text(
                 state.content,
                 modifier = Modifier.fillMaxWidth()
-                    .padding(contentPadding),
+                    .padding(horizontal = 16.dp),
                 fontFamily = crimsonText,
                 fontSize = 18.sp,
             )
@@ -99,8 +109,7 @@ private fun SongDetailUi(
     }
 }
 
-
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalHazeMaterialsApi::class)
 @Composable
 private fun SongPager(
     state: SongDetailPagerState.Content,
@@ -108,6 +117,7 @@ private fun SongPager(
     onPageChanged: (newPage: Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val hazeState = remember { HazeState() }
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val pagerState = rememberPagerState(state.initialPage, pageCount = { state.pages.size })
     val coroutineScope = rememberCoroutineScope()
@@ -117,10 +127,16 @@ private fun SongPager(
     }
     Scaffold(
         topBar = {
-            AppTopBar("", scrollBehaviour = scrollBehavior)
+            AppTopBar(
+                title = "",
+                scrollBehaviour = scrollBehavior,
+            )
         },
         bottomBar = {
-            BottomAppBar {
+            BottomAppBar(
+                containerColor = Color.Transparent,
+                modifier = Modifier.hazeChild(hazeState, style = HazeMaterials.ultraThin()),
+            ) {
                 BottomControlsUi(
                     audioItem = state.audioItem,
                     title = "${state.currentEntry.songBook.songbook}, ${state.currentEntry.songBook.entry}",
@@ -149,7 +165,8 @@ private fun SongPager(
             state = pagerState,
             key = { state.pages[it].id },
             modifier = modifier.consumeWindowInsets(innerPadding)
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
+                .nestedScroll(scrollBehavior.nestedScrollConnection)
+                .haze(hazeState),
         ) { page ->
             pageContent(state.pages[page], innerPadding)
         }
