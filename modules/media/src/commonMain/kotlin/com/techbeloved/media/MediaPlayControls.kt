@@ -17,7 +17,6 @@ import androidx.compose.material.icons.rounded.SkipPrevious
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import hymnbook.modules.media.generated.resources.Res
 import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MediaPlayerControls(modifier: Modifier = Modifier) {
@@ -41,11 +39,8 @@ fun MediaPlayerControls(modifier: Modifier = Modifier) {
     var progress by remember { mutableFloatStateOf(0f) }
     LaunchedEffect(playbackState) {
         snapshotFlow {
-            playbackState.duration to playbackState.position
-        }
-            .collect {
-                progress = it.second.toFloat() / it.first
-            }
+            playbackState.position.toFloat() / playbackState.duration
+        }.collect { progress = it }
     }
     LaunchedEffect(playbackState) {
         snapshotFlow { playbackState.playerState }
@@ -126,34 +121,30 @@ private fun loadMediaItems(mediaController: PlaybackController?) {
                 uri = Res.getUri("files/sample5.mid"),
                 title = "Midi with joy",
                 artist = "Gospel artist",
-                album = "Demo"
+                album = "Demo",
+                mediaId = "sample5",
             ),
             AudioItem(
                 uri = Res.getUri("files/sample2.mp3"),
                 title = "Sample beats",
                 artist = "Demo demo",
-                album = "Demo"
+                album = "Demo",
+                mediaId = "sample2",
             ),
             AudioItem(
                 uri = Res.getUri("files/sample3.mp3"),
                 title = "Dance with me beats",
                 artist = "Demo",
-                album = "Demo"
+                album = "Demo",
+                mediaId = "sample3",
             ),
             AudioItem(
                 uri = Res.getUri("files/sample4.mp3"),
                 title = "Viertel vor acht",
                 artist = "DDD",
-                album = "Triple"
+                album = "Triple",
+                mediaId = "sample4",
             ),
         )
     )
-}
-
-@Preview
-@Composable
-fun PlayerControlViewPreview() {
-    MaterialTheme {
-        MediaPlayerControls(modifier = Modifier.height(300.dp))
-    }
 }

@@ -15,3 +15,6 @@ VALUES (?, ?, ?, ?);
 
 lastInsertRowId:
 SELECT last_insert_rowid();
+
+mediaForSong:
+SELECT song_id, file_path, file_hash, type FROM MediaFile WHERE song_id = ?;

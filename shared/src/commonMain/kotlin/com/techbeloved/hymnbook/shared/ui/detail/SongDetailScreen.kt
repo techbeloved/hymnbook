@@ -12,17 +12,21 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.Text
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -32,6 +36,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import com.techbeloved.hymnbook.shared.model.SongPageEntry
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
 import com.techbeloved.hymnbook.shared.ui.theme.crimsonText
+import kotlinx.coroutines.launch
 
 internal class SongDetailScreen(private val songbook: String, private val entry: String) : Screen {
     @Composable
@@ -41,20 +46,28 @@ internal class SongDetailScreen(private val songbook: String, private val entry:
         val pagerState by pagerModel.state.collectAsState()
         when (val state = pagerState) {
             is SongDetailPagerState.Content -> {
-                SongPager(state, pageContent = { pageEntry, contentPadding ->
-                    val screenModel =
-                        rememberScreenModel(pageEntry.toString()) { SongDetailScreenModel(pageEntry.id) }
-                    val uiDetail by screenModel.state.collectAsState()
-                    SongDetailUi(
-                        state = uiDetail,
-                        contentPadding = contentPadding,
-                    )
-                })
+                SongPager(state,
+                    onPageChanged = pagerModel::onPageSelected,
+                    pageContent = { pageEntry, contentPadding ->
+                        val screenModel =
+                            rememberScreenModel(pageEntry.toString()) {
+                                SongDetailScreenModel(
+                                    pageEntry.id
+                                )
+                            }
+                        val uiDetail by screenModel.state.collectAsState()
+                        SongDetailUi(
+                            state = uiDetail,
+                            contentPadding = contentPadding,
+                        )
+                    })
             }
 
             SongDetailPagerState.Loading -> {
-                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
+                Surface(Modifier.fillMaxSize()) {
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
                 }
             }
         }
@@ -92,16 +105,48 @@ private fun SongDetailUi(
 private fun SongPager(
     state: SongDetailPagerState.Content,
     pageContent: @Composable (entry: SongPageEntry, contentPadding: PaddingValues) -> Unit,
+    onPageChanged: (newPage: Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val pagerState = rememberPagerState(state.initialPage, pageCount = { state.pages.size })
+    val coroutineScope = rememberCoroutineScope()
+    LaunchedEffect(pagerState.settledPage) {
+        val currentPage = pagerState.settledPage
+        onPageChanged(currentPage)
+    }
     Scaffold(
         topBar = {
             AppTopBar("", scrollBehaviour = scrollBehavior)
         },
+        bottomBar = {
+            BottomAppBar {
+                BottomControlsUi(
+                    audioItem = state.audioItem,
+                    title = "${state.currentEntry.songBook.songbook}, ${state.currentEntry.songBook.entry}",
+                    onPreviousButtonClick = {
+                        val currentPage = pagerState.currentPage
+                        if (currentPage > 0) {
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(currentPage - 1)
+                            }
+                        }
+                    },
+                    onNextButtonClick = {
+                        val currentPage = pagerState.currentPage
+                        if (currentPage < pagerState.pageCount - 1) {
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(currentPage + 1)
+                            }
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+        }
     ) { innerPadding ->
         HorizontalPager(
-            state = rememberPagerState(state.initialPage, pageCount = { state.pages.size }),
+            state = pagerState,
             key = { state.pages[it].id },
             modifier = modifier.consumeWindowInsets(innerPadding)
                 .nestedScroll(scrollBehavior.nestedScrollConnection),

@@ -70,6 +70,8 @@ class IosPlaybackController(
             )
         }
         player?.prepare()
+        // Update the current playing media id
+        state.mediaId = audioItem.mediaId
     }
 
     override fun playWhenReady() {
@@ -80,4 +82,6 @@ class IosPlaybackController(
         prepare()
         player?.play()
     }
+
+    fun onDispose() = player?.onDispose()
 }

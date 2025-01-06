@@ -34,6 +34,7 @@ class PlaybackState(
     duration: Long = 0L,
     itemIndex: Int = 0,
     playerState: PlayerState = PlayerState.Idle,
+    mediaId: String? = null,
 ) {
 
     var isPlaying by mutableStateOf(isPlaying)
@@ -46,9 +47,25 @@ class PlaybackState(
         internal set
     var playerState by mutableStateOf(playerState)
 
+    /**
+     * The currently playing media id.
+     */
+    var mediaId by mutableStateOf(mediaId)
+        internal set
+
+
     companion object {
         val Saver: Saver<PlaybackState, *> = listSaver(
-            save = { listOf(it.isPlaying, it.position, it.itemIndex, it.duration, it.playerState) },
+            save = {
+                listOf(
+                    it.isPlaying,
+                    it.position,
+                    it.itemIndex,
+                    it.duration,
+                    it.playerState,
+                    it.mediaId,
+                )
+            },
             restore = {
                 PlaybackState(
                     isPlaying = it[0] as Boolean,
@@ -56,6 +73,7 @@ class PlaybackState(
                     itemIndex = it[2] as Int,
                     duration = it[3] as Long,
                     playerState = it[4] as PlayerState,
+                    mediaId = it[5] as String?,
                 )
             }
         )

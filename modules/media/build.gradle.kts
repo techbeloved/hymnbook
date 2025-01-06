@@ -70,7 +70,8 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.kotlinx.collections.immutable)
-
+        }
+        iosMain.dependencies {
             implementation(libs.kaluga.base)
             implementation(libs.kaluga.media)
         }

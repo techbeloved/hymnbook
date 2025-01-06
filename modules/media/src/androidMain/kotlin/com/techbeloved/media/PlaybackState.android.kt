@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
@@ -18,6 +19,10 @@ import kotlinx.coroutines.guava.await
 
 @Composable
 actual fun rememberPlaybackController(playbackState: PlaybackState): PlaybackController? {
+    if (LocalInspectionMode.current) {
+        return remember { DummyPlaybackController(playbackState) }
+    }
+
     val context = LocalContext.current
 
     var playbackController: PlaybackController? by remember { mutableStateOf(null) }
@@ -44,6 +49,5 @@ actual fun rememberPlaybackController(playbackState: PlaybackState): PlaybackCon
             }
         }
     }
-
     return playbackController
 }
