@@ -35,7 +35,8 @@ internal class ImportMediaFilesUseCase(
                     ).executeAsOne()
                     database.mediaFileQueries.insert(
                         song_id = songEntry.song_id,
-                        file_path = tunesPath.toString(),
+                        file_path = tunesPath.name, // only save the relative path.
+                        // We will resolve this at runtime. It's not a good idea to save the absolute path, especially on iOS
                         file_hash = hashFileUseCase(tunesPath).sha256,
                         type = if (tunesPath.name.endsWith(".mid")) {
                             MediaType.Midi

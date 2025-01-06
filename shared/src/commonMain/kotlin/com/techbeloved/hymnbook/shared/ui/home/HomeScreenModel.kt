@@ -2,6 +2,7 @@ package com.techbeloved.hymnbook.shared.ui.home
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import com.techbeloved.hymnbook.shared.ext.tunesDir
 import com.techbeloved.hymnbook.shared.files.ExtractArchiveUseCase
 import com.techbeloved.hymnbook.shared.files.GetSavedFileHashUseCase
 import com.techbeloved.hymnbook.shared.files.HashAssetFileUseCase
@@ -79,7 +80,7 @@ internal class HomeScreenModel(
         val savedTunesArchiveHash = getSavedFileHashUseCase(tunesBundledAsset)
 
         if (savedTunesArchiveHash?.sha256 != tunesAssetFileHash.sha256) {
-            val tunesDir = fileSystem.userData / "tunes/"
+            val tunesDir = fileSystem.tunesDir()
             fileSystem.fileSystem.createDirectory(tunesDir)
 
             val result = extractArchiveUseCase(

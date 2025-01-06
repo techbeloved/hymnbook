@@ -25,6 +25,7 @@ internal class SongDetailPagerModel(
             val songEntries = getSongEntriesForSongbookUseCase(songbookEntry)
             val initialSongEntry = songEntries.first { it.songBook == songbookEntry }
             val availableMedia = getAvailableMediaForSongUseCase(initialSongEntry.id)
+            println("Available media $availableMedia")
             state.update {
                 SongDetailPagerState.Content(
                     initialPage = songEntries.indexOfFirst { it.songBook == songbookEntry },
@@ -46,8 +47,9 @@ internal class SongDetailPagerModel(
                     val availableMedia = getAvailableMediaForSongUseCase(pageEntry.id)
                     state.updateIfContent {
                         it.copy(
-                            audioItem = availableMedia.firstOrNull { if (preferredMidi.value) it.isMidi() else true }
-                                ?: availableMedia.firstOrNull(),
+                            audioItem = availableMedia.firstOrNull { item ->
+                                if (preferredMidi.value) item.isMidi() else true
+                            } ?: availableMedia.firstOrNull(),
                             currentEntry = pageEntry,
                         )
                     }

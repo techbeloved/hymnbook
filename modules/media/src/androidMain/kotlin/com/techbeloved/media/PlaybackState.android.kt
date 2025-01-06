@@ -49,6 +49,5 @@ actual fun rememberPlaybackController(playbackState: PlaybackState): PlaybackCon
             }
         }
     }
-
     return playbackController
 }
