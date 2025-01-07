@@ -7,14 +7,23 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.techbeloved.hymnbook.shared.App
+import com.techbeloved.media.DefaultMediaControllerDisposer
+import com.techbeloved.media.MediaControllerDisposer
 
-class MainActivity : ComponentActivity() {
+class MainActivity : ComponentActivity(),
+    MediaControllerDisposer by DefaultMediaControllerDisposer() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
             App()
         }
+    }
+
+    override fun onStop() {
+        onDispose()
+        super.onStop()
     }
 }
 

@@ -26,7 +26,6 @@ actual fun rememberPlaybackController(playbackState: PlaybackState): PlaybackCon
     val context = LocalContext.current
 
     var playbackController: PlaybackController? by remember { mutableStateOf(null) }
-
     val lifecycle = LocalLifecycleOwner.current
     LaunchedEffect(Unit) {
         lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -41,11 +40,12 @@ actual fun rememberPlaybackController(playbackState: PlaybackState): PlaybackCon
                     scope = this,
                     state = playbackState,
                 )
+                (context as MediaControllerDisposer).controllerFuture = controllerFuture
                 awaitCancellation()
             } finally {
                 playbackController = null
-                println("Release mediaController")
-                MediaController.releaseFuture(controllerFuture)
+                (context as MediaControllerDisposer).onDispose()
+                println("Release mediaController - onDispose")
             }
         }
     }
