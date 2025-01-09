@@ -2,6 +2,7 @@ package com.techbeloved.hymnbook.shared.ui.home
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import com.techbeloved.hymnbook.shared.ext.sheetsDir
 import com.techbeloved.hymnbook.shared.ext.tunesDir
 import com.techbeloved.hymnbook.shared.files.ExtractArchiveUseCase
 import com.techbeloved.hymnbook.shared.files.GetSavedFileHashUseCase
@@ -13,6 +14,7 @@ import com.techbeloved.hymnbook.shared.files.defaultOkioFileSystemProvider
 import com.techbeloved.hymnbook.shared.media.ImportMediaFilesUseCase
 import com.techbeloved.hymnbook.shared.model.SongTitle
 import com.techbeloved.hymnbook.shared.openlyrics.ImportOpenLyricsUseCase
+import com.techbeloved.hymnbook.shared.sheetmusic.ImportMusicSheetsUseCase
 import com.techbeloved.hymnbook.shared.titles.GetHymnTitlesUseCase
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -29,6 +31,7 @@ internal class HomeScreenModel(
     private val getSavedFileHashUseCase: GetSavedFileHashUseCase = GetSavedFileHashUseCase(),
     private val saveFileHashUseCase: SaveFileHashUseCase = SaveFileHashUseCase(),
     private val importMediaFilesUseCase: ImportMediaFilesUseCase = ImportMediaFilesUseCase(),
+    private val importMusicSheetsUseCase: ImportMusicSheetsUseCase = ImportMusicSheetsUseCase(),
 ) : ScreenModel {
     val state: MutableStateFlow<ImmutableList<SongTitle>> = MutableStateFlow(persistentListOf())
 
@@ -47,6 +50,8 @@ internal class HomeScreenModel(
         importBundledLyrics(fileSystem)
 
         importBundledTunes(fileSystem)
+
+        importBundledSheets(fileSystem)
     }
 
     private suspend fun importBundledLyrics(fileSystem: SharedFileSystem) {
@@ -91,6 +96,26 @@ internal class HomeScreenModel(
             if (result.isSuccess) {
                 importMediaFilesUseCase(tunesDir).onFailure { it.printStackTrace() }
                 saveFileHashUseCase(tunesAssetFileHash)
+            }
+        }
+    }
+    private suspend fun importBundledSheets(fileSystem: SharedFileSystem) {
+        val sheetsBundledAsset = "files/sheets/sample_sheets.zip" // FIXME: update the name with the final name
+        val sheetsAssetFileHash = hashAssetFileUseCase(sheetsBundledAsset)
+        val savedTunesArchiveHash = getSavedFileHashUseCase(sheetsBundledAsset)
+
+        if (savedTunesArchiveHash?.sha256 != sheetsAssetFileHash.sha256) {
+            val sheetsDir = fileSystem.sheetsDir()
+            fileSystem.fileSystem.createDirectory(sheetsDir)
+
+            val result = extractArchiveUseCase(
+                assetFilePath = sheetsBundledAsset,
+                destination = sheetsDir
+            ).onFailure { it.printStackTrace() }
+
+            if (result.isSuccess) {
+                importMusicSheetsUseCase(sheetsDir).onFailure { it.printStackTrace() }
+                saveFileHashUseCase(sheetsAssetFileHash)
             }
         }
     }

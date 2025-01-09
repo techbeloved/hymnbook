@@ -13,6 +13,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -25,6 +26,7 @@ internal fun AppTopBar(
     modifier: Modifier = Modifier,
     showUpButton: Boolean = true,
     scrollBehaviour: TopAppBarScrollBehavior? = null,
+    containerColor: Color = MaterialTheme.colorScheme.surface,
     actions: @Composable (RowScope.() -> Unit) = {},
 ) {
     TopAppBar(
@@ -41,7 +43,7 @@ internal fun AppTopBar(
         modifier = modifier,
         scrollBehavior = scrollBehaviour,
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.surface,
+            containerColor = containerColor,
             scrolledContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
             navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
             titleContentColor = MaterialTheme.colorScheme.onSurface,

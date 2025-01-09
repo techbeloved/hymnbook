@@ -4,7 +4,11 @@ import okio.Path
 
 public data class SheetMusic(
     val songId: Long,
-    val filePath: Path,
+    /**
+     * This is a relative path. For example, sheets/music1.pdf
+     */
+    val relativePath: Path,
+    val absolutePath: Path,
     val type: Type,
 ) {
     public enum class Type {

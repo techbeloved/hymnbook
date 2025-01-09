@@ -17,7 +17,7 @@ internal class SongDetailPagerModel(
 
     val state = MutableStateFlow<SongDetailPagerState>(SongDetailPagerState.Loading)
 
-    private val preferredMidi = MutableStateFlow(true)
+    private val preferredMidi = MutableStateFlow(true) // FIXME: use persistent settings
 
     init {
         screenModelScope.launch {
@@ -25,7 +25,6 @@ internal class SongDetailPagerModel(
             val songEntries = getSongEntriesForSongbookUseCase(songbookEntry)
             val initialSongEntry = songEntries.first { it.songBook == songbookEntry }
             val availableMedia = getAvailableMediaForSongUseCase(initialSongEntry.id)
-            println("Available media $availableMedia")
             state.update {
                 SongDetailPagerState.Content(
                     initialPage = songEntries.indexOfFirst { it.songBook == songbookEntry },

@@ -38,6 +38,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import com.techbeloved.hymnbook.shared.model.SongPageEntry
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
 import com.techbeloved.hymnbook.shared.ui.theme.crimsonText
+import com.techbeloved.sheetmusic.SheetMusicUi
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
@@ -88,23 +89,30 @@ private fun SongDetailUi(
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(
-                top = contentPadding.calculateTopPadding(),
-                bottom = contentPadding.calculateBottomPadding(),
-            ),
-    ) {
-        CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
-            Text(
-                state.content,
-                modifier = Modifier.fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                fontFamily = crimsonText,
-                fontSize = 18.sp,
-            )
+    if (state.preferSheetMusic && state.sheetMusic != null) {
+        SheetMusicUi(
+            sheetMusicItem = state.sheetMusic,
+            modifier = modifier.fillMaxSize(),
+        )
+    } else {
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(
+                    top = contentPadding.calculateTopPadding(),
+                    bottom = contentPadding.calculateBottomPadding(),
+                ),
+        ) {
+            CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
+                Text(
+                    state.content,
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    fontFamily = crimsonText,
+                    fontSize = 18.sp,
+                )
+            }
         }
     }
 }
@@ -118,7 +126,7 @@ private fun SongPager(
     modifier: Modifier = Modifier,
 ) {
     val hazeState = remember { HazeState() }
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val pagerState = rememberPagerState(state.initialPage, pageCount = { state.pages.size })
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(pagerState.settledPage) {
@@ -130,6 +138,7 @@ private fun SongPager(
             AppTopBar(
                 title = "",
                 scrollBehaviour = scrollBehavior,
+                containerColor = MaterialTheme.colorScheme.surface.copy(alpha = .5f),
             )
         },
         bottomBar = {

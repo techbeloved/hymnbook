@@ -15,3 +15,6 @@ VALUES (:song_id, :file_path,  :file_hash, :type);
 
 lastInsertRowId:
 SELECT last_insert_rowid();
+
+sheetMusicForSong:
+SELECT song_id, file_path, file_hash, type FROM SheetMusicEntity WHERE song_id = ? ORDER BY id DESC LIMIT 1;

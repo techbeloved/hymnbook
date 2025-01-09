@@ -46,6 +46,7 @@ kotlin {
         commonMain.dependencies {
             //put your multiplatform dependencies here
             implementation(project(":modules:media"))
+            implementation(project(":modules:sheetmusic"))
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
