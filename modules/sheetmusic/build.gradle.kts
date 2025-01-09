@@ -57,7 +57,7 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.compose.activity)
-
+            implementation(libs.android.pdf.viewer)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
