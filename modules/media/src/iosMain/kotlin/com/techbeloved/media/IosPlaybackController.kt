@@ -3,7 +3,6 @@ package com.techbeloved.media
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.CoroutineScope
 import platform.AVFoundation.AVPlayerItem
-import platform.Foundation.NSURL
 
 class IosPlaybackController(
     private val state: PlaybackState,
@@ -50,9 +49,7 @@ class IosPlaybackController(
 
         val audioItem = queue[currentItemIndex]
 
-        val currentPlayerItem = audioItem.let {
-            NSURL.URLWithString(it.uri)
-        } ?: return
+        val currentPlayerItem = getNSURLFromRelativePath(audioItem.relativePath) ?: return
 
         player?.onDispose()
 
