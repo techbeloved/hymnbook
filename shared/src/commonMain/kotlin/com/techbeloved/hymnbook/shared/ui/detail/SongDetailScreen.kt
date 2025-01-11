@@ -17,6 +17,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -35,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
+import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.model.SongPageEntry
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
 import com.techbeloved.hymnbook.shared.ui.theme.crimsonText
@@ -54,7 +58,8 @@ internal class SongDetailScreen(private val songbook: String, private val entry:
         val pagerState by pagerModel.state.collectAsState()
         when (val state = pagerState) {
             is SongDetailPagerState.Content -> {
-                SongPager(state,
+                SongPager(
+                    state,
                     onPageChanged = pagerModel::onPageSelected,
                     pageContent = { pageEntry, contentPadding ->
                         val screenModel =
@@ -68,7 +73,9 @@ internal class SongDetailScreen(private val songbook: String, private val entry:
                             state = uiDetail,
                             contentPadding = contentPadding,
                         )
-                    })
+                    },
+                    onChangeSongDisplayMode = pagerModel::onChangeSongDisplayMode,
+                )
             }
 
             SongDetailPagerState.Loading -> {
@@ -89,7 +96,7 @@ private fun SongDetailUi(
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
-    if (state.preferSheetMusic && state.sheetMusic != null) {
+    if (state.songDisplayMode == SongDisplayMode.SheetMusic && state.sheetMusic != null) {
         SheetMusicUi(
             sheetMusicItem = state.sheetMusic,
             modifier = modifier.fillMaxSize(),
@@ -123,6 +130,7 @@ private fun SongPager(
     state: SongDetailPagerState.Content,
     pageContent: @Composable (entry: SongPageEntry, contentPadding: PaddingValues) -> Unit,
     onPageChanged: (newPage: Int) -> Unit,
+    onChangeSongDisplayMode: (mode: SongDisplayMode) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val hazeState = remember { HazeState() }
@@ -136,9 +144,26 @@ private fun SongPager(
     Scaffold(
         topBar = {
             AppTopBar(
-                title = "",
+                titleContent = {
+                    SingleChoiceSegmentedButtonRow {
+                        state.displayModes.forEachIndexed { index, displayModeState ->
+                            SegmentedButton(
+                                selected = displayModeState.displayMode == state.currentDisplayMode,
+                                onClick = { onChangeSongDisplayMode(displayModeState.displayMode) },
+                                shape = SegmentedButtonDefaults.itemShape(
+                                    index = index,
+                                    count = state.displayModes.size
+                                ),
+                                enabled = displayModeState.isEnabled,
+                            ) {
+                                Text(text = displayModeState.text)
+                            }
+                        }
+                    }
+                },
                 scrollBehaviour = scrollBehavior,
                 containerColor = MaterialTheme.colorScheme.surface.copy(alpha = .5f),
+                modifier = Modifier.hazeChild(hazeState, style = HazeMaterials.ultraThin()),
             )
         },
         bottomBar = {

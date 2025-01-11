@@ -3,12 +3,12 @@
 package com.techbeloved.hymnbook.shared.ui
 
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -22,15 +22,20 @@ internal expect val navigationArrowBack: ImageVector
 
 @Composable
 internal fun AppTopBar(
-    title: String,
     modifier: Modifier = Modifier,
+    title: String = "",
+    titleContent: @Composable (() -> Unit)? = null,
     showUpButton: Boolean = true,
     scrollBehaviour: TopAppBarScrollBehavior? = null,
     containerColor: Color = MaterialTheme.colorScheme.surface,
     actions: @Composable (RowScope.() -> Unit) = {},
 ) {
-    TopAppBar(
-        title = { Text(title) },
+    CenterAlignedTopAppBar(
+        title = if (titleContent != null) {
+            titleContent
+        } else {
+            { Text(title) }
+        },
         navigationIcon = {
             if (showUpButton) {
                 val navigator = LocalNavigator.currentOrThrow

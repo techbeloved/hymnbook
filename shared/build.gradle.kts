@@ -80,6 +80,10 @@ kotlin {
             // Haze
             implementation(libs.haze)
             implementation(libs.haze.materials)
+
+            // datastore
+            implementation(libs.androidx.datastore.core)
+            implementation(libs.androidx.datastore.preferences)
         }
 
         androidMain.dependencies {
@@ -110,6 +114,7 @@ kotlin {
         commonTest.dependencies {
             implementation(kotlin("test"))
             implementation(libs.coroutines.test)
+            implementation(libs.cashapp.turbine)
             implementation(libs.squareup.okio.fakefilesystem)
         }
 

@@ -73,7 +73,7 @@ internal fun BottomControlsUi(
                 style = MaterialTheme.typography.titleSmall,
             )
             IconButton(onClick = onNextButtonClick) {
-                Icon(imageVector = Icons.Rounded.ChevronRight, contentDescription = "Previous")
+                Icon(imageVector = Icons.Rounded.ChevronRight, contentDescription = "Next")
             }
         }
 
