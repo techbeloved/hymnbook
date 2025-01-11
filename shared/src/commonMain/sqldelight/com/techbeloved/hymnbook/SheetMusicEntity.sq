@@ -1,11 +1,11 @@
 import com.techbeloved.hymnbook.shared.model.SheetMusic;
 
 CREATE TABLE IF NOT EXISTS SheetMusicEntity (
-     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
      song_id INTEGER,
      file_path TEXT,
      file_hash TEXT,
      type TEXT AS SheetMusic.Type,
+     PRIMARY KEY (song_id, type),
      FOREIGN KEY (song_id) REFERENCES SongEntity (id) ON DELETE CASCADE
 );
 
@@ -15,3 +15,6 @@ VALUES (:song_id, :file_path,  :file_hash, :type);
 
 lastInsertRowId:
 SELECT last_insert_rowid();
+
+sheetMusicForSong:
+SELECT song_id, file_path, file_hash, type FROM SheetMusicEntity WHERE song_id = ? LIMIT 1;

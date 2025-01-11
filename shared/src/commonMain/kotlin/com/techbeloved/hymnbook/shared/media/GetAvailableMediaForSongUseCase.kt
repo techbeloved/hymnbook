@@ -25,8 +25,10 @@ internal class GetAvailableMediaForSongUseCase(
             availableMedia.mapNotNull { item ->
                 if (item.file_path != null) {
                     val songBookEntry = song.songbookEntries().firstOrNull()
+                    val absolutePath = fileSystem.tunesDir() / item.file_path
                     AudioItem(
-                        uri = (fileSystem.tunesDir() / item.file_path).toString(),
+                        absolutePath = absolutePath.toString(),
+                        relativePath = absolutePath.relativeTo(fileSystem.userData).toString(),
                         title = song.title,
                         artist = song.authors().firstOrNull()?.name.orEmpty(),
                         album = songBookEntry?.songbook.orEmpty(),

@@ -46,6 +46,7 @@ kotlin {
         commonMain.dependencies {
             //put your multiplatform dependencies here
             implementation(project(":modules:media"))
+            implementation(project(":modules:sheetmusic"))
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
@@ -79,6 +80,10 @@ kotlin {
             // Haze
             implementation(libs.haze)
             implementation(libs.haze.materials)
+
+            // datastore
+            implementation(libs.androidx.datastore.core)
+            implementation(libs.androidx.datastore.preferences)
         }
 
         androidMain.dependencies {
@@ -109,6 +114,7 @@ kotlin {
         commonTest.dependencies {
             implementation(kotlin("test"))
             implementation(libs.coroutines.test)
+            implementation(libs.cashapp.turbine)
             implementation(libs.squareup.okio.fakefilesystem)
         }
 

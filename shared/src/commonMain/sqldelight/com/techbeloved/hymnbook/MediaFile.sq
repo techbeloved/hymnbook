@@ -1,11 +1,11 @@
 import com.techbeloved.hymnbook.shared.model.MediaType;
 
 CREATE TABLE IF NOT EXISTS MediaFile (
-     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
      song_id INTEGER,
      file_path TEXT,
      file_hash TEXT,
      type TEXT AS MediaType,
+     PRIMARY KEY (song_id, type),
      FOREIGN KEY (song_id) REFERENCES SongEntity (id) ON DELETE CASCADE
 );
 

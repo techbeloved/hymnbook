@@ -26,10 +26,10 @@ internal object HomeScreen : Screen {
 
         val screenModel = rememberScreenModel { HomeScreenModel() }
         val state by screenModel.state.collectAsState()
-        val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
         Scaffold(
             topBar = {
-                AppTopBar("Hymnbook", showUpButton = false, scrollBehaviour = scrollBehavior)
+                AppTopBar(title = "Hymnbook", showUpButton = false, scrollBehaviour = scrollBehavior)
             },
         ) { innerPadding ->
             HomeUi(

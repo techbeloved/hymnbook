@@ -118,28 +118,32 @@ private fun loadMediaItems(mediaController: PlaybackController?) {
     mediaController?.setItems(
         persistentListOf(
             AudioItem(
-                uri = Res.getUri("files/sample5.mid"),
+                absolutePath = Res.getUri("files/sample5.mid"),
+                relativePath = "relative/path",
                 title = "Midi with joy",
                 artist = "Gospel artist",
                 album = "Demo",
                 mediaId = "sample5",
             ),
             AudioItem(
-                uri = Res.getUri("files/sample2.mp3"),
+                absolutePath = Res.getUri("files/sample2.mp3"),
+                relativePath = "relative/path",
                 title = "Sample beats",
                 artist = "Demo demo",
                 album = "Demo",
                 mediaId = "sample2",
             ),
             AudioItem(
-                uri = Res.getUri("files/sample3.mp3"),
+                absolutePath = Res.getUri("files/sample3.mp3"),
+                relativePath = "relative/path",
                 title = "Dance with me beats",
                 artist = "Demo",
                 album = "Demo",
                 mediaId = "sample3",
             ),
             AudioItem(
-                uri = Res.getUri("files/sample4.mp3"),
+                absolutePath = Res.getUri("files/sample4.mp3"),
+                relativePath = "relative/path",
                 title = "Viertel vor acht",
                 artist = "DDD",
                 album = "Triple",

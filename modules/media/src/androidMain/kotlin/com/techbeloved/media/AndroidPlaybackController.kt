@@ -110,7 +110,7 @@ class AndroidPlaybackController(
         mediaController.setMediaItems(
             items.map { item ->
                 MediaItem.Builder()
-                    .setUri(item.uri)
+                    .setUri(item.absolutePath)
                     .setMediaId(item.mediaId)
                     .setMediaMetadata(
                         MediaMetadata.Builder()
