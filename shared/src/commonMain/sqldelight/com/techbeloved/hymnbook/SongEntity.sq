@@ -30,12 +30,42 @@ LEFT JOIN AuthorSongs AS a ON a.song_id=s.id
 LEFT JOIN TopicSongs AS t ON t.song_id=s.id
 GROUP BY s.id;
 
+-- Full Text Search on Songs table
+CREATE VIRTUAL TABLE songs_fts USING fts5(search_title, search_lyrics, content=SongEntity, content_rowid=id, tokenize=porter);
+
+CREATE TRIGGER trigger_songs_fts_after_insert AFTER INSERT ON SongEntity BEGIN
+  INSERT INTO songs_fts(rowid, search_title, search_lyrics) VALUES(new.id, new.search_title, new.search_lyrics);
+END;
+
+CREATE TRIGGER trigger_songs_fts_after_delete AFTER DELETE ON SongEntity BEGIN
+  INSERT INTO songs_fts(songs_fts, rowid, search_title, search_lyrics) VALUES('delete', old.id, old.search_title, old.search_lyrics);
+END;
+
+CREATE TRIGGER trigger_songs_fts_after_update AFTER UPDATE ON SongEntity BEGIN
+  INSERT INTO songs_fts(songs_fts, rowid, search_title, search_lyrics) VALUES('delete', old.id, old.search_title, old.search_lyrics);
+  INSERT INTO songs_fts(rowid, search_title, search_lyrics) VALUES(new.id, new.search_title, new.search_lyrics);
+END;
+
+
 insert:
-INSERT OR REPLACE INTO SongEntity(id, title, alternate_title, lyrics, verse_order, copyright, comments, search_title, search_lyrics, created, modified)
+INSERT INTO SongEntity(id, title, alternate_title, lyrics, verse_order, copyright, comments, search_title, search_lyrics, created, modified)
 VALUES(?, ?,?,?,?,?,?,?,?,?,?);
 
 lastInsertRowId:
 SELECT last_insert_rowid();
+
+update:
+UPDATE SongEntity
+SET title = :title,
+    alternate_title = :alternate_title,
+    lyrics = :lyrics,
+    verse_order = :verse_order,
+    copyright = :copyright,
+    comments = :comments,
+    search_title = :search_title,
+    search_lyrics = :search_lyrics,
+    modified = :modified
+WHERE id = :id;
 
 getAllTitles:
 SELECT S.id, S.title, S.alternate_title, B.songbook, B.entry FROM SongEntity AS S
@@ -54,6 +84,15 @@ SELECT * FROM SongDetail;
 getSongById:
 SELECT * FROM SongDetail
 WHERE SongDetail.id = ?;
+
+searchSongs:
+SELECT S.id, S.title, S.alternate_title, B.songbook, B.entry FROM SongEntity AS S
+LEFT JOIN SongbookSongs AS B
+ON S.id = B.song_id
+JOIN songs_fts ON S.id=songs_fts.rowid
+WHERE songs_fts MATCH :search
+ORDER BY bm25(songs_fts, 10.0);
+
 
 deleteAll:
 DELETE FROM SongEntity;

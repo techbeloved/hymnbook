@@ -6,9 +6,11 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.techbeloved.hymnbook.Database
 import com.techbeloved.hymnbook.shared.di.AndroidInjector
+import io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory
 
 internal actual class DriverFactory(private val context: Context) {
     actual fun createDriver(): SqlDriver {
+        val factory = RequerySQLiteOpenHelperFactory()
         return AndroidSqliteDriver(
             schema = Database.Schema,
             context = context,
@@ -18,6 +20,7 @@ internal actual class DriverFactory(private val context: Context) {
                     db.setForeignKeyConstraintsEnabled(true)
                 }
             },
+            factory = factory,
         )
     }
 
