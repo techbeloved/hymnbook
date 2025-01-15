@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 
 internal expect val navigationArrowBack: ImageVector
 
@@ -38,8 +37,8 @@ internal fun AppTopBar(
         },
         navigationIcon = {
             if (showUpButton) {
-                val navigator = LocalNavigator.currentOrThrow
-                IconButton(onClick = navigator::pop) {
+                val navigator = LocalNavigator.current
+                IconButton(onClick = { navigator?.pop() }) {
                     Icon(navigationArrowBack, contentDescription = "Navigate up")
                 }
             }

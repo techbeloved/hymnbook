@@ -4,6 +4,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.techbeloved.hymnbook.shared.ui.detail.BottomControlsUi
+import com.techbeloved.hymnbook.shared.ui.search.AppSearchBar
+import com.techbeloved.hymnbook.shared.ui.search.SearchState
+import com.techbeloved.hymnbook.shared.ui.search.SearchUi
 import com.techbeloved.media.AudioItem
 
 @Preview
@@ -23,6 +26,32 @@ private fun BottomControlsUiPreview() {
             ),
             onPreviousButtonClick = {},
             onNextButtonClick = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun SearchBarPreview() {
+    MaterialTheme {
+        AppSearchBar(
+            onSearch = {},
+            placeholderText = "Search hymns",
+            onQueryChange = {},
+            query = "",
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun SearchUiPreview() {
+    MaterialTheme {
+        SearchUi(
+            state = SearchState.Default,
+            query = "",
+            onSearch = {},
+            onQueryChange = {},
         )
     }
 }

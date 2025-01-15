@@ -91,6 +91,8 @@ kotlin {
             implementation(libs.sqldelight.android)
             implementation(compose.preview)
             implementation(compose.uiTooling)
+            // Requery Sqlite
+            implementation (libs.requery.sqlite.android)
         }
         val desktopMain by getting {
             dependencies {

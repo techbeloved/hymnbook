@@ -32,6 +32,7 @@ compose_ui = "1.7.6"
 composeBom = "2024.12.01"
 compose_jetbrains = "1.7.3"
 constraintlayout = "2.2.0"
+requerySqliteAndroid = "3.45.0"
 turbine = "1.2.0"
 xmlutil = "0.86.3"
 core_library_desugaring = "2.1.4"
@@ -203,6 +204,7 @@ sqldelight-adapters = { group = "app.cash.sqldelight", name = "primitive-adapter
 sqldelight-android = { group = "app.cash.sqldelight", name = "android-driver", version.ref = "sqlDelight" }
 sqldelight-native = { group = "app.cash.sqldelight", name = "native-driver", version.ref = "sqlDelight" }
 sqldelight-jvm = { group = "app.cash.sqldelight", name = "sqlite-driver", version.ref = "sqlDelight" }
+requery-sqlite-android = { module = "com.github.requery:sqlite-android", version.ref = "requerySqliteAndroid" }
 squareup-okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
 squareup-okio-fakefilesystem = { group = "com.squareup.okio", name = "okio-fakefilesystem", version.ref = "okio" }
 cashapp-turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }

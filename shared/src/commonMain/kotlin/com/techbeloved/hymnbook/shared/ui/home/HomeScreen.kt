@@ -15,9 +15,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.techbeloved.hymnbook.shared.model.SongTitle
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
 import com.techbeloved.hymnbook.shared.ui.listing.HymnListingUi
+import com.techbeloved.hymnbook.shared.ui.search.HomeSearchBar
+import com.techbeloved.hymnbook.shared.ui.search.SearchScreen
 import kotlinx.collections.immutable.ImmutableList
 
 internal object HomeScreen : Screen {
@@ -27,20 +31,28 @@ internal object HomeScreen : Screen {
         val screenModel = rememberScreenModel { HomeScreenModel() }
         val state by screenModel.state.collectAsState()
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+        val navigator = LocalNavigator.currentOrThrow
         Scaffold(
             topBar = {
-                AppTopBar(title = "Hymnbook", showUpButton = false, scrollBehaviour = scrollBehavior)
-            },
+                AppTopBar(
+                    showUpButton = false,
+                    titleContent = {
+                        HomeSearchBar {
+                            navigator.push(SearchScreen)
+                        }
+                    },
+                )
+            }
         ) { innerPadding ->
             HomeUi(
                 state = state,
-                modifier = Modifier.consumeWindowInsets(innerPadding)
+                modifier = Modifier
+                    .consumeWindowInsets(innerPadding)
                     .nestedScroll(scrollBehavior.nestedScrollConnection),
                 contentPadding = innerPadding,
             )
         }
     }
-
 }
 
 @Composable

@@ -26,23 +26,37 @@ internal class SaveOpenLyricsUseCase(
             // First check if song exists already, then we just update. Else we insert it.
             val songTitle = song.properties.titles.first().value
             val existingSong = database.songEntityQueries.getSongByTitleAndSongbook(
-                songTitle,
-                song.properties.songbooks?.firstOrNull()?.name
-            ).executeAsOneOrNull()
-            database.songEntityQueries.insert(
                 title = songTitle,
-                alternate_title = song.properties.titles.getOrNull(1)?.value,
-                lyrics = lyrics,
-                verse_order = song.properties.verseOrder,
-                comments = song.properties.comments?.joinToString(),
-                copyright = song.properties.copyright,
-                search_title = song.properties.titles.joinToString(separator = " ") { it.value },
-                search_lyrics = lyrics.joinToString(separator = " ") { it.content },
-                created = created,
-                modified = created,
-                id = existingSong?.id, // If the song is not already in db,
-                // then a new entry is created (that if id is null), otherwise, the entry is updated
-            )
+                songbook = song.properties.songbooks?.firstOrNull()?.name,
+            ).executeAsOneOrNull()
+            if (existingSong != null) {
+                database.songEntityQueries.update(
+                    title = songTitle,
+                    alternate_title = song.properties.titles.getOrNull(1)?.value,
+                    lyrics = lyrics,
+                    verse_order = song.properties.verseOrder,
+                    comments = song.properties.comments?.joinToString(),
+                    copyright = song.properties.copyright,
+                    search_title = song.properties.titles.joinToString(separator = " ") { it.value },
+                    search_lyrics = lyrics.joinToString(separator = " ") { it.content },
+                    modified = created,
+                    id = existingSong.id,
+                )
+            } else {
+                database.songEntityQueries.insert(
+                    title = songTitle,
+                    alternate_title = song.properties.titles.getOrNull(1)?.value,
+                    lyrics = lyrics,
+                    verse_order = song.properties.verseOrder,
+                    comments = song.properties.comments?.joinToString(),
+                    copyright = song.properties.copyright,
+                    search_title = song.properties.titles.joinToString(separator = " ") { it.value },
+                    search_lyrics = lyrics.joinToString(separator = " ") { it.content },
+                    created = created,
+                    modified = created,
+                    id = null,
+                )
+            }
             val songId = existingSong?.id
                 ?: database.songEntityQueries.lastInsertRowId().executeAsOne()
 
