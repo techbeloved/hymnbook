@@ -23,7 +23,10 @@ internal class SongDetailScreenModel(
 
     val state =
         getSongDetailFlow().combine(preferencesRepository.songPreferences) { detail, prefs ->
-            detail.copy(songDisplayMode = prefs.songDisplayMode)
+            detail.copy(
+                songDisplayMode = prefs.songDisplayMode,
+                fontSize = prefs.fontSize,
+            )
         }.stateIn(
             scope = screenModelScope,
             started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
