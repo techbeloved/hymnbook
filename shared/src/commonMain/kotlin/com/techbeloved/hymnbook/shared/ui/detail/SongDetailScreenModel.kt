@@ -20,13 +20,17 @@ internal class SongDetailScreenModel(
     preferencesRepository: PreferencesRepository = Injector.preferencesRepository,
 ) : ScreenModel {
 
-    val state = getSongDetailFlow().combine(preferencesRepository.songPreferences) { detail, prefs ->
-        detail.copy(songDisplayMode = prefs.songDisplayMode)
-    }.stateIn(
-        scope = screenModelScope,
-        started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
-        initialValue = SongUiDetail(),
-    )
+    val state =
+        getSongDetailFlow().combine(preferencesRepository.songPreferences) { detail, prefs ->
+            detail.copy(
+                songDisplayMode = prefs.songDisplayMode,
+                fontSize = prefs.fontSize,
+            )
+        }.stateIn(
+            scope = screenModelScope,
+            started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
+            initialValue = SongUiDetail(),
+        )
 
     private fun getSongDetailFlow() = flow {
         val sheetMusic = getAvailableSheetMusicForSongUseCase(songId)

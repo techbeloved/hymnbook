@@ -7,10 +7,13 @@ import com.techbeloved.hymnbook.shared.media.GetAvailableMediaForSongUseCase
 import com.techbeloved.hymnbook.shared.model.SongBookEntry
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.preferences.PreferencesRepository
+import com.techbeloved.hymnbook.shared.preferences.detail.SettingsPreferenceAction
 import com.techbeloved.hymnbook.shared.sheetmusic.GetAvailableSheetMusicForSongUseCase
+import com.techbeloved.hymnbook.shared.ui.settings.NowPlayingBottomSettingsState
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -27,10 +30,13 @@ internal class SongDetailPagerModel(
     private val preferencesRepository: PreferencesRepository = Injector.preferencesRepository,
 ) : ScreenModel {
 
+    private val _bottomSheetState =
+        MutableStateFlow<DetailBottomSheetState>(DetailBottomSheetState.Hidden)
+    val bottomSheetState get() = _bottomSheetState.asStateFlow()
+
     private val initialSongbookEntry = SongBookEntry(songbook, entry)
 
     private val selectedPage = MutableStateFlow(-1)
-
     val state = combine(
         preferencesRepository.songPreferences,
 
@@ -63,11 +69,11 @@ internal class SongDetailPagerModel(
             displayModes = SongDisplayMode.entries.map { mode ->
                 SongDisplayModeState(
                     displayMode = mode,
-                    isEnabled = when(mode) {
+                    isEnabled = when (mode) {
                         SongDisplayMode.Lyrics -> true
                         SongDisplayMode.SheetMusic -> availableSheetMusic != null
                     },
-                    text = when(mode) {
+                    text = when (mode) {
                         SongDisplayMode.Lyrics -> "Lyrics"
                         SongDisplayMode.SheetMusic -> "Sheet"
                     },
@@ -92,6 +98,24 @@ internal class SongDetailPagerModel(
     fun onChangeSongDisplayMode(songDisplayMode: SongDisplayMode) {
         screenModelScope.launch {
             preferencesRepository.updateSongPreference(songDisplayMode)
+        }
+    }
+
+    fun onShowSettings() = _bottomSheetState.update {
+        DetailBottomSheetState.Show(NowPlayingBottomSettingsState.Default)
+    }
+
+    fun onHideSettings() = _bottomSheetState.update { DetailBottomSheetState.Hidden }
+
+    fun onIncreaseFontSize() {
+        screenModelScope.launch {
+            preferencesRepository.updatePreference(SettingsPreferenceAction.FontSize.Increase)
+        }
+    }
+
+    fun onDecreaseFontSize() {
+        screenModelScope.launch {
+            preferencesRepository.updatePreference(SettingsPreferenceAction.FontSize.Decrease)
         }
     }
 }
