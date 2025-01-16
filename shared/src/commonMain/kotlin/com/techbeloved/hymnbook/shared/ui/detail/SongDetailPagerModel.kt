@@ -2,12 +2,13 @@ package com.techbeloved.hymnbook.shared.ui.detail
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.techbeloved.hymnbook.shared.di.Injector
 import com.techbeloved.hymnbook.shared.media.GetAvailableMediaForSongUseCase
 import com.techbeloved.hymnbook.shared.model.SongBookEntry
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
-import com.techbeloved.hymnbook.shared.preferences.PreferencesRepository
-import com.techbeloved.hymnbook.shared.preferences.detail.SettingsPreferenceAction
+import com.techbeloved.hymnbook.shared.preferences.ChangeFontSizeUseCase
+import com.techbeloved.hymnbook.shared.preferences.ChangePreferenceUseCase
+import com.techbeloved.hymnbook.shared.preferences.GetSongPreferenceFlowUseCase
+import com.techbeloved.hymnbook.shared.preferences.SongPreferences
 import com.techbeloved.hymnbook.shared.sheetmusic.GetAvailableSheetMusicForSongUseCase
 import com.techbeloved.hymnbook.shared.ui.settings.NowPlayingBottomSettingsState
 import kotlinx.collections.immutable.toImmutableList
@@ -28,7 +29,9 @@ internal class SongDetailPagerModel(
     private val getAvailableMediaForSongUseCase: GetAvailableMediaForSongUseCase = GetAvailableMediaForSongUseCase(),
     private val getAvailableSheetMusicForSongUseCase: GetAvailableSheetMusicForSongUseCase =
         GetAvailableSheetMusicForSongUseCase(),
-    private val preferencesRepository: PreferencesRepository = Injector.preferencesRepository,
+    private val changePreferenceUseCase: ChangePreferenceUseCase = ChangePreferenceUseCase(),
+    getSongPreferenceFlowUseCase: GetSongPreferenceFlowUseCase = GetSongPreferenceFlowUseCase(),
+    private val changeFontSizeUseCase: ChangeFontSizeUseCase = ChangeFontSizeUseCase(),
 ) : ScreenModel {
 
     private val _bottomSheetState =
@@ -39,7 +42,7 @@ internal class SongDetailPagerModel(
 
     private val selectedPage = MutableStateFlow(-1)
     val state = combine(
-        preferencesRepository.songPreferences,
+        getSongPreferenceFlowUseCase(),
 
         getSongEntriesFlow().map { songEntries ->
             object {
@@ -97,7 +100,7 @@ internal class SongDetailPagerModel(
 
     fun onChangeSongDisplayMode(songDisplayMode: SongDisplayMode) {
         screenModelScope.launch {
-            preferencesRepository.updateSongPreference(songDisplayMode)
+            changePreferenceUseCase(SongPreferences.songDisplayModePrefKey) { songDisplayMode.name }
         }
     }
 
@@ -109,13 +112,13 @@ internal class SongDetailPagerModel(
 
     fun onIncreaseFontSize() {
         screenModelScope.launch {
-            preferencesRepository.updatePreference(SettingsPreferenceAction.FontSize.Increase)
+            changeFontSizeUseCase(isIncrease = true)
         }
     }
 
     fun onDecreaseFontSize() {
         screenModelScope.launch {
-            preferencesRepository.updatePreference(SettingsPreferenceAction.FontSize.Decrease)
+            changeFontSizeUseCase(isIncrease = false)
         }
     }
 }
