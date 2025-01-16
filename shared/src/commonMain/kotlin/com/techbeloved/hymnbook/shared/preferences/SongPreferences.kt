@@ -20,16 +20,19 @@ internal data class SongPreferences(
         val songDisplayModePrefKey = PreferenceKey(
             inMemory = true,
             key = stringPreferencesKey("song.DisplayMode"),
+            defaultValue = SongDisplayMode.Lyrics.name,
         )
 
         val isPreferMidiPrefKey = PreferenceKey(
             inMemory = true,
-            key = booleanPreferencesKey("song.IsPreferMidi")
+            key = booleanPreferencesKey("song.IsPreferMidi"),
+            defaultValue = true,
         )
 
         val songFontSizePrefKey = PreferenceKey(
             inMemory = false,
             key = floatPreferencesKey("song.FontSize"),
+            defaultValue = 20f,
         )
 
     }
