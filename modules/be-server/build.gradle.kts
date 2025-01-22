@@ -19,6 +19,7 @@ dependencies {
     implementation(libs.slf4j.api)
     implementation(libs.ktor.server.core)
     implementation(libs.ktor.server.netty)
+    implementation(libs.ktor.server.status.pages)
     testImplementation(libs.ktor.server.tests)
     testImplementation(libs.test.junit)
 }
