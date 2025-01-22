@@ -28,6 +28,7 @@ composeBom = "2025.01.00"
 compose_jetbrains = "1.7.3"
 constraintlayout = "2.2.0"
 requerySqliteAndroid = "3.45.0"
+slf4jApi = "2.0.16"
 turbine = "1.2.0"
 xmlutil = "0.86.3"
 coreTestingVersion = "2.2.0"
@@ -170,6 +171,7 @@ rxbinding-recyclerview = { module = "com.jakewharton.rxbinding3:rxbinding-recycl
 rxbinding-viewpager = { module = "com.jakewharton.rxbinding3:rxbinding-viewpager", version.ref = "rxbindingViewpager" }
 rxjava = { module = "io.reactivex.rxjava2:rxjava", version.ref = "rxjava" }
 rxrelay = { module = "com.jakewharton.rxrelay2:rxrelay", version.ref = "rxrelay" }
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4jApi" }
 snippety = { module = "com.github.fueled:snippety", version.ref = "snippety" }
 sqldelight-runtime = { group = "app.cash.sqldelight", name = "runtime", version.ref = "sqlDelight" }
 sqldelight-adapters = { group = "app.cash.sqldelight", name = "primitive-adapters", version.ref = "sqlDelight" }
