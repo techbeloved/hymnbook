@@ -23,7 +23,8 @@ class MediaPlaybackService : MediaSessionService() {
         val player = ExoPlayer.Builder(this)
             .setRenderersFactory(
                 DefaultRenderersFactory(this)
-                    .setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON) // required to enable midi support
+                    // required to enable midi support
+                    .setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON)
                     .setEnableAudioTrackPlaybackParams(true)
             )
             .build()

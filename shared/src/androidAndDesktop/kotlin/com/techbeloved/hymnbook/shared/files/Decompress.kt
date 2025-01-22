@@ -16,18 +16,18 @@ internal class Decompress {
                     entry.name.lowercase().contains(it, ignoreCase = true)
                 }
             }.forEach { entry ->
-                    val entryPath = File(destinationDirPath, entry.name)
-                    if (entry.isDirectory) {
-                        entryPath.mkdirs()
-                    } else {
-                        if (entryPath.exists()) {
-                            entryPath.delete()
-                        }
-                        val fileOutputStream = FileOutputStream(entryPath)
-                        inputStream.copyTo(fileOutputStream)
-                        fileOutputStream.close()
+                val entryPath = File(destinationDirPath, entry.name)
+                if (entry.isDirectory) {
+                    entryPath.mkdirs()
+                } else {
+                    if (entryPath.exists()) {
+                        entryPath.delete()
                     }
+                    val fileOutputStream = FileOutputStream(entryPath)
+                    inputStream.copyTo(fileOutputStream)
+                    fileOutputStream.close()
                 }
+            }
         }
     }
 }

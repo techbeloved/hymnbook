@@ -6,6 +6,7 @@ import com.techbeloved.hymnbook.Database
 import java.io.File
 import java.util.Properties
 
+@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 internal actual class DriverFactory {
     actual fun createDriver(): SqlDriver {
         val databasePath = File(System.getProperty("user.home"), "hymnbook_songs.db")
@@ -13,12 +14,6 @@ internal actual class DriverFactory {
             url = "jdbc:sqlite:" + databasePath.absolutePath,
             properties = Properties().apply { put("foreign_keys", "true") },
         )
-        Database.Schema.create(driver)
-        return driver
-    }
-
-    actual fun createInMemorySqlDriver(): SqlDriver {
-        val driver: SqlDriver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
         Database.Schema.create(driver)
         return driver
     }

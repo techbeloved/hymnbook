@@ -28,11 +28,13 @@ import platform.AVFoundation.seekToTime
 import platform.CoreMedia.CMTimeGetSeconds
 import platform.CoreMedia.CMTimeMake
 
+private const val THOUSAND = 1000
+
 class DefaultMediaPlayer(
     private val playerItem: AVPlayerItem,
     private val coroutineScope: CoroutineScope,
     private val state: PlaybackState,
-): IosMediaPlayer {
+) : IosMediaPlayer {
     private val player = AVPlayer.playerWithPlayerItem(playerItem)
     private var timeObserver: Any? = null
     private var playerJob: Job? = null
@@ -45,9 +47,10 @@ class DefaultMediaPlayer(
         player.play()
     }
 
-    override fun pause()  = player.pause()
+    override fun pause() = player.pause()
 
-    override fun seekTo(position: Long)  = player.seekToTime(CMTimeMake(position, 1000))
+    override fun seekTo(position: Long) =
+        player.seekToTime(CMTimeMake(position, timescale = THOUSAND))
 
     override fun prepare() {
         observePlaybackStatus(playerItem)
@@ -61,10 +64,10 @@ class DefaultMediaPlayer(
 
     private fun observePlaybackStatus(currentPlayerItem: AVPlayerItem) {
         timeObserver = player.addPeriodicTimeObserverForInterval(
-            interval = CMTimeMake(100, 1000),
+            interval = CMTimeMake(value = 100, timescale = 1000),
             queue = null
         ) {
-            state.position = (CMTimeGetSeconds(it) * 1000).toLong()
+            state.position = (CMTimeGetSeconds(it) * THOUSAND).toLong()
         }
 
         playerJob = coroutineScope.launch {
@@ -76,7 +79,7 @@ class DefaultMediaPlayer(
                     when (itemStatus) {
                         AVPlayerItemStatusReadyToPlay -> {
                             state.duration =
-                                (CMTimeGetSeconds(currentPlayerItem.duration) * 1000).toLong()
+                                (CMTimeGetSeconds(currentPlayerItem.duration) * THOUSAND).toLong()
                             state.playerState = PlayerState.Ready
                         }
 
@@ -97,5 +100,4 @@ class DefaultMediaPlayer(
                 }
         }
     }
-
 }

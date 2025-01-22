@@ -30,7 +30,7 @@ internal class ImportOpenLyricsUseCase(
                             bufferedSource.readUtf8()
                         }
                     }
-                    try {
+                    runCatching {
                         val openLyricsSong = xml.decodeFromString(
                             deserializer = OpenLyricsSong.serializer(),
                             string = lyricsXmlContent
@@ -38,8 +38,6 @@ internal class ImportOpenLyricsUseCase(
                             rootName = QName("http://openlyrics.info/namespace/2009/song", "song"),
                         )
                         saveOpenLyricsUseCase(openLyricsSong)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
                     }
                 }
         }

@@ -20,6 +20,8 @@ import platform.Foundation.NSError
 import platform.Foundation.NSURL
 import platform.Foundation.NSURL.Companion.URLWithString
 
+private const val THOUSAND = 1000.0
+
 class MidiPlayer(
     private val midiContent: NSURL,
     private val coroutineScope: CoroutineScope,
@@ -38,7 +40,6 @@ class MidiPlayer(
         }
     }
     private var playerEventsJob: Job? = null
-
 
     override fun play() {
         // restore playback position. The player don't have a pause so we do the state restoration manually
@@ -63,12 +64,12 @@ class MidiPlayer(
     }
 
     override fun seekTo(position: Long) =
-        player.setCurrentPosition(position / 1000.0) // Convert from millisec
+        player.setCurrentPosition(position / THOUSAND) // Convert from millisec
 
     override fun prepare() {
         player.prepareToPlay()
         state.playerState = PlayerState.Ready
-        state.duration = (player.duration * 1000).toLong()
+        state.duration = (player.duration * THOUSAND).toLong()
         state.position = 0
     }
 
@@ -82,8 +83,8 @@ class MidiPlayer(
         playerEventsJob = coroutineScope.launch {
             state.isPlaying = player.isPlaying()
             while (player.isPlaying()) {
-                state.position = (player.currentPosition * 1000).toLong()
-                delay(100)
+                state.position = (player.currentPosition * THOUSAND).toLong()
+                delay(timeMillis = 100)
             }
             state.isPlaying = player.isPlaying()
         }

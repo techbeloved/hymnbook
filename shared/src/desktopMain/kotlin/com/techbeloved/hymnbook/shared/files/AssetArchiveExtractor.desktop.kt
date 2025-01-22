@@ -20,15 +20,14 @@ private class DesktopAssetArchiveExtractor(
     private val dispatchersProvider: DispatchersProvider = getPlatformDispatcherProvider(),
 ) : AssetArchiveExtractor {
     override suspend fun extract(assetFile: String, destination: Path) {
-        try {
+        runCatching {
             systemArchiveExtractor.extract(
                 sourceFile = getResourcePath(assetFile).toPath(),
                 destination = destination,
                 sourceFileSystem = FileSystem.RESOURCES,
                 destinationFileSystem = FileSystem.SYSTEM
             )
-        } catch (e: UnsupportedOperationException) {
-            e.printStackTrace()
+        }.onFailure {
             withContext(dispatchersProvider.io()) {
                 val classLoader = Thread.currentThread().contextClassLoader
                     ?: (::DesktopAssetArchiveExtractor.javaClass.classLoader)

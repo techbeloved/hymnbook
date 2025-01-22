@@ -1,7 +1,7 @@
 package com.techbeloved.hymnbook
 
-class JVMPlatform {
+class JvmPlatform {
     val name: String = "Java ${System.getProperty("java.version")}"
 }
 
-fun getPlatform() = JVMPlatform()
+fun getPlatform() = JvmPlatform()

@@ -55,7 +55,7 @@ internal class HomeScreenModel(
     }
 
     private suspend fun importBundledLyrics(fileSystem: SharedFileSystem) {
-        val lyricsBundledAsset = "files/openlyrics/sample_songs.zip" // FIXME: update the name with the final name
+        val lyricsBundledAsset = "files/openlyrics/sample_songs.zip" // update the name with the final name
         val lyricsAssetFileHash = hashAssetFileUseCase(lyricsBundledAsset)
         val savedLyricsArchiveHash = getSavedFileHashUseCase(lyricsBundledAsset)
 
@@ -80,7 +80,7 @@ internal class HomeScreenModel(
     }
 
     private suspend fun importBundledTunes(fileSystem: SharedFileSystem) {
-        val tunesBundledAsset = "files/tunes/sample_tunes.zip" // FIXME: update the name with the final name
+        val tunesBundledAsset = "files/tunes/sample_tunes.zip" // update the name with the final name
         val tunesAssetFileHash = hashAssetFileUseCase(tunesBundledAsset)
         val savedTunesArchiveHash = getSavedFileHashUseCase(tunesBundledAsset)
 
@@ -100,7 +100,7 @@ internal class HomeScreenModel(
         }
     }
     private suspend fun importBundledSheets(fileSystem: SharedFileSystem) {
-        val sheetsBundledAsset = "files/sheets/sample_sheets.zip" // FIXME: update the name with the final name
+        val sheetsBundledAsset = "files/sheets/sample_sheets.zip" // update the name with the final name
         val sheetsAssetFileHash = hashAssetFileUseCase(sheetsBundledAsset)
         val savedTunesArchiveHash = getSavedFileHashUseCase(sheetsBundledAsset)
 

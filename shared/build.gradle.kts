@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.plugin.mpp.BitcodeEmbeddingMode
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -9,6 +8,7 @@ plugins {
     alias(libs.plugins.sqldelight)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.native.cocoapods)
+    alias(libs.plugins.detekt)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -38,13 +38,11 @@ kotlin {
         framework {
             isStatic = false
             baseName = "shared"
-            embedBitcode(BitcodeEmbeddingMode.BITCODE)
         }
     }
 
     sourceSets {
         commonMain.dependencies {
-            //put your multiplatform dependencies here
             implementation(project(":modules:media"))
             implementation(project(":modules:sheetmusic"))
             implementation(compose.runtime)
@@ -92,7 +90,7 @@ kotlin {
             implementation(compose.preview)
             implementation(compose.uiTooling)
             // Requery Sqlite
-            implementation (libs.requery.sqlite.android)
+            implementation(libs.requery.sqlite.android)
         }
         val desktopMain by getting {
             dependencies {
@@ -120,10 +118,8 @@ kotlin {
             implementation(libs.squareup.okio.fakefilesystem)
         }
 
-        val androidUnitTest by getting {
-            dependencies {
-                implementation(libs.sqldelight.jvm)
-            }
+        androidUnitTest.dependencies {
+            implementation(libs.sqldelight.jvm)
         }
     }
 }
@@ -154,4 +150,19 @@ sqldelight {
         // See https://github.com/cashapp/sqldelight/issues/1442
         linkSqlite = true
     }
+}
+
+detekt {
+    config.setFrom(file("../config/detekt/detekt.yml"))
+    source.setFrom(
+        "src/androidAndDesktop/kotlin",
+        "src/androidMain/kotlin",
+        "src/androidUnitTest/kotlin",
+        "src/commonMain/kotlin",
+        "src/commonTest/kotlin",
+        "src/desktopMain/kotlin",
+        "src/desktopTest/kotlin",
+        "src/iosMain/kotlin",
+        "src/iosTest/kotlin",
+    )
 }
