@@ -36,3 +36,4 @@ src/main/res/menu-night/
 /modules/media/build/
 /modules/sheetmusic/build
 /modules/media/src/iosMain/composeResources/files/yamaha_grand_piano.sf2
+/modules/be-server/build
