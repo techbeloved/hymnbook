@@ -8,5 +8,4 @@ internal actual fun PdfUi(
     relativePath: String,
     absolutePath: String,
     modifier: Modifier,
-) {
-}
+) = Unit

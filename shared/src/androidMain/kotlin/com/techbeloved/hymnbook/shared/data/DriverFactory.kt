@@ -8,6 +8,7 @@ import com.techbeloved.hymnbook.Database
 import com.techbeloved.hymnbook.shared.di.AndroidInjector
 import io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory
 
+@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 internal actual class DriverFactory(private val context: Context) {
     actual fun createDriver(): SqlDriver {
         val factory = RequerySQLiteOpenHelperFactory()
@@ -21,17 +22,6 @@ internal actual class DriverFactory(private val context: Context) {
                 }
             },
             factory = factory,
-        )
-    }
-
-    actual fun createInMemorySqlDriver(): SqlDriver {
-        return AndroidSqliteDriver(
-            Database.Schema, context, name = null,
-            callback = object : AndroidSqliteDriver.Callback(Database.Schema) {
-                override fun onOpen(db: SupportSQLiteDatabase) {
-                    db.setForeignKeyConstraintsEnabled(true)
-                }
-            },
         )
     }
 }

@@ -48,12 +48,13 @@ class SaveOpenLyricsUseCaseTest {
                         songbook = null,
                         songbookEntry = null
                     )
-                ), actual = getHymnTitlesUseCase()
+                ),
+                actual = getHymnTitlesUseCase(),
             )
         }
 
     @Test
-    fun `Given an empty database_When a single song with songbook is inserted_Then allTitles returns the single song`() =
+    fun `Given an empty database_When a single song with songbook is inserted_Then allTitles returns the song`() =
         runTest {
             assertEquals(expected = emptyList(), actual = getHymnTitlesUseCase())
             useCase(sampleOpenLyricsSongWithSongbook)
@@ -66,7 +67,8 @@ class SaveOpenLyricsUseCaseTest {
                         songbook = "songbook1",
                         songbookEntry = "1"
                     )
-                ), actual = getHymnTitlesUseCase()
+                ),
+                actual = getHymnTitlesUseCase(),
             )
         }
 
@@ -92,10 +94,10 @@ class SaveOpenLyricsUseCaseTest {
                         songbook = null,
                         songbookEntry = null,
                     ),
-                ), actual = getHymnTitlesUseCase()
+                ),
+                actual = getHymnTitlesUseCase(),
             )
         }
-
 
     companion object {
         private val sampleOpenLyricsSong = OpenLyricsSong(

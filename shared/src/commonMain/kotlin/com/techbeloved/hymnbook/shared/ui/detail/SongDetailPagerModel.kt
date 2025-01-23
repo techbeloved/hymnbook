@@ -23,7 +23,8 @@ internal class SongDetailPagerModel(
     entry: String,
     private val getSongEntriesForSongbookUseCase: GetSongEntriesForSongbookUseCase = GetSongEntriesForSongbookUseCase(),
     private val getAvailableMediaForSongUseCase: GetAvailableMediaForSongUseCase = GetAvailableMediaForSongUseCase(),
-    private val getAvailableSheetMusicForSongUseCase: GetAvailableSheetMusicForSongUseCase = GetAvailableSheetMusicForSongUseCase(),
+    private val getAvailableSheetMusicForSongUseCase: GetAvailableSheetMusicForSongUseCase =
+        GetAvailableSheetMusicForSongUseCase(),
     private val preferencesRepository: PreferencesRepository = Injector.preferencesRepository,
 ) : ScreenModel {
 
@@ -63,11 +64,11 @@ internal class SongDetailPagerModel(
             displayModes = SongDisplayMode.entries.map { mode ->
                 SongDisplayModeState(
                     displayMode = mode,
-                    isEnabled = when(mode) {
+                    isEnabled = when (mode) {
                         SongDisplayMode.Lyrics -> true
                         SongDisplayMode.SheetMusic -> availableSheetMusic != null
                     },
-                    text = when(mode) {
+                    text = when (mode) {
                         SongDisplayMode.Lyrics -> "Lyrics"
                         SongDisplayMode.SheetMusic -> "Sheet"
                     },
@@ -83,7 +84,6 @@ internal class SongDetailPagerModel(
 
     private fun getSongEntriesFlow() =
         flow { emit(getSongEntriesForSongbookUseCase(initialSongbookEntry)) }
-
 
     fun onPageSelected(pageIndex: Int) {
         selectedPage.update { pageIndex }

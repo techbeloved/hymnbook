@@ -13,13 +13,14 @@ internal class HashAssetFileUseCase(
     private val dispatchersProvider: DispatchersProvider = getPlatformDispatcherProvider(),
     private val defaultAssetFileSourceProvider: AssetFileSourceProvider = assetFileSourceProvider,
 ) {
-    suspend operator fun invoke(filePath: String): FileHash = withContext(dispatchersProvider.io()){
-        val hash = HashingSink.sha256(blackholeSink()).use { hashingSink ->
-            defaultAssetFileSourceProvider.get(filePath).buffer().use { source ->
-                source.readAll(hashingSink)
-                hashingSink.hash.hex()
+    suspend operator fun invoke(filePath: String): FileHash =
+        withContext(dispatchersProvider.io()) {
+            val hash = HashingSink.sha256(blackholeSink()).use { hashingSink ->
+                defaultAssetFileSourceProvider.get(filePath).buffer().use { source ->
+                    source.readAll(hashingSink)
+                    hashingSink.hash.hex()
+                }
             }
+            FileHash(path = filePath, sha256 = hash)
         }
-        FileHash(path = filePath, sha256 = hash)
-    }
 }

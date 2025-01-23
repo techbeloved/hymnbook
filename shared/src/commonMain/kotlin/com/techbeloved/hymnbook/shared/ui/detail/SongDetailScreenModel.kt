@@ -16,17 +16,19 @@ import kotlinx.coroutines.flow.stateIn
 internal class SongDetailScreenModel(
     private val songId: Long,
     private val getSongDetailUseCase: GetSongDetailUseCase = GetSongDetailUseCase(),
-    private val getAvailableSheetMusicForSongUseCase: GetAvailableSheetMusicForSongUseCase = GetAvailableSheetMusicForSongUseCase(),
+    private val getAvailableSheetMusicForSongUseCase: GetAvailableSheetMusicForSongUseCase =
+        GetAvailableSheetMusicForSongUseCase(),
     preferencesRepository: PreferencesRepository = Injector.preferencesRepository,
 ) : ScreenModel {
 
-    val state = getSongDetailFlow().combine(preferencesRepository.songPreferences) { detail, prefs ->
-        detail.copy(songDisplayMode = prefs.songDisplayMode)
-    }.stateIn(
-        scope = screenModelScope,
-        started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
-        initialValue = SongUiDetail(),
-    )
+    val state =
+        getSongDetailFlow().combine(preferencesRepository.songPreferences) { detail, prefs ->
+            detail.copy(songDisplayMode = prefs.songDisplayMode)
+        }.stateIn(
+            scope = screenModelScope,
+            started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
+            initialValue = SongUiDetail(),
+        )
 
     private fun getSongDetailFlow() = flow {
         val sheetMusic = getAvailableSheetMusicForSongUseCase(songId)

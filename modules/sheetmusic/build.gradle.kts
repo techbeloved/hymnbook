@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.jetbrains.compose.compiler)
+    alias(libs.plugins.detekt)
 }
 
 kotlin {
@@ -17,7 +18,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -28,7 +29,7 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     jvm("desktop")
 
     @OptIn(ExperimentalWasmDsl::class)
@@ -50,10 +51,10 @@ kotlin {
         }
         binaries.executable()
     }
-    
+
     sourceSets {
         val desktopMain by getting
-        
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.compose.activity)
@@ -69,9 +70,6 @@ kotlin {
             implementation(libs.kotlinx.collections.immutable)
             implementation(libs.coil.compose)
             implementation(libs.coil.network)
-        }
-        iosMain.dependencies {
-
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -106,4 +104,19 @@ android {
 
 dependencies {
     debugImplementation(compose.uiTooling)
+}
+
+detekt {
+    config.setFrom(file("../../config/detekt/detekt.yml"))
+    source.setFrom(
+        "src/androidMain/kotlin",
+        "src/androidUnitTest/kotlin",
+        "src/commonMain/kotlin",
+        "src/commonTest/kotlin",
+        "src/desktopMain/kotlin",
+        "src/desktopTest/kotlin",
+        "src/iosMain/kotlin",
+        "src/iosTest/kotlin",
+        "src/wasmJsMain/kotlin",
+    )
 }

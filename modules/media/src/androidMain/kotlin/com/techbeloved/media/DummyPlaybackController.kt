@@ -16,11 +16,9 @@ class DummyPlaybackController(private val playbackState: PlaybackState) : Playba
         playbackState.position = position
     }
 
-    override fun seekToNext() {
-    }
+    override fun seekToNext() = Unit
 
-    override fun seekToPrevious() {
-    }
+    override fun seekToPrevious() = Unit
 
     override fun setItems(items: ImmutableList<AudioItem>) {
         queue.clear()

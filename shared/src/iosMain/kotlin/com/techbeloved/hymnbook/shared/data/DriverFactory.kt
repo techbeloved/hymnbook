@@ -5,22 +5,12 @@ import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import co.touchlab.sqliter.DatabaseConfiguration
 import com.techbeloved.hymnbook.Database
 
+@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 internal actual class DriverFactory {
     actual fun createDriver(): SqlDriver {
         return NativeSqliteDriver(
             Database.Schema,
             "songs.db",
-            onConfiguration = { config: DatabaseConfiguration ->
-                config.copy(
-                    extendedConfig = DatabaseConfiguration.Extended(foreignKeyConstraints = true)
-                )
-            })
-    }
-
-    actual fun createInMemorySqlDriver(): SqlDriver {
-        return NativeSqliteDriver(
-            schema = Database.Schema,
-            name = "test.db",
             onConfiguration = { config: DatabaseConfiguration ->
                 config.copy(
                     extendedConfig = DatabaseConfiguration.Extended(foreignKeyConstraints = true)

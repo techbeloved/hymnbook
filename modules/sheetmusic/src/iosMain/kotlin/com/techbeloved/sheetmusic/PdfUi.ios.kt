@@ -14,6 +14,7 @@ import platform.Foundation.NSUserDomainMask
 import platform.PDFKit.PDFDocument
 import platform.PDFKit.PDFView
 
+@Suppress("UNCHECKED_CAST")
 @OptIn(ExperimentalForeignApi::class)
 @Composable
 internal actual fun PdfUi(
@@ -21,9 +22,11 @@ internal actual fun PdfUi(
     absolutePath: String,
     modifier: Modifier,
 ) {
-
     val documentNsUrl = remember(relativePath) {
-        val defaultDir = NSFileManager.defaultManager.URLsForDirectory(NSApplicationSupportDirectory, NSUserDomainMask) as List<NSURL>
+        val defaultDir = NSFileManager.defaultManager.URLsForDirectory(
+            directory = NSApplicationSupportDirectory,
+            inDomains = NSUserDomainMask,
+        ) as List<NSURL>
         defaultDir.first().URLByAppendingPathComponent(relativePath)
     }
     if (documentNsUrl != null) {
