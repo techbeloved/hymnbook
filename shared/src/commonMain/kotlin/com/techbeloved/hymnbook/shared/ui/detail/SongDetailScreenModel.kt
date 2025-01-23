@@ -2,9 +2,8 @@ package com.techbeloved.hymnbook.shared.ui.detail
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.techbeloved.hymnbook.shared.di.Injector
 import com.techbeloved.hymnbook.shared.model.SheetMusic
-import com.techbeloved.hymnbook.shared.preferences.PreferencesRepository
+import com.techbeloved.hymnbook.shared.preferences.GetSongPreferenceFlowUseCase
 import com.techbeloved.hymnbook.shared.sheetmusic.GetAvailableSheetMusicForSongUseCase
 import com.techbeloved.sheetmusic.SheetMusicItem
 import com.techbeloved.sheetmusic.SheetMusicType
@@ -18,12 +17,15 @@ internal class SongDetailScreenModel(
     private val getSongDetailUseCase: GetSongDetailUseCase = GetSongDetailUseCase(),
     private val getAvailableSheetMusicForSongUseCase: GetAvailableSheetMusicForSongUseCase =
         GetAvailableSheetMusicForSongUseCase(),
-    preferencesRepository: PreferencesRepository = Injector.preferencesRepository,
+    getSongPreferenceFlowUseCase: GetSongPreferenceFlowUseCase = GetSongPreferenceFlowUseCase(),
 ) : ScreenModel {
 
     val state =
-        getSongDetailFlow().combine(preferencesRepository.songPreferences) { detail, prefs ->
-            detail.copy(songDisplayMode = prefs.songDisplayMode)
+        getSongDetailFlow().combine(getSongPreferenceFlowUseCase()) { detail, prefs ->
+            detail.copy(
+                songDisplayMode = prefs.songDisplayMode,
+                fontSize = prefs.fontSize,
+            )
         }.stateIn(
             scope = screenModelScope,
             started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
