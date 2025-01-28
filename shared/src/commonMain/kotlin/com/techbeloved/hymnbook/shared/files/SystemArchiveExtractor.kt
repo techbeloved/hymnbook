@@ -1,8 +1,8 @@
 package com.techbeloved.hymnbook.shared.files
 
 import com.techbeloved.hymnbook.shared.dispatcher.DispatchersProvider
-import com.techbeloved.hymnbook.shared.dispatcher.getPlatformDispatcherProvider
 import kotlinx.coroutines.withContext
+import me.tatarka.inject.annotations.Inject
 import okio.FileSystem
 import okio.Path
 import okio.Path.Companion.toPath
@@ -16,8 +16,8 @@ import okio.use
  * Regular archives in regular filesystems are supported for all platforms
  * [Credits](https://www.reddit.com/r/Kotlin/comments/ut2n62/comment/ltdx229/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button)
  */
-internal class SystemArchiveExtractor(
-    private val dispatchersProvider: DispatchersProvider = getPlatformDispatcherProvider(),
+internal class SystemArchiveExtractor @Inject constructor(
+    private val dispatchersProvider: DispatchersProvider,
 ) {
     suspend fun extract(
         sourceFile: Path,

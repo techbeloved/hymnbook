@@ -12,7 +12,6 @@ import com.techbeloved.hymnbook.shared.data.getDriverFactory
 import com.techbeloved.hymnbook.shared.data.listColumnAdapter
 import com.techbeloved.hymnbook.shared.preferences.InMemoryDataStore
 import com.techbeloved.hymnbook.shared.preferences.InMemoryPreferences
-import com.techbeloved.hymnbook.shared.preferences.PreferencesRepository
 import com.techbeloved.hymnbook.shared.preferences.createPlatformDataStore
 import kotlinx.serialization.json.Json
 import nl.adaptivity.xmlutil.XmlDeclMode
@@ -26,7 +25,7 @@ internal object Injector {
         getDatabase(driver)
     }
 
-    val json: Json by lazy {
+    private val json: Json by lazy {
         Json {
             isLenient = true
             encodeDefaults = true
@@ -47,8 +46,6 @@ internal object Injector {
 
     val inMemoryDataStore: DataStore<InMemoryPreferences> by lazy { InMemoryDataStore() }
 
-    val preferencesRepository by lazy { PreferencesRepository() }
-
     fun getDatabase(driver: SqlDriver): Database {
         return Database(
             driver = driver,
@@ -61,5 +58,4 @@ internal object Injector {
             ),
         )
     }
-
 }

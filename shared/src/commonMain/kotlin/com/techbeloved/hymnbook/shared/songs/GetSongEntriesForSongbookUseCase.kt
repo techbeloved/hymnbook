@@ -1,18 +1,17 @@
-package com.techbeloved.hymnbook.shared.ui.detail
+package com.techbeloved.hymnbook.shared.songs
 
 import com.techbeloved.hymnbook.Database
-import com.techbeloved.hymnbook.shared.di.Injector
 import com.techbeloved.hymnbook.shared.dispatcher.DispatchersProvider
-import com.techbeloved.hymnbook.shared.dispatcher.getPlatformDispatcherProvider
 import com.techbeloved.hymnbook.shared.model.SongBookEntry
 import com.techbeloved.hymnbook.shared.model.SongPageEntry
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.withContext
+import me.tatarka.inject.annotations.Inject
 
-internal class GetSongEntriesForSongbookUseCase(
-    private val database: Database = Injector.database,
-    private val dispatchersProvider: DispatchersProvider = getPlatformDispatcherProvider(),
+internal class GetSongEntriesForSongbookUseCase @Inject constructor(
+    private val database: Database,
+    private val dispatchersProvider: DispatchersProvider,
 ) {
 
     suspend operator fun invoke(songbookEntry: SongBookEntry): ImmutableList<SongPageEntry> =

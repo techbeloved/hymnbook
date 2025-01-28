@@ -1,21 +1,19 @@
 package com.techbeloved.hymnbook.shared.media
 
 import com.techbeloved.hymnbook.Database
-import com.techbeloved.hymnbook.shared.di.Injector
 import com.techbeloved.hymnbook.shared.dispatcher.DispatchersProvider
-import com.techbeloved.hymnbook.shared.dispatcher.getPlatformDispatcherProvider
 import com.techbeloved.hymnbook.shared.ext.tunesDir
 import com.techbeloved.hymnbook.shared.files.OkioFileSystemProvider
-import com.techbeloved.hymnbook.shared.files.defaultOkioFileSystemProvider
 import com.techbeloved.hymnbook.shared.model.ext.authors
 import com.techbeloved.hymnbook.shared.model.ext.songbookEntries
 import com.techbeloved.media.AudioItem
 import kotlinx.coroutines.withContext
+import me.tatarka.inject.annotations.Inject
 
-internal class GetAvailableMediaForSongUseCase(
-    private val database: Database = Injector.database,
-    private val dispatchersProvider: DispatchersProvider = getPlatformDispatcherProvider(),
-    private val fileSystemProvider: OkioFileSystemProvider = defaultOkioFileSystemProvider,
+internal class GetAvailableMediaForSongUseCase @Inject constructor(
+    private val database: Database,
+    private val dispatchersProvider: DispatchersProvider,
+    private val fileSystemProvider: OkioFileSystemProvider,
 ) {
     suspend operator fun invoke(songId: Long): List<AudioItem> {
         return withContext(dispatchersProvider.io()) {

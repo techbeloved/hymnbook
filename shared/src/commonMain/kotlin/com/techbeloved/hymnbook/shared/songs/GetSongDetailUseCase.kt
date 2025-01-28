@@ -1,4 +1,4 @@
-package com.techbeloved.hymnbook.shared.ui.detail
+package com.techbeloved.hymnbook.shared.songs
 
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.ParagraphStyle
@@ -10,19 +10,19 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import com.techbeloved.hymnbook.Database
 import com.techbeloved.hymnbook.SongDetail
-import com.techbeloved.hymnbook.shared.di.Injector
 import com.techbeloved.hymnbook.shared.dispatcher.DispatchersProvider
-import com.techbeloved.hymnbook.shared.dispatcher.getPlatformDispatcherProvider
 import com.techbeloved.hymnbook.shared.model.Lyric
 import com.techbeloved.hymnbook.shared.model.ext.lyricsByVerseOrder
 import com.techbeloved.hymnbook.shared.model.ext.songbookEntries
+import com.techbeloved.hymnbook.shared.ui.detail.SongUiDetail
 import kotlinx.coroutines.withContext
+import me.tatarka.inject.annotations.Inject
 
 private const val IndentFactor = 1.5
 
-internal class GetSongDetailUseCase(
-    private val database: Database = Injector.database,
-    private val dispatchersProvider: DispatchersProvider = getPlatformDispatcherProvider(),
+internal class GetSongDetailUseCase @Inject constructor(
+    private val database: Database,
+    private val dispatchersProvider: DispatchersProvider,
 ) {
 
     suspend operator fun invoke(songId: Long): SongUiDetail =

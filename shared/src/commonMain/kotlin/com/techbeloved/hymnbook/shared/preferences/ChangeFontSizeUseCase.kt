@@ -1,9 +1,9 @@
 package com.techbeloved.hymnbook.shared.preferences
 
-import com.techbeloved.hymnbook.shared.di.Injector
+import me.tatarka.inject.annotations.Inject
 
-internal class ChangeFontSizeUseCase(
-    private val repository: PreferencesRepository = Injector.preferencesRepository,
+internal class ChangeFontSizeUseCase @Inject constructor(
+    private val repository: PreferencesRepository,
 ) {
     suspend operator fun invoke(isIncrease: Boolean) {
         repository.updatePreference(SongPreferences.songFontSizePrefKey) { oldValue ->

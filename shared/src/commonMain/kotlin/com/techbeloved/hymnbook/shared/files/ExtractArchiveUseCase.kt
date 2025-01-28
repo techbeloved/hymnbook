@@ -1,13 +1,13 @@
 package com.techbeloved.hymnbook.shared.files
 
 import com.techbeloved.hymnbook.shared.dispatcher.DispatchersProvider
-import com.techbeloved.hymnbook.shared.dispatcher.getPlatformDispatcherProvider
 import kotlinx.coroutines.withContext
+import me.tatarka.inject.annotations.Inject
 import okio.Path
 
-internal class ExtractArchiveUseCase(
-    private val assetArchiveExtractor: AssetArchiveExtractor = defaultAssetArchiveExtractor,
-    private val dispatchersProvider: DispatchersProvider = getPlatformDispatcherProvider(),
+internal class ExtractArchiveUseCase @Inject constructor(
+    private val assetArchiveExtractor: AssetArchiveExtractor,
+    private val dispatchersProvider: DispatchersProvider,
 ) {
     suspend operator fun invoke(assetFilePath: String, destination: Path): Result<Unit> =
         withContext(dispatchersProvider.io()) {

@@ -1,7 +1,7 @@
 package com.techbeloved.hymnbook.shared.files
 
 import com.techbeloved.hymnbook.shared.dispatcher.DispatchersProvider
-import com.techbeloved.hymnbook.shared.dispatcher.getPlatformDispatcherProvider
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okio.FileSystem
 import okio.Path
@@ -16,8 +16,9 @@ internal actual val defaultAssetArchiveExtractor: AssetArchiveExtractor by lazy 
 
 private class DesktopAssetArchiveExtractor(
     private val decompress: Decompress = Decompress(),
-    private val systemArchiveExtractor: SystemArchiveExtractor = SystemArchiveExtractor(),
-    private val dispatchersProvider: DispatchersProvider = getPlatformDispatcherProvider(),
+    private val systemArchiveExtractor: SystemArchiveExtractor = SystemArchiveExtractor(
+        DispatchersProvider()
+    ),
 ) : AssetArchiveExtractor {
     override suspend fun extract(assetFile: String, destination: Path) {
         runCatching {
@@ -28,7 +29,7 @@ private class DesktopAssetArchiveExtractor(
                 destinationFileSystem = FileSystem.SYSTEM
             )
         }.onFailure {
-            withContext(dispatchersProvider.io()) {
+            withContext(Dispatchers.IO) {
                 val classLoader = Thread.currentThread().contextClassLoader
                     ?: (::DesktopAssetArchiveExtractor.javaClass.classLoader)
                 val assetStream = classLoader.asResourceFileSystem()

@@ -1,12 +1,12 @@
 package com.techbeloved.hymnbook.shared.preferences
 
-import com.techbeloved.hymnbook.shared.di.Injector
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import me.tatarka.inject.annotations.Inject
 
-internal class GetSongPreferenceFlowUseCase(
-    private val repository: PreferencesRepository = Injector.preferencesRepository,
+internal class GetSongPreferenceFlowUseCase @Inject constructor(
+    private val repository: PreferencesRepository,
 ) {
     operator fun invoke(): Flow<SongPreferences> = combine(
         repository.getPreferenceFlow(SongPreferences.songDisplayModePrefKey),
