@@ -11,9 +11,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import me.tatarka.inject.annotations.Inject
 
-internal class SearchScreenModel(
-    private val searchSongsUseCase: SearchSongsUseCase = SearchSongsUseCase(),
+internal class SearchScreenModel @Inject constructor(
+    private val searchSongsUseCase: SearchSongsUseCase,
 ) : ScreenModel {
 
     var searchQuery by mutableStateOf("")
@@ -35,8 +36,11 @@ internal class SearchScreenModel(
         screenModelScope.launch {
             val results = searchSongsUseCase(searchQuery)
             _state.update {
-                if (results.isNotEmpty()) SearchState.SearchResult(results.toImmutableList())
-                else SearchState.NoResult(searchQuery)
+                if (results.isNotEmpty()) {
+                    SearchState.SearchResult(results.toImmutableList())
+                } else {
+                    SearchState.NoResult(searchQuery)
+                }
             }
         }
     }

@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.jetbrains.compose.compiler)
     alias(libs.plugins.sqldelight)
+    alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.native.cocoapods)
     alias(libs.plugins.detekt)
@@ -42,6 +43,8 @@ kotlin {
     }
 
     sourceSets {
+        dependencies.ksp(libs.kotlin.inject.compiler)
+        dependencies.ksp(libs.kotlin.inject.anvil.compiler)
         commonMain.dependencies {
             implementation(project(":modules:media"))
             implementation(project(":modules:sheetmusic"))
@@ -82,6 +85,11 @@ kotlin {
             // datastore
             implementation(libs.androidx.datastore.core)
             implementation(libs.androidx.datastore.preferences)
+
+            // Inject
+            implementation(libs.kotlin.inject.runtime)
+            implementation(libs.kotlin.inject.anvil.runtime)
+            implementation(libs.kotlin.inject.anvil.runtime.optional)
         }
 
         androidMain.dependencies {

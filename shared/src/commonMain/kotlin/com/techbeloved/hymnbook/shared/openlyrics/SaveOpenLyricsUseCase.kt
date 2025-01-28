@@ -5,21 +5,19 @@ import com.techbeloved.hymnbook.Database
 import com.techbeloved.hymnbook.GetSongByTitleAndSongbook
 import com.techbeloved.hymnbook.SongbookSongs
 import com.techbeloved.hymnbook.TopicSongs
-import com.techbeloved.hymnbook.shared.di.Injector
 import com.techbeloved.hymnbook.shared.dispatcher.DispatchersProvider
-import com.techbeloved.hymnbook.shared.dispatcher.getPlatformDispatcherProvider
 import com.techbeloved.hymnbook.shared.model.Lyric
 import com.techbeloved.hymnbook.shared.model.ext.OpenLyricsSong
 import com.techbeloved.hymnbook.shared.model.ext.toLyric
-import com.techbeloved.hymnbook.shared.time.DefaultInstantProvider
 import com.techbeloved.hymnbook.shared.time.InstantProvider
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
+import me.tatarka.inject.annotations.Inject
 
-internal class SaveOpenLyricsUseCase(
-    private val database: Database = Injector.database,
-    private val dispatchersProvider: DispatchersProvider = getPlatformDispatcherProvider(),
-    private val instantProvider: InstantProvider = DefaultInstantProvider(),
+internal class SaveOpenLyricsUseCase @Inject constructor(
+    private val database: Database,
+    private val dispatchersProvider: DispatchersProvider,
+    private val instantProvider: InstantProvider,
 ) {
     suspend operator fun invoke(song: OpenLyricsSong) = withContext(dispatchersProvider.io()) {
         val lyrics = song.lyrics.map { it.toLyric() }

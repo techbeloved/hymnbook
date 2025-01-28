@@ -5,19 +5,20 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import com.techbeloved.hymnbook.shared.model.SheetMusic
 import com.techbeloved.hymnbook.shared.preferences.GetSongPreferenceFlowUseCase
 import com.techbeloved.hymnbook.shared.sheetmusic.GetAvailableSheetMusicForSongUseCase
+import com.techbeloved.hymnbook.shared.songs.GetSongDetailUseCase
 import com.techbeloved.sheetmusic.SheetMusicItem
 import com.techbeloved.sheetmusic.SheetMusicType
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
+import me.tatarka.inject.annotations.Inject
 
 internal class SongDetailScreenModel(
     private val songId: Long,
-    private val getSongDetailUseCase: GetSongDetailUseCase = GetSongDetailUseCase(),
-    private val getAvailableSheetMusicForSongUseCase: GetAvailableSheetMusicForSongUseCase =
-        GetAvailableSheetMusicForSongUseCase(),
-    getSongPreferenceFlowUseCase: GetSongPreferenceFlowUseCase = GetSongPreferenceFlowUseCase(),
+    private val getSongDetailUseCase: GetSongDetailUseCase,
+    private val getAvailableSheetMusicForSongUseCase: GetAvailableSheetMusicForSongUseCase,
+    getSongPreferenceFlowUseCase: GetSongPreferenceFlowUseCase,
 ) : ScreenModel {
 
     val state =
@@ -49,5 +50,19 @@ internal class SongDetailScreenModel(
             },
         )
         emit(songDetail)
+    }
+
+    class Factory @Inject constructor(
+        private val getSongDetailUseCase: GetSongDetailUseCase,
+        private val getAvailableSheetMusicForSongUseCase: GetAvailableSheetMusicForSongUseCase,
+        private val getSongPreferenceFlowUseCase: GetSongPreferenceFlowUseCase,
+    ) {
+
+        fun create(songId: Long): SongDetailScreenModel = SongDetailScreenModel(
+            songId = songId,
+            getSongDetailUseCase = getSongDetailUseCase,
+            getAvailableSheetMusicForSongUseCase = getAvailableSheetMusicForSongUseCase,
+            getSongPreferenceFlowUseCase = getSongPreferenceFlowUseCase,
+        )
     }
 }

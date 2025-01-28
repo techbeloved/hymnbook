@@ -10,7 +10,6 @@ import com.techbeloved.hymnbook.shared.files.HashAssetFileUseCase
 import com.techbeloved.hymnbook.shared.files.OkioFileSystemProvider
 import com.techbeloved.hymnbook.shared.files.SaveFileHashUseCase
 import com.techbeloved.hymnbook.shared.files.SharedFileSystem
-import com.techbeloved.hymnbook.shared.files.defaultOkioFileSystemProvider
 import com.techbeloved.hymnbook.shared.media.ImportMediaFilesUseCase
 import com.techbeloved.hymnbook.shared.model.SongTitle
 import com.techbeloved.hymnbook.shared.openlyrics.ImportOpenLyricsUseCase
@@ -21,17 +20,18 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import me.tatarka.inject.annotations.Inject
 
-internal class HomeScreenModel(
-    private val hashAssetFileUseCase: HashAssetFileUseCase = HashAssetFileUseCase(),
-    private val extractArchiveUseCase: ExtractArchiveUseCase = ExtractArchiveUseCase(),
-    private val importOpenLyricsUseCase: ImportOpenLyricsUseCase = ImportOpenLyricsUseCase(),
-    private val getHymnTitlesUseCase: GetHymnTitlesUseCase = GetHymnTitlesUseCase(),
-    private val fileSystemProvider: OkioFileSystemProvider = defaultOkioFileSystemProvider,
-    private val getSavedFileHashUseCase: GetSavedFileHashUseCase = GetSavedFileHashUseCase(),
-    private val saveFileHashUseCase: SaveFileHashUseCase = SaveFileHashUseCase(),
-    private val importMediaFilesUseCase: ImportMediaFilesUseCase = ImportMediaFilesUseCase(),
-    private val importMusicSheetsUseCase: ImportMusicSheetsUseCase = ImportMusicSheetsUseCase(),
+internal class HomeScreenModel @Inject constructor(
+    private val hashAssetFileUseCase: HashAssetFileUseCase,
+    private val extractArchiveUseCase: ExtractArchiveUseCase,
+    private val importOpenLyricsUseCase: ImportOpenLyricsUseCase,
+    private val getHymnTitlesUseCase: GetHymnTitlesUseCase,
+    private val fileSystemProvider: OkioFileSystemProvider,
+    private val getSavedFileHashUseCase: GetSavedFileHashUseCase,
+    private val saveFileHashUseCase: SaveFileHashUseCase,
+    private val importMediaFilesUseCase: ImportMediaFilesUseCase,
+    private val importMusicSheetsUseCase: ImportMusicSheetsUseCase,
 ) : ScreenModel {
     val state: MutableStateFlow<ImmutableList<SongTitle>> = MutableStateFlow(persistentListOf())
 
@@ -55,7 +55,8 @@ internal class HomeScreenModel(
     }
 
     private suspend fun importBundledLyrics(fileSystem: SharedFileSystem) {
-        val lyricsBundledAsset = "files/openlyrics/sample_songs.zip" // update the name with the final name
+        val lyricsBundledAsset =
+            "files/openlyrics/sample_songs.zip" // update the name with the final name
         val lyricsAssetFileHash = hashAssetFileUseCase(lyricsBundledAsset)
         val savedLyricsArchiveHash = getSavedFileHashUseCase(lyricsBundledAsset)
 
@@ -80,7 +81,8 @@ internal class HomeScreenModel(
     }
 
     private suspend fun importBundledTunes(fileSystem: SharedFileSystem) {
-        val tunesBundledAsset = "files/tunes/sample_tunes.zip" // update the name with the final name
+        val tunesBundledAsset =
+            "files/tunes/sample_tunes.zip" // update the name with the final name
         val tunesAssetFileHash = hashAssetFileUseCase(tunesBundledAsset)
         val savedTunesArchiveHash = getSavedFileHashUseCase(tunesBundledAsset)
 
@@ -99,8 +101,10 @@ internal class HomeScreenModel(
             }
         }
     }
+
     private suspend fun importBundledSheets(fileSystem: SharedFileSystem) {
-        val sheetsBundledAsset = "files/sheets/sample_sheets.zip" // update the name with the final name
+        val sheetsBundledAsset =
+            "files/sheets/sample_sheets.zip" // update the name with the final name
         val sheetsAssetFileHash = hashAssetFileUseCase(sheetsBundledAsset)
         val savedTunesArchiveHash = getSavedFileHashUseCase(sheetsBundledAsset)
 

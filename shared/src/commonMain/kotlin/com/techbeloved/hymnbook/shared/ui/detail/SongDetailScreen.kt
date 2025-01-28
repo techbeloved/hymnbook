@@ -44,6 +44,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
+import com.techbeloved.hymnbook.shared.di.appComponent
+import com.techbeloved.hymnbook.shared.model.SongBookEntry
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.model.SongPageEntry
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
@@ -61,7 +63,9 @@ internal class SongDetailScreen(private val songbook: String, private val entry:
     @Composable
     override fun Content() {
         val pagerModel =
-            rememberScreenModel { SongDetailPagerModel(songbook, entry) }
+            rememberScreenModel {
+                appComponent.detailPagerScreenModelFactory().create(SongBookEntry(songbook, entry))
+            }
         val pagerState by pagerModel.state.collectAsState()
         when (val state = pagerState) {
             is SongDetailPagerState.Content -> {
@@ -70,9 +74,7 @@ internal class SongDetailScreen(private val songbook: String, private val entry:
                     pageContent = { pageEntry, contentPadding ->
                         val screenModel =
                             rememberScreenModel(pageEntry.toString()) {
-                                SongDetailScreenModel(
-                                    pageEntry.id
-                                )
+                                appComponent.detailScreenModelFactory().create(pageEntry.id)
                             }
                         val uiDetail by screenModel.state.collectAsState()
                         SongDetailUi(
@@ -109,7 +111,6 @@ internal class SongDetailScreen(private val songbook: String, private val entry:
                 )
             }
         }
-
     }
 }
 

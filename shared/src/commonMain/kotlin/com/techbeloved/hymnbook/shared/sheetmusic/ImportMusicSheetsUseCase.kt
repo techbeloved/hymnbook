@@ -1,23 +1,21 @@
 package com.techbeloved.hymnbook.shared.sheetmusic
 
 import com.techbeloved.hymnbook.Database
-import com.techbeloved.hymnbook.shared.di.Injector
 import com.techbeloved.hymnbook.shared.dispatcher.DispatchersProvider
-import com.techbeloved.hymnbook.shared.dispatcher.getPlatformDispatcherProvider
 import com.techbeloved.hymnbook.shared.ext.extension
 import com.techbeloved.hymnbook.shared.ext.sheetsDir
 import com.techbeloved.hymnbook.shared.files.HashFileUseCase
 import com.techbeloved.hymnbook.shared.files.OkioFileSystemProvider
-import com.techbeloved.hymnbook.shared.files.defaultOkioFileSystemProvider
 import com.techbeloved.hymnbook.shared.model.SheetMusic
 import kotlinx.coroutines.withContext
+import me.tatarka.inject.annotations.Inject
 import okio.Path
 
-internal class ImportMusicSheetsUseCase(
-    private val database: Database = Injector.database,
-    private val fileSystemProvider: OkioFileSystemProvider = defaultOkioFileSystemProvider,
-    private val dispatchersProvider: DispatchersProvider = getPlatformDispatcherProvider(),
-    private val hashFileUseCase: HashFileUseCase = HashFileUseCase(),
+internal class ImportMusicSheetsUseCase @Inject constructor(
+    private val database: Database,
+    private val fileSystemProvider: OkioFileSystemProvider,
+    private val dispatchersProvider: DispatchersProvider,
+    private val hashFileUseCase: HashFileUseCase,
 ) {
     suspend operator fun invoke(directory: Path) = withContext(dispatchersProvider.io()) {
         val sharedFileSystem = fileSystemProvider.get()

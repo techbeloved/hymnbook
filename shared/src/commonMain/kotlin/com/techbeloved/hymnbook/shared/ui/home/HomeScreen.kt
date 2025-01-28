@@ -17,6 +17,7 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.techbeloved.hymnbook.shared.di.appComponent
 import com.techbeloved.hymnbook.shared.model.SongTitle
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
 import com.techbeloved.hymnbook.shared.ui.listing.HymnListingUi
@@ -27,8 +28,7 @@ import kotlinx.collections.immutable.ImmutableList
 internal object HomeScreen : Screen {
     @Composable
     override fun Content() {
-
-        val screenModel = rememberScreenModel { HomeScreenModel() }
+        val screenModel = rememberScreenModel { appComponent.homeScreenModel() }
         val state by screenModel.state.collectAsState()
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
         val navigator = LocalNavigator.currentOrThrow

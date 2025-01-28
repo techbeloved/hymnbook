@@ -3,13 +3,13 @@ package com.techbeloved.hymnbook.shared.preferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import com.techbeloved.hymnbook.shared.di.Injector
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import me.tatarka.inject.annotations.Inject
 
-internal class PreferencesRepository(
-    private val preferencesDataStore: DataStore<Preferences> = Injector.preferencesDataStore,
-    private val inMemoryPreferencesDataStore: DataStore<InMemoryPreferences> = Injector.inMemoryDataStore,
+internal class PreferencesRepository @Inject constructor(
+    private val preferencesDataStore: DataStore<Preferences>,
+    private val inMemoryPreferencesDataStore: DataStore<InMemoryPreferences>,
 ) {
 
     fun <T> getPreferenceFlow(preferenceKey: PreferenceKey<T>): Flow<T> = combine(

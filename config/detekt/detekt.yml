@@ -133,7 +133,7 @@ complexity:
   LongParameterList:
     active: true
     functionThreshold: 20
-    constructorThreshold: 7
+    constructorThreshold: 15
     ignoreDefaultParameters: true
     ignoreDataClasses: true
     ignoreAnnotatedParameter: []
@@ -176,7 +176,7 @@ complexity:
     ignoreDeprecated: false
     ignorePrivate: false
     ignoreOverridden: false
-    ignoreAnnotatedFunctions: ['Preview']
+    ignoreAnnotated: ['Preview', 'Component']
 
 coroutines:
   active: true

@@ -10,6 +10,7 @@ import com.techbeloved.hymnbook.shared.preferences.ChangePreferenceUseCase
 import com.techbeloved.hymnbook.shared.preferences.GetSongPreferenceFlowUseCase
 import com.techbeloved.hymnbook.shared.preferences.SongPreferences
 import com.techbeloved.hymnbook.shared.sheetmusic.GetAvailableSheetMusicForSongUseCase
+import com.techbeloved.hymnbook.shared.songs.GetSongEntriesForSongbookUseCase
 import com.techbeloved.hymnbook.shared.ui.settings.NowPlayingBottomSettingsState
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,24 +22,23 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import me.tatarka.inject.annotations.Inject
 
 internal class SongDetailPagerModel(
-    songbook: String,
-    entry: String,
-    private val getSongEntriesForSongbookUseCase: GetSongEntriesForSongbookUseCase = GetSongEntriesForSongbookUseCase(),
-    private val getAvailableMediaForSongUseCase: GetAvailableMediaForSongUseCase = GetAvailableMediaForSongUseCase(),
-    private val getAvailableSheetMusicForSongUseCase: GetAvailableSheetMusicForSongUseCase =
-        GetAvailableSheetMusicForSongUseCase(),
-    private val changePreferenceUseCase: ChangePreferenceUseCase = ChangePreferenceUseCase(),
-    getSongPreferenceFlowUseCase: GetSongPreferenceFlowUseCase = GetSongPreferenceFlowUseCase(),
-    private val changeFontSizeUseCase: ChangeFontSizeUseCase = ChangeFontSizeUseCase(),
+    songBookEntry: SongBookEntry,
+    private val getSongEntriesForSongbookUseCase: GetSongEntriesForSongbookUseCase,
+    private val getAvailableMediaForSongUseCase: GetAvailableMediaForSongUseCase,
+    private val getAvailableSheetMusicForSongUseCase: GetAvailableSheetMusicForSongUseCase,
+    private val changePreferenceUseCase: ChangePreferenceUseCase,
+    getSongPreferenceFlowUseCase: GetSongPreferenceFlowUseCase,
+    private val changeFontSizeUseCase: ChangeFontSizeUseCase,
 ) : ScreenModel {
 
     private val _bottomSheetState =
         MutableStateFlow<DetailBottomSheetState>(DetailBottomSheetState.Hidden)
     val bottomSheetState get() = _bottomSheetState.asStateFlow()
 
-    private val initialSongbookEntry = SongBookEntry(songbook, entry)
+    private val initialSongbookEntry = songBookEntry
 
     private val selectedPage = MutableStateFlow(-1)
     val state = combine(
@@ -120,5 +120,26 @@ internal class SongDetailPagerModel(
         screenModelScope.launch {
             changeFontSizeUseCase(isIncrease = false)
         }
+    }
+
+    class Factory @Inject constructor(
+        private val getSongEntriesForSongbookUseCase: GetSongEntriesForSongbookUseCase,
+        private val getAvailableMediaForSongUseCase: GetAvailableMediaForSongUseCase,
+        private val getAvailableSheetMusicForSongUseCase: GetAvailableSheetMusicForSongUseCase,
+        private val changePreferenceUseCase: ChangePreferenceUseCase,
+        private val getSongPreferenceFlowUseCase: GetSongPreferenceFlowUseCase,
+        private val changeFontSizeUseCase: ChangeFontSizeUseCase,
+    ) {
+        fun create(
+            songBookEntry: SongBookEntry,
+        ): SongDetailPagerModel = SongDetailPagerModel(
+            songBookEntry = songBookEntry,
+            getSongEntriesForSongbookUseCase = getSongEntriesForSongbookUseCase,
+            getAvailableMediaForSongUseCase = getAvailableMediaForSongUseCase,
+            getAvailableSheetMusicForSongUseCase = getAvailableSheetMusicForSongUseCase,
+            changePreferenceUseCase = changePreferenceUseCase,
+            getSongPreferenceFlowUseCase = getSongPreferenceFlowUseCase,
+            changeFontSizeUseCase = changeFontSizeUseCase,
+        )
     }
 }
