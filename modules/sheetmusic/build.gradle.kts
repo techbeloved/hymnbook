@@ -34,7 +34,7 @@ kotlin {
 
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
-        moduleName = "sheetmusic"
+        outputModuleName = "sheetmusic"
         browser {
             val rootDirPath = project.rootDir.path
             val projectDirPath = project.projectDir.path

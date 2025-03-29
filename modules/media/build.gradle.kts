@@ -32,7 +32,7 @@ kotlin {
 
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
-        moduleName = "media"
+        outputModuleName = "media"
         browser {
             val rootDirPath = project.rootDir.path
             val projectDirPath = project.projectDir.path
