@@ -53,8 +53,8 @@ import com.techbeloved.hymnbook.shared.ui.settings.NowPlayingSettingsBottomSheet
 import com.techbeloved.hymnbook.shared.ui.theme.crimsonText
 import com.techbeloved.sheetmusic.SheetMusicUi
 import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.haze
-import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
 import kotlinx.coroutines.launch
@@ -188,7 +188,7 @@ private fun SongPager(
                 },
                 scrollBehaviour = scrollBehavior,
                 containerColor = MaterialTheme.colorScheme.surface.copy(alpha = .5f),
-                modifier = Modifier.hazeChild(hazeState, style = HazeMaterials.ultraThin()),
+                modifier = Modifier.hazeEffect(hazeState, style = HazeMaterials.ultraThin()),
                 actions = {
                     IconButton(onClick = onShowSettingsBottomSheet) {
                         Icon(
@@ -202,7 +202,7 @@ private fun SongPager(
         bottomBar = {
             BottomAppBar(
                 containerColor = Color.Transparent,
-                modifier = Modifier.hazeChild(hazeState, style = HazeMaterials.ultraThin()),
+                modifier = Modifier.hazeEffect(hazeState, style = HazeMaterials.ultraThin()),
             ) {
                 BottomControlsUi(
                     audioItem = state.audioItem,
@@ -233,7 +233,7 @@ private fun SongPager(
             key = { state.pages[it].id },
             modifier = modifier.consumeWindowInsets(innerPadding)
                 .nestedScroll(scrollBehavior.nestedScrollConnection)
-                .haze(hazeState),
+                .hazeSource(hazeState),
         ) { page ->
             pageContent(state.pages[page], innerPadding)
         }

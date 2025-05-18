@@ -20,4 +20,5 @@ plugins {
     alias libs.plugins.jetbrains.compose.compiler apply false
     alias libs.plugins.native.cocoapods apply false
     alias libs.plugins.detekt apply false
+    alias libs.plugins.benmanes.versions apply true
 }
