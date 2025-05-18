@@ -134,13 +134,13 @@ kotlin {
 
 android {
     namespace = "com.techbeloved.hymnbook.shared"
-    compileSdk = 35
+    compileSdk = libs.versions.android.targetSdk.get().toInt()
     defaultConfig {
-        minSdk = 21
+        minSdk = libs.versions.android.minSdk.get().toInt()
     }
 
     kotlin {
-        jvmToolchain(17)
+        jvmToolchain(libs.versions.jdk.get().toInt())
     }
 
     sourceSets["main"].apply {
