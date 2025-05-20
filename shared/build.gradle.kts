@@ -51,21 +51,16 @@ kotlin {
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
-            implementation(compose.material)
             implementation(compose.materialIconsExtended)
             @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
+            implementation(libs.jetbrains.navigation.compose)
+            implementation(libs.jetbrains.viewmodel.compose)
             implementation(libs.kotlinx.collections.immutable)
             implementation(libs.kotlinx.serialization)
             implementation(libs.kotlinx.io)
             implementation(libs.kotlinx.datetime)
             implementation(libs.coroutines)
-
-            // Voyager
-            implementation(libs.voyager.navigator)
-            implementation(libs.voyager.transitions)
-            implementation(libs.voyager.bottomSheetNavigator)
-            implementation(libs.voyager.screenmodel)
 
             // Sqldelight
             implementation(libs.sqldelight.runtime)

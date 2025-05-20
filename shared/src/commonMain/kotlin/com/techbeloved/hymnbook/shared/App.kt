@@ -1,13 +1,59 @@
 package com.techbeloved.hymnbook.shared
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import cafe.adriel.voyager.navigator.Navigator
-import com.techbeloved.hymnbook.shared.ui.home.HomeScreen
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.techbeloved.hymnbook.shared.ui.appbar.BottomNavigationBar
+import com.techbeloved.hymnbook.shared.ui.home.TopLevelRoute
+import com.techbeloved.hymnbook.shared.ui.home.addHomeRoutes
+import com.techbeloved.hymnbook.shared.ui.home.isATopLevelDestination
+import com.techbeloved.hymnbook.shared.ui.home.navigationItems
+import com.techbeloved.hymnbook.shared.ui.navigation.LocalNavController
+import com.techbeloved.hymnbook.shared.ui.navigation.addNavigationRoutes
 import com.techbeloved.hymnbook.shared.ui.theme.AppTheme
 
 @Composable
 public fun App() {
     AppTheme {
-        Navigator(screen = HomeScreen)
+        val navController = rememberNavController()
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val isBottomNavVisible by derivedStateOf { navBackStackEntry?.destination?.isATopLevelDestination() == true }
+        Scaffold(
+            bottomBar = {
+                AnimatedVisibility(
+                    isBottomNavVisible,
+                    enter = fadeIn() + slideInVertically(initialOffsetY = { it / 2 }),
+                    exit = fadeOut() + slideOutVertically(targetOffsetY = { it / 2 }),
+                ) {
+                    BottomNavigationBar(
+                        items = navigationItems,
+                        navController = navController,
+                    )
+                }
+            }
+        ) {
+            CompositionLocalProvider(LocalNavController provides navController) {
+                NavHost(
+                    navController = navController,
+                    startDestination = TopLevelRoute,
+                    modifier = Modifier,
+                ) {
+                    addHomeRoutes(navController)
+
+                    addNavigationRoutes()
+                }
+            }
+        }
     }
 }

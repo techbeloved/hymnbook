@@ -3,8 +3,11 @@ package com.techbeloved.hymnbook.shared.ui.search
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.techbeloved.hymnbook.shared.di.appComponent
 import com.techbeloved.hymnbook.shared.search.SearchSongsUseCase
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +18,7 @@ import me.tatarka.inject.annotations.Inject
 
 internal class SearchScreenModel @Inject constructor(
     private val searchSongsUseCase: SearchSongsUseCase,
-) : ScreenModel {
+) : ViewModel() {
 
     var searchQuery by mutableStateOf("")
         private set
@@ -33,7 +36,7 @@ internal class SearchScreenModel @Inject constructor(
     fun onSearch() {
         if (searchQuery.isBlank()) return
         _state.update { SearchState.SearchLoading }
-        screenModelScope.launch {
+        viewModelScope.launch {
             val results = searchSongsUseCase(searchQuery)
             _state.update {
                 if (results.isNotEmpty()) {
@@ -47,5 +50,13 @@ internal class SearchScreenModel @Inject constructor(
 
     private fun onClearResults() {
         _state.update { SearchState.Default }
+    }
+
+    companion object {
+        val Factory = viewModelFactory {
+            initializer {
+                appComponent.searchScreenModel()
+            }
+        }
     }
 }

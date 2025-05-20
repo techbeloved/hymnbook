@@ -1,7 +1,14 @@
 package com.techbeloved.hymnbook.shared.ui.detail
 
-import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.createSavedStateHandle
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.navigation.toRoute
+import com.techbeloved.hymnbook.shared.di.appComponent
 import com.techbeloved.hymnbook.shared.media.GetAvailableMediaForSongUseCase
 import com.techbeloved.hymnbook.shared.model.SongBookEntry
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
@@ -25,20 +32,25 @@ import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Inject
 
 internal class SongDetailPagerModel(
-    songBookEntry: SongBookEntry,
     private val getSongEntriesForSongbookUseCase: GetSongEntriesForSongbookUseCase,
     private val getAvailableMediaForSongUseCase: GetAvailableMediaForSongUseCase,
     private val getAvailableSheetMusicForSongUseCase: GetAvailableSheetMusicForSongUseCase,
     private val changePreferenceUseCase: ChangePreferenceUseCase,
     getSongPreferenceFlowUseCase: GetSongPreferenceFlowUseCase,
     private val changeFontSizeUseCase: ChangeFontSizeUseCase,
-) : ScreenModel {
+    savedStateHandle: SavedStateHandle,
+) : ViewModel() {
 
     private val _bottomSheetState =
         MutableStateFlow<DetailBottomSheetState>(DetailBottomSheetState.Hidden)
     val bottomSheetState get() = _bottomSheetState.asStateFlow()
 
-    private val initialSongbookEntry = songBookEntry
+    private val initialSongbookEntry = savedStateHandle.toRoute<SongDetailScreen>().let {
+        SongBookEntry(
+            songbook = it.songbook,
+            entry = it.entry
+        )
+    }
 
     private val selectedPage = MutableStateFlow(-1)
     val state = combine(
@@ -86,7 +98,7 @@ internal class SongDetailPagerModel(
             currentDisplayMode = preferences.songDisplayMode,
         )
     }.stateIn(
-        scope = screenModelScope,
+        scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
         initialValue = SongDetailPagerState.Loading,
     )
@@ -99,7 +111,7 @@ internal class SongDetailPagerModel(
     }
 
     fun onChangeSongDisplayMode(songDisplayMode: SongDisplayMode) {
-        screenModelScope.launch {
+        viewModelScope.launch {
             changePreferenceUseCase(SongPreferences.songDisplayModePrefKey) { songDisplayMode.name }
         }
     }
@@ -111,13 +123,13 @@ internal class SongDetailPagerModel(
     fun onHideSettings() = _bottomSheetState.update { DetailBottomSheetState.Hidden }
 
     fun onIncreaseFontSize() {
-        screenModelScope.launch {
+        viewModelScope.launch {
             changeFontSizeUseCase(isIncrease = true)
         }
     }
 
     fun onDecreaseFontSize() {
-        screenModelScope.launch {
+        viewModelScope.launch {
             changeFontSizeUseCase(isIncrease = false)
         }
     }
@@ -129,17 +141,28 @@ internal class SongDetailPagerModel(
         private val changePreferenceUseCase: ChangePreferenceUseCase,
         private val getSongPreferenceFlowUseCase: GetSongPreferenceFlowUseCase,
         private val changeFontSizeUseCase: ChangeFontSizeUseCase,
-    ) {
+    ) : ViewModelProvider.Factory {
+
         fun create(
-            songBookEntry: SongBookEntry,
+            savedStateHandle: SavedStateHandle,
         ): SongDetailPagerModel = SongDetailPagerModel(
-            songBookEntry = songBookEntry,
             getSongEntriesForSongbookUseCase = getSongEntriesForSongbookUseCase,
             getAvailableMediaForSongUseCase = getAvailableMediaForSongUseCase,
             getAvailableSheetMusicForSongUseCase = getAvailableSheetMusicForSongUseCase,
             changePreferenceUseCase = changePreferenceUseCase,
             getSongPreferenceFlowUseCase = getSongPreferenceFlowUseCase,
             changeFontSizeUseCase = changeFontSizeUseCase,
+            savedStateHandle = savedStateHandle,
         )
+    }
+
+    companion object {
+
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+
+            initializer {
+                appComponent.detailPagerScreenModelFactory().create(createSavedStateHandle())
+            }
+        }
     }
 }

@@ -1,7 +1,10 @@
 package com.techbeloved.hymnbook.shared.ui.home
 
-import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.techbeloved.hymnbook.shared.di.appComponent
 import com.techbeloved.hymnbook.shared.ext.sheetsDir
 import com.techbeloved.hymnbook.shared.ext.tunesDir
 import com.techbeloved.hymnbook.shared.files.ExtractArchiveUseCase
@@ -32,11 +35,11 @@ internal class HomeScreenModel @Inject constructor(
     private val saveFileHashUseCase: SaveFileHashUseCase,
     private val importMediaFilesUseCase: ImportMediaFilesUseCase,
     private val importMusicSheetsUseCase: ImportMusicSheetsUseCase,
-) : ScreenModel {
+) : ViewModel() {
     val state: MutableStateFlow<ImmutableList<SongTitle>> = MutableStateFlow(persistentListOf())
 
     init {
-        screenModelScope.launch {
+        viewModelScope.launch {
 
             importBundledAssets()
             state.value = getHymnTitlesUseCase().toImmutableList()
@@ -121,6 +124,12 @@ internal class HomeScreenModel @Inject constructor(
                 importMusicSheetsUseCase(sheetsDir).onFailure { it.printStackTrace() }
                 saveFileHashUseCase(sheetsAssetFileHash)
             }
+        }
+    }
+
+    companion object {
+        val Factory = viewModelFactory {
+            initializer { appComponent.homeScreenModel() }
         }
     }
 }

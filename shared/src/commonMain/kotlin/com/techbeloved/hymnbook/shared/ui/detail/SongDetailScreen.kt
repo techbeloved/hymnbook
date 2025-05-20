@@ -5,7 +5,6 @@ package com.techbeloved.hymnbook.shared.ui.detail
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -42,10 +41,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import cafe.adriel.voyager.core.model.rememberScreenModel
-import cafe.adriel.voyager.core.screen.Screen
-import com.techbeloved.hymnbook.shared.di.appComponent
-import com.techbeloved.hymnbook.shared.model.SongBookEntry
+import androidx.lifecycle.viewmodel.MutableCreationExtras
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.model.SongPageEntry
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
@@ -58,58 +55,63 @@ import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
 
-internal class SongDetailScreen(private val songbook: String, private val entry: String) : Screen {
-    @Composable
-    override fun Content() {
-        val pagerModel =
-            rememberScreenModel {
-                appComponent.detailPagerScreenModelFactory().create(SongBookEntry(songbook, entry))
-            }
-        val pagerState by pagerModel.state.collectAsState()
-        when (val state = pagerState) {
-            is SongDetailPagerState.Content -> {
-                SongPager(
-                    state,
-                    pageContent = { pageEntry, contentPadding ->
-                        val screenModel =
-                            rememberScreenModel(pageEntry.toString()) {
-                                appComponent.detailScreenModelFactory().create(pageEntry.id)
-                            }
-                        val uiDetail by screenModel.state.collectAsState()
-                        SongDetailUi(
-                            state = uiDetail,
-                            contentPadding = contentPadding,
-                        )
-                    },
-                    onPageChanged = pagerModel::onPageSelected,
-                    onChangeSongDisplayMode = pagerModel::onChangeSongDisplayMode,
-                    onShowSettingsBottomSheet = pagerModel::onShowSettings,
-                )
-            }
+@Serializable
+internal data class SongDetailScreen(val songbook: String, val entry: String)
 
-            SongDetailPagerState.Loading -> {
-                Surface(Modifier.fillMaxSize()) {
-                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator()
-                    }
+@Composable
+internal fun SongDetailScreen(
+    pagerViewModel: SongDetailPagerModel = viewModel(
+        factory = SongDetailPagerModel.Factory,
+    ),
+) {
+    val pagerState by pagerViewModel.state.collectAsState()
+    when (val state = pagerState) {
+        is SongDetailPagerState.Content -> {
+            SongPager(
+                state,
+                pageContent = { pageEntry, contentPadding ->
+                    val screenModel: SongDetailScreenModel = viewModel(
+                        key = pageEntry.toString(),
+                        factory = SongDetailScreenModel.Factory,
+                        extras = MutableCreationExtras().apply {
+                            set(SongDetailScreenModel.SONG_ID_KEY, pageEntry.id)
+                        },
+                    )
+                    val uiDetail by screenModel.state.collectAsState()
+                    SongDetailUi(
+                        state = uiDetail,
+                        contentPadding = contentPadding,
+                    )
+                },
+                onPageChanged = pagerViewModel::onPageSelected,
+                onChangeSongDisplayMode = pagerViewModel::onChangeSongDisplayMode,
+                onShowSettingsBottomSheet = pagerViewModel::onShowSettings,
+            )
+        }
+
+        SongDetailPagerState.Loading -> {
+            Surface(Modifier.fillMaxSize()) {
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
                 }
             }
         }
+    }
 
-        val bottomSheetState by pagerModel.bottomSheetState.collectAsState()
-        when (bottomSheetState) {
-            DetailBottomSheetState.Hidden -> {
-                // BottomSheet is hidden
-            }
+    val bottomSheetState by pagerViewModel.bottomSheetState.collectAsState()
+    when (bottomSheetState) {
+        DetailBottomSheetState.Hidden -> {
+            // BottomSheet is hidden
+        }
 
-            is DetailBottomSheetState.Show -> {
-                NowPlayingSettingsBottomSheet(
-                    onDismiss = pagerModel::onHideSettings,
-                    onZoomIn = pagerModel::onIncreaseFontSize,
-                    onZoomOut = pagerModel::onDecreaseFontSize,
-                )
-            }
+        is DetailBottomSheetState.Show -> {
+            NowPlayingSettingsBottomSheet(
+                onDismiss = pagerViewModel::onHideSettings,
+                onZoomIn = pagerViewModel::onIncreaseFontSize,
+                onZoomOut = pagerViewModel::onDecreaseFontSize,
+            )
         }
     }
 }
@@ -231,7 +233,7 @@ private fun SongPager(
         HorizontalPager(
             state = pagerState,
             key = { state.pages[it].id },
-            modifier = modifier.consumeWindowInsets(innerPadding)
+            modifier = modifier
                 .nestedScroll(scrollBehavior.nestedScrollConnection)
                 .hazeSource(hazeState),
         ) { page ->
