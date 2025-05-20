@@ -1,7 +1,11 @@
 package com.techbeloved.hymnbook.shared.ui.detail
 
-import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.CreationExtras
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.techbeloved.hymnbook.shared.di.appComponent
 import com.techbeloved.hymnbook.shared.model.SheetMusic
 import com.techbeloved.hymnbook.shared.preferences.GetSongPreferenceFlowUseCase
 import com.techbeloved.hymnbook.shared.sheetmusic.GetAvailableSheetMusicForSongUseCase
@@ -19,7 +23,7 @@ internal class SongDetailScreenModel(
     private val getSongDetailUseCase: GetSongDetailUseCase,
     private val getAvailableSheetMusicForSongUseCase: GetAvailableSheetMusicForSongUseCase,
     getSongPreferenceFlowUseCase: GetSongPreferenceFlowUseCase,
-) : ScreenModel {
+) : ViewModel() {
 
     val state =
         getSongDetailFlow().combine(getSongPreferenceFlowUseCase()) { detail, prefs ->
@@ -28,7 +32,7 @@ internal class SongDetailScreenModel(
                 fontSize = prefs.fontSize,
             )
         }.stateIn(
-            scope = screenModelScope,
+            scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
             initialValue = SongUiDetail(),
         )
@@ -64,5 +68,16 @@ internal class SongDetailScreenModel(
             getAvailableSheetMusicForSongUseCase = getAvailableSheetMusicForSongUseCase,
             getSongPreferenceFlowUseCase = getSongPreferenceFlowUseCase,
         )
+    }
+
+    companion object {
+        val SONG_ID_KEY = object : CreationExtras.Key<Long> {}
+        val Factory = viewModelFactory {
+
+            initializer {
+                val songId = this[SONG_ID_KEY] as Long
+                appComponent.detailScreenModelFactory().create(songId)
+            }
+        }
     }
 }
