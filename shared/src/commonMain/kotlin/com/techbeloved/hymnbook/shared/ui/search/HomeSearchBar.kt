@@ -26,7 +26,7 @@ internal fun HomeSearchBar(onOpenSearchScreen: () -> Unit) {
             .padding(horizontal = 16.dp)
             .height(48.dp),
         onClick = {
-           onOpenSearchScreen()
+            onOpenSearchScreen()
         },
         color = MaterialTheme.colorScheme.surfaceContainerHigh,
         shape = CircleShape,
@@ -48,7 +48,7 @@ internal fun HomeSearchBar(onOpenSearchScreen: () -> Unit) {
             )
 
             IconButton(
-                onClick = { println("Open speed dial") }
+                onClick = { /* Open speed dial */ }
             ) {
                 Icon(
                     imageVector = Icons.Rounded.Dialpad,

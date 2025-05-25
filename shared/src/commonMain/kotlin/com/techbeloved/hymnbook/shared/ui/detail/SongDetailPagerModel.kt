@@ -18,11 +18,9 @@ import com.techbeloved.hymnbook.shared.preferences.GetSongPreferenceFlowUseCase
 import com.techbeloved.hymnbook.shared.preferences.SongPreferences
 import com.techbeloved.hymnbook.shared.sheetmusic.GetAvailableSheetMusicForSongUseCase
 import com.techbeloved.hymnbook.shared.songs.GetSongEntriesForSongbookUseCase
-import com.techbeloved.hymnbook.shared.ui.settings.NowPlayingBottomSettingsState
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -41,9 +39,16 @@ internal class SongDetailPagerModel(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private val _bottomSheetState =
-        MutableStateFlow<DetailBottomSheetState>(DetailBottomSheetState.Hidden)
-    val bottomSheetState get() = _bottomSheetState.asStateFlow()
+    private val bottomSheetVisible = MutableStateFlow(false)
+
+    val bottomSheetState =
+        bottomSheetVisible.combine(getSongPreferenceFlowUseCase()) { visible, prefs ->
+            if (visible) DetailBottomSheetState.Show(prefs) else DetailBottomSheetState.Hidden
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
+            DetailBottomSheetState.Hidden,
+        )
 
     private val initialSongbookEntry = savedStateHandle.toRoute<SongDetailScreen>().let {
         SongBookEntry(
@@ -116,11 +121,9 @@ internal class SongDetailPagerModel(
         }
     }
 
-    fun onShowSettings() = _bottomSheetState.update {
-        DetailBottomSheetState.Show(NowPlayingBottomSettingsState.Default)
-    }
+    fun onShowSettings() = bottomSheetVisible.update { true }
 
-    fun onHideSettings() = _bottomSheetState.update { DetailBottomSheetState.Hidden }
+    fun onHideSettings() = bottomSheetVisible.update { false }
 
     fun onIncreaseFontSize() {
         viewModelScope.launch {

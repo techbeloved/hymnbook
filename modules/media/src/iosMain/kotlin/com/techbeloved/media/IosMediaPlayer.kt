@@ -11,4 +11,6 @@ interface IosMediaPlayer {
     fun prepare()
 
     fun onDispose()
+
+    fun changePlaybackSpeed(speed: Float)
 }

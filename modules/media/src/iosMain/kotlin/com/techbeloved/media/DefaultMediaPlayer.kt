@@ -23,6 +23,7 @@ import platform.AVFoundation.currentTime
 import platform.AVFoundation.duration
 import platform.AVFoundation.pause
 import platform.AVFoundation.play
+import platform.AVFoundation.rate
 import platform.AVFoundation.removeTimeObserver
 import platform.AVFoundation.seekToTime
 import platform.CoreMedia.CMTimeGetSeconds
@@ -53,7 +54,12 @@ class DefaultMediaPlayer(
         player.seekToTime(CMTimeMake(position, timescale = THOUSAND))
 
     override fun prepare() {
+        changePlaybackSpeed(state.playbackSpeed.ratePercentToFloat)
         observePlaybackStatus(playerItem)
+    }
+
+    override fun changePlaybackSpeed(speed: Float) {
+        player.rate = speed
     }
 
     override fun onDispose() {
@@ -73,7 +79,7 @@ class DefaultMediaPlayer(
         playerJob = coroutineScope.launch {
             combine(
                 player.observeKeyValueAsFlow<AVPlayerTimeControlStatus>("timeControlStatus"),
-                currentPlayerItem.observeKeyValueAsFlow<AVPlayerItemStatus>("status")
+                currentPlayerItem.observeKeyValueAsFlow<AVPlayerItemStatus>("status"),
             ) { playStatus, status -> playStatus to status }
                 .collect { (timeControlStatus, itemStatus) ->
                     when (itemStatus) {
@@ -81,6 +87,7 @@ class DefaultMediaPlayer(
                             state.duration =
                                 (CMTimeGetSeconds(currentPlayerItem.duration) * THOUSAND).toLong()
                             state.playerState = PlayerState.Ready
+                            state.playbackSpeed = player.rate.rateToPercent
                         }
 
                         AVPlayerItemStatusUnknown,
@@ -90,11 +97,15 @@ class DefaultMediaPlayer(
                     }
 
                     when (timeControlStatus) {
-                        AVPlayerTimeControlStatusPlaying -> state.isPlaying = true
+                        AVPlayerTimeControlStatusPlaying -> {
+                            state.isPlaying = true
+                            state.playbackSpeed = player.rate.rateToPercent
+                        }
                         AVPlayerTimeControlStatusPaused -> state.isPlaying = false
                         AVPlayerTimeControlStatusWaitingToPlayAtSpecifiedRate -> {
                             state.playerState = PlayerState.Buffering
                             state.isPlaying = true
+                            state.playbackSpeed = player.rate.rateToPercent
                         }
                     }
                 }

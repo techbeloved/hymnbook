@@ -12,10 +12,8 @@ import com.techbeloved.media.AudioItem
 @Preview
 @Composable
 private fun BottomControlsUiPreview() {
-
     MaterialTheme {
         BottomControlsUi(
-            title = "Hymn 10",
             audioItem = AudioItem(
                 absolutePath = "files/sample2.mp3",
                 relativePath = "relative/path",
@@ -26,6 +24,7 @@ private fun BottomControlsUiPreview() {
             ),
             onPreviousButtonClick = {},
             onNextButtonClick = {},
+            onShowSettingsBottomSheet = {},
         )
     }
 }

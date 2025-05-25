@@ -34,6 +34,5 @@ internal data class SongPreferences(
             key = floatPreferencesKey("song.FontSize"),
             defaultValue = 20f,
         )
-
     }
 }

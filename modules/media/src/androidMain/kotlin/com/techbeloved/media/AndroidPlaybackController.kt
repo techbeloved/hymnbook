@@ -26,6 +26,8 @@ class AndroidPlaybackController(
             itemIndex = mediaController.currentMediaItemIndex
             position = mediaController.currentPosition
             mediaId = mediaController.currentMediaItem?.mediaId
+            // Convert to percent
+            playbackSpeed = mediaController.playbackParameters.speed.rateToPercent
             updateDuration()
         }
 
@@ -69,6 +71,10 @@ class AndroidPlaybackController(
                 }
                 if (events.contains(Player.EVENT_TIMELINE_CHANGED)) {
                     updateDuration()
+                }
+
+                if (events.contains(Player.EVENT_PLAYBACK_PARAMETERS_CHANGED)) {
+                    state.playbackSpeed = mediaController.playbackParameters.speed.rateToPercent
                 }
             }
         }
@@ -129,5 +135,9 @@ class AndroidPlaybackController(
 
     override fun playWhenReady() {
         mediaController.playWhenReady = true
+    }
+
+    override fun changePlaybackSpeed(speed: Int) {
+        mediaController.setPlaybackSpeed(speed.ratePercentToFloat)
     }
 }
