@@ -2,32 +2,46 @@
 
 package com.techbeloved.hymnbook.shared.ui.settings
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.techbeloved.hymnbook.shared.ext.percentToNearestFive
+import com.techbeloved.hymnbook.shared.model.SongDisplayMode
+import com.techbeloved.hymnbook.shared.preferences.SongPreferences
 
 @Composable
 internal fun NowPlayingSettingsBottomSheet(
     onDismiss: () -> Unit,
+    onSpeedUp: () -> Unit,
+    onSpeedDown: () -> Unit,
     onZoomOut: () -> Unit,
     onZoomIn: () -> Unit,
+    onChangeSongDisplayMode: (songDisplayMode: SongDisplayMode) -> Unit,
+    preferences: SongPreferences,
+    playbackSpeed: Int,
     modifier: Modifier = Modifier,
     bottomSheetState: SheetState = rememberModalBottomSheetState(),
 ) {
@@ -36,9 +50,25 @@ internal fun NowPlayingSettingsBottomSheet(
         sheetState = bottomSheetState,
         modifier = modifier,
     ) {
+        SheetMusicToggle(
+            songDisplayMode = preferences.songDisplayMode,
+            onToggle = onChangeSongDisplayMode,
+            modifier = Modifier.fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+        )
+        HorizontalDivider()
         ZoomButtons(
             onZoomIn = onZoomIn,
             onZoomOut = onZoomOut,
+            modifier = Modifier.fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            fontSize = preferences.fontSize.sp,
+        )
+        HorizontalDivider()
+        MusicSpeedControls(
+            currentSpeed = playbackSpeed,
+            onSpeedUp = onSpeedUp,
+            onSpeedDown = onSpeedDown,
             modifier = Modifier.fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 16.dp),
         )
@@ -49,45 +79,81 @@ internal fun NowPlayingSettingsBottomSheet(
 private fun ZoomButtons(
     onZoomOut: () -> Unit,
     onZoomIn: () -> Unit,
+    fontSize: TextUnit,
     modifier: Modifier = Modifier,
 ) {
-    Row(modifier = modifier) {
-        Surface(
-            onClick = onZoomOut,
-            shape = RoundedCornerShape(
-                topStartPercent = 50,
-                bottomStartPercent = 50,
-                topEndPercent = 0,
-                bottomEndPercent = 0,
-            ),
-            modifier = Modifier.weight(1f)
-                .height(48.dp),
-        ) {
-            Box(
-                Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(text = "A", style = MaterialTheme.typography.bodySmall)
-            }
+    SettingsControl(modifier = modifier, text = "Lyrics Size") {
+        IconButton(onClick = onZoomOut) {
+            Icon(Icons.Default.Remove, contentDescription = "Zoom out")
         }
-        Spacer(Modifier.width(4.dp))
-        Surface(
-            onClick = onZoomIn,
-            shape = RoundedCornerShape(
-                topStartPercent = 0,
-                bottomStartPercent = 0,
-                topEndPercent = 50,
-                bottomEndPercent = 50,
-            ),
-            modifier = Modifier.weight(1f)
-                .height(48.dp),
-        ) {
-            Box(
-                Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(text = "A", style = MaterialTheme.typography.headlineLarge)
-            }
+        Text(
+            text = "A",
+            fontSize = fontSize,
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.labelMedium,
+        )
+        IconButton(onClick = onZoomIn) {
+            Icon(Icons.Default.Add, contentDescription = "Zoom in")
         }
+    }
+}
+
+@Composable
+private fun MusicSpeedControls(
+    currentSpeed: Int,
+    onSpeedUp: () -> Unit,
+    onSpeedDown: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    SettingsControl(modifier = modifier, text = "Music Speed") {
+        IconButton(onClick = onSpeedDown) {
+            Icon(Icons.Default.Remove, contentDescription = "Speed down")
+        }
+        Text(
+            text = "${currentSpeed.percentToNearestFive}X",
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.labelMedium,
+        )
+        IconButton(onClick = onSpeedUp) {
+            Icon(Icons.Default.Add, contentDescription = "Speed up")
+        }
+    }
+}
+
+@Composable
+private fun SheetMusicToggle(
+    songDisplayMode: SongDisplayMode,
+    onToggle: (songDisplayMode: SongDisplayMode) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    SettingsControl(
+        text = "Sheet Music",
+        modifier = modifier,
+    ) {
+        Switch(
+            checked = songDisplayMode == SongDisplayMode.SheetMusic,
+            onCheckedChange = { isChecked ->
+                onToggle(if (isChecked) SongDisplayMode.SheetMusic else SongDisplayMode.Lyrics)
+            },
+        )
+    }
+}
+
+@Composable
+private fun SettingsControl(
+    text: String,
+    modifier: Modifier = Modifier,
+    controls: @Composable RowScope.() -> Unit,
+) {
+    Row(
+        modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(24.dp),
+    ) {
+        Text(text = text)
+
+        Spacer(Modifier.weight(1f))
+
+        controls()
     }
 }

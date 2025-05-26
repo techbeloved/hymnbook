@@ -12,19 +12,12 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -37,7 +30,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,12 +40,17 @@ import com.techbeloved.hymnbook.shared.model.SongPageEntry
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
 import com.techbeloved.hymnbook.shared.ui.settings.NowPlayingSettingsBottomSheet
 import com.techbeloved.hymnbook.shared.ui.theme.crimsonText
+import com.techbeloved.media.PlaybackController
+import com.techbeloved.media.PlaybackState
+import com.techbeloved.media.rememberPlaybackController
+import com.techbeloved.media.rememberPlaybackState
 import com.techbeloved.sheetmusic.SheetMusicUi
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
@@ -67,6 +64,8 @@ internal fun SongDetailScreen(
     ),
 ) {
     val pagerState by pagerViewModel.state.collectAsState()
+    val playbackState = rememberPlaybackState()
+    val playbackController = rememberPlaybackController(playbackState)
     when (val state = pagerState) {
         is SongDetailPagerState.Content -> {
             SongPager(
@@ -86,8 +85,9 @@ internal fun SongDetailScreen(
                     )
                 },
                 onPageChanged = pagerViewModel::onPageSelected,
-                onChangeSongDisplayMode = pagerViewModel::onChangeSongDisplayMode,
                 onShowSettingsBottomSheet = pagerViewModel::onShowSettings,
+                playbackState = playbackState,
+                controller = playbackController,
             )
         }
 
@@ -100,8 +100,8 @@ internal fun SongDetailScreen(
         }
     }
 
-    val bottomSheetState by pagerViewModel.bottomSheetState.collectAsState()
-    when (bottomSheetState) {
+    val bottomSheetState by pagerViewModel.bottomSheetState.collectAsState(context = Dispatchers.Main.immediate)
+    when (val state = bottomSheetState) {
         DetailBottomSheetState.Hidden -> {
             // BottomSheet is hidden
         }
@@ -111,6 +111,25 @@ internal fun SongDetailScreen(
                 onDismiss = pagerViewModel::onHideSettings,
                 onZoomIn = pagerViewModel::onIncreaseFontSize,
                 onZoomOut = pagerViewModel::onDecreaseFontSize,
+                onSpeedUp = {
+                    playbackController?.changePlaybackSpeed(
+                        speed = changeMusicSpeed(
+                            currentSpeed = playbackState.playbackSpeed,
+                            isIncrease = true,
+                        ),
+                    )
+                },
+                onSpeedDown = {
+                    playbackController?.changePlaybackSpeed(
+                        speed = changeMusicSpeed(
+                            currentSpeed = playbackState.playbackSpeed,
+                            isIncrease = false,
+                        ),
+                    )
+                },
+                onChangeSongDisplayMode = pagerViewModel::onChangeSongDisplayMode,
+                preferences = state.preferences,
+                playbackSpeed = playbackState.playbackSpeed,
             )
         }
     }
@@ -156,12 +175,13 @@ private fun SongPager(
     state: SongDetailPagerState.Content,
     pageContent: @Composable (entry: SongPageEntry, contentPadding: PaddingValues) -> Unit,
     onPageChanged: (newPage: Int) -> Unit,
-    onChangeSongDisplayMode: (mode: SongDisplayMode) -> Unit,
     onShowSettingsBottomSheet: () -> Unit,
+    playbackState: PlaybackState,
+    controller: PlaybackController?,
     modifier: Modifier = Modifier,
 ) {
     val hazeState = remember { HazeState() }
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val pagerState = rememberPagerState(state.initialPage, pageCount = { state.pages.size })
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(pagerState.settledPage) {
@@ -171,44 +191,18 @@ private fun SongPager(
     Scaffold(
         topBar = {
             AppTopBar(
-                titleContent = {
-                    SingleChoiceSegmentedButtonRow {
-                        state.displayModes.forEachIndexed { index, displayModeState ->
-                            SegmentedButton(
-                                selected = displayModeState.displayMode == state.currentDisplayMode,
-                                onClick = { onChangeSongDisplayMode(displayModeState.displayMode) },
-                                shape = SegmentedButtonDefaults.itemShape(
-                                    index = index,
-                                    count = state.displayModes.size
-                                ),
-                                enabled = displayModeState.isEnabled,
-                            ) {
-                                Text(text = displayModeState.text)
-                            }
-                        }
-                    }
-                },
                 scrollBehaviour = scrollBehavior,
                 containerColor = MaterialTheme.colorScheme.surface.copy(alpha = .5f),
                 modifier = Modifier.hazeEffect(hazeState, style = HazeMaterials.ultraThin()),
-                actions = {
-                    IconButton(onClick = onShowSettingsBottomSheet) {
-                        Icon(
-                            imageVector = Icons.Rounded.Settings,
-                            contentDescription = "Show settings",
-                        )
-                    }
-                }
             )
         },
         bottomBar = {
             BottomAppBar(
-                containerColor = Color.Transparent,
+                containerColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = .8f),
                 modifier = Modifier.hazeEffect(hazeState, style = HazeMaterials.ultraThin()),
             ) {
                 BottomControlsUi(
                     audioItem = state.audioItem,
-                    title = "${state.currentEntry.songBook.songbook}, ${state.currentEntry.songBook.entry}",
                     onPreviousButtonClick = {
                         val currentPage = pagerState.currentPage
                         if (currentPage > 0) {
@@ -226,6 +220,9 @@ private fun SongPager(
                         }
                     },
                     modifier = Modifier.fillMaxWidth(),
+                    playbackState = playbackState,
+                    controller = controller,
+                    onShowSettingsBottomSheet = onShowSettingsBottomSheet,
                 )
             }
         }

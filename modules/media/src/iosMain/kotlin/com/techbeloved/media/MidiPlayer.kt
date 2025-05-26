@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalForeignApi::class, ExperimentalResourceApi::class, BetaInteropApi::class)
+@file:OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
 
 package com.techbeloved.media
 
@@ -14,7 +14,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import platform.AVFAudio.AVMIDIPlayer
 import platform.Foundation.NSError
 import platform.Foundation.NSURL
@@ -36,6 +35,7 @@ class MidiPlayer(
             soundBankURL = URLWithString(Res.getUri("files/yamaha_grand_lite_sf_v11.sf2")),
             error = error.ptr,
         ).also {
+            it.rate = state.playbackSpeed.ratePercentToFloat
             println("AVMidiPlayer Init: ${error.value}")
         }
     }
@@ -44,13 +44,13 @@ class MidiPlayer(
     override fun play() {
         // restore playback position. The player don't have a pause so we do the state restoration manually
         seekTo(state.position)
+        changePlaybackSpeed(state.playbackSpeed.ratePercentToFloat)
         player.play {
             state.isPlaying = false
             if (!isPaused) {
                 // Reset position
                 state.position = 0
             }
-            println("Playback ended. Paused: $isPaused")
             isPaused = false
         }
         observePlaybackStatus()
@@ -68,6 +68,7 @@ class MidiPlayer(
 
     override fun prepare() {
         player.prepareToPlay()
+        player.rate = state.playbackSpeed.ratePercentToFloat
         state.playerState = PlayerState.Ready
         state.duration = (player.duration * THOUSAND).toLong()
         state.position = 0
@@ -78,12 +79,17 @@ class MidiPlayer(
         playerEventsJob?.cancel()
     }
 
+    override fun changePlaybackSpeed(speed: Float) {
+        player.rate = speed
+    }
+
     private fun observePlaybackStatus() {
         playerEventsJob?.cancel()
         playerEventsJob = coroutineScope.launch {
             state.isPlaying = player.isPlaying()
             while (player.isPlaying()) {
                 state.position = (player.currentPosition * THOUSAND).toLong()
+                state.playbackSpeed = player.rate.rateToPercent
                 delay(timeMillis = 100)
             }
             state.isPlaying = player.isPlaying()

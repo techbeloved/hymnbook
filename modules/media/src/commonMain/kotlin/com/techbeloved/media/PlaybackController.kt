@@ -21,4 +21,6 @@ interface PlaybackController {
     fun prepare()
 
     fun playWhenReady()
+
+    fun changePlaybackSpeed(speed: Int)
 }

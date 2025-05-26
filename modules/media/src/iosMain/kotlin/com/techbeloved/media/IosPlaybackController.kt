@@ -75,6 +75,10 @@ class IosPlaybackController(
         player?.play()
     }
 
+    override fun changePlaybackSpeed(speed: Int) {
+        player?.changePlaybackSpeed(speed.ratePercentToFloat)
+    }
+
     private fun playCurrentItem() {
         prepare()
         player?.play()

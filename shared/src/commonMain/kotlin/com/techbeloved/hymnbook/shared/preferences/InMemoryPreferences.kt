@@ -16,7 +16,6 @@ internal class InMemoryPreferences(private val store: MutableMap<String, Any?> =
 
         if (other.store.size != store.size) return false
 
-
         return other.store.all { otherEntry ->
             store[otherEntry.key]?.let { value ->
                 when (val otherVal = otherEntry.value) {
@@ -24,7 +23,7 @@ internal class InMemoryPreferences(private val store: MutableMap<String, Any?> =
                     else -> otherVal == value
                 }
             } ?: false
-        }.also { println("Equals $it") }
+        }
     }
 
     override fun hashCode(): Int {

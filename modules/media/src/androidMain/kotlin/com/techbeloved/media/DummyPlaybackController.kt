@@ -32,4 +32,8 @@ class DummyPlaybackController(private val playbackState: PlaybackState) : Playba
     override fun playWhenReady() {
         if (playbackState.playerState == PlayerState.Ready) play()
     }
+
+    override fun changePlaybackSpeed(speed: Int) {
+        playbackState.playbackSpeed = speed
+    }
 }
