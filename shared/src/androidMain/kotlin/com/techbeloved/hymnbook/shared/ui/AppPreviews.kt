@@ -51,6 +51,7 @@ private fun SearchUiPreview() {
             query = "",
             onSearch = {},
             onQueryChange = {},
+            onSongItemClicked = {},
         )
     }
 }

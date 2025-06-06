@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
-import com.techbeloved.hymnbook.shared.model.SongPageEntry
+import com.techbeloved.hymnbook.shared.model.SongFilter
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
 import com.techbeloved.hymnbook.shared.ui.settings.NowPlayingSettingsBottomSheet
 import com.techbeloved.hymnbook.shared.ui.theme.crimsonText
@@ -55,7 +55,14 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class SongDetailScreen(val songbook: String, val entry: String)
+internal data class SongDetailScreen(
+    val initialSongId: Long,
+    val topics: List<String>,
+    val songbooks: List<String>,
+    val orderByTitle: Boolean,
+) {
+    val songFilter get() = SongFilter(topics, songbooks, orderByTitle)
+}
 
 @Composable
 internal fun SongDetailScreen(
@@ -69,13 +76,13 @@ internal fun SongDetailScreen(
     when (val state = pagerState) {
         is SongDetailPagerState.Content -> {
             SongPager(
-                state,
-                pageContent = { pageEntry, contentPadding ->
+                state = state,
+                pageContent = { songId, contentPadding ->
                     val screenModel: SongDetailScreenModel = viewModel(
-                        key = pageEntry.toString(),
+                        key = songId.toString(),
                         factory = SongDetailScreenModel.Factory,
                         extras = MutableCreationExtras().apply {
-                            set(SongDetailScreenModel.SONG_ID_KEY, pageEntry.id)
+                            set(SongDetailScreenModel.SONG_ID_KEY, songId)
                         },
                     )
                     val uiDetail by screenModel.state.collectAsState()
@@ -173,7 +180,7 @@ private fun SongDetailUi(
 @Composable
 private fun SongPager(
     state: SongDetailPagerState.Content,
-    pageContent: @Composable (entry: SongPageEntry, contentPadding: PaddingValues) -> Unit,
+    pageContent: @Composable (songId: Long, contentPadding: PaddingValues) -> Unit,
     onPageChanged: (newPage: Int) -> Unit,
     onShowSettingsBottomSheet: () -> Unit,
     playbackState: PlaybackState,
@@ -229,7 +236,7 @@ private fun SongPager(
     ) { innerPadding ->
         HorizontalPager(
             state = pagerState,
-            key = { state.pages[it].id },
+            key = { state.pages[it] },
             modifier = modifier
                 .nestedScroll(scrollBehavior.nestedScrollConnection)
                 .hazeSource(hazeState),

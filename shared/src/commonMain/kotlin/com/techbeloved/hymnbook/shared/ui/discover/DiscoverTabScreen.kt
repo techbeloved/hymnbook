@@ -1,15 +1,18 @@
 package com.techbeloved.hymnbook.shared.ui.discover
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.techbeloved.hymnbook.TopicEntity
+import com.techbeloved.hymnbook.shared.ui.topics.TopicsScreen
 
 @Composable
-internal fun DiscoverTabScreen() {
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = "Discover")
-    }
+internal fun DiscoverTabScreen(
+    onTopicSelected: (topic: TopicEntity) -> Unit,
+) {
+    // For now we use topics screen. Until when the discover feature is ready
+    TopicsScreen(
+        onTopicSelected = onTopicSelected,
+        modifier = Modifier.fillMaxSize(),
+    )
 }

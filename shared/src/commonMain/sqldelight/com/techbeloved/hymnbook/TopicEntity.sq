@@ -8,3 +8,6 @@ VALUES(?);
 
 deleteAll:
 DELETE FROM TopicEntity;
+
+getAll:
+SELECT * FROM TopicEntity ORDER BY name;

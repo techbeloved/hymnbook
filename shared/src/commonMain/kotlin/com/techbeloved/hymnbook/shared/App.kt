@@ -51,7 +51,7 @@ public fun App() {
                 ) {
                     addHomeRoutes(navController)
 
-                    addNavigationRoutes()
+                    addNavigationRoutes(navController)
                 }
             }
         }

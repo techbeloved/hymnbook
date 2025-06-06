@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextOverflow
 import com.techbeloved.hymnbook.shared.ui.navigation.LocalNavController
 
 internal expect val navigationArrowBack: ImageVector
@@ -33,7 +34,13 @@ internal fun AppTopBar(
         title = if (titleContent != null) {
             titleContent
         } else {
-            { Text(title) }
+            {
+                Text(
+                    text = title,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
         },
         navigationIcon = {
             if (showUpButton) {

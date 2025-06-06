@@ -9,3 +9,8 @@ CREATE TABLE IF NOT EXISTS TopicSongs (
 insert:
 INSERT OR REPLACE INTO TopicSongs(topic, song_id)
 VALUES (?, ?);
+
+getSongTitlesByTopic:
+SELECT S.id, S.title FROM SongEntity AS S INNER JOIN TopicSongs AS T
+ON S.id = T.song_id
+WHERE T.topic = ?;
