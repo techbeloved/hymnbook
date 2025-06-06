@@ -10,14 +10,13 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.toRoute
 import com.techbeloved.hymnbook.shared.di.appComponent
 import com.techbeloved.hymnbook.shared.media.GetAvailableMediaForSongUseCase
-import com.techbeloved.hymnbook.shared.model.SongBookEntry
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.preferences.ChangeFontSizeUseCase
 import com.techbeloved.hymnbook.shared.preferences.ChangePreferenceUseCase
 import com.techbeloved.hymnbook.shared.preferences.GetSongPreferenceFlowUseCase
 import com.techbeloved.hymnbook.shared.preferences.SongPreferences
 import com.techbeloved.hymnbook.shared.sheetmusic.GetAvailableSheetMusicForSongUseCase
-import com.techbeloved.hymnbook.shared.songs.GetSongEntriesForSongbookUseCase
+import com.techbeloved.hymnbook.shared.songs.GetSongIdsByFilterUseCase
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -27,16 +26,17 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import me.tatarka.inject.annotations.Assisted
 import me.tatarka.inject.annotations.Inject
 
-internal class SongDetailPagerModel(
-    private val getSongEntriesForSongbookUseCase: GetSongEntriesForSongbookUseCase,
+internal class SongDetailPagerModel @Inject constructor (
     private val getAvailableMediaForSongUseCase: GetAvailableMediaForSongUseCase,
     private val getAvailableSheetMusicForSongUseCase: GetAvailableSheetMusicForSongUseCase,
+    private val getSongIdsByFilterUseCase: GetSongIdsByFilterUseCase,
     private val changePreferenceUseCase: ChangePreferenceUseCase,
     getSongPreferenceFlowUseCase: GetSongPreferenceFlowUseCase,
     private val changeFontSizeUseCase: ChangeFontSizeUseCase,
-    savedStateHandle: SavedStateHandle,
+    @Assisted savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val bottomSheetVisible = MutableStateFlow(false)
@@ -50,21 +50,17 @@ internal class SongDetailPagerModel(
             DetailBottomSheetState.Hidden,
         )
 
-    private val initialSongbookEntry = savedStateHandle.toRoute<SongDetailScreen>().let {
-        SongBookEntry(
-            songbook = it.songbook,
-            entry = it.entry
-        )
-    }
+    private val route = savedStateHandle.toRoute<SongDetailScreen>()
+    private val initialSongId = route.initialSongId
 
     private val selectedPage = MutableStateFlow(-1)
     val state = combine(
         getSongPreferenceFlowUseCase(),
 
-        getSongEntriesFlow().map { songEntries ->
+        getSongEntriesFlow().map { songIds ->
             object {
-                val initialPage = songEntries.indexOfFirst { it.songBook == initialSongbookEntry }
-                val songEntries = songEntries
+                val initialPage = songIds.indexOfFirst { it == initialSongId }
+                val songEntries = songIds
             }
         },
         selectedPage
@@ -72,8 +68,8 @@ internal class SongDetailPagerModel(
 
         val currentIndex = if (selectedPageIndex < 0) songEntries.initialPage else selectedPageIndex
         val currentEntry = songEntries.songEntries[currentIndex]
-        val availableMedia = getAvailableMediaForSongUseCase(currentEntry.id)
-        val availableSheetMusic = getAvailableSheetMusicForSongUseCase(currentEntry.id)
+        val availableMedia = getAvailableMediaForSongUseCase(currentEntry)
+        val availableSheetMusic = getAvailableSheetMusicForSongUseCase(currentEntry)
 
         SongDetailPagerState.Content(
             initialPage = songEntries.initialPage,
@@ -84,9 +80,9 @@ internal class SongDetailPagerModel(
                 if (preferences.isPreferMidi) item.isMidi() else true
             } ?: availableMedia.firstOrNull(),
 
-            currentEntry = currentEntry,
+            currentSongId = currentEntry,
 
-            pages = songEntries.songEntries,
+            pages = songEntries.songEntries.toImmutableList(),
             displayModes = SongDisplayMode.entries.map { mode ->
                 SongDisplayModeState(
                     displayMode = mode,
@@ -109,7 +105,7 @@ internal class SongDetailPagerModel(
     )
 
     private fun getSongEntriesFlow() =
-        flow { emit(getSongEntriesForSongbookUseCase(initialSongbookEntry)) }
+        flow { emit(getSongIdsByFilterUseCase(route.songFilter)) }
 
     fun onPageSelected(pageIndex: Int) {
         selectedPage.update { pageIndex }
@@ -137,27 +133,8 @@ internal class SongDetailPagerModel(
         }
     }
 
-    class Factory @Inject constructor(
-        private val getSongEntriesForSongbookUseCase: GetSongEntriesForSongbookUseCase,
-        private val getAvailableMediaForSongUseCase: GetAvailableMediaForSongUseCase,
-        private val getAvailableSheetMusicForSongUseCase: GetAvailableSheetMusicForSongUseCase,
-        private val changePreferenceUseCase: ChangePreferenceUseCase,
-        private val getSongPreferenceFlowUseCase: GetSongPreferenceFlowUseCase,
-        private val changeFontSizeUseCase: ChangeFontSizeUseCase,
-    ) : ViewModelProvider.Factory {
-
-        fun create(
-            savedStateHandle: SavedStateHandle,
-        ): SongDetailPagerModel = SongDetailPagerModel(
-            getSongEntriesForSongbookUseCase = getSongEntriesForSongbookUseCase,
-            getAvailableMediaForSongUseCase = getAvailableMediaForSongUseCase,
-            getAvailableSheetMusicForSongUseCase = getAvailableSheetMusicForSongUseCase,
-            changePreferenceUseCase = changePreferenceUseCase,
-            getSongPreferenceFlowUseCase = getSongPreferenceFlowUseCase,
-            changeFontSizeUseCase = changeFontSizeUseCase,
-            savedStateHandle = savedStateHandle,
-        )
-    }
+    @Inject
+    class Factory(val create: (SavedStateHandle) -> SongDetailPagerModel)
 
     companion object {
 

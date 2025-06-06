@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.jetbrains.compose.compiler)
+    alias(libs.plugins.jetbrains.compose.hotreload)
     alias(libs.plugins.sqldelight)
     alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.kotlin.serialization)
@@ -54,6 +55,7 @@ kotlin {
             implementation(compose.materialIconsExtended)
             @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
             implementation(libs.jetbrains.navigation.compose)
             implementation(libs.jetbrains.viewmodel.compose)
             implementation(libs.kotlinx.collections.immutable)
@@ -92,6 +94,7 @@ kotlin {
             implementation(libs.sqldelight.android)
             implementation(compose.preview)
             implementation(compose.uiTooling)
+            implementation(compose.ui)
             // Requery Sqlite
             implementation(libs.requery.sqlite.android)
         }
@@ -142,6 +145,10 @@ android {
         res.srcDirs("src/androidMain/res", "src/commonMain/composeResources/res")
         assets.srcDirs("src/commonMain/composeResources/files")
     }
+}
+
+dependencies {
+    debugImplementation(compose.uiTooling)
 }
 
 sqldelight {

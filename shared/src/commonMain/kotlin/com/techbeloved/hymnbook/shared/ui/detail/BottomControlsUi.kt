@@ -176,7 +176,7 @@ private fun PlayButton(
 
 @Composable
 private fun DisabledPlayButton(modifier: Modifier = Modifier) {
-    Box(modifier = modifier.size(44.dp)) {
+    Box(modifier = modifier.size(48.dp)) {
         IconButton(
             onClick = {},
             enabled = false,
@@ -190,9 +190,7 @@ private fun DisabledPlayButton(modifier: Modifier = Modifier) {
                 contentDescription = "Playable media not available",
             )
         }
-        CircularProgressIndicator(strokeWidth = 2.dp, progress = { 0f })
     }
-
 }
 
 private fun PlaybackController.playNew(audioItem: AudioItem) {

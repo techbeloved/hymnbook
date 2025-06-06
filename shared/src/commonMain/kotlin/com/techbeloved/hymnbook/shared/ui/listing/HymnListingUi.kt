@@ -12,28 +12,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.techbeloved.hymnbook.shared.model.SongTitle
-import com.techbeloved.hymnbook.shared.ui.detail.SongDetailScreen
-import com.techbeloved.hymnbook.shared.ui.navigation.LocalNavController
-import com.techbeloved.hymnbook.shared.ui.navigation.currentOrThrow
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 internal fun HymnListingUi(
     hymnItems: ImmutableList<SongTitle>,
+    onSongItemClicked: (SongTitle) -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
-    val navController = LocalNavController.currentOrThrow
+
     LazyColumn(modifier = modifier, contentPadding = contentPadding) {
         items(hymnItems, SongTitle::id) { item ->
             ListItem(
                 modifier = Modifier.clickable {
-                    navController.navigate(
-                        SongDetailScreen(
-                            songbook = checkNotNull(item.songbook),
-                            entry = checkNotNull(item.songbookEntry),
-                        )
-                    )
+                    onSongItemClicked(item)
                 },
                 headlineContent = {
                     Text(text = item.title)

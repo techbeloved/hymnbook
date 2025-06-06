@@ -25,6 +25,7 @@ internal fun SearchUi(
     state: SearchState,
     query: String,
     onSearch: (query: String) -> Unit,
+    onSongItemClicked: (SongTitle) -> Unit,
     onQueryChange: (newQuery: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -65,6 +66,7 @@ internal fun SearchUi(
                         .fillMaxSize()
                         .consumeWindowInsets(innerPadding)
                         .nestedScroll(scrollBehavior.nestedScrollConnection),
+                    onSongItemClicked = onSongItemClicked,
                 )
             }
         }
@@ -74,6 +76,7 @@ internal fun SearchUi(
 @Composable
 private fun SearchResults(
     results: ImmutableList<SongTitle>,
+    onSongItemClicked: (SongTitle) -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
@@ -81,6 +84,7 @@ private fun SearchResults(
         hymnItems = results,
         contentPadding = contentPadding,
         modifier = modifier,
+        onSongItemClicked = onSongItemClicked,
     )
 }
 

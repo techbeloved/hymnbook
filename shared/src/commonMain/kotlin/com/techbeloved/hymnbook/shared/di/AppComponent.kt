@@ -16,6 +16,8 @@ import com.techbeloved.hymnbook.shared.ui.detail.SongDetailPagerModel
 import com.techbeloved.hymnbook.shared.ui.detail.SongDetailScreenModel
 import com.techbeloved.hymnbook.shared.ui.home.HomeScreenModel
 import com.techbeloved.hymnbook.shared.ui.search.SearchScreenModel
+import com.techbeloved.hymnbook.shared.ui.songs.FilteredSongsViewModel
+import com.techbeloved.hymnbook.shared.ui.topics.TopicsViewModel
 import me.tatarka.inject.annotations.Component
 import me.tatarka.inject.annotations.KmpComponentCreate
 import me.tatarka.inject.annotations.Provides
@@ -26,6 +28,8 @@ import software.amazon.lastmile.kotlin.inject.anvil.SingleIn
 @SingleIn(AppScope::class)
 internal interface AppComponent {
 
+    fun filteredSongsViewModelFactory(): FilteredSongsViewModel.Factory
+
     fun detailScreenModelFactory(): SongDetailScreenModel.Factory
 
     fun detailPagerScreenModelFactory(): SongDetailPagerModel.Factory
@@ -33,6 +37,8 @@ internal interface AppComponent {
     fun homeScreenModel(): HomeScreenModel
 
     fun searchScreenModel(): SearchScreenModel
+
+    fun topicsViewModel(): TopicsViewModel
 
     @Provides
     fun assetFileSource(): AssetFileSourceProvider = assetFileSourceProvider
