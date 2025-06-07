@@ -12,7 +12,13 @@ internal class SearchSongsUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(searchQuery: String): List<SongTitle> =
         withContext(dispatchersProvider.io()) {
-            database.songEntityQueries.searchSongs(searchQuery, ::SongTitle)
-                .executeAsList()
+            // check if search query contains only digits, then use the searchSongbookEntry
+            if (searchQuery.matches(regex = "\\d+".toRegex())) {
+                database.songEntityQueries.searchSongbookEntry(searchQuery, ::SongTitle)
+                    .executeAsList()
+            } else {
+                database.songEntityQueries.searchSongs(searchQuery, ::SongTitle)
+                    .executeAsList()
+            }
         }
 }

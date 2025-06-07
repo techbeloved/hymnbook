@@ -5,6 +5,7 @@ import app.cash.sqldelight.EnumColumnAdapter
 import app.cash.sqldelight.db.SqlDriver
 import com.techbeloved.hymnbook.Database
 import com.techbeloved.hymnbook.MediaFile
+import com.techbeloved.hymnbook.PlaylistEntity
 import com.techbeloved.hymnbook.SheetMusicEntity
 import com.techbeloved.hymnbook.SongEntity
 import com.techbeloved.hymnbook.shared.data.dateColumnAdapter
@@ -52,9 +53,13 @@ internal object Injector {
             MediaFileAdapter = MediaFile.Adapter(EnumColumnAdapter()),
             SheetMusicEntityAdapter = SheetMusicEntity.Adapter(EnumColumnAdapter()),
             SongEntityAdapter = SongEntity.Adapter(
-                listColumnAdapter(json),
-                dateColumnAdapter(),
-                dateColumnAdapter(),
+                lyricsAdapter = listColumnAdapter(json),
+                createdAdapter = dateColumnAdapter(),
+                modifiedAdapter = dateColumnAdapter(),
+            ),
+            PlaylistEntityAdapter = PlaylistEntity.Adapter(
+                createdAdapter = dateColumnAdapter(),
+                modifiedAdapter = dateColumnAdapter(),
             ),
         )
     }

@@ -11,7 +11,7 @@ androidx_core_ktx = "1.16.0"
 androidx_datastore = "1.1.7"
 androidx_hilt_compiler = "1.2.0"
 androidx_hilt_work = "1.2.0"
-androidx_lifecycle = "2.9.0"
+androidx_lifecycle = "2.9.1"
 androidx_media3 = "1.7.1"
 androidx_test_junit = "1.2.1"
 androidx_work = "2.10.1"
@@ -185,6 +185,7 @@ rxjava = { module = "io.reactivex.rxjava2:rxjava", version.ref = "rxjava" }
 rxrelay = { module = "com.jakewharton.rxrelay2:rxrelay", version.ref = "rxrelay" }
 slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4jApi" }
 snippety = { module = "com.github.fueled:snippety", version.ref = "snippety" }
+sqldelight-coroutines-extensions = { group = "app.cash.sqldelight", name = "coroutines-extensions", version.ref = "sqlDelight" }
 sqldelight-runtime = { group = "app.cash.sqldelight", name = "runtime", version.ref = "sqlDelight" }
 sqldelight-adapters = { group = "app.cash.sqldelight", name = "primitive-adapters", version.ref = "sqlDelight" }
 sqldelight-android = { group = "app.cash.sqldelight", name = "android-driver", version.ref = "sqlDelight" }
@@ -207,6 +208,7 @@ coil-network = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", versio
 
 jetbrains-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "jetbrainsNavigation"}
 jetbrains-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "jetbrainsViewModel"}
+jetbrains-runtime-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "jetbrainsViewModel"}
 
 test-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx_test_junit" }
 test-ui-test-junit = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "compose_ui" }

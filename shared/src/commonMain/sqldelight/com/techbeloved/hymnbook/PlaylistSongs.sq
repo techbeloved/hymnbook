@@ -1,0 +1,17 @@
+CREATE TABLE IF NOT EXISTS PlaylistSongs (
+    playlist_id INTEGER,
+    song_id INTEGER,
+    PRIMARY KEY (playlist_id, song_id),
+    FOREIGN KEY (song_id) REFERENCES SongEntity(id) ON DELETE CASCADE,
+    FOREIGN KEY (playlist_id) REFERENCES PlaylistEntity(id) ON DELETE CASCADE
+);
+
+insert:
+INSERT OR IGNORE INTO PlaylistSongs(playlist_id, song_id)
+VALUES (?,?);
+
+getSongsInPlaylist:
+SELECT sd.id, sd.title, sd.alternate_title FROM SongDetail AS sd
+JOIN PlaylistSongs AS ps
+ON ps.song_id = sd.id
+WHERE ps.playlist_id = :playlistId;

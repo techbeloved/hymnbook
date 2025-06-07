@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS SongEntity (
     comments TEXT,
     search_title TEXT NOT NULL COLLATE NOCASE,
     search_lyrics TEXT NOT NULL COLLATE NOCASE,
+    search_songbook TEXT NOT NULL COLLATE NOCASE,
     created INTEGER AS Instant NOT NULL,
     modified INTEGER AS Instant NOT NULL
 );
@@ -46,10 +47,25 @@ CREATE TRIGGER trigger_songs_fts_after_update AFTER UPDATE ON SongEntity BEGIN
   INSERT INTO songs_fts(rowid, search_title, search_lyrics) VALUES(new.id, new.search_title, new.search_lyrics);
 END;
 
+-- Full Text Search songbook entry
+CREATE VIRTUAL TABLE songbook_fts USING fts5(search_songbook, content=SongEntity, content_rowid=id, tokenize=porter);
+
+CREATE TRIGGER trigger_songbook_fts_after_insert AFTER INSERT ON SongEntity BEGIN
+  INSERT INTO songbook_fts(rowid, search_songbook) VALUES(new.id, new.search_songbook);
+END;
+
+CREATE TRIGGER trigger_songbook_fts_after_delete AFTER DELETE ON SongEntity BEGIN
+  INSERT INTO songbook_fts(songbook_fts, rowid, search_songbook) VALUES('delete', old.id, old.search_songbook);
+END;
+
+CREATE TRIGGER trigger_songbook_fts_after_update AFTER UPDATE ON SongEntity BEGIN
+  INSERT INTO songbook_fts(songbook_fts, rowid, search_songbook) VALUES('delete', old.id, old.search_songbook);
+  INSERT INTO songbook_fts(rowid, search_songbook) VALUES(new.id, new.search_songbook);
+END;
 
 insert:
-INSERT INTO SongEntity(id, title, alternate_title, lyrics, verse_order, copyright, comments, search_title, search_lyrics, created, modified)
-VALUES(?, ?,?,?,?,?,?,?,?,?,?);
+INSERT INTO SongEntity(id, title, alternate_title, lyrics, verse_order, copyright, comments, search_title, search_lyrics, search_songbook, created, modified)
+VALUES(?, ?,?,?,?,?,?,?,?,?,?, ?);
 
 lastInsertRowId:
 SELECT last_insert_rowid();
@@ -64,6 +80,7 @@ SET title = :title,
     comments = :comments,
     search_title = :search_title,
     search_lyrics = :search_lyrics,
+    search_songbook = :search_songbook,
     modified = :modified
 WHERE id = :id;
 
@@ -79,7 +96,7 @@ ON S.id = B.song_id
 WHERE S.title = ? AND B.songbook = ?;
 
 -- write a sqldelight query to get a list of songs given the following filter parameters
-   -- list of topics and list of songbooks
+-- list of topics and list of songbooks
 
 filterSongsByTopicsAndSongbooks:
 SELECT DISTINCT sd.id, sd.title, sd.alternate_title, sbs.songbook, sbs.entry
@@ -133,6 +150,14 @@ ON S.id = B.song_id
 JOIN songs_fts ON S.id=songs_fts.rowid
 WHERE songs_fts MATCH :search
 ORDER BY bm25(songs_fts, 10.0);
+
+searchSongbookEntry:
+SELECT S.id, S.title, S.alternate_title, B.songbook, B.entry FROM SongEntity AS S
+LEFT JOIN SongbookSongs AS B
+ON S.id = B.song_id
+JOIN songbook_fts ON S.id=songbook_fts.rowid
+WHERE songbook_fts MATCH :search
+ORDER BY bm25(songbook_fts, 10.0);
 
 
 deleteAll:

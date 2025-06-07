@@ -58,6 +58,7 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.jetbrains.navigation.compose)
             implementation(libs.jetbrains.viewmodel.compose)
+            implementation(libs.jetbrains.runtime.compose)
             implementation(libs.kotlinx.collections.immutable)
             implementation(libs.kotlinx.serialization)
             implementation(libs.kotlinx.io)
@@ -65,6 +66,7 @@ kotlin {
             implementation(libs.coroutines)
 
             // Sqldelight
+            implementation(libs.sqldelight.coroutines.extensions)
             implementation(libs.sqldelight.runtime)
             implementation(libs.sqldelight.adapters)
 

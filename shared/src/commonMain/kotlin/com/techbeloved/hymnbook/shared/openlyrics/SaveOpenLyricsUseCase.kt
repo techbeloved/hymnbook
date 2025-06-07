@@ -92,6 +92,8 @@ internal class SaveOpenLyricsUseCase @Inject constructor(
                 copyright = song.properties.copyright,
                 search_title = song.properties.titles.joinToString(separator = " ") { it.value },
                 search_lyrics = lyrics.joinToString(separator = " ") { it.content },
+                search_songbook = song.properties.songbooks
+                    ?.joinToString(separator = " ") { it.entry.orEmpty() } ?: "",
                 modified = created,
                 id = existingSong.id,
             )
@@ -105,6 +107,8 @@ internal class SaveOpenLyricsUseCase @Inject constructor(
                 copyright = song.properties.copyright,
                 search_title = song.properties.titles.joinToString(separator = " ") { it.value },
                 search_lyrics = lyrics.joinToString(separator = " ") { it.content },
+                search_songbook = song.properties.songbooks
+                    ?.joinToString(separator = " ") { it.entry.orEmpty() } ?: "",
                 created = created,
                 modified = created,
                 id = null,

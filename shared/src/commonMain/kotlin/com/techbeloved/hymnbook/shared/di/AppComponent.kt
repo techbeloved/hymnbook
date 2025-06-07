@@ -15,6 +15,7 @@ import com.techbeloved.hymnbook.shared.time.InstantProvider
 import com.techbeloved.hymnbook.shared.ui.detail.SongDetailPagerModel
 import com.techbeloved.hymnbook.shared.ui.detail.SongDetailScreenModel
 import com.techbeloved.hymnbook.shared.ui.home.HomeScreenModel
+import com.techbeloved.hymnbook.shared.ui.playlist.PlaylistsViewModel
 import com.techbeloved.hymnbook.shared.ui.search.SearchScreenModel
 import com.techbeloved.hymnbook.shared.ui.songs.FilteredSongsViewModel
 import com.techbeloved.hymnbook.shared.ui.topics.TopicsViewModel
@@ -39,6 +40,8 @@ internal interface AppComponent {
     fun searchScreenModel(): SearchScreenModel
 
     fun topicsViewModel(): TopicsViewModel
+
+    fun playlistsViewModel(): PlaylistsViewModel
 
     @Provides
     fun assetFileSource(): AssetFileSourceProvider = assetFileSourceProvider
