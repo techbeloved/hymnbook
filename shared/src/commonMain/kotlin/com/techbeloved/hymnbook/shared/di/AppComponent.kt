@@ -16,6 +16,7 @@ import com.techbeloved.hymnbook.shared.ui.detail.SongDetailPagerModel
 import com.techbeloved.hymnbook.shared.ui.detail.SongDetailScreenModel
 import com.techbeloved.hymnbook.shared.ui.home.HomeScreenModel
 import com.techbeloved.hymnbook.shared.ui.playlist.PlaylistsViewModel
+import com.techbeloved.hymnbook.shared.ui.playlist.add.AddEditPlaylistViewModel
 import com.techbeloved.hymnbook.shared.ui.search.SearchScreenModel
 import com.techbeloved.hymnbook.shared.ui.songs.FilteredSongsViewModel
 import com.techbeloved.hymnbook.shared.ui.topics.TopicsViewModel
@@ -66,6 +67,7 @@ internal interface AppComponent {
     @Provides
     fun provideInstantProvider(instantProvider: DefaultInstantProvider): InstantProvider =
         instantProvider
+    fun addNewPlaylistViewModelFactory(): AddEditPlaylistViewModel.Factory
 
     companion object
 }

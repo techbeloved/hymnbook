@@ -13,13 +13,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.twotone.PlaylistAdd
+import androidx.compose.material.icons.twotone.AddCircle
 import androidx.compose.material.icons.twotone.Delete
 import androidx.compose.material.icons.twotone.MoreVert
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -31,6 +35,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -81,6 +86,9 @@ private fun PlaylistsUi(
     modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+
+    val listState = rememberLazyListState()
+    val isFabExpanded by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 } }
     Scaffold(
         topBar = {
             AppTopBar(
@@ -96,6 +104,23 @@ private fun PlaylistsUi(
                 containerColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0f),
             ) { }
         },
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                text = {
+                    Text(text = "New", modifier = Modifier.padding(end = 16.dp))
+                },
+                icon = {
+                    Icon(
+                        imageVector = Icons.TwoTone.AddCircle,
+                        contentDescription = "New Playlist"
+                    )
+                },
+                onClick = onAddPlaylistClick,
+                shape = MaterialTheme.shapes.extraLarge,
+                expanded = isFabExpanded,
+            )
+        },
+        floatingActionButtonPosition = FabPosition.End,
         modifier = modifier,
     ) { innerPadding ->
         if (state.isEmpty) {
@@ -103,10 +128,14 @@ private fun PlaylistsUi(
                 modifier = Modifier.padding(paddingValues = innerPadding)
                     .padding(horizontal = 16.dp)
                     .fillMaxSize(),
-                onAddPlaylistClick = onAddPlaylistClick
+                onAddPlaylistClick = onAddPlaylistClick,
             )
         } else {
-            LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = innerPadding) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = innerPadding,
+                state = listState,
+            ) {
                 items(state.playlists.size) {
                     PlaylistItem(
                         item = state.playlists[it],

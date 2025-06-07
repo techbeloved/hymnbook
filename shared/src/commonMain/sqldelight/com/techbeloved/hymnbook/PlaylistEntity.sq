@@ -17,11 +17,19 @@ UPDATE PlaylistEntity
 SET name = :name,
     description = :description,
     image_url = :imageUrl,
-    modified = :modified;
+    modified = :modified
+WHERE id = :playlistId;
+
+lastInsertRowId:
+SELECT last_insert_rowid();
 
 getAll:
 SELECT * FROM PlaylistEntity
 ORDER BY created;
+
+getById:
+SELECT * FROM PlaylistEntity
+WHERE id = :playlistId;
 
 delete:
 DELETE FROM PlaylistEntity

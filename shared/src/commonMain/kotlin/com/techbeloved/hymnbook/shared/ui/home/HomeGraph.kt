@@ -18,6 +18,7 @@ import com.techbeloved.hymnbook.shared.ui.detail.SongDetailScreen
 import com.techbeloved.hymnbook.shared.ui.discover.DiscoverTabScreen
 import com.techbeloved.hymnbook.shared.ui.more.MoreTabScreen
 import com.techbeloved.hymnbook.shared.ui.playlist.PlayListTabScreen
+import com.techbeloved.hymnbook.shared.ui.playlist.add.AddEditPlaylistDialog
 import com.techbeloved.hymnbook.shared.ui.search.SearchScreen
 import com.techbeloved.hymnbook.shared.ui.songs.FilteredSongsScreen
 import kotlinx.collections.immutable.persistentListOf
@@ -97,7 +98,7 @@ internal fun NavGraphBuilder.addHomeRoutes(navController: NavHostController) =
 
         composable<TopLevelDestination.Playlists> {
             PlayListTabScreen {
-                // Navigate to add playlist screen
+                navController.navigate(AddEditPlaylistDialog(playlistId = null))
             }
         }
 
