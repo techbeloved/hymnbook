@@ -1,0 +1,36 @@
+import kotlinx.datetime.Instant;
+CREATE TABLE IF NOT EXISTS PlaylistEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    description TEXT,
+    image_url TEXT,
+    created INTEGER AS Instant NOT NULL,
+    modified INTEGER AS Instant NOT NULL
+);
+
+insert:
+INSERT OR IGNORE INTO PlaylistEntity(id, name, description, image_url, created, modified)
+VALUES (?,?,?,?,?,?);
+
+update:
+UPDATE PlaylistEntity
+SET name = :name,
+    description = :description,
+    image_url = :imageUrl,
+    modified = :modified
+WHERE id = :playlistId;
+
+lastInsertRowId:
+SELECT last_insert_rowid();
+
+getAll:
+SELECT * FROM PlaylistEntity
+ORDER BY created;
+
+getById:
+SELECT * FROM PlaylistEntity
+WHERE id = :playlistId;
+
+delete:
+DELETE FROM PlaylistEntity
+WHERE id = :playlistId;
