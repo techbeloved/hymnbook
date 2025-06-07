@@ -3,6 +3,7 @@
 package com.techbeloved.hymnbook.shared.ui
 
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -28,6 +29,7 @@ internal fun AppTopBar(
     showUpButton: Boolean = true,
     scrollBehaviour: TopAppBarScrollBehavior? = null,
     containerColor: Color = MaterialTheme.colorScheme.surface,
+    windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
     actions: @Composable (RowScope.() -> Unit) = {},
 ) {
     CenterAlignedTopAppBar(
@@ -60,5 +62,6 @@ internal fun AppTopBar(
             titleContentColor = MaterialTheme.colorScheme.onSurface,
             actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
         ),
+        windowInsets = windowInsets,
     )
 }

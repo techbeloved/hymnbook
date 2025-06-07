@@ -21,10 +21,10 @@ internal data class SongFilter(
             orderByTitle = false,
         )
 
-        fun songbookFilter(songbook: String): SongFilter = SongFilter(
+        fun songbookFilter(songbook: String, sortByTitle: Boolean = false): SongFilter = SongFilter(
             topics = emptyList(),
             songbooks = listOf(songbook),
-            orderByTitle = false,
+            orderByTitle = sortByTitle,
         )
     }
 }

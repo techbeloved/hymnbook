@@ -89,7 +89,7 @@ LEFT JOIN SongbookSongs AS sbs ON sd.id = sbs.song_id
 WHERE ts.topic IN :topicNames
 AND sbs.songbook IN :songbookNames
 GROUP BY sd.id
-ORDER BY (CASE WHEN :orderByTitle THEN sd.title ELSE sd.songbookEntries END);
+ORDER BY (CASE WHEN :orderByTitle THEN sd.title ELSE CAST(sbs.entry AS REAL) END);
 
 
 filterSongsByTopics:
@@ -99,17 +99,16 @@ LEFT JOIN TopicSongs AS ts ON sd.id = ts.song_id
 LEFT JOIN SongbookSongs AS sbs ON sd.id = sbs.song_id
 WHERE ts.topic IN :topicNames
 GROUP BY sd.id
-ORDER BY (CASE WHEN :orderByTitle THEN sd.title ELSE sd.songbookEntries END);
+ORDER BY (CASE WHEN :orderByTitle THEN sd.title ELSE CAST(sbs.entry AS REAL) END);
 
 
 filterSongsBySongbooks:
 SELECT DISTINCT sd.id, sd.title, sd.alternate_title, sbs.songbook, sbs.entry
 FROM SongDetail AS sd
-LEFT JOIN TopicSongs AS ts ON sd.id = ts.song_id
-LEFT JOIN SongbookSongs AS sbs ON sd.id = sbs.song_id
+JOIN SongbookSongs AS sbs ON sd.id = sbs.song_id
 AND sbs.songbook IN :songbookNames
 GROUP BY sd.id
-ORDER BY (CASE WHEN :orderByTitle THEN sd.title ELSE sd.songbookEntries END);
+ORDER BY (CASE WHEN :orderByTitle THEN sd.title ELSE CAST(sbs.entry AS REAL) END);
 
 
 filterSongs:
@@ -118,7 +117,7 @@ FROM SongDetail AS sd
 LEFT JOIN TopicSongs AS ts ON sd.id = ts.song_id
 LEFT JOIN SongbookSongs AS sbs ON sd.id = sbs.song_id
 GROUP BY sd.id
-ORDER BY (CASE WHEN :orderByTitle THEN sd.title ELSE sd.songbookEntries END);
+ORDER BY (CASE WHEN :orderByTitle THEN sd.title ELSE CAST(sbs.entry AS REAL) END);
 
 getAllSongs:
 SELECT * FROM SongDetail;

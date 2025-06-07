@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.techbeloved.hymnbook.SongbookEntity
 import com.techbeloved.hymnbook.shared.di.appComponent
 import com.techbeloved.hymnbook.shared.ext.sheetsDir
 import com.techbeloved.hymnbook.shared.ext.tunesDir
@@ -14,14 +15,18 @@ import com.techbeloved.hymnbook.shared.files.OkioFileSystemProvider
 import com.techbeloved.hymnbook.shared.files.SaveFileHashUseCase
 import com.techbeloved.hymnbook.shared.files.SharedFileSystem
 import com.techbeloved.hymnbook.shared.media.ImportMediaFilesUseCase
-import com.techbeloved.hymnbook.shared.model.SongTitle
+import com.techbeloved.hymnbook.shared.model.SongFilter
 import com.techbeloved.hymnbook.shared.openlyrics.ImportOpenLyricsUseCase
 import com.techbeloved.hymnbook.shared.sheetmusic.ImportMusicSheetsUseCase
-import com.techbeloved.hymnbook.shared.titles.GetHymnTitlesUseCase
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
+import com.techbeloved.hymnbook.shared.songbooks.GetAllSongbooksUseCase
+import com.techbeloved.hymnbook.shared.titles.GetFilteredSongTitlesUseCase
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Inject
 
@@ -29,21 +34,61 @@ internal class HomeScreenModel @Inject constructor(
     private val hashAssetFileUseCase: HashAssetFileUseCase,
     private val extractArchiveUseCase: ExtractArchiveUseCase,
     private val importOpenLyricsUseCase: ImportOpenLyricsUseCase,
-    private val getHymnTitlesUseCase: GetHymnTitlesUseCase,
+    private val getFilteredSongTitlesUseCase: GetFilteredSongTitlesUseCase,
     private val fileSystemProvider: OkioFileSystemProvider,
     private val getSavedFileHashUseCase: GetSavedFileHashUseCase,
     private val saveFileHashUseCase: SaveFileHashUseCase,
     private val importMediaFilesUseCase: ImportMediaFilesUseCase,
     private val importMusicSheetsUseCase: ImportMusicSheetsUseCase,
+    private val getAllSongbooksUseCase: GetAllSongbooksUseCase,
 ) : ViewModel() {
-    val state: MutableStateFlow<ImmutableList<SongTitle>> = MutableStateFlow(persistentListOf())
+
+    private val assetsReady = MutableStateFlow(false)
+    private val sortBy = MutableStateFlow(value = SortBy.Number)
+    private val selectedSongbook = MutableStateFlow<SongbookEntity?>(value = null)
+    private val songbooks = flow { emit(getAllSongbooksUseCase().toImmutableList()) }
+
+    val state = combine(
+        assetsReady,
+        sortBy,
+        selectedSongbook,
+        songbooks,
+    ) { assetsReady, sortBy, selectedSongbook, songbooks ->
+        if (assetsReady) {
+            HomeScreenState(
+                songTitles = getFilteredSongTitlesUseCase(
+                    songFilter = SongFilter.songbookFilter(
+                        songbook = selectedSongbook?.name ?: songbooks.first().name,
+                        sortByTitle = sortBy == SortBy.Title,
+                    )
+                ).toImmutableList(),
+                songbooks = songbooks,
+                currentSongbook = selectedSongbook ?: songbooks.first(),
+                isLoading = false,
+                sortBy = sortBy,
+            )
+        } else {
+            HomeScreenState.EmptyLoading
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
+        initialValue = HomeScreenState.EmptyLoading,
+    )
 
     init {
         viewModelScope.launch {
-
             importBundledAssets()
-            state.value = getHymnTitlesUseCase().toImmutableList()
+            assetsReady.update { true }
         }
+    }
+
+    fun onUpdateSortBy(sortBy: SortBy) {
+        this.sortBy.update { sortBy }
+    }
+
+    fun onUpdateSongbook(songbook: SongbookEntity) {
+        selectedSongbook.update { songbook }
     }
 
     private suspend fun importBundledAssets() {

@@ -52,7 +52,9 @@ internal fun AppSearchBar(
                         .focusRequester(focusRequester),
                     value = query,
                     onValueChange = { if (query.length < maxChar) onQueryChange(it) },
-                    textStyle = MaterialTheme.typography.bodyMedium,
+                    textStyle = MaterialTheme.typography.bodyMedium.copy(
+                        color = MaterialTheme.colorScheme.onSurface,
+                    ),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text,
                         imeAction = ImeAction.Search,
@@ -67,7 +69,10 @@ internal fun AppSearchBar(
                             enabled = true,
                             singleLine = true,
                             placeholder = {
-                                Text(text = placeholderText)
+                                Text(
+                                    text = placeholderText,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
                             },
                             visualTransformation = VisualTransformation.None,
                             interactionSource = interactionSource,

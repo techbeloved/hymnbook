@@ -15,15 +15,15 @@ import com.techbeloved.hymnbook.shared.model.SongTitle
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
-internal fun HymnListingUi(
-    hymnItems: ImmutableList<SongTitle>,
+internal fun SongListingUi(
+    songItems: ImmutableList<SongTitle>,
     onSongItemClicked: (SongTitle) -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
 
     LazyColumn(modifier = modifier, contentPadding = contentPadding) {
-        items(hymnItems, SongTitle::id) { item ->
+        items(songItems, SongTitle::id) { item ->
             ListItem(
                 modifier = Modifier.clickable {
                     onSongItemClicked(item)
