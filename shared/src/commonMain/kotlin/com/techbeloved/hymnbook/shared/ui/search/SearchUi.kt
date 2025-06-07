@@ -16,7 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.techbeloved.hymnbook.shared.model.SongTitle
-import com.techbeloved.hymnbook.shared.ui.listing.HymnListingUi
+import com.techbeloved.hymnbook.shared.ui.listing.SongListingUi
 import kotlinx.collections.immutable.ImmutableList
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -80,8 +80,8 @@ private fun SearchResults(
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
-    HymnListingUi(
-        hymnItems = results,
+    SongListingUi(
+        songItems = results,
         contentPadding = contentPadding,
         modifier = modifier,
         onSongItemClicked = onSongItemClicked,

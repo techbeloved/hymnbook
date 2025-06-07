@@ -16,7 +16,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.techbeloved.hymnbook.shared.model.SongFilter
 import com.techbeloved.hymnbook.shared.model.SongTitle
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
-import com.techbeloved.hymnbook.shared.ui.listing.HymnListingUi
+import com.techbeloved.hymnbook.shared.ui.listing.SongListingUi
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
@@ -68,8 +68,8 @@ private fun FilteredSongsUi(
         },
         modifier = modifier,
     ) { innerPadding ->
-        HymnListingUi(
-            hymnItems = state.songs,
+        SongListingUi(
+            songItems = state.songs,
             contentPadding = innerPadding,
             modifier = Modifier.fillMaxSize(),
             onSongItemClicked = onSongItemClicked,
