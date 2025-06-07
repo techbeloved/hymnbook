@@ -96,7 +96,9 @@ internal fun NavGraphBuilder.addHomeRoutes(navController: NavHostController) =
         }
 
         composable<TopLevelDestination.Playlists> {
-            PlayListTabScreen()
+            PlayListTabScreen {
+                // Navigate to add playlist screen
+            }
         }
 
         composable<TopLevelDestination.More> {

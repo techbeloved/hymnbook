@@ -55,15 +55,16 @@ internal class HomeScreenModel @Inject constructor(
         songbooks,
     ) { assetsReady, sortBy, selectedSongbook, songbooks ->
         if (assetsReady) {
+            val songbook = selectedSongbook ?: songbooks.firstOrNull()
             HomeScreenState(
                 songTitles = getFilteredSongTitlesUseCase(
                     songFilter = SongFilter.songbookFilter(
-                        songbook = selectedSongbook?.name ?: songbooks.first().name,
+                        songbook = songbook?.name.orEmpty(),
                         sortByTitle = sortBy == SortBy.Title,
                     )
                 ).toImmutableList(),
                 songbooks = songbooks,
-                currentSongbook = selectedSongbook ?: songbooks.first(),
+                currentSongbook = selectedSongbook ?: songbook,
                 isLoading = false,
                 sortBy = sortBy,
             )
