@@ -6,10 +6,14 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -22,6 +26,7 @@ import com.techbeloved.hymnbook.shared.ui.home.navigationItems
 import com.techbeloved.hymnbook.shared.ui.navigation.LocalNavController
 import com.techbeloved.hymnbook.shared.ui.navigation.addNavigationRoutes
 import com.techbeloved.hymnbook.shared.ui.theme.AppTheme
+import kotlinx.coroutines.launch
 
 @Composable
 public fun App() {
@@ -29,6 +34,8 @@ public fun App() {
         val navController = rememberNavController()
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val isBottomNavVisible by derivedStateOf { navBackStackEntry?.destination?.isATopLevelDestination() == true }
+        val snackbarHostState = remember { SnackbarHostState() }
+        val scope = rememberCoroutineScope()
         Scaffold(
             bottomBar = {
                 AnimatedVisibility(
@@ -41,7 +48,8 @@ public fun App() {
                         navController = navController,
                     )
                 }
-            }
+            },
+            snackbarHost = { SnackbarHost(snackbarHostState) },
         ) {
             CompositionLocalProvider(LocalNavController provides navController) {
                 NavHost(
@@ -51,7 +59,9 @@ public fun App() {
                 ) {
                     addHomeRoutes(navController)
 
-                    addNavigationRoutes(navController)
+                    addNavigationRoutes(navController) { snackMessage ->
+                        scope.launch { snackbarHostState.showSnackbar(snackMessage) }
+                    }
                 }
             }
         }

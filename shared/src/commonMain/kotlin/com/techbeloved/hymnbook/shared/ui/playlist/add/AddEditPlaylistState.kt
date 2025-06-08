@@ -9,10 +9,14 @@ internal data class AddEditPlaylistState(
     val imageUrl: String? = null,
     val isNewPlaylist: Boolean = oldItem == null,
     val isLoading: Boolean = false,
-    val savedPlaylistId: Long? = null,
+    val playlistSaved: PlaylistSaved? = null,
 ) {
     val isModified: Boolean = (name.isNotBlank()) && (oldItem?.name != name
             || oldItem.description != description
             || oldItem.imageUrl != imageUrl)
 
 }
+
+internal data class PlaylistSaved(
+    val songAdded: Boolean = false,
+)

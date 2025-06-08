@@ -26,8 +26,10 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -66,10 +68,12 @@ internal data class SongDetailScreen(
 
 @Composable
 internal fun SongDetailScreen(
+    onAddSongToPlaylist: (songId: Long) -> Unit,
     pagerViewModel: SongDetailPagerModel = viewModel(
         factory = SongDetailPagerModel.Factory,
     ),
 ) {
+    var currentSongId by remember { mutableStateOf<Long?>(null) }
     val pagerState by pagerViewModel.state.collectAsState()
     val playbackState = rememberPlaybackState()
     val playbackController = rememberPlaybackController(playbackState)
@@ -78,6 +82,9 @@ internal fun SongDetailScreen(
             SongPager(
                 state = state,
                 pageContent = { songId, contentPadding ->
+                    LaunchedEffect(songId) {
+                        currentSongId = songId
+                    }
                     val screenModel: SongDetailScreenModel = viewModel(
                         key = songId.toString(),
                         factory = SongDetailScreenModel.Factory,
@@ -116,8 +123,6 @@ internal fun SongDetailScreen(
         is DetailBottomSheetState.Show -> {
             NowPlayingSettingsBottomSheet(
                 onDismiss = pagerViewModel::onHideSettings,
-                onZoomIn = pagerViewModel::onIncreaseFontSize,
-                onZoomOut = pagerViewModel::onDecreaseFontSize,
                 onSpeedUp = {
                     playbackController?.changePlaybackSpeed(
                         speed = changeMusicSpeed(
@@ -134,9 +139,15 @@ internal fun SongDetailScreen(
                         ),
                     )
                 },
+                onZoomOut = pagerViewModel::onDecreaseFontSize,
+                onZoomIn = pagerViewModel::onIncreaseFontSize,
                 onChangeSongDisplayMode = pagerViewModel::onChangeSongDisplayMode,
                 preferences = state.preferences,
                 playbackSpeed = playbackState.playbackSpeed,
+                onAddSongToPlaylist = {
+                    pagerViewModel.onHideSettings()
+                    currentSongId?.let { onAddSongToPlaylist(it) }
+                },
             )
         }
     }

@@ -64,48 +64,49 @@ internal sealed interface TopLevelDestination {
     data object More : TopLevelDestination
 }
 
-internal fun NavGraphBuilder.addHomeRoutes(navController: NavHostController) =
-    navigation<TopLevelRoute>(startDestination = TopLevelDestination.Home) {
-        composable<TopLevelDestination.Home> {
-            HomeTabScreen(
-                onOpenSearch = { navController.navigate(SearchScreen) },
-                onSongItemClicked = { song ->
-                    navController.navigate(
-                        SongDetailScreen(
-                            initialSongId = song.id,
-                            topics = SongFilter.NONE.topics,
-                            songbooks = song.songbook?.let { listOf(it) }
-                                ?: SongFilter.NONE.songbooks,
-                            orderByTitle = SongFilter.NONE.orderByTitle,
-                        )
-                    )
-                },
-            )
-        }
-
-        composable<TopLevelDestination.Discover> {
-            DiscoverTabScreen { topic ->
-                val songFilter = topic.toSongFilter()
+internal fun NavGraphBuilder.addHomeRoutes(
+    navController: NavHostController
+) = navigation<TopLevelRoute>(startDestination = TopLevelDestination.Home) {
+    composable<TopLevelDestination.Home> {
+        HomeTabScreen(
+            onOpenSearch = { navController.navigate(SearchScreen) },
+            onSongItemClicked = { song ->
                 navController.navigate(
-                    FilteredSongsScreen(
-                        topics = songFilter.topics,
-                        songbooks = songFilter.songbooks,
-                        orderByTitle = songFilter.orderByTitle,
+                    SongDetailScreen(
+                        initialSongId = song.id,
+                        topics = SongFilter.NONE.topics,
+                        songbooks = song.songbook?.let { listOf(it) }
+                            ?: SongFilter.NONE.songbooks,
+                        orderByTitle = SongFilter.NONE.orderByTitle,
                     )
                 )
-            }
-        }
+            },
+        )
+    }
 
-        composable<TopLevelDestination.Playlists> {
-            PlayListTabScreen {
-                navController.navigate(AddEditPlaylistDialog(playlistId = null))
-            }
-        }
-
-        composable<TopLevelDestination.More> {
-            MoreTabScreen()
+    composable<TopLevelDestination.Discover> {
+        DiscoverTabScreen { topic ->
+            val songFilter = topic.toSongFilter()
+            navController.navigate(
+                FilteredSongsScreen(
+                    topics = songFilter.topics,
+                    songbooks = songFilter.songbooks,
+                    orderByTitle = songFilter.orderByTitle,
+                )
+            )
         }
     }
+
+    composable<TopLevelDestination.Playlists> {
+        PlayListTabScreen {
+            navController.navigate(AddEditPlaylistDialog(playlistId = null, songId = null))
+        }
+    }
+
+    composable<TopLevelDestination.More> {
+        MoreTabScreen()
+    }
+}
 
 private fun TopicEntity.toSongFilter(): SongFilter {
     return SongFilter(
@@ -117,6 +118,6 @@ private fun TopicEntity.toSongFilter(): SongFilter {
 
 internal fun NavDestination.isATopLevelDestination(): Boolean =
     hasRoute<TopLevelDestination.Home>() ||
-        hasRoute<TopLevelDestination.Playlists>() ||
-        hasRoute<TopLevelDestination.Discover>() ||
-        hasRoute<TopLevelDestination.More>()
+            hasRoute<TopLevelDestination.Playlists>() ||
+            hasRoute<TopLevelDestination.Discover>() ||
+            hasRoute<TopLevelDestination.More>()
