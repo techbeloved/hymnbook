@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.toRoute
 import com.techbeloved.hymnbook.shared.di.appComponent
+import com.techbeloved.hymnbook.shared.playlist.AddSongToPlaylistUseCase
 import com.techbeloved.hymnbook.shared.playlist.CreatePlaylistUseCase
 import com.techbeloved.hymnbook.shared.playlist.GetPlaylistByIdUseCase
 import com.techbeloved.hymnbook.shared.playlist.UpdatePlaylistUseCase
@@ -25,6 +26,7 @@ internal class AddEditPlaylistViewModel @Inject constructor(
     private val createPlaylistUseCase: CreatePlaylistUseCase,
     private val updatePlaylistUseCase: UpdatePlaylistUseCase,
     private val getPlaylistByIdUseCase: GetPlaylistByIdUseCase,
+    private val addSongToPlaylistUseCase: AddSongToPlaylistUseCase,
     @Assisted private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -36,7 +38,7 @@ internal class AddEditPlaylistViewModel @Inject constructor(
     private val playlistImageUrl = savedStateHandle.getStateFlow<String?>("playlistImageUrl", null)
 
     private val inProgress = MutableStateFlow(false)
-    private val savedPlaylistId = MutableStateFlow<Long?>(null)
+    private val playlistSaved = MutableStateFlow<PlaylistSaved?>(null)
 
     private val editing = combine(
         playlistName,
@@ -60,7 +62,7 @@ internal class AddEditPlaylistViewModel @Inject constructor(
         oldPlaylist,
         editing,
         inProgress,
-        savedPlaylistId,
+        playlistSaved,
     ) { oldPlaylist, editing, inProgress, playlistSaved ->
         // Prefer the user changed values. Except it is empty, in which case use the old value
         AddEditPlaylistState(
@@ -69,7 +71,7 @@ internal class AddEditPlaylistViewModel @Inject constructor(
             description = editing.description.ifBlank { oldPlaylist?.description ?: "" },
             imageUrl = editing.imageUrl ?: oldPlaylist?.imageUrl,
             isLoading = inProgress,
-            savedPlaylistId = playlistSaved,
+            playlistSaved = playlistSaved,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -111,8 +113,11 @@ internal class AddEditPlaylistViewModel @Inject constructor(
                     imageUrl = currentState.imageUrl,
                 )
             }
+            if (args.songId != null) {
+                addSongToPlaylistUseCase(playlistId = playlistId, songId = args.songId)
+            }
             inProgress.update { false }
-            savedPlaylistId.update { playlistId }
+            playlistSaved.update { PlaylistSaved(songAdded = args.songId != null) }
         }
     }
 

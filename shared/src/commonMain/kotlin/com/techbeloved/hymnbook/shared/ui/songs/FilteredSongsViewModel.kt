@@ -22,15 +22,26 @@ internal class FilteredSongsViewModel @Inject constructor(
     @Assisted savedStateHandle: SavedStateHandle,
     private val getFilteredSongTitlesUseCase: GetFilteredSongTitlesUseCase,
 ) : ViewModel() {
-    private val songFilter = savedStateHandle.toRoute<FilteredSongsScreen>().songFilter
+    private val args = savedStateHandle.toRoute<FilteredSongsScreen>()
+    private val songFilter = args.songFilter
 
     val state: StateFlow<FilteredSongsState> = flow {
         val songs = getFilteredSongTitlesUseCase.invoke(songFilter)
-        emit(FilteredSongsState(filter = songFilter, songs = songs.toImmutableList()))
+        emit(
+            FilteredSongsState(
+                filter = songFilter,
+                songs = songs.toImmutableList(),
+                title = args.title,
+            )
+        )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
-        initialValue = FilteredSongsState(songFilter, emptyList<SongTitle>().toImmutableList()),
+        initialValue = FilteredSongsState(
+            filter = songFilter,
+            songs = emptyList<SongTitle>().toImmutableList(),
+            title = args.title,
+        ),
     )
 
     @Inject

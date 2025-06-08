@@ -13,7 +13,7 @@ internal class GetPlaylistsUseCase @Inject constructor(
     private val dispatchersProvider: DispatchersProvider,
 ) {
     operator fun invoke(): Flow<List<PlaylistItem>> =
-        database.playlistEntityQueries.getAll { id, name, description, imageUrl, created, updated ->
+        database.playlistEntityQueries.getAll { id, name, description, imageUrl, created, updated, songCount ->
             PlaylistItem(
                 id = id,
                 name = name,
@@ -21,6 +21,7 @@ internal class GetPlaylistsUseCase @Inject constructor(
                 imageUrl = imageUrl,
                 created = created,
                 updated = updated,
+                songCount = songCount,
             )
         }.asFlow().mapToList(context = dispatchersProvider.io())
 }

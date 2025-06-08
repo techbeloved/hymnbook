@@ -8,10 +8,13 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.twotone.PlaylistAdd
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -40,6 +43,7 @@ internal fun NowPlayingSettingsBottomSheet(
     onZoomOut: () -> Unit,
     onZoomIn: () -> Unit,
     onChangeSongDisplayMode: (songDisplayMode: SongDisplayMode) -> Unit,
+    onAddSongToPlaylist: () -> Unit,
     preferences: SongPreferences,
     playbackSpeed: Int,
     modifier: Modifier = Modifier,
@@ -50,6 +54,26 @@ internal fun NowPlayingSettingsBottomSheet(
         sheetState = bottomSheetState,
         modifier = modifier,
     ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(
+                space = 16.dp,
+                alignment = Alignment.CenterHorizontally,
+            )
+        ) {
+            FilledTonalButton(
+                onClick = onAddSongToPlaylist,
+            ) {
+                Row {
+                    Text(text = "Add to playlist")
+                    Spacer(Modifier.width(8.dp))
+                    Icon(
+                        imageVector = Icons.AutoMirrored.TwoTone.PlaylistAdd,
+                        contentDescription = "Add to playlist",
+                    )
+                }
+            }
+        }
         SheetMusicToggle(
             songDisplayMode = preferences.songDisplayMode,
             onToggle = onChangeSongDisplayMode,

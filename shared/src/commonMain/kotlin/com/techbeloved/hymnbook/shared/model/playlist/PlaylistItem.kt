@@ -6,6 +6,7 @@ internal data class PlaylistItem(
     val id: Long,
     val name: String,
     val description: String?,
+    val songCount: Long,
     val imageUrl: String?,
     val created: Instant,
     val updated: Instant,

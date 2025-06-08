@@ -32,20 +32,21 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class AddEditPlaylistDialog(
     val playlistId: Long?,
+    val songId: Long?,
 )
 
 @Composable
 internal fun AddEditPlaylistDialog(
-    onDismiss: (savedPlaylistId: Long?) -> Unit,
+    onDismiss: (saved: PlaylistSaved?) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: AddEditPlaylistViewModel = viewModel(factory = AddEditPlaylistViewModel.Factory),
 ) {
 
     val state by viewModel.state.collectAsStateWithLifecycle(context = Dispatchers.Main.immediate)
 
-    LaunchedEffect(state.savedPlaylistId) {
-        if (state.savedPlaylistId != null) {
-            onDismiss(state.savedPlaylistId)
+    LaunchedEffect(state.playlistSaved) {
+        if (state.playlistSaved != null) {
+            onDismiss(state.playlistSaved)
         }
     }
 

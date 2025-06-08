@@ -27,9 +27,16 @@ import kotlinx.serialization.Serializable
 internal data class FilteredSongsScreen(
     val topics: List<String>,
     val songbooks: List<String>,
+    val playlistIds: List<Long>,
     val orderByTitle: Boolean,
+    val title: String = "",
 ) {
-    val songFilter get() = SongFilter(topics, songbooks, orderByTitle)
+    val songFilter get() = SongFilter(
+        topics = topics,
+        songbooks = songbooks,
+        playlistIds = playlistIds,
+        orderByTitle = orderByTitle,
+    )
 }
 
 @Composable
@@ -63,7 +70,7 @@ private fun FilteredSongsUi(
                 scrollBehaviour = scrollBehavior,
                 containerColor = MaterialTheme.colorScheme.surface.copy(alpha = .5f),
                 modifier = Modifier.hazeEffect(hazeState, style = HazeMaterials.ultraThin()),
-                title = state.filter.topics.firstOrNull().orEmpty(),
+                title = state.title,
             )
         },
         modifier = modifier,
