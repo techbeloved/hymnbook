@@ -127,6 +127,19 @@ AND sbs.songbook IN :songbookNames
 GROUP BY sd.id
 ORDER BY (CASE WHEN :orderByTitle THEN sd.title ELSE CAST(sbs.entry AS REAL) END);
 
+filterSongsByPlaylists:
+SELECT DISTINCT sd.id, sd.title, sd.alternate_title, sbs.songbook, sbs.entry
+FROM SongDetail AS sd
+JOIN (
+    SELECT pls.playlist_id  AS playlist_id , pl.created, pls.song_id AS songid
+    FROM PlaylistSongs AS pls, PlaylistEntity AS pl
+    WHERE pls.playlist_id = pl.id
+    ) AS ps ON sd.id = ps.songid
+LEFT JOIN SongbookSongs AS sbs ON sd.id = sbs.song_id
+WHERE ps.playlist_id IN :playlistIds
+GROUP BY sd.id
+ORDER BY ps.created;
+
 
 filterSongs:
 SELECT DISTINCT sd.id, sd.title, sd.alternate_title, sbs.songbook, sbs.entry
@@ -135,9 +148,6 @@ LEFT JOIN TopicSongs AS ts ON sd.id = ts.song_id
 LEFT JOIN SongbookSongs AS sbs ON sd.id = sbs.song_id
 GROUP BY sd.id
 ORDER BY (CASE WHEN :orderByTitle THEN sd.title ELSE CAST(sbs.entry AS REAL) END);
-
-getAllSongs:
-SELECT * FROM SongDetail;
 
 getSongById:
 SELECT * FROM SongDetail

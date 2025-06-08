@@ -61,9 +61,15 @@ internal data class SongDetailScreen(
     val initialSongId: Long,
     val topics: List<String>,
     val songbooks: List<String>,
+    val playlistIds: List<Long>,
     val orderByTitle: Boolean,
 ) {
-    val songFilter get() = SongFilter(topics, songbooks, orderByTitle)
+    val songFilter get() = SongFilter(
+        topics = topics,
+        songbooks = songbooks,
+        playlistIds = playlistIds,
+        orderByTitle = orderByTitle,
+    )
 }
 
 @Composable

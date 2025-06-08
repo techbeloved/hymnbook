@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.techbeloved.hymnbook.TopicEntity
 import com.techbeloved.hymnbook.shared.model.SongFilter
+import com.techbeloved.hymnbook.shared.model.playlist.PlaylistItem
 import com.techbeloved.hymnbook.shared.ui.appbar.HomeNavItem
 import com.techbeloved.hymnbook.shared.ui.detail.SongDetailScreen
 import com.techbeloved.hymnbook.shared.ui.discover.DiscoverTabScreen
@@ -78,6 +79,7 @@ internal fun NavGraphBuilder.addHomeRoutes(
                         songbooks = song.songbook?.let { listOf(it) }
                             ?: SongFilter.NONE.songbooks,
                         orderByTitle = SongFilter.NONE.orderByTitle,
+                        playlistIds = SongFilter.NONE.playlistIds,
                     )
                 )
             },
@@ -86,21 +88,19 @@ internal fun NavGraphBuilder.addHomeRoutes(
 
     composable<TopLevelDestination.Discover> {
         DiscoverTabScreen { topic ->
-            val songFilter = topic.toSongFilter()
-            navController.navigate(
-                FilteredSongsScreen(
-                    topics = songFilter.topics,
-                    songbooks = songFilter.songbooks,
-                    orderByTitle = songFilter.orderByTitle,
-                )
-            )
+            navController.navigate(topic.toSongsDestination())
         }
     }
 
     composable<TopLevelDestination.Playlists> {
-        PlayListTabScreen {
-            navController.navigate(AddEditPlaylistDialog(playlistId = null, songId = null))
-        }
+        PlayListTabScreen(
+            onAddPlaylistClick = {
+                navController.navigate(AddEditPlaylistDialog(playlistId = null, songId = null))
+            },
+            onOpenPlaylistDetail = { item ->
+                navController.navigate(item.toSongsDestination())
+            },
+        )
     }
 
     composable<TopLevelDestination.More> {
@@ -108,13 +108,22 @@ internal fun NavGraphBuilder.addHomeRoutes(
     }
 }
 
-private fun TopicEntity.toSongFilter(): SongFilter {
-    return SongFilter(
-        topics = listOf(name),
-        songbooks = emptyList(),
-        orderByTitle = false,
-    )
-}
+private fun TopicEntity.toSongsDestination() = FilteredSongsScreen(
+    topics = listOf(name),
+    songbooks = SongFilter.NONE.songbooks,
+    orderByTitle = SongFilter.NONE.orderByTitle,
+    playlistIds = SongFilter.NONE.playlistIds,
+    title = name,
+)
+
+// This is temporary until the playlist detail screen is implemented
+private fun PlaylistItem.toSongsDestination() = FilteredSongsScreen(
+    topics = SongFilter.NONE.topics,
+    songbooks = SongFilter.NONE.songbooks,
+    orderByTitle = SongFilter.NONE.orderByTitle,
+    playlistIds = listOf(id),
+    title = name,
+)
 
 internal fun NavDestination.isATopLevelDestination(): Boolean =
     hasRoute<TopLevelDestination.Home>() ||

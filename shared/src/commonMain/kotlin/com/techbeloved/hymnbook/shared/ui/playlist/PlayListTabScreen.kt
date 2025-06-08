@@ -3,6 +3,7 @@
 package com.techbeloved.hymnbook.shared.ui.playlist
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.twotone.PlaylistAdd
@@ -67,6 +69,7 @@ internal fun PlayListTabScreen(
     modifier: Modifier = Modifier,
     viewModel: PlaylistsViewModel = viewModel(factory = PlaylistsViewModel.Factory),
     onAddPlaylistClick: () -> Unit,
+    onOpenPlaylistDetail: (item: PlaylistItem) -> Unit,
 ) {
 
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -75,6 +78,7 @@ internal fun PlayListTabScreen(
         onAddPlaylistClick = onAddPlaylistClick,
         onDelete = viewModel::onDeletePlaylist,
         modifier = modifier,
+        onItemClick = onOpenPlaylistDetail,
     )
 }
 
@@ -83,6 +87,7 @@ private fun PlaylistsUi(
     state: PlaylistsUiState,
     onAddPlaylistClick: () -> Unit,
     onDelete: (PlaylistItem) -> Unit,
+    onItemClick: (PlaylistItem) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -136,10 +141,11 @@ private fun PlaylistsUi(
                 contentPadding = innerPadding,
                 state = listState,
             ) {
-                items(state.playlists.size) {
+                items(items = state.playlists, key = { it.id }) { item ->
                     PlaylistItem(
-                        item = state.playlists[it],
-                        onDeleteClick = { onDelete(state.playlists[it]) },
+                        item = item,
+                        onDeleteClick = { onDelete(item) },
+                        onItemClick = { onItemClick(item) },
                     )
                 }
             }
@@ -157,6 +163,7 @@ private fun PlaylistsUiPreview() {
         created = Instant.DISTANT_PAST,
         updated = Instant.DISTANT_PAST,
         imageUrl = null,
+        songCount = 10L,
     )
     val item2 = PlaylistItem(
         id = 2L,
@@ -165,11 +172,12 @@ private fun PlaylistsUiPreview() {
         created = Instant.DISTANT_PAST,
         updated = Instant.DISTANT_PAST,
         imageUrl = null,
+        songCount = 5L,
     )
     val state =
-        PlaylistsUiState(playlists = kotlinx.collections.immutable.persistentListOf(item1, item2))
+        PlaylistsUiState(playlists = persistentListOf(item1, item2))
     AppTheme {
-        PlaylistsUi(state = state, onAddPlaylistClick = { }, onDelete = {})
+        PlaylistsUi(state = state, onAddPlaylistClick = { }, onDelete = {}, onItemClick = {})
     }
 }
 
@@ -183,6 +191,7 @@ private fun PlaylistsUiPreviewDark() {
         created = Instant.DISTANT_PAST,
         updated = Instant.DISTANT_PAST,
         imageUrl = null,
+        songCount = 10L,
     )
     val item2 = PlaylistItem(
         id = 2L,
@@ -191,11 +200,12 @@ private fun PlaylistsUiPreviewDark() {
         created = Instant.DISTANT_PAST,
         updated = Instant.DISTANT_PAST,
         imageUrl = null,
+        songCount = 5L,
     )
     val state =
-        PlaylistsUiState(playlists = kotlinx.collections.immutable.persistentListOf(item1, item2))
+        PlaylistsUiState(playlists = persistentListOf(item1, item2))
     AppTheme(darkTheme = true) {
-        PlaylistsUi(state = state, onAddPlaylistClick = { }, onDelete = {})
+        PlaylistsUi(state = state, onAddPlaylistClick = { }, onDelete = {}, onItemClick = {})
     }
 }
 
@@ -238,6 +248,7 @@ private fun PlaylistsEmptyUiPreview() {
             onAddPlaylistClick = {},
             onDelete = {},
             state = PlaylistsUiState(playlists = persistentListOf()),
+            onItemClick = {},
         )
     }
 }
@@ -246,21 +257,20 @@ private fun PlaylistsEmptyUiPreview() {
 private fun PlaylistItem(
     item: PlaylistItem,
     onDeleteClick: () -> Unit,
+    onItemClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var showDeleteConfirmation by remember { mutableStateOf(false) }
     ListItem(
         headlineContent = { Text(text = item.name) },
-        supportingContent = item.description?.let {
-            {
-                Text(
-                    text = it,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
+        supportingContent = {
+            Text(
+                text = "${item.songCount} Songs",
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+            )
         },
-        modifier = modifier,
+        modifier = modifier.clickable(onClick = onItemClick),
         trailingContent = {
             PlaylistItemMoreMenu(
                 onDeleteClick = { showDeleteConfirmation = true },
@@ -341,9 +351,10 @@ private fun PlaylistItemPreview() {
         imageUrl = null,
         created = Instant.DISTANT_PAST,
         updated = Instant.DISTANT_PAST,
+        songCount = 10L,
     )
     AppTheme {
-        PlaylistItem(item = item, onDeleteClick = {})
+        PlaylistItem(item = item, onDeleteClick = {}, onItemClick = {})
     }
 }
 

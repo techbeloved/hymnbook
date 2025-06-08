@@ -41,6 +41,7 @@ private fun NavGraphBuilder.searchScreenDestination(navController: NavHostContro
                     topics = SongFilter.NONE.topics,
                     songbooks = SongFilter.NONE.songbooks,
                     orderByTitle = SongFilter.NONE.orderByTitle,
+                    playlistIds = SongFilter.NONE.playlistIds,
                 )
             )
         })
@@ -58,6 +59,7 @@ private fun NavGraphBuilder.filteredSongsScreenDestination(navController: NavHos
                         topics = route.topics,
                         songbooks = route.songbooks,
                         orderByTitle = route.orderByTitle,
+                        playlistIds = route.playlistIds,
                     )
                 )
             }

@@ -37,6 +37,12 @@ internal class GetFilteredSongTitlesUseCase @Inject constructor(
                     mapper = ::SongTitle,
                 )
             }
+            songFilter.byPlaylists -> {
+                database.songEntityQueries.filterSongsByPlaylists(
+                    playlistIds = songFilter.playlistIds,
+                    mapper = ::SongTitle,
+                )
+            }
 
             else -> {
                 database.songEntityQueries.filterSongs(

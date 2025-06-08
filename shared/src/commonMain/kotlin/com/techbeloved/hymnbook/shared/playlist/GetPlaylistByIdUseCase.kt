@@ -12,7 +12,9 @@ internal class GetPlaylistByIdUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(playlistId: Long): PlaylistItem =
         withContext(dispatchersProvider.io()) {
-            database.playlistEntityQueries.getById(playlistId) { id, name, description, imageUrl, created, modified ->
+            database.playlistEntityQueries.getById(
+                playlistId = playlistId,
+            ) { id, name, description, imageUrl, created, modified, songCount ->
                 PlaylistItem(
                     id = id,
                     name = name,
@@ -20,6 +22,7 @@ internal class GetPlaylistByIdUseCase @Inject constructor(
                     imageUrl = imageUrl,
                     created = created,
                     updated = modified,
+                    songCount = songCount,
                 )
 
             }.executeAsOne()

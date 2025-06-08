@@ -7,4 +7,5 @@ import kotlinx.collections.immutable.ImmutableList
 internal data class FilteredSongsState(
     val filter: SongFilter,
     val songs: ImmutableList<SongTitle>,
+    val title: String,
 )

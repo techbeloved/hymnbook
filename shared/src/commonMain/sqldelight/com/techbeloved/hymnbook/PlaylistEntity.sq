@@ -24,12 +24,31 @@ lastInsertRowId:
 SELECT last_insert_rowid();
 
 getAll:
-SELECT * FROM PlaylistEntity
+SELECT
+    pl.id,
+    pl.name,
+    pl.description,
+    pl.image_url,
+    pl.created,
+    pl.modified,
+    COUNT(ps.song_id) AS song_count
+FROM PlaylistEntity AS pl
+LEFT OUTER JOIN PlaylistSongs AS ps ON ps.playlist_id = pl.id
+GROUP BY pl.id
 ORDER BY created;
 
 getById:
-SELECT * FROM PlaylistEntity
-WHERE id = :playlistId;
+SELECT
+    pl.id,
+    pl.name,
+    pl.description,
+    pl.image_url,
+    pl.created,
+    pl.modified,
+    COUNT(ps.song_id) AS song_count
+FROM PlaylistEntity AS pl
+LEFT OUTER JOIN PlaylistSongs AS ps ON ps.playlist_id = pl.id
+WHERE pl.id = :playlistId;
 
 delete:
 DELETE FROM PlaylistEntity
