@@ -19,7 +19,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.techbeloved.hymnbook.shared.ui.appbar.BottomNavigationBar
-import com.techbeloved.hymnbook.shared.ui.home.TopLevelRoute
+import com.techbeloved.hymnbook.shared.ui.home.TopLevelDestination
 import com.techbeloved.hymnbook.shared.ui.home.addHomeRoutes
 import com.techbeloved.hymnbook.shared.ui.home.isATopLevelDestination
 import com.techbeloved.hymnbook.shared.ui.home.navigationItems
@@ -54,7 +54,7 @@ public fun App() {
             CompositionLocalProvider(LocalNavController provides navController) {
                 NavHost(
                     navController = navController,
-                    startDestination = TopLevelRoute,
+                    startDestination = TopLevelDestination.Home,
                     modifier = Modifier,
                 ) {
                     addHomeRoutes(navController)

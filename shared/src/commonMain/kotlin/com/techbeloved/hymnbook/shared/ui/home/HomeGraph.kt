@@ -10,7 +10,6 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import androidx.navigation.navigation
 import com.techbeloved.hymnbook.TopicEntity
 import com.techbeloved.hymnbook.shared.model.SongFilter
 import com.techbeloved.hymnbook.shared.model.playlist.PlaylistItem
@@ -49,8 +48,6 @@ internal val navigationItems = persistentListOf(
 )
 
 @Serializable
-internal data object TopLevelRoute
-
 internal sealed interface TopLevelDestination {
     @Serializable
     data object Home : TopLevelDestination
@@ -66,8 +63,8 @@ internal sealed interface TopLevelDestination {
 }
 
 internal fun NavGraphBuilder.addHomeRoutes(
-    navController: NavHostController
-) = navigation<TopLevelRoute>(startDestination = TopLevelDestination.Home) {
+    navController: NavHostController,
+) {
     composable<TopLevelDestination.Home> {
         HomeTabScreen(
             onOpenSearch = { navController.navigate(SearchScreen) },
