@@ -1,6 +1,10 @@
+
+import com.mikepenz.aboutlibraries.plugin.DuplicateMode
+import com.mikepenz.aboutlibraries.plugin.DuplicateRule
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
+    alias(libs.plugins.about.libraries)
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.compose)
@@ -63,6 +67,11 @@ kotlin {
             implementation(libs.kotlinx.io)
             implementation(libs.kotlinx.datetime)
             implementation(libs.coroutines)
+
+            // About libraries
+            implementation(libs.about.libraries.compose.core)
+            implementation(libs.about.libraries.compose.m3)
+            implementation(libs.about.libraries.core)
 
             // Sqldelight
             implementation(libs.sqldelight.coroutines.extensions)
@@ -143,13 +152,25 @@ android {
     }
 
     sourceSets["main"].apply {
-        res.srcDirs("src/androidMain/res", "src/commonMain/composeResources/res")
+        res.srcDirs("src/androidMain/res", "src/commonMain/composeResources")
         assets.srcDirs("src/commonMain/composeResources/files")
     }
 }
 
 dependencies {
     debugImplementation(compose.uiTooling)
+}
+
+aboutLibraries {
+    export {
+        outputFile = file("src/commonMain/composeResources/files/about/libraries.json")
+        prettyPrint = true
+    }
+
+    library {
+        duplicationMode = DuplicateMode.MERGE
+        duplicationRule = DuplicateRule.SIMPLE
+    }
 }
 
 sqldelight {
