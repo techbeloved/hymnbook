@@ -8,6 +8,8 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.toRoute
 import com.techbeloved.hymnbook.shared.model.SongFilter
 import com.techbeloved.hymnbook.shared.ui.detail.SongDetailScreen
+import com.techbeloved.hymnbook.shared.ui.more.about.AboutScreen
+import com.techbeloved.hymnbook.shared.ui.more.about.OpenSourceLicencesScreen
 import com.techbeloved.hymnbook.shared.ui.playlist.add.AddEditPlaylistDialog
 import com.techbeloved.hymnbook.shared.ui.playlist.select.AddSongToPlaylistDialog
 import com.techbeloved.hymnbook.shared.ui.search.SearchScreen
@@ -22,6 +24,21 @@ internal fun NavGraphBuilder.addNavigationRoutes(
     filteredSongsScreenDestination(navController)
     addEditPlaylistDialogDestination(navController, onShowSnackbarMessage)
     addSongToPlaylistDialogDestination(navController, onShowSnackbarMessage)
+    aboutScreenDestination(navController)
+
+    composable<OpenSourceLicencesScreen> {
+        OpenSourceLicencesScreen()
+    }
+}
+
+private fun NavGraphBuilder.aboutScreenDestination(navController: NavHostController) {
+    composable<AboutScreen> {
+        AboutScreen(
+            onPrivacyPolicyClick = {},
+            onOpenSourceLicencesClick = { navController.navigate(OpenSourceLicencesScreen) },
+            onTermsAndConditionsClick = {},
+        )
+    }
 }
 
 private fun NavGraphBuilder.songDetailDestination(navController: NavHostController) {

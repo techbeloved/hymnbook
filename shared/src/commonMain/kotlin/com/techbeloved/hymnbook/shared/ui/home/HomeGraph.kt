@@ -17,6 +17,7 @@ import com.techbeloved.hymnbook.shared.ui.appbar.HomeNavItem
 import com.techbeloved.hymnbook.shared.ui.detail.SongDetailScreen
 import com.techbeloved.hymnbook.shared.ui.discover.DiscoverTabScreen
 import com.techbeloved.hymnbook.shared.ui.more.MoreTabScreen
+import com.techbeloved.hymnbook.shared.ui.more.about.AboutScreen
 import com.techbeloved.hymnbook.shared.ui.playlist.PlayListTabScreen
 import com.techbeloved.hymnbook.shared.ui.playlist.add.AddEditPlaylistDialog
 import com.techbeloved.hymnbook.shared.ui.search.SearchScreen
@@ -101,7 +102,9 @@ internal fun NavGraphBuilder.addHomeRoutes(
     }
 
     composable<TopLevelDestination.More> {
-        MoreTabScreen()
+        MoreTabScreen(
+            onAboutClick = { navController.navigate(AboutScreen) },
+        )
     }
 }
 

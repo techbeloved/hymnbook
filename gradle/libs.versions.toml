@@ -4,6 +4,7 @@ android-compileSdk = "36"
 android-minSdk = "21"
 android-targetSdk = "36"
 jdk = "17"
+aboutLibraries = "12.2.1"
 androidPdfViewer = "3.1.0-beta.1"
 androidx_activity = "1.10.1"
 androidx_appcompat = "1.7.0"
@@ -17,7 +18,7 @@ androidx_test_junit = "1.2.1"
 androidx_work = "2.10.1"
 androidx_work_runtime = "2.10.1"
 appUpdateKtx = "2.1.0"
-haze = "1.6.3"
+haze = "1.6.4"
 kaluga = "1.5.1"
 cardview = "1.0.0"
 circularProgressBar = "1.2.3"
@@ -67,7 +68,7 @@ material = "1.12.0"
 media = "1.7.0"
 mockitoKotlin = "2.2.0"
 androidxNavigation = "2.9.0"
-okio = "3.11.0"
+okio = "3.12.0"
 paletteKtx = "1.0.0"
 preferenceKtx = "1.2.1"
 recyclerview = "1.4.0"
@@ -129,6 +130,10 @@ androidx-datastore-preferences = { group = "androidx.datastore", name = "datasto
 androidx-work-rxjava2 = { module = "androidx.work:work-rxjava2", version.ref = "androidx_work" }
 androidx-work-testing = { module = "androidx.work:work-testing", version.ref = "androidx_work" }
 app-update-ktx = { module = "com.google.android.play:app-update-ktx", version.ref = "appUpdateKtx" }
+
+about-libraries-core = { module = "com.mikepenz:aboutlibraries-core", version.ref = "aboutLibraries" }
+about-libraries-compose-core = { module = "com.mikepenz:aboutlibraries-compose-core", version.ref = "aboutLibraries" }
+about-libraries-compose-m3 = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutLibraries" }
 haze = { module = "dev.chrisbanes.haze:haze", version.ref = "haze" }
 haze-materials = { module = "dev.chrisbanes.haze:haze-materials", version.ref = "haze" }
 kaluga-base = { module = "com.splendo.kaluga:base", version.ref = "kaluga" }
@@ -240,3 +245,4 @@ firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 triplet-play = { id = "com.github.triplet.play", version.ref = "triplet" }
 benmanes-versions = { id = "com.github.ben-manes.versions", version.ref = "versions" }
+about-libraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutLibraries"}

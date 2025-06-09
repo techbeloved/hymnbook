@@ -22,4 +22,5 @@ plugins {
     alias libs.plugins.native.cocoapods apply false
     alias libs.plugins.detekt apply false
     alias libs.plugins.benmanes.versions apply true
+    alias libs.plugins.about.libraries apply true
 }
