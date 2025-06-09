@@ -24,7 +24,7 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -46,7 +46,7 @@ internal class HomeScreenModel @Inject constructor(
     private val assetsReady = MutableStateFlow(false)
     private val sortBy = MutableStateFlow(value = SortBy.Number)
     private val selectedSongbook = MutableStateFlow<SongbookEntity?>(value = null)
-    private val songbooks = flow { emit(getAllSongbooksUseCase().toImmutableList()) }
+    private val songbooks = getAllSongbooksUseCase().map { it.toImmutableList() }
 
     val state = combine(
         assetsReady,
