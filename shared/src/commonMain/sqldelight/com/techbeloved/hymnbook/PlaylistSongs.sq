@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS PlaylistSongs (
+CREATE TABLE PlaylistSongs (
     playlist_id INTEGER,
     song_id INTEGER,
     PRIMARY KEY (playlist_id, song_id),
