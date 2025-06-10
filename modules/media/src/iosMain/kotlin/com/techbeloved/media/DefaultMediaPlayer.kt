@@ -54,6 +54,7 @@ class DefaultMediaPlayer(
         player.seekToTime(CMTimeMake(position, timescale = THOUSAND))
 
     override fun prepare() {
+        AudioSessionInitializer.initialize
         changePlaybackSpeed(state.playbackSpeed.ratePercentToFloat)
         observePlaybackStatus(playerItem)
     }

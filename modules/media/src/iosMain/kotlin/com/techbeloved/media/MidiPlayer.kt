@@ -9,7 +9,6 @@ import kotlinx.cinterop.ObjCObjectVar
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr
-import kotlinx.cinterop.value
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -32,12 +31,10 @@ class MidiPlayer(
         val error = alloc<ObjCObjectVar<NSError?>>()
         AVMIDIPlayer(
             contentsOfURL = midiContent,
-            soundBankURL = URLWithString(Res.getUri("files/yamaha_grand_lite_sf_v11.sf2")),
+            // Downloaded from https://archive.org/download/free-soundfonts-sf2-2019-04
+            soundBankURL = URLWithString(Res.getUri("files/reality_gm_gs.sf2")),
             error = error.ptr,
-        ).also {
-            it.rate = state.playbackSpeed.ratePercentToFloat
-            println("AVMidiPlayer Init: ${error.value}")
-        }
+        )
     }
     private var playerEventsJob: Job? = null
 
@@ -67,6 +64,7 @@ class MidiPlayer(
         player.setCurrentPosition(position / THOUSAND) // Convert from millisec
 
     override fun prepare() {
+        AudioSessionInitializer.initialize
         player.prepareToPlay()
         player.rate = state.playbackSpeed.ratePercentToFloat
         state.playerState = PlayerState.Ready
@@ -93,6 +91,8 @@ class MidiPlayer(
                 delay(timeMillis = 100)
             }
             state.isPlaying = player.isPlaying()
+            state.position = 0
+            player.stop()
         }
     }
 }
