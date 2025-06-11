@@ -36,6 +36,7 @@ class PlaybackState(
     playbackSpeed: Int = 100,
     playerState: PlayerState = PlayerState.Idle,
     mediaId: String? = null,
+    isLooping: Boolean = false,
 ) {
 
     var isPlaying by mutableStateOf(isPlaying)
@@ -48,6 +49,8 @@ class PlaybackState(
         internal set
     var playerState by mutableStateOf(playerState)
     var playbackSpeed by mutableStateOf(playbackSpeed)
+        internal set
+    var isLooping by mutableStateOf(isLooping)
         internal set
 
     /**
@@ -67,6 +70,7 @@ class PlaybackState(
                     it.playerState,
                     it.mediaId,
                     it.playbackSpeed,
+                    it.isLooping,
                 )
             },
             restore = {
@@ -78,6 +82,7 @@ class PlaybackState(
                     playerState = it[4] as PlayerState,
                     mediaId = it[5] as String?,
                     playbackSpeed = it[6] as Int,
+                    isLooping = it[7] as Boolean,
                 )
             }
         )

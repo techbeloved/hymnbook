@@ -81,6 +81,10 @@ class MidiPlayer(
         player.rate = speed
     }
 
+    override fun toggleLooping() {
+        // Figure out the proper and error-free way to implement looping for AVMidiPlayer
+    }
+
     private fun observePlaybackStatus() {
         playerEventsJob?.cancel()
         playerEventsJob = coroutineScope.launch {

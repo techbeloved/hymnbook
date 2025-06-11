@@ -63,6 +63,10 @@ class DefaultMediaPlayer(
         player.rate = speed
     }
 
+    override fun toggleLooping() {
+        // Figure out how to implement proper looping of AVPlayer using AVPlayerLooper and AVQueuePlayer
+    }
+
     override fun onDispose() {
         player.pause()
         timeObserver?.let { player.removeTimeObserver(it) }

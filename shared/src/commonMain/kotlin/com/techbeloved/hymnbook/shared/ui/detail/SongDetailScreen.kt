@@ -64,12 +64,13 @@ internal data class SongDetailScreen(
     val playlistIds: List<Long>,
     val orderByTitle: Boolean,
 ) {
-    val songFilter get() = SongFilter(
-        topics = topics,
-        songbooks = songbooks,
-        playlistIds = playlistIds,
-        orderByTitle = orderByTitle,
-    )
+    val songFilter
+        get() = SongFilter(
+            topics = topics,
+            songbooks = songbooks,
+            playlistIds = playlistIds,
+            orderByTitle = orderByTitle,
+        )
 }
 
 @Composable
@@ -154,6 +155,11 @@ internal fun SongDetailScreen(
                     pagerViewModel.onHideSettings()
                     currentSongId?.let { onAddSongToPlaylist(it) }
                 },
+                onToggleLooping = {
+                    playbackController?.toggleLooping()
+                },
+                isLooping = playbackState.isLooping,
+                isLoopingSupported = playbackController?.isLoopingSupported == true,
             )
         }
     }

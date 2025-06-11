@@ -3,8 +3,9 @@
 package com.techbeloved.hymnbook.shared.ui.settings
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -34,6 +35,16 @@ import androidx.compose.ui.unit.sp
 import com.techbeloved.hymnbook.shared.ext.percentToNearestFive
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.preferences.SongPreferences
+import hymnbook.shared.generated.resources.Res
+import hymnbook.shared.generated.resources.now_playing_add_to_playlist
+import hymnbook.shared.generated.resources.now_playing_settings_loop
+import hymnbook.shared.generated.resources.now_playing_settings_lyrics_size
+import hymnbook.shared.generated.resources.now_playing_settings_music_speed
+import hymnbook.shared.generated.resources.now_playing_settings_speed_down
+import hymnbook.shared.generated.resources.now_playing_settings_speed_up
+import hymnbook.shared.generated.resources.now_playing_settings_zoom_in
+import hymnbook.shared.generated.resources.now_playing_settings_zoom_out
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun NowPlayingSettingsBottomSheet(
@@ -44,6 +55,9 @@ internal fun NowPlayingSettingsBottomSheet(
     onZoomIn: () -> Unit,
     onChangeSongDisplayMode: (songDisplayMode: SongDisplayMode) -> Unit,
     onAddSongToPlaylist: () -> Unit,
+    onToggleLooping: (isLooping: Boolean) -> Unit,
+    isLooping: Boolean,
+    isLoopingSupported: Boolean,
     preferences: SongPreferences,
     playbackSpeed: Int,
     modifier: Modifier = Modifier,
@@ -65,11 +79,11 @@ internal fun NowPlayingSettingsBottomSheet(
                 onClick = onAddSongToPlaylist,
             ) {
                 Row {
-                    Text(text = "Add to playlist")
+                    Text(text = stringResource(Res.string.now_playing_add_to_playlist))
                     Spacer(Modifier.width(8.dp))
                     Icon(
                         imageVector = Icons.AutoMirrored.TwoTone.PlaylistAdd,
-                        contentDescription = "Add to playlist",
+                        contentDescription = stringResource(Res.string.now_playing_add_to_playlist),
                     )
                 }
             }
@@ -96,6 +110,33 @@ internal fun NowPlayingSettingsBottomSheet(
             modifier = Modifier.fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 16.dp),
         )
+        if (isLoopingSupported) {
+            HorizontalDivider()
+            LoopingControls(
+                isLooping = isLooping,
+                onToggleLooping = onToggleLooping,
+                modifier = Modifier.fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 16.dp),
+            )
+        }
+    }
+}
+
+@Composable
+private fun LoopingControls(
+    isLooping: Boolean,
+    onToggleLooping: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    SettingsControl(
+        text = stringResource(Res.string.now_playing_settings_loop),
+        modifier = modifier,
+    ) {
+        Switch(
+            checked = isLooping,
+            onCheckedChange = onToggleLooping,
+            modifier = Modifier.align(Alignment.CenterEnd),
+        )
     }
 }
 
@@ -106,18 +147,34 @@ private fun ZoomButtons(
     fontSize: TextUnit,
     modifier: Modifier = Modifier,
 ) {
-    SettingsControl(modifier = modifier, text = "Lyrics Size") {
-        IconButton(onClick = onZoomOut) {
-            Icon(Icons.Default.Remove, contentDescription = "Zoom out")
+    SettingsControl(
+        modifier = modifier,
+        text = stringResource(Res.string.now_playing_settings_lyrics_size),
+    ) {
+        IconButton(
+            onClick = onZoomOut,
+            modifier = Modifier.align(Alignment.CenterStart),
+        ) {
+            Icon(
+                imageVector = Icons.Default.Remove,
+                contentDescription = stringResource(Res.string.now_playing_settings_zoom_out),
+            )
         }
         Text(
             text = "A",
             fontSize = fontSize,
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.labelMedium,
+            modifier = Modifier.align(Alignment.Center),
         )
-        IconButton(onClick = onZoomIn) {
-            Icon(Icons.Default.Add, contentDescription = "Zoom in")
+        IconButton(
+            onClick = onZoomIn,
+            modifier = Modifier.align(Alignment.CenterEnd),
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = stringResource(Res.string.now_playing_settings_zoom_in),
+            )
         }
     }
 }
@@ -129,17 +186,33 @@ private fun MusicSpeedControls(
     onSpeedDown: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    SettingsControl(modifier = modifier, text = "Music Speed") {
-        IconButton(onClick = onSpeedDown) {
-            Icon(Icons.Default.Remove, contentDescription = "Speed down")
+    SettingsControl(
+        modifier = modifier,
+        text = stringResource(Res.string.now_playing_settings_music_speed),
+    ) {
+        IconButton(
+            onClick = onSpeedDown,
+            modifier = Modifier.align(Alignment.CenterStart),
+        ) {
+            Icon(
+                Icons.Default.Remove,
+                contentDescription = stringResource(Res.string.now_playing_settings_speed_down),
+            )
         }
         Text(
-            text = "${currentSpeed.percentToNearestFive}X",
+            text = "${currentSpeed.percentToNearestFive}×",
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.labelMedium,
+            modifier = Modifier.align(Alignment.Center),
         )
-        IconButton(onClick = onSpeedUp) {
-            Icon(Icons.Default.Add, contentDescription = "Speed up")
+        IconButton(
+            onClick = onSpeedUp,
+            modifier = Modifier.align(Alignment.CenterEnd),
+        ) {
+            Icon(
+                Icons.Default.Add,
+                contentDescription = stringResource(Res.string.now_playing_settings_speed_up),
+            )
         }
     }
 }
@@ -159,6 +232,7 @@ private fun SheetMusicToggle(
             onCheckedChange = { isChecked ->
                 onToggle(if (isChecked) SongDisplayMode.SheetMusic else SongDisplayMode.Lyrics)
             },
+            modifier = Modifier.align(Alignment.CenterEnd),
         )
     }
 }
@@ -167,17 +241,19 @@ private fun SheetMusicToggle(
 private fun SettingsControl(
     text: String,
     modifier: Modifier = Modifier,
-    controls: @Composable RowScope.() -> Unit,
+    controls: @Composable BoxScope.() -> Unit,
 ) {
     Row(
         modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(24.dp),
     ) {
-        Text(text = text)
+        Text(text = text, modifier = Modifier.weight(weight = 1f))
 
-        Spacer(Modifier.weight(1f))
-
-        controls()
+        Box(
+            Modifier.weight(weight = 1f),
+        ) {
+            controls()
+        }
     }
 }

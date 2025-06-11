@@ -18,6 +18,8 @@ class AndroidPlaybackController(
     private val state: PlaybackState,
 ) : PlaybackController {
 
+    override val isLoopingSupported: Boolean = true
+
     init {
         // Initial state
         state.apply {
@@ -29,6 +31,7 @@ class AndroidPlaybackController(
             // Convert to percent
             playbackSpeed = mediaController.playbackParameters.speed.rateToPercent
             updateDuration()
+            isLooping = mediaController.repeatMode != Player.REPEAT_MODE_OFF
         }
 
         scope.launch {
@@ -75,6 +78,10 @@ class AndroidPlaybackController(
 
                 if (events.contains(Player.EVENT_PLAYBACK_PARAMETERS_CHANGED)) {
                     state.playbackSpeed = mediaController.playbackParameters.speed.rateToPercent
+                }
+
+                if (events.contains(Player.EVENT_REPEAT_MODE_CHANGED)) {
+                    state.isLooping = mediaController.repeatMode != Player.REPEAT_MODE_OFF
                 }
             }
         }
@@ -139,5 +146,13 @@ class AndroidPlaybackController(
 
     override fun changePlaybackSpeed(speed: Int) {
         mediaController.setPlaybackSpeed(speed.ratePercentToFloat)
+    }
+
+    override fun toggleLooping() {
+        mediaController.repeatMode = if (mediaController.repeatMode == Player.REPEAT_MODE_OFF) {
+            Player.REPEAT_MODE_ONE
+        } else {
+            Player.REPEAT_MODE_OFF
+        }
     }
 }

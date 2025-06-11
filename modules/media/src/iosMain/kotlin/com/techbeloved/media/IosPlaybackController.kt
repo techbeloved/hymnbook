@@ -8,6 +8,8 @@ class IosPlaybackController(
     private val state: PlaybackState,
     private val coroutineScope: CoroutineScope,
 ) : PlaybackController {
+
+    override val isLoopingSupported: Boolean = false // Not yet
     private val queue = mutableListOf<AudioItem>()
     private var player: IosMediaPlayer? = null
 
@@ -77,6 +79,10 @@ class IosPlaybackController(
 
     override fun changePlaybackSpeed(speed: Int) {
         player?.changePlaybackSpeed(speed.ratePercentToFloat)
+    }
+
+    override fun toggleLooping() {
+        player?.toggleLooping()
     }
 
     private fun playCurrentItem() {

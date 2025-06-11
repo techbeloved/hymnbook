@@ -17,4 +17,19 @@
     <string name="settings_light_mode">Light Mode</string>
     <string name="settings_dark_mode">Dark Mode</string>
     <string name="settings_system_default">System Default</string>
+    <string name="now_playing_add_to_playlist">Add to playlist</string>
+    <string name="now_playing_settings_loop">Loop</string>
+    <string name="now_playing_settings_lyrics_size">Lyrics Size</string>
+    <string name="now_playing_settings_music_speed">Music Speed</string>
+    <string name="now_playing_settings_sheet_music">Sheet Music</string>
+    <string name="now_playing_settings_zoom_out">Zoom Out</string>
+    <string name="now_playing_settings_zoom_in">Zoom In</string>
+    <string name="now_playing_settings_speed_down">Speed Down</string>
+    <string name="now_playing_settings_speed_up">Speed Up</string>
+    <string name="content_description_previous">Previous</string>
+    <string name="content_description_next">Next</string>
+    <string name="content_description_show_more_controls">Show more controls</string>
+    <string name="content_description_pause">Pause</string>
+    <string name="content_description_play">Play</string>
+    <string name="content_description_media_not_available">Playable media not available</string>
 </resources>
