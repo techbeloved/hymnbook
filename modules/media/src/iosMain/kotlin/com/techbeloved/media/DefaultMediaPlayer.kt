@@ -54,12 +54,17 @@ class DefaultMediaPlayer(
         player.seekToTime(CMTimeMake(position, timescale = THOUSAND))
 
     override fun prepare() {
+        AudioSessionInitializer.initialize
         changePlaybackSpeed(state.playbackSpeed.ratePercentToFloat)
         observePlaybackStatus(playerItem)
     }
 
     override fun changePlaybackSpeed(speed: Float) {
         player.rate = speed
+    }
+
+    override fun toggleLooping() {
+        // Figure out how to implement proper looping of AVPlayer using AVPlayerLooper and AVQueuePlayer
     }
 
     override fun onDispose() {

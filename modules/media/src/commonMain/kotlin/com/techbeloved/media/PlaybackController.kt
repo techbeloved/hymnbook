@@ -6,6 +6,8 @@ import kotlinx.collections.immutable.ImmutableList
 @Stable
 interface PlaybackController {
 
+    val isLoopingSupported: Boolean
+
     fun play()
 
     fun pause()
@@ -23,4 +25,6 @@ interface PlaybackController {
     fun playWhenReady()
 
     fun changePlaybackSpeed(speed: Int)
+
+    fun toggleLooping()
 }

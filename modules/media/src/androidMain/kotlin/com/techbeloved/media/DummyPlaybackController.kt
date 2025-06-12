@@ -3,6 +3,9 @@ package com.techbeloved.media
 import kotlinx.collections.immutable.ImmutableList
 
 class DummyPlaybackController(private val playbackState: PlaybackState) : PlaybackController {
+
+    override val isLoopingSupported: Boolean
+        get() = false
     private val queue = mutableListOf<AudioItem>()
     override fun play() {
         playbackState.isPlaying = true
@@ -35,5 +38,9 @@ class DummyPlaybackController(private val playbackState: PlaybackState) : Playba
 
     override fun changePlaybackSpeed(speed: Int) {
         playbackState.playbackSpeed = speed
+    }
+
+    override fun toggleLooping() {
+        playbackState.isLooping = !playbackState.isLooping
     }
 }

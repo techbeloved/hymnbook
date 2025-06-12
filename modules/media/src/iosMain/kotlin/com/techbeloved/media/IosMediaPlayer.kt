@@ -13,4 +13,6 @@ interface IosMediaPlayer {
     fun onDispose()
 
     fun changePlaybackSpeed(speed: Float)
+
+    fun toggleLooping()
 }

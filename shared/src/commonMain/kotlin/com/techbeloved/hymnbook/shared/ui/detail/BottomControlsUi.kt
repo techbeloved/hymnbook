@@ -11,11 +11,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.KeyboardArrowDown
-import androidx.compose.material.icons.rounded.ChevronLeft
-import androidx.compose.material.icons.rounded.ChevronRight
-import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material.icons.twotone.ChevronLeft
+import androidx.compose.material.icons.twotone.ChevronRight
+import androidx.compose.material.icons.twotone.Pause
+import androidx.compose.material.icons.twotone.PlayArrow
+import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,7 +39,15 @@ import com.techbeloved.media.PlaybackState
 import com.techbeloved.media.PlayerState
 import com.techbeloved.media.rememberPlaybackController
 import com.techbeloved.media.rememberPlaybackState
+import hymnbook.shared.generated.resources.Res
+import hymnbook.shared.generated.resources.content_description_media_not_available
+import hymnbook.shared.generated.resources.content_description_next
+import hymnbook.shared.generated.resources.content_description_pause
+import hymnbook.shared.generated.resources.content_description_play
+import hymnbook.shared.generated.resources.content_description_previous
+import hymnbook.shared.generated.resources.content_description_show_more_controls
 import kotlinx.collections.immutable.persistentListOf
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun BottomControlsUi(
@@ -63,7 +72,10 @@ internal fun BottomControlsUi(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             IconButton(onClick = onPreviousButtonClick) {
-                Icon(imageVector = Icons.Rounded.ChevronLeft, contentDescription = "Previous")
+                Icon(
+                    imageVector = Icons.TwoTone.ChevronLeft,
+                    contentDescription = stringResource(Res.string.content_description_previous),
+                )
             }
             if (audioItem != null) {
                 PlayButton(
@@ -75,7 +87,10 @@ internal fun BottomControlsUi(
                 DisabledPlayButton()
             }
             IconButton(onClick = onNextButtonClick) {
-                Icon(imageVector = Icons.Rounded.ChevronRight, contentDescription = "Next")
+                Icon(
+                    imageVector = Icons.TwoTone.ChevronRight,
+                    contentDescription = stringResource(Res.string.content_description_next),
+                )
             }
 
         }
@@ -84,8 +99,8 @@ internal fun BottomControlsUi(
             onClick = onShowSettingsBottomSheet,
         ) {
             Icon(
-                imageVector = Icons.Outlined.KeyboardArrowDown,
-                contentDescription = "Show more controls"
+                imageVector = Icons.TwoTone.Settings,
+                contentDescription = stringResource(Res.string.content_description_show_more_controls),
             )
         }
 
@@ -161,11 +176,15 @@ private fun PlayButton(
         ) {
             Icon(
                 imageVector = if (playbackState.isPlaying) {
-                    Icons.Rounded.Pause
+                    Icons.TwoTone.Pause
                 } else {
-                    Icons.Rounded.PlayArrow
+                    Icons.TwoTone.PlayArrow
                 },
-                contentDescription = if (playbackState.isPlaying) "Pause" else "Play",
+                contentDescription = if (playbackState.isPlaying) {
+                    stringResource(Res.string.content_description_pause)
+                } else {
+                    stringResource(Res.string.content_description_play)
+                },
             )
         }
         AnimatedVisibility(progressVisible) {
@@ -187,7 +206,7 @@ private fun DisabledPlayButton(modifier: Modifier = Modifier) {
         ) {
             Icon(
                 imageVector = Icons.Rounded.PlayArrow,
-                contentDescription = "Playable media not available",
+                contentDescription = stringResource(Res.string.content_description_media_not_available),
             )
         }
     }
