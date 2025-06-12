@@ -19,6 +19,7 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
@@ -94,22 +95,6 @@ internal fun NowPlayingSettingsBottomSheet(
             modifier = Modifier.fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
         )
-        HorizontalDivider()
-        ZoomButtons(
-            onZoomIn = onZoomIn,
-            onZoomOut = onZoomOut,
-            modifier = Modifier.fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            fontSize = preferences.fontSize.sp,
-        )
-        HorizontalDivider()
-        MusicSpeedControls(
-            currentSpeed = playbackSpeed,
-            onSpeedUp = onSpeedUp,
-            onSpeedDown = onSpeedDown,
-            modifier = Modifier.fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 16.dp),
-        )
         if (isLoopingSupported) {
             HorizontalDivider()
             LoopingControls(
@@ -119,6 +104,22 @@ internal fun NowPlayingSettingsBottomSheet(
                     .padding(horizontal = 16.dp, vertical = 16.dp),
             )
         }
+        HorizontalDivider()
+        MusicSpeedControls(
+            currentSpeed = playbackSpeed,
+            onSpeedUp = onSpeedUp,
+            onSpeedDown = onSpeedDown,
+            modifier = Modifier.fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 16.dp),
+        )
+        HorizontalDivider()
+        ZoomButtons(
+            onZoomIn = onZoomIn,
+            onZoomOut = onZoomOut,
+            modifier = Modifier.fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            fontSize = preferences.fontSize.sp,
+        )
     }
 }
 
@@ -154,6 +155,9 @@ private fun ZoomButtons(
         IconButton(
             onClick = onZoomOut,
             modifier = Modifier.align(Alignment.CenterStart),
+            colors = IconButtonDefaults.iconButtonColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
+            ),
         ) {
             Icon(
                 imageVector = Icons.Default.Remove,
@@ -170,6 +174,9 @@ private fun ZoomButtons(
         IconButton(
             onClick = onZoomIn,
             modifier = Modifier.align(Alignment.CenterEnd),
+            colors = IconButtonDefaults.iconButtonColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
+            ),
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
@@ -193,6 +200,9 @@ private fun MusicSpeedControls(
         IconButton(
             onClick = onSpeedDown,
             modifier = Modifier.align(Alignment.CenterStart),
+            colors = IconButtonDefaults.iconButtonColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            ),
         ) {
             Icon(
                 Icons.Default.Remove,
@@ -208,6 +218,9 @@ private fun MusicSpeedControls(
         IconButton(
             onClick = onSpeedUp,
             modifier = Modifier.align(Alignment.CenterEnd),
+            colors = IconButtonDefaults.iconButtonColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            ),
         ) {
             Icon(
                 Icons.Default.Add,
