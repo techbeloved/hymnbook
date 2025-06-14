@@ -1,0 +1,26 @@
+{
+  "openlyrics": [
+    {
+      "path": "openlyrics/sample_songs.zip",
+      "type": "zip"
+    }
+  ],
+  "json": [
+    {
+      "path": "json/sample_hymns.json",
+      "type": "json"
+    }
+  ],
+  "tunes": [
+    {
+      "path": "tunes/sample_tunes.zip",
+      "type": "zip"
+    }
+  ],
+  "sheets": [
+    {
+      "path": "sheets/sample_sheets.zip",
+      "type": "zip"
+    }
+  ]
+}
