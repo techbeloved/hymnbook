@@ -21,6 +21,7 @@ import com.techbeloved.hymnbook.shared.ui.playlist.select.AddSongToPlaylistViewM
 import com.techbeloved.hymnbook.shared.ui.search.SearchScreenModel
 import com.techbeloved.hymnbook.shared.ui.songs.FilteredSongsViewModel
 import com.techbeloved.hymnbook.shared.ui.topics.TopicsViewModel
+import kotlinx.serialization.json.Json
 import me.tatarka.inject.annotations.Component
 import me.tatarka.inject.annotations.KmpComponentCreate
 import me.tatarka.inject.annotations.Provides
@@ -64,6 +65,9 @@ internal interface AppComponent {
 
     @Provides
     fun database(): Database = Injector.database
+
+    @Provides
+    fun json(): Json = Injector.json
 
     @Provides
     fun provideInstantProvider(instantProvider: DefaultInstantProvider): InstantProvider =

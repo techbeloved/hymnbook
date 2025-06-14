@@ -26,7 +26,7 @@ internal object Injector {
         getDatabase(driver)
     }
 
-    private val json: Json by lazy {
+    val json: Json by lazy {
         Json {
             isLenient = true
             encodeDefaults = true
