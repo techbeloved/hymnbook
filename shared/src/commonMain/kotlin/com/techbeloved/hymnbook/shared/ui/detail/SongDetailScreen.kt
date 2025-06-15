@@ -5,16 +5,22 @@ package com.techbeloved.hymnbook.shared.ui.detail
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.twotone.Search
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -75,6 +81,7 @@ internal data class SongDetailScreen(
 
 @Composable
 internal fun SongDetailScreen(
+    onOpenSearch: () -> Unit,
     onAddSongToPlaylist: (songId: Long) -> Unit,
     pagerViewModel: SongDetailPagerModel = viewModel(
         factory = SongDetailPagerModel.Factory,
@@ -109,6 +116,7 @@ internal fun SongDetailScreen(
                 onShowSettingsBottomSheet = pagerViewModel::onShowSettings,
                 playbackState = playbackState,
                 controller = playbackController,
+                onOpenSearch = onOpenSearch,
             )
         }
 
@@ -210,6 +218,7 @@ private fun SongPager(
     onShowSettingsBottomSheet: () -> Unit,
     playbackState: PlaybackState,
     controller: PlaybackController?,
+    onOpenSearch: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val hazeState = remember { HazeState() }
@@ -227,6 +236,12 @@ private fun SongPager(
                 containerColor = MaterialTheme.colorScheme.surface.copy(alpha = .5f),
                 modifier = Modifier.hazeEffect(hazeState, style = HazeMaterials.ultraThin()),
                 title = state.currentSongBookEntry?.songbook.orEmpty(),
+                actions = {
+                    Spacer(Modifier.width(8.dp))
+                    IconButton(onClick = onOpenSearch, modifier = Modifier) {
+                        Icon(imageVector = Icons.TwoTone.Search, contentDescription = "Search")
+                    }
+                }
             )
         },
         bottomBar = {

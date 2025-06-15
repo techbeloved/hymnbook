@@ -11,13 +11,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.twotone.ChevronLeft
 import androidx.compose.material.icons.twotone.ChevronRight
-import androidx.compose.material.icons.twotone.Pause
-import androidx.compose.material.icons.twotone.PlayArrow
-import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -99,7 +99,7 @@ internal fun BottomControlsUi(
             onClick = onShowSettingsBottomSheet,
         ) {
             Icon(
-                imageVector = Icons.TwoTone.Settings,
+                imageVector = Icons.Rounded.Settings,
                 contentDescription = stringResource(Res.string.content_description_show_more_controls),
             )
         }
@@ -146,7 +146,7 @@ private fun PlayButton(
         visible = controller != null,
         modifier = modifier.size(48.dp),
     ) {
-        IconButton(
+        FilledTonalIconButton(
             onClick = {
                 controller?.run {
                     when (playbackState.playerState) {
@@ -170,15 +170,12 @@ private fun PlayButton(
                 }
             },
             modifier = Modifier.fillMaxSize(),
-            colors = IconButtonDefaults.iconButtonColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant
-            ),
         ) {
             Icon(
                 imageVector = if (playbackState.isPlaying) {
-                    Icons.TwoTone.Pause
+                    Icons.Default.Pause
                 } else {
-                    Icons.TwoTone.PlayArrow
+                    Icons.Rounded.PlayArrow
                 },
                 contentDescription = if (playbackState.isPlaying) {
                     stringResource(Res.string.content_description_pause)

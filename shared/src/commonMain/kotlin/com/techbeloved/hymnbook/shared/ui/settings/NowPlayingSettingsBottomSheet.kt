@@ -16,10 +16,9 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
@@ -152,12 +151,9 @@ private fun ZoomButtons(
         modifier = modifier,
         text = stringResource(Res.string.now_playing_settings_lyrics_size),
     ) {
-        IconButton(
+        FilledTonalIconButton(
             onClick = onZoomOut,
             modifier = Modifier.align(Alignment.CenterStart),
-            colors = IconButtonDefaults.iconButtonColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant
-            ),
         ) {
             Icon(
                 imageVector = Icons.Default.Remove,
@@ -171,12 +167,9 @@ private fun ZoomButtons(
             style = MaterialTheme.typography.labelMedium,
             modifier = Modifier.align(Alignment.Center),
         )
-        IconButton(
+        FilledTonalIconButton(
             onClick = onZoomIn,
             modifier = Modifier.align(Alignment.CenterEnd),
-            colors = IconButtonDefaults.iconButtonColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant
-            ),
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
@@ -197,12 +190,9 @@ private fun MusicSpeedControls(
         modifier = modifier,
         text = stringResource(Res.string.now_playing_settings_music_speed),
     ) {
-        IconButton(
+        FilledTonalIconButton(
             onClick = onSpeedDown,
             modifier = Modifier.align(Alignment.CenterStart),
-            colors = IconButtonDefaults.iconButtonColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant,
-            ),
         ) {
             Icon(
                 Icons.Default.Remove,
@@ -215,12 +205,9 @@ private fun MusicSpeedControls(
             style = MaterialTheme.typography.labelMedium,
             modifier = Modifier.align(Alignment.Center),
         )
-        IconButton(
+        FilledTonalIconButton(
             onClick = onSpeedUp,
             modifier = Modifier.align(Alignment.CenterEnd),
-            colors = IconButtonDefaults.iconButtonColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant,
-            ),
         ) {
             Icon(
                 Icons.Default.Add,

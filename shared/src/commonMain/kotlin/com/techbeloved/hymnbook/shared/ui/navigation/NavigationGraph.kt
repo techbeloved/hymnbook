@@ -43,9 +43,14 @@ private fun NavGraphBuilder.aboutScreenDestination(navController: NavHostControl
 
 private fun NavGraphBuilder.songDetailDestination(navController: NavHostController) {
     composable<SongDetailScreen> {
-        SongDetailScreen(onAddSongToPlaylist = { songId ->
-            navController.navigate(AddSongToPlaylistDialog(songId))
-        })
+        SongDetailScreen(
+            onAddSongToPlaylist = { songId ->
+                navController.navigate(AddSongToPlaylistDialog(songId))
+            },
+            onOpenSearch = {
+                navController.navigate(SearchScreen)
+            },
+        )
     }
 }
 
