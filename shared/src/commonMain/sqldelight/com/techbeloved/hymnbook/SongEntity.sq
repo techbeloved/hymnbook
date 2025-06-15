@@ -153,6 +153,10 @@ getSongById:
 SELECT * FROM SongDetail
 WHERE SongDetail.id = ?;
 
+getSongbookEntries:
+SELECT songbookEntries FROM SongDetail
+WHERE SongDetail.id = ?;
+
 searchSongs:
 SELECT S.id, S.title, S.alternate_title, B.songbook, B.entry FROM SongEntity AS S
 LEFT JOIN SongbookSongs AS B

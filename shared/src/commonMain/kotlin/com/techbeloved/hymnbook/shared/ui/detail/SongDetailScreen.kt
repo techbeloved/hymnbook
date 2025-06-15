@@ -5,16 +5,22 @@ package com.techbeloved.hymnbook.shared.ui.detail
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.twotone.Search
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -41,7 +47,7 @@ import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.model.SongFilter
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
 import com.techbeloved.hymnbook.shared.ui.settings.NowPlayingSettingsBottomSheet
-import com.techbeloved.hymnbook.shared.ui.theme.crimsonText
+import com.techbeloved.hymnbook.shared.ui.utils.toUiDetail
 import com.techbeloved.media.PlaybackController
 import com.techbeloved.media.PlaybackState
 import com.techbeloved.media.rememberPlaybackController
@@ -75,6 +81,7 @@ internal data class SongDetailScreen(
 
 @Composable
 internal fun SongDetailScreen(
+    onOpenSearch: () -> Unit,
     onAddSongToPlaylist: (songId: Long) -> Unit,
     pagerViewModel: SongDetailPagerModel = viewModel(
         factory = SongDetailPagerModel.Factory,
@@ -109,6 +116,7 @@ internal fun SongDetailScreen(
                 onShowSettingsBottomSheet = pagerViewModel::onShowSettings,
                 playbackState = playbackState,
                 controller = playbackController,
+                onOpenSearch = onOpenSearch,
             )
         }
 
@@ -186,14 +194,18 @@ private fun SongDetailUi(
                     bottom = contentPadding.calculateBottomPadding(),
                 ),
         ) {
-            CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
-                Text(
-                    state.content,
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    fontFamily = crimsonText,
-                    fontSize = state.fontSize.sp,
-                )
+            if (state.content != null) {
+
+                CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
+                    val defaultFontSize = MaterialTheme.typography.bodyMedium.fontSize
+                    val fontSize = defaultFontSize *  state.fontSizeMultiplier
+                    Text(
+                        text = state.content.toUiDetail(fontSize),
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        lineHeight = 28.sp,
+                    )
+                }
             }
         }
     }
@@ -208,6 +220,7 @@ private fun SongPager(
     onShowSettingsBottomSheet: () -> Unit,
     playbackState: PlaybackState,
     controller: PlaybackController?,
+    onOpenSearch: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val hazeState = remember { HazeState() }
@@ -224,6 +237,13 @@ private fun SongPager(
                 scrollBehaviour = scrollBehavior,
                 containerColor = MaterialTheme.colorScheme.surface.copy(alpha = .5f),
                 modifier = Modifier.hazeEffect(hazeState, style = HazeMaterials.ultraThin()),
+                title = state.currentSongBookEntry?.songbook.orEmpty(),
+                actions = {
+                    Spacer(Modifier.width(8.dp))
+                    IconButton(onClick = onOpenSearch, modifier = Modifier) {
+                        Icon(imageVector = Icons.TwoTone.Search, contentDescription = "Search")
+                    }
+                }
             )
         },
         bottomBar = {
@@ -257,14 +277,16 @@ private fun SongPager(
             }
         }
     ) { innerPadding ->
-        HorizontalPager(
-            state = pagerState,
-            key = { state.pages[it] },
-            modifier = modifier
-                .nestedScroll(scrollBehavior.nestedScrollConnection)
-                .hazeSource(hazeState),
-        ) { page ->
-            pageContent(state.pages[page], innerPadding)
+        Column(modifier = Modifier.fillMaxSize()) {
+            HorizontalPager(
+                state = pagerState,
+                key = { state.pages[it] },
+                modifier = modifier
+                    .nestedScroll(scrollBehavior.nestedScrollConnection)
+                    .hazeSource(hazeState),
+            ) { page ->
+                pageContent(state.pages[page], innerPadding)
+            }
         }
     }
 }

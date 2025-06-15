@@ -16,10 +16,9 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
@@ -32,7 +31,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.techbeloved.hymnbook.shared.ext.percentToNearestFive
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.preferences.SongPreferences
@@ -118,7 +116,7 @@ internal fun NowPlayingSettingsBottomSheet(
             onZoomOut = onZoomOut,
             modifier = Modifier.fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
-            fontSize = preferences.fontSize.sp,
+            fontSize = MaterialTheme.typography.bodySmall.fontSize *  preferences.fontSize,
         )
     }
 }
@@ -152,12 +150,9 @@ private fun ZoomButtons(
         modifier = modifier,
         text = stringResource(Res.string.now_playing_settings_lyrics_size),
     ) {
-        IconButton(
+        FilledTonalIconButton(
             onClick = onZoomOut,
             modifier = Modifier.align(Alignment.CenterStart),
-            colors = IconButtonDefaults.iconButtonColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant
-            ),
         ) {
             Icon(
                 imageVector = Icons.Default.Remove,
@@ -171,12 +166,9 @@ private fun ZoomButtons(
             style = MaterialTheme.typography.labelMedium,
             modifier = Modifier.align(Alignment.Center),
         )
-        IconButton(
+        FilledTonalIconButton(
             onClick = onZoomIn,
             modifier = Modifier.align(Alignment.CenterEnd),
-            colors = IconButtonDefaults.iconButtonColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant
-            ),
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
@@ -197,12 +189,9 @@ private fun MusicSpeedControls(
         modifier = modifier,
         text = stringResource(Res.string.now_playing_settings_music_speed),
     ) {
-        IconButton(
+        FilledTonalIconButton(
             onClick = onSpeedDown,
             modifier = Modifier.align(Alignment.CenterStart),
-            colors = IconButtonDefaults.iconButtonColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant,
-            ),
         ) {
             Icon(
                 Icons.Default.Remove,
@@ -215,12 +204,9 @@ private fun MusicSpeedControls(
             style = MaterialTheme.typography.labelMedium,
             modifier = Modifier.align(Alignment.Center),
         )
-        IconButton(
+        FilledTonalIconButton(
             onClick = onSpeedUp,
             modifier = Modifier.align(Alignment.CenterEnd),
-            colors = IconButtonDefaults.iconButtonColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant,
-            ),
         ) {
             Icon(
                 Icons.Default.Add,

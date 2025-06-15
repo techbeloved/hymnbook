@@ -4,12 +4,12 @@ package com.techbeloved.hymnbook.shared.ui
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -32,7 +32,7 @@ internal fun AppTopBar(
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
     actions: @Composable (RowScope.() -> Unit) = {},
 ) {
-    CenterAlignedTopAppBar(
+    TopAppBar(
         title = if (titleContent != null) {
             titleContent
         } else {

@@ -4,12 +4,16 @@ package com.techbeloved.hymnbook.shared.ui.topics
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.SuggestionChipDefaults
@@ -27,6 +31,7 @@ import com.techbeloved.hymnbook.shared.ui.AppTopBar
 import com.techbeloved.hymnbook.shared.ui.theme.AppTheme
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
 import kotlinx.collections.immutable.ImmutableList
@@ -72,19 +77,27 @@ private fun TopicsUi(
                 title = "Topics",
             )
         },
+        bottomBar = {
+            NavigationBar(
+                containerColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0f),
+            ) { }
+        },
         modifier = modifier,
     ) { innerPadding ->
 
         FlowRow(
             modifier = Modifier.padding(innerPadding)
                 .padding(horizontal = 16.dp)
-                .verticalScroll(state = rememberScrollState()),
+                .verticalScroll(state = rememberScrollState())
+                .hazeSource(hazeState),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
+            Spacer(Modifier.fillMaxWidth().height(8.dp))
             topics.forEachIndexed { index, topic ->
                 TopicItem(topic = topic, onClick = { onTopicSelected(topic) })
             }
+            Spacer(Modifier.fillMaxWidth().height(16.dp))
         }
     }
 }

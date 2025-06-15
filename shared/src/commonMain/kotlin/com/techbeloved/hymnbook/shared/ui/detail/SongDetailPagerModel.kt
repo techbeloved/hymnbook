@@ -16,6 +16,7 @@ import com.techbeloved.hymnbook.shared.preferences.ChangePreferenceUseCase
 import com.techbeloved.hymnbook.shared.preferences.GetSongPreferenceFlowUseCase
 import com.techbeloved.hymnbook.shared.preferences.SongPreferences
 import com.techbeloved.hymnbook.shared.sheetmusic.GetAvailableSheetMusicForSongUseCase
+import com.techbeloved.hymnbook.shared.songbooks.GetSongbookEntriesForSongUseCase
 import com.techbeloved.hymnbook.shared.songs.GetSongIdsByFilterUseCase
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,6 +34,7 @@ internal class SongDetailPagerModel @Inject constructor (
     private val getAvailableMediaForSongUseCase: GetAvailableMediaForSongUseCase,
     private val getAvailableSheetMusicForSongUseCase: GetAvailableSheetMusicForSongUseCase,
     private val getSongIdsByFilterUseCase: GetSongIdsByFilterUseCase,
+    private val getSongbookEntriesForSongUseCase: GetSongbookEntriesForSongUseCase,
     private val changePreferenceUseCase: ChangePreferenceUseCase,
     getSongPreferenceFlowUseCase: GetSongPreferenceFlowUseCase,
     private val changeFontSizeUseCase: ChangeFontSizeUseCase,
@@ -68,6 +70,7 @@ internal class SongDetailPagerModel @Inject constructor (
 
         val currentIndex = if (selectedPageIndex < 0) songEntries.initialPage else selectedPageIndex
         val currentEntry = songEntries.songEntries[currentIndex]
+        val songbookEntries = getSongbookEntriesForSongUseCase(currentEntry)
         val availableMedia = getAvailableMediaForSongUseCase(currentEntry)
         val availableSheetMusic = getAvailableSheetMusicForSongUseCase(currentEntry)
 
@@ -97,6 +100,7 @@ internal class SongDetailPagerModel @Inject constructor (
                 )
             }.toImmutableList(),
             currentDisplayMode = preferences.songDisplayMode,
+            currentSongBookEntry = songbookEntries.firstOrNull(),
         )
     }.stateIn(
         scope = viewModelScope,
