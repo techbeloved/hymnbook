@@ -41,7 +41,7 @@ import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.model.SongFilter
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
 import com.techbeloved.hymnbook.shared.ui.settings.NowPlayingSettingsBottomSheet
-import com.techbeloved.hymnbook.shared.ui.theme.crimsonText
+import com.techbeloved.hymnbook.shared.ui.utils.toUiDetail
 import com.techbeloved.media.PlaybackController
 import com.techbeloved.media.PlaybackState
 import com.techbeloved.media.rememberPlaybackController
@@ -186,14 +186,16 @@ private fun SongDetailUi(
                     bottom = contentPadding.calculateBottomPadding(),
                 ),
         ) {
-            CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
-                Text(
-                    state.content,
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    fontFamily = crimsonText,
-                    fontSize = state.fontSize.sp,
-                )
+            if (state.content != null) {
+
+                CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
+                    Text(
+                        text = state.content.toUiDetail(state.fontSize.sp),
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        lineHeight = 28.sp,
+                    )
+                }
             }
         }
     }
@@ -224,6 +226,7 @@ private fun SongPager(
                 scrollBehaviour = scrollBehavior,
                 containerColor = MaterialTheme.colorScheme.surface.copy(alpha = .5f),
                 modifier = Modifier.hazeEffect(hazeState, style = HazeMaterials.ultraThin()),
+                title = state.currentSongBookEntry?.songbook.orEmpty(),
             )
         },
         bottomBar = {
@@ -257,14 +260,16 @@ private fun SongPager(
             }
         }
     ) { innerPadding ->
-        HorizontalPager(
-            state = pagerState,
-            key = { state.pages[it] },
-            modifier = modifier
-                .nestedScroll(scrollBehavior.nestedScrollConnection)
-                .hazeSource(hazeState),
-        ) { page ->
-            pageContent(state.pages[page], innerPadding)
+        Column(modifier = Modifier.fillMaxSize()) {
+            HorizontalPager(
+                state = pagerState,
+                key = { state.pages[it] },
+                modifier = modifier
+                    .nestedScroll(scrollBehavior.nestedScrollConnection)
+                    .hazeSource(hazeState),
+            ) { page ->
+                pageContent(state.pages[page], innerPadding)
+            }
         }
     }
 }

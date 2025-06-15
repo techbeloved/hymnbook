@@ -25,21 +25,17 @@ internal class SongDetailScreenModel(
     getSongPreferenceFlowUseCase: GetSongPreferenceFlowUseCase,
 ) : ViewModel() {
 
-    val state =
-        getSongDetailFlow().combine(getSongPreferenceFlowUseCase()) { detail, prefs ->
-            detail.copy(
-                songDisplayMode = prefs.songDisplayMode,
-                fontSize = prefs.fontSize,
-            )
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
-            initialValue = SongUiDetail(),
-        )
+    private val songDetailFlow = flow { emit(getSongDetailUseCase(songId)) }
+    private val sheetMusicFlow = flow { emit(getAvailableSheetMusicForSongUseCase(songId)) }
+    private val songPreferencesFlow = getSongPreferenceFlowUseCase()
 
-    private fun getSongDetailFlow() = flow {
-        val sheetMusic = getAvailableSheetMusicForSongUseCase(songId)
-        val songDetail = getSongDetailUseCase(songId).copy(
+
+    val state = combine(
+        songDetailFlow,
+        sheetMusicFlow,
+        songPreferencesFlow,
+    ) { songDetail, sheetMusic, prefs ->
+        SongUiDetail(
             sheetMusic = if (sheetMusic != null) {
                 SheetMusicItem(
                     relativeUri = sheetMusic.relativePath.toString(),
@@ -52,9 +48,15 @@ internal class SongDetailScreenModel(
             } else {
                 null
             },
+            content = songDetail,
+            songDisplayMode = prefs.songDisplayMode,
+            fontSize = prefs.fontSize,
         )
-        emit(songDetail)
-    }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
+        initialValue = SongUiDetail(),
+    )
 
     class Factory @Inject constructor(
         private val getSongDetailUseCase: GetSongDetailUseCase,
