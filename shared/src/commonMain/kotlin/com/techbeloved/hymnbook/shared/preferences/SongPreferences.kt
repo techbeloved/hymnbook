@@ -12,10 +12,10 @@ internal data class SongPreferences(
 ) {
     companion object {
 
-        const val DEFAULT_FONT_SIZE = 20f
-        const val MIN_FONT_SIZE = 16f
-        const val MAX_FONT_SIZE = 28f
-        const val FONT_CHANGE_STEP = 1f
+        const val DEFAULT_FONT_SIZE = 1f
+        const val MIN_FONT_SIZE = .7f
+        const val MAX_FONT_SIZE = 2.25f
+        const val FONT_CHANGE_STEP = 1.15f
 
         val songDisplayModePrefKey = PreferenceKey(
             inMemory = true,
@@ -32,7 +32,7 @@ internal data class SongPreferences(
         val songFontSizePrefKey = PreferenceKey(
             inMemory = false,
             key = floatPreferencesKey("song.FontSize"),
-            defaultValue = 20f,
+            defaultValue = DEFAULT_FONT_SIZE,
         )
     }
 }

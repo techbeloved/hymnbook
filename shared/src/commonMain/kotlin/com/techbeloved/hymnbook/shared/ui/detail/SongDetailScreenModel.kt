@@ -50,7 +50,7 @@ internal class SongDetailScreenModel(
             },
             content = songDetail,
             songDisplayMode = prefs.songDisplayMode,
-            fontSize = prefs.fontSize,
+            fontSizeMultiplier = prefs.fontSize,
         )
     }.stateIn(
         scope = viewModelScope,

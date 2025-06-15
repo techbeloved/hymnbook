@@ -197,8 +197,10 @@ private fun SongDetailUi(
             if (state.content != null) {
 
                 CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
+                    val defaultFontSize = MaterialTheme.typography.bodyMedium.fontSize
+                    val fontSize = defaultFontSize *  state.fontSizeMultiplier
                     Text(
-                        text = state.content.toUiDetail(state.fontSize.sp),
+                        text = state.content.toUiDetail(fontSize),
                         modifier = Modifier.fillMaxWidth()
                             .padding(horizontal = 16.dp),
                         lineHeight = 28.sp,

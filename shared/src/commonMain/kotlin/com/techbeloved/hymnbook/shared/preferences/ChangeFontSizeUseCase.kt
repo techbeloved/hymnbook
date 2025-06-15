@@ -8,15 +8,15 @@ internal class ChangeFontSizeUseCase @Inject constructor(
     suspend operator fun invoke(isIncrease: Boolean) {
         repository.updatePreference(SongPreferences.songFontSizePrefKey) { oldValue ->
             val change = if (isIncrease) {
-                SongPreferences.FONT_CHANGE_STEP
+                oldValue * SongPreferences.FONT_CHANGE_STEP
             } else {
-                -SongPreferences.FONT_CHANGE_STEP
+                oldValue / SongPreferences.FONT_CHANGE_STEP
             }
-            val updatedFontSize = (oldValue + change).coerceIn(
+            val updatedFontSizeMultiplier = (change).coerceIn(
                 minimumValue = SongPreferences.MIN_FONT_SIZE,
                 maximumValue = SongPreferences.MAX_FONT_SIZE,
             )
-            updatedFontSize
+            updatedFontSizeMultiplier
         }
     }
 }

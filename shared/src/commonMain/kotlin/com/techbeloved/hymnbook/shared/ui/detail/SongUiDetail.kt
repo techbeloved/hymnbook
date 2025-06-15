@@ -9,5 +9,5 @@ internal data class SongUiDetail(
     val content: SongDetail? = null,
     val sheetMusic: SheetMusicItem? = null,
     val songDisplayMode: SongDisplayMode = SongDisplayMode.Lyrics,
-    val fontSize: Float = SongPreferences.DEFAULT_FONT_SIZE,
+    val fontSizeMultiplier: Float = SongPreferences.DEFAULT_FONT_SIZE,
 )

@@ -31,7 +31,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.techbeloved.hymnbook.shared.ext.percentToNearestFive
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.preferences.SongPreferences
@@ -117,7 +116,7 @@ internal fun NowPlayingSettingsBottomSheet(
             onZoomOut = onZoomOut,
             modifier = Modifier.fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
-            fontSize = preferences.fontSize.sp,
+            fontSize = MaterialTheme.typography.bodySmall.fontSize *  preferences.fontSize,
         )
     }
 }
