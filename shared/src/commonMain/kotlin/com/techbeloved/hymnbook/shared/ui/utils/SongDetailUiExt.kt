@@ -28,7 +28,7 @@ internal fun SongDetail.toUiDetail(fontSize: TextUnit): AnnotatedString {
         textMeasurer.measure("9.\t\t", textStyle).size.width
     }
     val lineOverflow = remember(bulletSize, fontSize, textStyle, textMeasurer) {
-        textMeasurer.measure("\t\t\t\t", textStyle).size.width + bulletSize
+        textMeasurer.measure("\t\t\t", textStyle).size.width + bulletSize
     }
     val bulletWidth = with(localDensity) {
         bulletSize.toSp()
@@ -52,8 +52,6 @@ internal fun SongDetail.toUiDetail(fontSize: TextUnit): AnnotatedString {
 
         appendLine()
         pop() // italic book entry
-
-        pushStyle(SpanStyle(fontSize = fontSize))
 
         // Verses
         val lyricsByOrder = lyricsByVerseOrder()
@@ -93,7 +91,6 @@ internal fun SongDetail.toUiDetail(fontSize: TextUnit): AnnotatedString {
                 }
             }
         }
-        pop()
     }
     return content
 }
