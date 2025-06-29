@@ -53,8 +53,6 @@ internal fun SongDetail.toUiDetail(fontSize: TextUnit): AnnotatedString {
         appendLine()
         pop() // italic book entry
 
-        pushStyle(SpanStyle(fontSize = fontSize))
-
         // Verses
         val lyricsByOrder = lyricsByVerseOrder()
         for (lyric in lyricsByOrder) {
@@ -93,7 +91,6 @@ internal fun SongDetail.toUiDetail(fontSize: TextUnit): AnnotatedString {
                 }
             }
         }
-        pop()
     }
     return content
 }
