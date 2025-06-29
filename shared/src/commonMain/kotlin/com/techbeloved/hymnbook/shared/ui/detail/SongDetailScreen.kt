@@ -22,6 +22,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -39,8 +40,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
@@ -61,6 +62,8 @@ import dev.chrisbanes.haze.materials.HazeMaterials
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
+
+private const val LineHeightMultiplier = 1.5f
 
 @Serializable
 internal data class SongDetailScreen(
@@ -196,14 +199,27 @@ private fun SongDetailUi(
         ) {
             if (state.content != null) {
 
-                CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
-                    val defaultFontSize = MaterialTheme.typography.bodyMedium.fontSize
-                    val fontSize = defaultFontSize *  state.fontSizeMultiplier
+                // All these to calculate the line height based on the font size
+                val textStyle = MaterialTheme.typography.bodyLarge
+                val defaultFontSize = textStyle.fontSize
+                val fontSize = defaultFontSize * state.fontSizeMultiplier
+                val lineHeight = textStyle.lineHeight * LineHeightMultiplier
+                CompositionLocalProvider(
+                    LocalContentColor provides MaterialTheme.colorScheme.onSurface,
+                    LocalTextStyle provides textStyle.merge(
+                        fontSize = fontSize,
+                        lineHeight = lineHeight,
+                        lineHeightStyle = LineHeightStyle(
+                            alignment = LineHeightStyle.Alignment.Proportional,
+                            trim = LineHeightStyle.Trim.None,
+                        ),
+                    )
+                ) {
+
                     Text(
                         text = state.content.toUiDetail(fontSize),
                         modifier = Modifier.fillMaxWidth()
                             .padding(horizontal = 16.dp),
-                        lineHeight = 28.sp,
                     )
                 }
             }
