@@ -8,12 +8,17 @@ import com.techbeloved.hymnbook.SongbookEntity
 import com.techbeloved.hymnbook.shared.assetimport.ImportBundledAssetsUseCase
 import com.techbeloved.hymnbook.shared.di.appComponent
 import com.techbeloved.hymnbook.shared.model.SongFilter
+import com.techbeloved.hymnbook.shared.preferences.ChangePreferenceUseCase
+import com.techbeloved.hymnbook.shared.preferences.GetPreferenceFlowUseCase
 import com.techbeloved.hymnbook.shared.songbooks.GetAllSongbooksUseCase
+import com.techbeloved.hymnbook.shared.songbooks.SongbookPreferenceKey
 import com.techbeloved.hymnbook.shared.titles.GetFilteredSongTitlesUseCase
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -23,12 +28,21 @@ import me.tatarka.inject.annotations.Inject
 internal class HomeScreenModel @Inject constructor(
     private val importBundledAssetsUseCase: ImportBundledAssetsUseCase,
     private val getFilteredSongTitlesUseCase: GetFilteredSongTitlesUseCase,
+    private val changePreferenceUseCase: ChangePreferenceUseCase,
+    getPreferenceFlowUseCase: GetPreferenceFlowUseCase,
     getAllSongbooksUseCase: GetAllSongbooksUseCase,
 ) : ViewModel() {
 
     private val assetsReady = MutableStateFlow(false)
     private val sortBy = MutableStateFlow(value = SortBy.Number)
-    private val selectedSongbook = MutableStateFlow<SongbookEntity?>(value = null)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val selectedSongbook = getPreferenceFlowUseCase(SongbookPreferenceKey)
+        .flatMapLatest { preference ->
+            getAllSongbooksUseCase().map { songbooks ->
+                songbooks.firstOrNull { songbook -> songbook.name == preference }
+            }
+        }
     private val songbooks = getAllSongbooksUseCase().map { it.toImmutableList() }
 
     val state = combine(
@@ -72,7 +86,11 @@ internal class HomeScreenModel @Inject constructor(
     }
 
     fun onUpdateSongbook(songbook: SongbookEntity) {
-        selectedSongbook.update { songbook }
+        viewModelScope.launch {
+            changePreferenceUseCase(SongbookPreferenceKey) {
+                songbook.name
+            }
+        }
     }
 
     companion object {
