@@ -25,6 +25,7 @@ extension TrackingEvent {
         case .actionsearch: AnalyticsEventSearch
         case .actionselectitem: AnalyticsEventSelectItem
         case .actionshare: AnalyticsEventShare
+        case .viewcontent: AnalyticsEventSelectContent
         default: ""
         }
     }
@@ -37,9 +38,11 @@ extension TrackingParam {
         case .itemcategory: AnalyticsParameterItemCategory
         case .itemname: AnalyticsParameterItemName
         case .screenname: AnalyticsParameterScreenName
+        case .screenclass: AnalyticsParameterScreenClass
         case .searchterm: AnalyticsParameterSearchTerm
         case .content: AnalyticsParameterContent
         case .contenttype: AnalyticsParameterContentType
+        case .method: AnalyticsParameterMethod
         default: ""
         }
     }

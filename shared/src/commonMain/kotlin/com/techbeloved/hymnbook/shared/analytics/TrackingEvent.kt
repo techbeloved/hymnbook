@@ -5,4 +5,5 @@ public enum class TrackingEvent {
     ActionSearch,
     ActionSelectItem,
     ActionShare,
+    ViewContent,
 }

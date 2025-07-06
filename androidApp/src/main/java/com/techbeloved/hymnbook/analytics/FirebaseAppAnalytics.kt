@@ -23,6 +23,7 @@ class FirebaseAppAnalytics : AppAnalytics {
         TrackingEvent.ActionSearch -> FirebaseAnalytics.Event.SEARCH
         TrackingEvent.ActionSelectItem -> FirebaseAnalytics.Event.SELECT_ITEM
         TrackingEvent.ActionShare -> FirebaseAnalytics.Event.SHARE
+        TrackingEvent.ViewContent -> FirebaseAnalytics.Event.SELECT_CONTENT
     }
 
     private fun TrackingParam.toFirebaseParam(): String = when (this) {
@@ -30,8 +31,10 @@ class FirebaseAppAnalytics : AppAnalytics {
         TrackingParam.ItemId -> FirebaseAnalytics.Param.ITEM_ID
         TrackingParam.ItemCategory -> FirebaseAnalytics.Param.ITEM_CATEGORY
         TrackingParam.ScreenName -> FirebaseAnalytics.Param.SCREEN_NAME
+        TrackingParam.ScreenClass -> FirebaseAnalytics.Param.SCREEN_CLASS
         TrackingParam.SearchTerm -> FirebaseAnalytics.Param.SEARCH_TERM
         TrackingParam.Content -> FirebaseAnalytics.Param.CONTENT
         TrackingParam.ContentType -> FirebaseAnalytics.Param.CONTENT_TYPE
+        TrackingParam.Method -> FirebaseAnalytics.Param.METHOD
     }
 }

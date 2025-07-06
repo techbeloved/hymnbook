@@ -5,7 +5,9 @@ public enum class TrackingParam {
     ItemId,
     ItemCategory,
     ScreenName,
+    ScreenClass,
     SearchTerm,
     Content,
     ContentType,
+    Method,
 }

@@ -23,6 +23,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,6 +47,9 @@ internal fun HomeTabScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeScreenModel = viewModel(factory = HomeScreenModel.Factory),
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.onScreenLoaded()
+    }
     val state by viewModel.state.collectAsState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
