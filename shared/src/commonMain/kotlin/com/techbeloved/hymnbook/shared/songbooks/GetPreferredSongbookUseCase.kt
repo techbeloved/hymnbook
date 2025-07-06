@@ -7,7 +7,7 @@ import me.tatarka.inject.annotations.Inject
 internal class GetPreferredSongbookUseCase @Inject constructor(
     private val preferenceRepository: PreferencesRepository,
 ) {
-    suspend operator fun invoke(): String =
+    suspend operator fun invoke(): String? =
         preferenceRepository.getPreferenceFlow(SongbookPreferenceKey)
-            .firstOrNull().orEmpty()
+            .firstOrNull()?.ifBlank { null }
 }
