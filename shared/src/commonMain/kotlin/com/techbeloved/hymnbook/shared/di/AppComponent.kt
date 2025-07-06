@@ -3,6 +3,8 @@ package com.techbeloved.hymnbook.shared.di
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.techbeloved.hymnbook.Database
+import com.techbeloved.hymnbook.shared.analytics.AppAnalytics
+import com.techbeloved.hymnbook.shared.analytics.analyticsProvider
 import com.techbeloved.hymnbook.shared.files.AssetArchiveExtractor
 import com.techbeloved.hymnbook.shared.files.AssetFileSourceProvider
 import com.techbeloved.hymnbook.shared.files.OkioFileSystemProvider
@@ -68,6 +70,9 @@ internal interface AppComponent {
 
     @Provides
     fun json(): Json = Injector.json
+
+    @Provides
+    fun provideAnalytics(): AppAnalytics = analyticsProvider()
 
     @Provides
     fun provideInstantProvider(instantProvider: DefaultInstantProvider): InstantProvider =
