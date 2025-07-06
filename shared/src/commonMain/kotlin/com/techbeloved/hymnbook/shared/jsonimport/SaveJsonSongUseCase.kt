@@ -10,7 +10,7 @@ import com.techbeloved.hymnbook.shared.model.jsonimport.JsonSongbook
 import com.techbeloved.hymnbook.shared.model.jsonimport.JsonSongbookMetadata
 import com.techbeloved.hymnbook.shared.time.InstantProvider
 import kotlinx.coroutines.withContext
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import me.tatarka.inject.annotations.Inject
 
 internal class SaveJsonSongUseCase @Inject constructor(

@@ -61,7 +61,7 @@ import com.techbeloved.hymnbook.shared.ui.dialog.AppDialog
 import com.techbeloved.hymnbook.shared.ui.theme.AppTheme
 import com.techbeloved.hymnbook.shared.ui.utils.generateRandomPastelColor
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable

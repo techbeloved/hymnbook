@@ -1,7 +1,7 @@
 package com.techbeloved.hymnbook.shared.data
 
 import app.cash.sqldelight.ColumnAdapter
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.serialization.json.Json
 
 internal inline fun <reified T> listColumnAdapter(json: Json) =
