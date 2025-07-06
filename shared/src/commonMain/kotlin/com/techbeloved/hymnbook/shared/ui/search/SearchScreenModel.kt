@@ -9,22 +9,38 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.techbeloved.hymnbook.shared.di.appComponent
 import com.techbeloved.hymnbook.shared.search.SearchSongsUseCase
+import com.techbeloved.hymnbook.shared.songbooks.GetAllSongbooksUseCase
+import com.techbeloved.hymnbook.shared.songbooks.GetPreferredSongbookUseCase
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Inject
 
 internal class SearchScreenModel @Inject constructor(
     private val searchSongsUseCase: SearchSongsUseCase,
+    private val getPreferredSongbookUseCase: GetPreferredSongbookUseCase,
+    songbooksUseCase: GetAllSongbooksUseCase,
 ) : ViewModel() {
 
     var searchQuery by mutableStateOf("")
         private set
 
-    private val _state: MutableStateFlow<SearchState> = MutableStateFlow(SearchState.Default)
-    val state = _state.asStateFlow()
+    private val _state: MutableStateFlow<SearchState> = MutableStateFlow(initialState)
+    val state = combine(songbooksUseCase(), _state) { songbooks, state ->
+        state.copy(
+            songbooks = songbooks.map { it.name }.toImmutableList(),
+            selectedSongbook = state.selectedSongbook ?: getPreferredSongbookUseCase(),
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
+        initialValue = initialState,
+    )
 
     fun onNewQuery(newQuery: String) {
         searchQuery = newQuery
@@ -35,21 +51,38 @@ internal class SearchScreenModel @Inject constructor(
 
     fun onSearch() {
         if (searchQuery.isBlank()) return
-        _state.update { SearchState.SearchLoading }
+        _state.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            val results = searchSongsUseCase(searchQuery)
+            val selectedSongbook = state.value.selectedSongbook ?: state.value.songbooks.firstOrNull()
+            val results = searchSongsUseCase(searchQuery, selectedSongbook)
             _state.update {
-                if (results.isNotEmpty()) {
-                    SearchState.SearchResult(results.toImmutableList())
-                } else {
-                    SearchState.NoResult(searchQuery)
-                }
+                it.copy(
+                    isLoading = false,
+                    query = searchQuery,
+                    results = results.toImmutableList(),
+                    selectedSongbook = selectedSongbook,
+                )
             }
         }
     }
 
+    fun onFilterBySongbook(songbook: String) {
+        _state.update {
+            it.copy(
+                selectedSongbook = songbook,
+            )
+        }
+        onSearch()
+    }
+
     private fun onClearResults() {
-        _state.update { SearchState.Default }
+        _state.update {
+            it.copy(
+                query = "",
+                results = persistentListOf(),
+                isLoading = false,
+            )
+        }
     }
 
     companion object {
@@ -58,5 +91,13 @@ internal class SearchScreenModel @Inject constructor(
                 appComponent.searchScreenModel()
             }
         }
+
+        private val initialState = SearchState(
+            query = "",
+            isLoading = false,
+            results = persistentListOf(),
+            songbooks = persistentListOf(),
+            selectedSongbook = null,
+        )
     }
 }

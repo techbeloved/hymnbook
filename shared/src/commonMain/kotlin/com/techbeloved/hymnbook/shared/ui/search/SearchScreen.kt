@@ -25,5 +25,6 @@ internal fun SearchScreen(
         query = viewModel.searchQuery,
         modifier = modifier,
         onSongItemClicked = onSongItemClicked,
+        onFilterBySongbook = viewModel::onFilterBySongbook,
     )
 }

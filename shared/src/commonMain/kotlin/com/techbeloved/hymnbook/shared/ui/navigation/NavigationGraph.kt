@@ -8,6 +8,7 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.toRoute
 import com.techbeloved.hymnbook.shared.model.SongFilter
 import com.techbeloved.hymnbook.shared.ui.detail.SongDetailScreen
+import com.techbeloved.hymnbook.shared.ui.home.TopLevelDestination
 import com.techbeloved.hymnbook.shared.ui.more.about.AboutScreen
 import com.techbeloved.hymnbook.shared.ui.more.about.OpenSourceLicencesScreen
 import com.techbeloved.hymnbook.shared.ui.playlist.add.AddEditPlaylistDialog
@@ -48,7 +49,9 @@ private fun NavGraphBuilder.songDetailDestination(navController: NavHostControll
                 navController.navigate(AddSongToPlaylistDialog(songId))
             },
             onOpenSearch = {
-                navController.navigate(SearchScreen)
+                navController.navigate(SearchScreen) {
+                    popUpTo(TopLevelDestination.Home)
+                }
             },
         )
     }
@@ -61,7 +64,7 @@ private fun NavGraphBuilder.searchScreenDestination(navController: NavHostContro
                 SongDetailScreen(
                     initialSongId = song.id,
                     topics = SongFilter.NONE.topics,
-                    songbooks = SongFilter.NONE.songbooks,
+                    songbooks = song.songbook?.let { listOf(it) } ?: SongFilter.NONE.songbooks,
                     orderByTitle = SongFilter.NONE.orderByTitle,
                     playlistIds = SongFilter.NONE.playlistIds,
                 )

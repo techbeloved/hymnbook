@@ -162,7 +162,7 @@ SELECT S.id, S.title, S.alternate_title, B.songbook, B.entry FROM SongEntity AS 
 LEFT JOIN SongbookSongs AS B
 ON S.id = B.song_id
 JOIN songs_fts ON S.id=songs_fts.rowid
-WHERE songs_fts MATCH :search
+WHERE songs_fts MATCH :search AND B.songbook=:songbook
 ORDER BY bm25(songs_fts, 10.0);
 
 searchSongbookEntry:
@@ -170,7 +170,7 @@ SELECT S.id, S.title, S.alternate_title, B.songbook, B.entry FROM SongEntity AS 
 LEFT JOIN SongbookSongs AS B
 ON S.id = B.song_id
 JOIN songbook_fts ON S.id=songbook_fts.rowid
-WHERE songbook_fts MATCH :search
+WHERE songbook_fts MATCH :search AND B.songbook=:songbook
 ORDER BY bm25(songbook_fts, 10.0);
 
 
