@@ -44,3 +44,4 @@ src/main/res/menu-night/
 !/iosApp/Pods/Local Podspecs
 !/iosApp/Pods/Pods.xcodeproj
 !/iosApp/Pods/Target Support Files/shared
+/iosApp/iosApp/GoogleService-Info.plist
