@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.techbeloved.hymnbook.SongbookEntity
+import com.techbeloved.hymnbook.shared.analytics.TrackAnalyticsEventUseCase
 import com.techbeloved.hymnbook.shared.assetimport.ImportBundledAssetsUseCase
 import com.techbeloved.hymnbook.shared.di.appComponent
 import com.techbeloved.hymnbook.shared.model.SongFilter
@@ -26,8 +27,9 @@ import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Inject
 
 internal class HomeScreenModel @Inject constructor(
-    private val importBundledAssetsUseCase: ImportBundledAssetsUseCase,
     private val getFilteredSongTitlesUseCase: GetFilteredSongTitlesUseCase,
+    private val importBundledAssetsUseCase: ImportBundledAssetsUseCase,
+    private val trackAnalyticsEventUseCase: TrackAnalyticsEventUseCase,
     private val changePreferenceUseCase: ChangePreferenceUseCase,
     getPreferenceFlowUseCase: GetPreferenceFlowUseCase,
     getAllSongbooksUseCase: GetAllSongbooksUseCase,
@@ -83,6 +85,11 @@ internal class HomeScreenModel @Inject constructor(
 
     fun onUpdateSortBy(sortBy: SortBy) {
         this.sortBy.update { sortBy }
+        viewModelScope.launch {
+            trackAnalyticsEventUseCase(
+                event = HomeAnalytics.actionUpdateSortBy(value = sortBy.name)
+            )
+        }
     }
 
     fun onUpdateSongbook(songbook: SongbookEntity) {
@@ -90,6 +97,15 @@ internal class HomeScreenModel @Inject constructor(
             changePreferenceUseCase(SongbookPreferenceKey) {
                 songbook.name
             }
+            trackAnalyticsEventUseCase(
+                event = HomeAnalytics.actionSelectSongbook(value = songbook.name)
+            )
+        }
+    }
+
+    fun onScreenLoaded() {
+        viewModelScope.launch {
+            trackAnalyticsEventUseCase(HomeAnalytics.screenView)
         }
     }
 

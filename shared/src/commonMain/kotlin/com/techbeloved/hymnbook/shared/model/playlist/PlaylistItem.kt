@@ -1,6 +1,6 @@
 package com.techbeloved.hymnbook.shared.model.playlist
 
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 internal data class PlaylistItem(
     val id: Long,

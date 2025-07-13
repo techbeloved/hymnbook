@@ -3,16 +3,17 @@ package com.techbeloved.hymnbook.shared.openlyrics
 import com.techbeloved.hymnbook.Database
 import com.techbeloved.hymnbook.shared.deleteAll
 import com.techbeloved.hymnbook.shared.di.Injector
+import com.techbeloved.hymnbook.shared.dispatcher.DispatchersProvider
 import com.techbeloved.hymnbook.shared.model.SongTitle
 import com.techbeloved.hymnbook.shared.model.ext.OpenLyricsSong
 import com.techbeloved.hymnbook.shared.testDatabaseDriver
 import com.techbeloved.hymnbook.shared.titles.GetHymnTitlesUseCase
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Instant
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.time.Instant
 
 class SaveOpenLyricsUseCaseTest {
     private lateinit var useCase: SaveOpenLyricsUseCase
@@ -22,10 +23,12 @@ class SaveOpenLyricsUseCaseTest {
     @BeforeTest
     fun setUp() {
         database = Injector.getDatabase(testDatabaseDriver())
-        getHymnTitlesUseCase = GetHymnTitlesUseCase(database)
+        val dispatchersProvider = DispatchersProvider()
+        getHymnTitlesUseCase = GetHymnTitlesUseCase(database, dispatchersProvider = dispatchersProvider)
         useCase = SaveOpenLyricsUseCase(
             database,
             instantProvider = { Instant.parse("2023-01-01T00:00:00Z") },
+            dispatchersProvider = dispatchersProvider
         )
     }
 

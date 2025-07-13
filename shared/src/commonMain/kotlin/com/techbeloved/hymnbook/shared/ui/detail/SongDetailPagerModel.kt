@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.toRoute
+import com.techbeloved.hymnbook.shared.analytics.TrackAnalyticsEventUseCase
 import com.techbeloved.hymnbook.shared.di.appComponent
 import com.techbeloved.hymnbook.shared.media.GetAvailableMediaForSongUseCase
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
@@ -30,11 +31,12 @@ import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Assisted
 import me.tatarka.inject.annotations.Inject
 
-internal class SongDetailPagerModel @Inject constructor (
-    private val getAvailableMediaForSongUseCase: GetAvailableMediaForSongUseCase,
+internal class SongDetailPagerModel @Inject constructor(
     private val getAvailableSheetMusicForSongUseCase: GetAvailableSheetMusicForSongUseCase,
-    private val getSongIdsByFilterUseCase: GetSongIdsByFilterUseCase,
     private val getSongbookEntriesForSongUseCase: GetSongbookEntriesForSongUseCase,
+    private val getAvailableMediaForSongUseCase: GetAvailableMediaForSongUseCase,
+    private val trackAnalyticsEventUseCase: TrackAnalyticsEventUseCase,
+    private val getSongIdsByFilterUseCase: GetSongIdsByFilterUseCase,
     private val changePreferenceUseCase: ChangePreferenceUseCase,
     getSongPreferenceFlowUseCase: GetSongPreferenceFlowUseCase,
     private val changeFontSizeUseCase: ChangeFontSizeUseCase,
@@ -107,6 +109,24 @@ internal class SongDetailPagerModel @Inject constructor (
         started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
         initialValue = SongDetailPagerState.Loading,
     )
+
+    fun onScreenLoaded() {
+        viewModelScope.launch {
+            trackAnalyticsEventUseCase(SongDetailAnalytics.screenView(route.songFilter))
+        }
+    }
+
+    fun trackSongLoopingToggle(isLooping: Boolean) {
+        viewModelScope.launch {
+            trackAnalyticsEventUseCase(SongDetailAnalytics.actionToggleLooping(isLooping))
+        }
+    }
+
+    fun trackSongSpeed(speed: Int) {
+        viewModelScope.launch {
+            trackAnalyticsEventUseCase(SongDetailAnalytics.actionChangeSpeed(speed))
+        }
+    }
 
     private fun getSongEntriesFlow() =
         flow { emit(getSongIdsByFilterUseCase(route.songFilter)) }

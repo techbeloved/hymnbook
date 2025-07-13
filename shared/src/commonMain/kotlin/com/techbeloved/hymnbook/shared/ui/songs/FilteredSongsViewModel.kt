@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.toRoute
+import com.techbeloved.hymnbook.shared.analytics.TrackAnalyticsEventUseCase
 import com.techbeloved.hymnbook.shared.di.appComponent
 import com.techbeloved.hymnbook.shared.model.SongTitle
 import com.techbeloved.hymnbook.shared.titles.GetFilteredSongTitlesUseCase
@@ -15,12 +16,14 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Assisted
 import me.tatarka.inject.annotations.Inject
 
 internal class FilteredSongsViewModel @Inject constructor(
     @Assisted savedStateHandle: SavedStateHandle,
     private val getFilteredSongTitlesUseCase: GetFilteredSongTitlesUseCase,
+    private val trackAnalyticsEventUseCase: TrackAnalyticsEventUseCase,
 ) : ViewModel() {
     private val args = savedStateHandle.toRoute<FilteredSongsScreen>()
     private val songFilter = args.songFilter
@@ -43,6 +46,12 @@ internal class FilteredSongsViewModel @Inject constructor(
             title = args.title,
         ),
     )
+
+    fun onScreenLoaded() {
+       viewModelScope.launch {
+           trackAnalyticsEventUseCase(FilteredSongsAnalytics.screenView(songFilter))
+       }
+    }
 
     @Inject
     class Factory(val create: (SavedStateHandle) -> FilteredSongsViewModel)

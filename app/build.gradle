@@ -141,6 +141,7 @@ dependencies {
     implementation libs.androidx.constraintlayout
     implementation libs.androidx.legacy.support.v4
 
+    implementation platform(libs.firebase.bom)
     implementation libs.firebase.crashlytics
     implementation libs.firebase.analytics
     testImplementation libs.test.junit

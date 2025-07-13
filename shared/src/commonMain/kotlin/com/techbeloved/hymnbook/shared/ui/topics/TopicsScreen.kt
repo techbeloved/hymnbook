@@ -20,6 +20,7 @@ import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -48,6 +49,10 @@ internal fun TopicsScreen(
     modifier: Modifier = Modifier,
     viewModel: TopicsViewModel = viewModel(factory = TopicsViewModel.Factory),
 ) {
+
+    LaunchedEffect(Unit) {
+        viewModel.onScreenLoaded()
+    }
 
     val topics by viewModel.state.collectAsState()
     TopicsUi(

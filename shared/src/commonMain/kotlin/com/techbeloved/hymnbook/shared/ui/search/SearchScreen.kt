@@ -1,6 +1,7 @@
 package com.techbeloved.hymnbook.shared.ui.search
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -17,6 +18,9 @@ internal fun SearchScreen(
     modifier: Modifier = Modifier,
     viewModel: SearchScreenModel = viewModel(factory = SearchScreenModel.Factory),
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.onScreenLoaded()
+    }
     val state by viewModel.state.collectAsState()
     SearchUi(
         state = state,

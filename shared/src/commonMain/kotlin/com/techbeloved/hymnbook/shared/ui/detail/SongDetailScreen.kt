@@ -90,10 +90,20 @@ internal fun SongDetailScreen(
         factory = SongDetailPagerModel.Factory,
     ),
 ) {
+    LaunchedEffect(Unit) {
+        pagerViewModel.onScreenLoaded()
+    }
     var currentSongId by remember { mutableStateOf<Long?>(null) }
     val pagerState by pagerViewModel.state.collectAsState()
     val playbackState = rememberPlaybackState()
     val playbackController = rememberPlaybackController(playbackState)
+
+    LaunchedEffect(playbackState.isLooping) {
+        pagerViewModel.trackSongLoopingToggle(playbackState.isLooping)
+    }
+    LaunchedEffect(playbackState.playbackSpeed) {
+        pagerViewModel.trackSongSpeed(playbackState.playbackSpeed)
+    }
     when (val state = pagerState) {
         is SongDetailPagerState.Content -> {
             SongPager(

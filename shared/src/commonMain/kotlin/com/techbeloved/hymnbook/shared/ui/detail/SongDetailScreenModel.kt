@@ -16,10 +16,11 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
+import me.tatarka.inject.annotations.Assisted
 import me.tatarka.inject.annotations.Inject
 
-internal class SongDetailScreenModel(
-    private val songId: Long,
+internal class SongDetailScreenModel @Inject constructor(
+    @Assisted private val songId: Long,
     private val getSongDetailUseCase: GetSongDetailUseCase,
     private val getAvailableSheetMusicForSongUseCase: GetAvailableSheetMusicForSongUseCase,
     getSongPreferenceFlowUseCase: GetSongPreferenceFlowUseCase,
@@ -58,19 +59,8 @@ internal class SongDetailScreenModel(
         initialValue = SongUiDetail(),
     )
 
-    class Factory @Inject constructor(
-        private val getSongDetailUseCase: GetSongDetailUseCase,
-        private val getAvailableSheetMusicForSongUseCase: GetAvailableSheetMusicForSongUseCase,
-        private val getSongPreferenceFlowUseCase: GetSongPreferenceFlowUseCase,
-    ) {
-
-        fun create(songId: Long): SongDetailScreenModel = SongDetailScreenModel(
-            songId = songId,
-            getSongDetailUseCase = getSongDetailUseCase,
-            getAvailableSheetMusicForSongUseCase = getAvailableSheetMusicForSongUseCase,
-            getSongPreferenceFlowUseCase = getSongPreferenceFlowUseCase,
-        )
-    }
+    @Inject
+    class Factory(val create: (songId: Long) -> SongDetailScreenModel)
 
     companion object {
         val SONG_ID_KEY = object : CreationExtras.Key<Long> {}

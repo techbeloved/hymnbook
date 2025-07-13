@@ -42,6 +42,10 @@ internal fun AddEditPlaylistDialog(
     viewModel: AddEditPlaylistViewModel = viewModel(factory = AddEditPlaylistViewModel.Factory),
 ) {
 
+    LaunchedEffect(Unit) {
+        viewModel.onScreenLoaded()
+    }
+
     val state by viewModel.state.collectAsStateWithLifecycle(context = Dispatchers.Main.immediate)
 
     LaunchedEffect(state.playlistSaved) {

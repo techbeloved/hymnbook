@@ -3,6 +3,8 @@ package com.techbeloved.hymnbook.shared.di
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.techbeloved.hymnbook.Database
+import com.techbeloved.hymnbook.shared.analytics.AppAnalytics
+import com.techbeloved.hymnbook.shared.analytics.analyticsProvider
 import com.techbeloved.hymnbook.shared.files.AssetArchiveExtractor
 import com.techbeloved.hymnbook.shared.files.AssetFileSourceProvider
 import com.techbeloved.hymnbook.shared.files.OkioFileSystemProvider
@@ -12,6 +14,7 @@ import com.techbeloved.hymnbook.shared.files.defaultOkioFileSystemProvider
 import com.techbeloved.hymnbook.shared.preferences.InMemoryPreferences
 import com.techbeloved.hymnbook.shared.time.DefaultInstantProvider
 import com.techbeloved.hymnbook.shared.time.InstantProvider
+import com.techbeloved.hymnbook.shared.ui.analytics.AnalyticsViewModel
 import com.techbeloved.hymnbook.shared.ui.detail.SongDetailPagerModel
 import com.techbeloved.hymnbook.shared.ui.detail.SongDetailScreenModel
 import com.techbeloved.hymnbook.shared.ui.home.HomeScreenModel
@@ -46,6 +49,8 @@ internal interface AppComponent {
 
     fun playlistsViewModel(): PlaylistsViewModel
 
+    fun analyticsViewModel(): AnalyticsViewModel
+
     @Provides
     fun assetFileSource(): AssetFileSourceProvider = assetFileSourceProvider
 
@@ -69,6 +74,8 @@ internal interface AppComponent {
     @Provides
     fun json(): Json = Injector.json
 
+    @Provides
+    fun provideAnalytics(): AppAnalytics = analyticsProvider()
     @Provides
     fun provideInstantProvider(instantProvider: DefaultInstantProvider): InstantProvider =
         instantProvider

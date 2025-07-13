@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.techbeloved.hymnbook.shared.analytics.TrackAnalyticsEventUseCase
 import com.techbeloved.hymnbook.shared.di.appComponent
 import com.techbeloved.hymnbook.shared.search.SearchSongsUseCase
 import com.techbeloved.hymnbook.shared.songbooks.GetAllSongbooksUseCase
@@ -24,6 +25,7 @@ import me.tatarka.inject.annotations.Inject
 internal class SearchScreenModel @Inject constructor(
     private val searchSongsUseCase: SearchSongsUseCase,
     private val getPreferredSongbookUseCase: GetPreferredSongbookUseCase,
+    private val trackAnalyticsUseCase: TrackAnalyticsEventUseCase,
     songbooksUseCase: GetAllSongbooksUseCase,
 ) : ViewModel() {
 
@@ -63,6 +65,7 @@ internal class SearchScreenModel @Inject constructor(
                     selectedSongbook = selectedSongbook,
                 )
             }
+            trackAnalyticsUseCase(SearchAnalytics.actionSearch(searchQuery))
         }
     }
 
@@ -73,6 +76,12 @@ internal class SearchScreenModel @Inject constructor(
             )
         }
         onSearch()
+    }
+
+    fun onScreenLoaded() {
+        viewModelScope.launch {
+            trackAnalyticsUseCase(SearchAnalytics.screenView)
+        }
     }
 
     private fun onClearResults() {

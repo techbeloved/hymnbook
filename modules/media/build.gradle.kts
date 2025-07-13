@@ -56,11 +56,7 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.compose.activity)
-            implementation(libs.androidx.media3.common.ktx)
-            implementation(libs.androidx.media3.exoplayer)
-            implementation(libs.androidx.media3.exoplayer.midi)
-            implementation(libs.androidx.media3.session)
-            implementation(libs.androidx.media3.ui)
+            implementation(libs.bundles.media3)
             implementation(libs.coroutines.guava)
         }
         commonMain.dependencies {

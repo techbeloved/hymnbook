@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.toRoute
+import com.techbeloved.hymnbook.shared.analytics.TrackAnalyticsEventUseCase
 import com.techbeloved.hymnbook.shared.di.appComponent
 import com.techbeloved.hymnbook.shared.model.playlist.PlaylistItem
 import com.techbeloved.hymnbook.shared.playlist.AddSongToPlaylistUseCase
@@ -21,6 +22,7 @@ import me.tatarka.inject.annotations.Inject
 
 internal class AddSongToPlaylistViewModel @Inject constructor(
     private val addSongToPlaylistUseCase: AddSongToPlaylistUseCase,
+    private val trackAnalyticsUseCase: TrackAnalyticsEventUseCase,
     getPlaylistsUseCase: GetPlaylistsUseCase,
     @Assisted savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -44,6 +46,12 @@ internal class AddSongToPlaylistViewModel @Inject constructor(
     fun onSelectPlaylist(playlistId: Long) {
         viewModelScope.launch {
             addSongToPlaylistUseCase(songId = args.songId, playlistId = playlistId)
+        }
+    }
+
+    fun onScreenLoaded() {
+        viewModelScope.launch {
+            trackAnalyticsUseCase(AddSongToPlaylistAnalytics.screenView())
         }
     }
 

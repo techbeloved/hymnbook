@@ -37,3 +37,11 @@ src/main/res/menu-night/
 /modules/sheetmusic/build
 /modules/media/src/iosMain/composeResources/files/yamaha_grand_piano.sf2
 /modules/be-server/build
+/iosApp/Pods/
+*.xcuserdatad/
+*.swp
+!/iosApp/Pods/Manifest.lock
+!/iosApp/Pods/Local Podspecs
+!/iosApp/Pods/Pods.xcodeproj
+!/iosApp/Pods/Target Support Files/shared
+/iosApp/iosApp/GoogleService-Info.plist
