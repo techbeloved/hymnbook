@@ -19,6 +19,6 @@ internal class FileRepository @Inject constructor(
         }
 
     suspend fun saveAssetFileHash(fileHash: FileHash) = withContext(dispatchersProvider.io()) {
-        database.bundledAssetEntityQueries.insert(fileHash.path, fileHash.sha256)
+        database.bundledAssetEntityQueries.insert(fileHash.path, fileHash.sha256).await()
     }
 }

@@ -47,4 +47,12 @@ internal data class JsonSongbookMetadata(
     @SerialName("publish_date")
     val publishDate: String,
     val revision: String,
+    @SerialName("sheet_music")
+    val sheetMusicArchive: String,
+    @SerialName("sheet_music_prefix")
+    val sheetMusicPrefix: String,
+    @SerialName("tunes")
+    val tunesArchive: String,
+    @SerialName("tunes_prefix")
+    val tunesPrefix: String,
 )

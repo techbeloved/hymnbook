@@ -1,5 +1,6 @@
 package com.techbeloved.hymnbook.shared.model.assetimport
 
+import hymnbook.shared.generated.resources.Res
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -7,8 +8,6 @@ import kotlinx.serialization.Serializable
 internal data class BundledAssetManifest(
     val openlyrics: List<BundledAsset>,
     val json: List<BundledAsset>,
-    val tunes: List<BundledAsset>,
-    val sheets: List<BundledAsset>,
 )
 
 @Serializable
@@ -16,7 +15,7 @@ internal data class BundledAsset(
     val path: String,
     val type: AssetType,
 ) {
-    val fullPath get() = "files/$path"
+    val fullPath get() = Res.getUri( "files/$path")
 }
 
 internal enum class AssetType {

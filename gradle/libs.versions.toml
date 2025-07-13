@@ -6,6 +6,7 @@ android-targetSdk = "36"
 jdk = "17"
 aboutLibraries = "12.2.4"
 androidPdfViewer = "3.1.0-beta.1"
+androidPdfViewer3 = "3.2.7"
 androidx_activity = "1.10.1"
 androidx_appcompat = "1.7.1"
 androidx_core_ktx = "1.16.0"
@@ -18,7 +19,7 @@ androidx_test_junit = "1.2.1"
 androidx_work = "2.10.2"
 androidx_work_runtime = "2.10.2"
 appUpdateKtx = "2.1.0"
-haze = "1.6.6"
+haze = "1.6.7"
 kaluga = "1.5.1"
 cardview = "1.0.0"
 circularProgressBar = "1.2.3"
@@ -38,7 +39,7 @@ xmlutil = "0.91.1"
 coreTestingVersion = "2.2.0"
 coroutines = "1.10.2"
 coroutinesTest = "1.10.2"
-dateTime = "0.7.0"
+dateTime = "0.7.1"
 detekt = "1.23.8"
 espresso = "3.6.1"
 firebaseBom = "33.16.0"
@@ -88,12 +89,17 @@ test_junit = "4.13.2"
 timber = "5.0.1"
 triplet = "3.12.1"
 versions = "0.52.0"
+anotherPdfViewer = "2.3.7"
+uiViewbinding = "1.8.3"
+fragmentCompose = "1.8.8"
 
 [libraries]
 android-pdf-viewer = { module = "com.github.DImuthuUpe:AndroidPdfViewer", version.ref = "androidPdfViewer" }
+android-pdf-viewer3 = { module = "com.github.marain87:AndroidPdfViewer", version.ref = "androidPdfViewer3" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx_appcompat" }
 androidx-cardview = { module = "androidx.cardview:cardview", version.ref = "cardview" }
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
+androidx-fragment-compose = { module = "androidx.fragment:fragment-compose", version.ref = "fragmentCompose" }
 androidx-legacy-preference-v14 = { module = "androidx.legacy:legacy-preference-v14", version.ref = "legacyPreferenceV14" }
 androidx-legacy-support-v4 = { module = "androidx.legacy:legacy-support-v4", version.ref = "legacySupportV4" }
 androidx-media = { module = "androidx.media:media", version.ref = "media" }
@@ -212,12 +218,15 @@ jetbrains-navigation-compose = { module = "org.jetbrains.androidx.navigation:nav
 jetbrains-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "jetbrainsViewModel"}
 jetbrains-runtime-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "jetbrainsViewModel"}
 
+pdf-viewer = { module = "io.github.afreakyelf:Pdf-Viewer", version.ref = "anotherPdfViewer" }
+
 test-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx_test_junit" }
 test-ui-test-junit = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "compose_ui" }
 test-ui-tooling-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 test-junit = { group = "junit", name = "junit", version.ref = "test_junit" }
 test-espresso = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
 test-hilt = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt_android" }
+androidx-ui-viewbinding = { group = "androidx.compose.ui", name = "ui-viewbinding", version.ref = "uiViewbinding" }
 
 [bundles]
 media3 = ["androidx-media3-exoplayer", "androidx-media3-ui", "androidx-media3-session", "androidx-media3-common-ktx", "androidx-media3-exoplayer-midi"]

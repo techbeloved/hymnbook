@@ -8,5 +8,5 @@ internal actual val assetFileSourceProvider: AssetFileSourceProvider = AssetFile
 }
 
 internal fun openAndroidAsset(assetFilePath: String) = AndroidInjector.application.assets.open(
-    assetFilePath.removePrefix("files/")
+    assetFilePath.removePrefix("files/").removePrefix("file:///android_asset/")
 )
