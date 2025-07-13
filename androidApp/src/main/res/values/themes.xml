@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Hymnbook" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.Hymnbook" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
+    </style>
 </resources>

@@ -1,9 +1,9 @@
 package com.techbeloved.hymnbook
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -13,7 +13,7 @@ import com.techbeloved.hymnbook.shared.App
 import com.techbeloved.media.DefaultMediaControllerDisposer
 import com.techbeloved.media.MediaControllerDisposer
 
-class MainActivity : ComponentActivity(),
+class MainActivity : AppCompatActivity(),
     MediaControllerDisposer by DefaultMediaControllerDisposer() {
 
     private val analytics: FirebaseAnalytics by lazy {

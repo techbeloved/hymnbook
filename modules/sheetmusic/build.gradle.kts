@@ -58,7 +58,10 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.compose.activity)
-            implementation(libs.android.pdf.viewer)
+            implementation(libs.android.pdf.viewer3)
+            implementation(libs.pdf.viewer)
+            implementation(libs.androidx.fragment.compose)
+            implementation(libs.androidx.ui.viewbinding)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -99,6 +102,11 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    buildFeatures {
+        compose = true
+        viewBinding = true
     }
 }
 

@@ -13,6 +13,7 @@ import com.techbeloved.hymnbook.shared.model.assetimport.AssetType
 import com.techbeloved.hymnbook.shared.model.assetimport.BundledAsset
 import com.techbeloved.hymnbook.shared.model.assetimport.BundledAssetManifest
 import com.techbeloved.hymnbook.shared.openlyrics.ImportOpenLyricsUseCase
+import hymnbook.shared.generated.resources.Res
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import me.tatarka.inject.annotations.Inject
@@ -33,7 +34,7 @@ internal class ImportBundledAssetsUseCase @Inject constructor(
 ) {
     suspend operator fun invoke() = withContext(dispatchersProvider.io()) {
         val fileSystem = fileSystemProvider.get()
-        val manifestJson = defaultAssetFileSourceProvider.get("files/manifest/filesmanifest.json")
+        val manifestJson = defaultAssetFileSourceProvider.get(Res.getUri("files/manifest/filesmanifest.json"))
             .use { fileSource ->
                 fileSource.buffer().use { bufferedSource ->
                     bufferedSource.readUtf8()
@@ -43,6 +44,7 @@ internal class ImportBundledAssetsUseCase @Inject constructor(
             deserializer = BundledAssetManifest.serializer(),
             string = manifestJson,
         )
+        println("Importing bundled assets $bundledAssets")
         runCatching {
             importOpenLyrics(fileSystem, bundledAssets.openlyrics)
             importJsonHymnbook(bundledAssets.json)

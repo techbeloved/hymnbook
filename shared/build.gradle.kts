@@ -155,8 +155,7 @@ android {
     }
 
     sourceSets["main"].apply {
-        res.srcDirs("src/androidMain/res", "src/commonMain/composeResources")
-        assets.srcDirs("src/commonMain/composeResources/files")
+        res.srcDirs("src/androidMain/res")
     }
 }
 

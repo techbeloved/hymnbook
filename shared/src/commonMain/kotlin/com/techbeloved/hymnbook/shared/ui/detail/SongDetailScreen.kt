@@ -42,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
@@ -119,7 +120,7 @@ internal fun SongDetailScreen(
                             set(SongDetailScreenModel.SONG_ID_KEY, songId)
                         },
                     )
-                    val uiDetail by screenModel.state.collectAsState()
+                    val uiDetail by screenModel.state.collectAsStateWithLifecycle()
                     SongDetailUi(
                         state = uiDetail,
                         contentPadding = contentPadding,
@@ -195,7 +196,8 @@ private fun SongDetailUi(
     if (state.songDisplayMode == SongDisplayMode.SheetMusic && state.sheetMusic != null) {
         SheetMusicUi(
             sheetMusicItem = state.sheetMusic,
-            modifier = modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize()
+                .padding(contentPadding),
         )
     } else {
         Column(
@@ -310,6 +312,7 @@ private fun SongPager(
                 modifier = modifier
                     .nestedScroll(scrollBehavior.nestedScrollConnection)
                     .hazeSource(hazeState),
+                userScrollEnabled = state.currentDisplayMode != SongDisplayMode.SheetMusic,
             ) { page ->
                 pageContent(state.pages[page], innerPadding)
             }

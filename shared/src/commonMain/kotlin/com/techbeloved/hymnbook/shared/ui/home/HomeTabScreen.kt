@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalHazeMaterialsApi::class)
+
 package com.techbeloved.hymnbook.shared.ui.home
 
 import androidx.compose.foundation.layout.Box
@@ -38,6 +40,11 @@ import com.techbeloved.hymnbook.shared.model.SongTitle
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
 import com.techbeloved.hymnbook.shared.ui.listing.SongListingUi
 import com.techbeloved.hymnbook.shared.ui.songbook.SongbookSelector
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
+import dev.chrisbanes.haze.materials.HazeMaterials
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,6 +57,7 @@ internal fun HomeTabScreen(
     LaunchedEffect(Unit) {
         viewModel.onScreenLoaded()
     }
+    val hazeState = remember { HazeState() }
     val state by viewModel.state.collectAsState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
@@ -57,6 +65,7 @@ internal fun HomeTabScreen(
             AppTopBar(
                 showUpButton = false,
                 scrollBehaviour = scrollBehavior,
+                modifier = Modifier.hazeEffect(hazeState, style = HazeMaterials.ultraThin()),
                 titleContent = {
                     if (!state.isLoading) {
                         SongbookSelector(
@@ -98,7 +107,8 @@ internal fun HomeTabScreen(
                 songItems = state.songTitles,
                 modifier = Modifier
                     .nestedScroll(scrollBehavior.nestedScrollConnection)
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .hazeSource(hazeState),
                 contentPadding = innerPadding,
                 onSongItemClicked = onSongItemClicked,
             )
