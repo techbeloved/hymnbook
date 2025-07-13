@@ -17,35 +17,35 @@ internal class ImportMusicSheetsUseCase @Inject constructor(
     private val dispatchersProvider: DispatchersProvider,
     private val hashFileUseCase: HashFileUseCase,
 ) {
-    suspend operator fun invoke(directory: Path) = withContext(dispatchersProvider.io()) {
-        val sharedFileSystem = fileSystemProvider.get()
-        val fileSystem = sharedFileSystem.fileSystem
-        fileSystem.createDirectory(sharedFileSystem.sheetsDir())
-        runCatching {
-            fileSystem.listRecursively(directory)
-                .filter { supportedSheetMusicFormats.contains(it.extension().lowercase()) }
-                .forEach { sheetPath ->
-                    val (songbook, entry) = sheetPath.name.substringBeforeLast(".")
-                        .split("_")
+    suspend operator fun invoke(directory: Path, prefix: String, songbook: String) =
+        withContext(dispatchersProvider.io()) {
+            val sharedFileSystem = fileSystemProvider.get()
+            val fileSystem = sharedFileSystem.fileSystem
+            fileSystem.createDirectory(sharedFileSystem.sheetsDir())
+            runCatching {
+                fileSystem.listRecursively(directory)
+                    .filter { supportedSheetMusicFormats.contains(it.extension().lowercase()) }
+                    .forEach { sheetPath ->
+                        val entry = sheetPath.name.removePrefix(prefix).substringBeforeLast(".")
 
-                    val songEntry = database.songbookSongsQueries.getSongbookEntry(
-                        songbook = songbook,
-                        entry = entry
-                    ).executeAsOneOrNull()
-                    val fileExtension = sheetPath.extension().lowercase()
-                    if (songEntry != null) {
-                        database.sheetMusicEntityQueries.insert(
-                            song_id = songEntry.song_id,
-                            file_path = sheetPath.name,
-                            file_hash = hashFileUseCase(sheetPath).sha256,
-                            type = if (fileExtension in pdfSheetMusicFormats) {
-                                SheetMusic.Type.Pdf
-                            } else {
-                                SheetMusic.Type.Image
-                            },
-                        )
+                        val songEntry = database.songbookSongsQueries.getSongbookEntry(
+                            songbook = songbook,
+                            entry = entry
+                        ).executeAsOneOrNull()
+                        val fileExtension = sheetPath.extension().lowercase()
+                        if (songEntry != null) {
+                            database.sheetMusicEntityQueries.insert(
+                                song_id = songEntry.song_id,
+                                file_path = sheetPath.name,
+                                file_hash = hashFileUseCase(sheetPath).sha256,
+                                type = if (fileExtension in pdfSheetMusicFormats) {
+                                    SheetMusic.Type.Pdf
+                                } else {
+                                    SheetMusic.Type.Image
+                                },
+                            )
+                        }
                     }
-                }
+            }
         }
-    }
 }

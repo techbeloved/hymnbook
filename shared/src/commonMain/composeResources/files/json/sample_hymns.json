@@ -4,7 +4,11 @@
     "longer_title": "Select Hymns and Songs for Christian Fellowship",
     "publisher": "Watchman Catholic Charismatic Renewal Movement",
     "publish_date": "1999",
-    "revision": "1"
+    "revision": "1",
+    "sheet_music": "sheets/sample_sheets.zip",
+    "sheet_music_prefix": "Watchman (HSCF)_",
+    "tunes": "tunes/sample_tunes.zip",
+    "tunes_prefix": "Watchman (HSCF)_"
   },
   "topics": [
     {
@@ -151,6 +155,25 @@
       },
       "topic": 1,
       "first": "To God be the glory, great things He has done;\nSo loved He the world that He gave us His Son,\nWho yielded His life an atonement for sin,\nAnd opened the life gate that all may go in."
+    },
+    {
+      "title": "A mighty fortress",
+      "num": 21,
+      "verses": [
+        "A mighty fortress is our God,\nA bulwark never failing;\nOur helper he, amid the flood\nOf mortal ills prevailing.\nFor still our ancient foe\nDoes seek to work us woe;\nHis craft and power are great,\nAnd armed with cruel hate,\nOn earth is not his equal.",
+        "Did we in our own strength confide,\nOur striving would be losing,\nWere not the right Man on our side,\nThe Man of God's own choosing.\nDost ask who that may be?\nChrist Jesus, it is He;\nLord Sabaoth His name,\nFrom age to age the same;\nAnd he must win the battle.",
+        "And though this world, with devils filled,\nShould threaten to undo us,\nWe will not fear, for God hath willed\nHis truth to triumph through us.\nThe prince of darkness grim,\nWe tremble not for him;\nHis rage we can endure,\nFor lo! his doom is sure;\nOne little word shall fell him.",
+        "That Word above all earthly powers\nNo thanks to them abideth;\nThe Spirit and the gifts are ours\nThro him who with us sideth.\nLet goods and kindred go,\nThis mortal life also;\nThe body they may kill:\nGod's truth abideth still;\nTis kingdom is forever! "
+      ],
+      "chorus": null,
+      "id": "hymn_21",
+      "attribution": {
+        "credits": null,
+        "music_by": "Johann S. Bach (PHH 7)",
+        "lyrics_by": "Martin Luther. born at Eisleben, Nov. 10, 1483; entered the University of Erfurt, 1501 (B.A. 1502, M.A.. 1503); became an Augustinian monk, 1505; ordained priest, 1507; appointed Professor at the University of Wittenberg, 1508, and in 1512 D.D.; published his 95 Theses, 1517; and burnt the Papal Bull which had condemned them, 1520; attended the Diet of Worms, 1521; translated the Bible into German, 1521-34; and died at Eisleben, Feb. 18, 1546. The details of his life and of his work as a reformer are accessible to English readers in a great variety of forms. Luther had a huge influence on German hymnody.\n\nLuther wrote this text sometime between 1527 and 1529 as a paraphrase of Psalm 46, though stanza four comes directly from Luther’s own persecution experience. The most commonly used English version is a translation by Frederick H. Hedge in 1853. The text is full of battle imagery; this, coupled with the historic use of the hymn in actual battles, can be troubling for Christians who struggle with making sense of warfare. There is a case for arguing that we need to see this hymn in light of the history in which it was written, when Christians were fighting to defend their faith. However, this text also needs to be understood in terms of a spiritual struggle against the powers of darkness. Whether we believe in very real, physical demons and tempters, or less concrete forces, we are in the midst of a very real war between good and evil. That sounds very dramatic and almost cliché, but it is important to remember. Luther reminds us that we can’t simply sit back and watch as horrible things unfold in our world, but that we must join the battle, knowing that God is on our side, and that we fight for a side that has, in a sense, already won."
+      },
+      "topic": 1,
+      "first": "A mighty fortress is our God,\nA bulwark never failing;\nOur helper he, amid the flood\nOf mortal ills prevailing.\nFor still our ancient foe\nDoes seek to work us woe;\nHis craft and power are great,\nAnd armed with cruel hate,\nOn earth is not his equal."
     }
   ]
 }

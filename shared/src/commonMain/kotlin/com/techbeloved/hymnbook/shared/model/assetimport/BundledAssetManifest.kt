@@ -7,8 +7,6 @@ import kotlinx.serialization.Serializable
 internal data class BundledAssetManifest(
     val openlyrics: List<BundledAsset>,
     val json: List<BundledAsset>,
-    val tunes: List<BundledAsset>,
-    val sheets: List<BundledAsset>,
 )
 
 @Serializable

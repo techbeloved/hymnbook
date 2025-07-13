@@ -9,18 +9,10 @@
     {
       "path": "json/sample_hymns.json",
       "type": "json"
-    }
-  ],
-  "tunes": [
+    },
     {
-      "path": "tunes/sample_tunes.zip",
-      "type": "zip"
-    }
-  ],
-  "sheets": [
-    {
-      "path": "sheets/sample_sheets.zip",
-      "type": "zip"
+      "path": "json/all_hymns_v6.json",
+      "type": "json"
     }
   ]
 }
