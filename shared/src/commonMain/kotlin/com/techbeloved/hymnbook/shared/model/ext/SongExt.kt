@@ -27,5 +27,15 @@ internal fun SongDetail.lyricsByVerseOrder(): List<Lyric> {
         val verseOrder = order.trim().split(" ")
         val labelToLyricsMap = lyrics.associateBy { (it.label ?: it.type.name) }
         verseOrder.mapNotNull(labelToLyricsMap::get)
-    } ?: lyrics
+    } ?: buildList {
+        val lyricsByType = lyrics.groupBy { it.type }
+        lyricsByType[Lyric.Type.Intro]?.forEach { add(it) }
+        lyricsByType[Lyric.Type.Verse]?.forEach {
+            add(it)
+            lyricsByType[Lyric.Type.PreChorus]?.forEach { add(it) }
+            lyricsByType[Lyric.Type.Chorus]?.forEach { add(it) }
+        }
+        lyricsByType[Lyric.Type.Bridge]?.forEach { add(it) }
+        lyricsByType[Lyric.Type.Ending]?.forEach { add(it) }
+    }
 }
