@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.techbeloved.hymnbook.shared.analytics.TrackAnalyticsEventUseCase
 import com.techbeloved.hymnbook.shared.di.appComponent
 import com.techbeloved.hymnbook.shared.model.playlist.PlaylistItem
 import com.techbeloved.hymnbook.shared.playlist.DeletePlaylistUseCase
@@ -18,6 +19,7 @@ import me.tatarka.inject.annotations.Inject
 internal class PlaylistsViewModel @Inject constructor(
     getPlaylistUseCase: GetPlaylistsUseCase,
     private val deletePlaylistUseCase: DeletePlaylistUseCase,
+    private val trackAnalyticsEventUseCase: TrackAnalyticsEventUseCase,
 ) : ViewModel() {
 
     val state = getPlaylistUseCase().map { playlists ->
@@ -34,6 +36,12 @@ internal class PlaylistsViewModel @Inject constructor(
     fun onDeletePlaylist(playlistItem: PlaylistItem) {
         viewModelScope.launch {
             deletePlaylistUseCase(playlistId = playlistItem.id)
+        }
+    }
+
+    fun onScreenLoaded() {
+        viewModelScope.launch {
+            trackAnalyticsEventUseCase(PlaylistAnalytics.screenView())
         }
     }
 

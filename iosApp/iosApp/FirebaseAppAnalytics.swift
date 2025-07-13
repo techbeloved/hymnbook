@@ -16,6 +16,10 @@ class FirebaseAppAnalytics: AppAnalytics {
         Analytics.logEvent(bundle.event.firebaseEvent(), parameters: parametersDict)
     }
 
+    func setDefaultParams(params: [String: String]) {
+        Analytics.setDefaultEventParameters(params)
+    }
+
 }
 
 extension TrackingEvent {

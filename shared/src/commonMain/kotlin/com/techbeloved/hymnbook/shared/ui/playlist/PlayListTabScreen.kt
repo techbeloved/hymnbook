@@ -37,6 +37,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -61,8 +62,8 @@ import com.techbeloved.hymnbook.shared.ui.dialog.AppDialog
 import com.techbeloved.hymnbook.shared.ui.theme.AppTheme
 import com.techbeloved.hymnbook.shared.ui.utils.generateRandomPastelColor
 import kotlinx.collections.immutable.persistentListOf
-import kotlin.time.Instant
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import kotlin.time.Instant
 
 @Composable
 internal fun PlayListTabScreen(
@@ -71,6 +72,10 @@ internal fun PlayListTabScreen(
     onAddPlaylistClick: () -> Unit,
     onOpenPlaylistDetail: (item: PlaylistItem) -> Unit,
 ) {
+
+    LaunchedEffect(Unit) {
+        viewModel.onScreenLoaded()
+    }
 
     val state by viewModel.state.collectAsStateWithLifecycle()
     PlaylistsUi(

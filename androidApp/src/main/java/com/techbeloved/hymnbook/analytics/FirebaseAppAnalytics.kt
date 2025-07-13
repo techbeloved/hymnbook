@@ -1,5 +1,6 @@
 package com.techbeloved.hymnbook.analytics
 
+import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.logEvent
@@ -16,6 +17,16 @@ class FirebaseAppAnalytics : AppAnalytics {
                 param(param.toFirebaseParam(), value)
             }
         }
+    }
+
+    override fun setDefaultParams(params: Map<String, String>) {
+        Firebase.analytics.setDefaultEventParameters(
+            Bundle().apply {
+                params.forEach { (key, value) ->
+                    putString(key, value)
+                }
+            }
+        )
     }
 
     private fun TrackingEvent.toFirebaseEvent(): String = when (this) {

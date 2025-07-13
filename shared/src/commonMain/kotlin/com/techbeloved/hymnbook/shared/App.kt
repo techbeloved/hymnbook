@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.techbeloved.hymnbook.shared.ui.analytics.LogDefaultAnalytics
 import com.techbeloved.hymnbook.shared.ui.appbar.BottomNavigationBar
 import com.techbeloved.hymnbook.shared.ui.home.TopLevelDestination
 import com.techbeloved.hymnbook.shared.ui.home.addHomeRoutes
@@ -30,6 +31,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 public fun App() {
+    LogDefaultAnalytics()
     AppTheme {
         val navController = rememberNavController()
         val navBackStackEntry by navController.currentBackStackEntryAsState()

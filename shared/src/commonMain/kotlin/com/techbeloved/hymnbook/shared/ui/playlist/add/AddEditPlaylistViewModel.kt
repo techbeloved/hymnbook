@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.toRoute
+import com.techbeloved.hymnbook.shared.analytics.TrackAnalyticsEventUseCase
 import com.techbeloved.hymnbook.shared.di.appComponent
 import com.techbeloved.hymnbook.shared.playlist.AddSongToPlaylistUseCase
 import com.techbeloved.hymnbook.shared.playlist.CreatePlaylistUseCase
@@ -27,6 +28,7 @@ internal class AddEditPlaylistViewModel @Inject constructor(
     private val updatePlaylistUseCase: UpdatePlaylistUseCase,
     private val getPlaylistByIdUseCase: GetPlaylistByIdUseCase,
     private val addSongToPlaylistUseCase: AddSongToPlaylistUseCase,
+    private val trackAnalyticsUseCase: TrackAnalyticsEventUseCase,
     @Assisted private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -118,6 +120,12 @@ internal class AddEditPlaylistViewModel @Inject constructor(
             }
             inProgress.update { false }
             playlistSaved.update { PlaylistSaved(songAdded = args.songId != null) }
+        }
+    }
+
+    fun onScreenLoaded() {
+        viewModelScope.launch {
+            trackAnalyticsUseCase(AddEditPlaylistAnalytics.screenView(isEdit = args.playlistId != null))
         }
     }
 
