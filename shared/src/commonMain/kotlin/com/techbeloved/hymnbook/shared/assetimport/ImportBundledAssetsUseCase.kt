@@ -44,7 +44,6 @@ internal class ImportBundledAssetsUseCase @Inject constructor(
             deserializer = BundledAssetManifest.serializer(),
             string = manifestJson,
         )
-        println("Importing bundled assets $bundledAssets")
         runCatching {
             importOpenLyrics(fileSystem, bundledAssets.openlyrics)
             importJsonHymnbook(bundledAssets.json)

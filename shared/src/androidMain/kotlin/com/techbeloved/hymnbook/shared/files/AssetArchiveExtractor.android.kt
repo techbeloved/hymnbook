@@ -12,7 +12,6 @@ private class AndroidArchiveExtractor(
 ) : AssetArchiveExtractor {
     override suspend fun extract(assetFile: String, destination: Path) =
         withContext(Dispatchers.IO) {
-            println("Extracting $assetFile to $destination")
             decompress.unzip(
                 ZipInputStream(
                     openAndroidAsset(assetFile)
