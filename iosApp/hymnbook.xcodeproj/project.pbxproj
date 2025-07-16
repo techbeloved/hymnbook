@@ -10,7 +10,7 @@
 		058557BB273AAA24004C7B11 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557BA273AAA24004C7B11 /* Assets.xcassets */; };
 		058557D9273AAEEB004C7B11 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */; };
 		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
-		5159ADD6EB0665BA364AB10E /* Pods_iosApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D053D33CFEC7261955E27FCC /* Pods_iosApp.framework */; };
+		4D882B44C4430C60C6DFECB5 /* Pods_hymnbook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA50D6243AC830FA84F7401F /* Pods_hymnbook.framework */; };
 		7555FF83242A565900829871 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF82242A565900829871 /* ContentView.swift */; };
 		981E3F922E1ABEDC00A906E0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 981E3F912E1ABEDC00A906E0 /* GoogleService-Info.plist */; };
 		C31C6A4A84C97B27C70CC93C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C31C60EC93BFDD0DA737F3C7 /* AppDelegate.swift */; };
@@ -34,13 +34,15 @@
 		058557BA273AAA24004C7B11 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2152FB032600AC8F00CF470E /* iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp.swift; sourceTree = "<group>"; };
-		7555FF7B242A565900829871 /* iosApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iosApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		489FDC70F86A20E070381F07 /* Pods-hymnbook.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hymnbook.release.xcconfig"; path = "Target Support Files/Pods-hymnbook/Pods-hymnbook.release.xcconfig"; sourceTree = "<group>"; };
+		7555FF7B242A565900829871 /* hymnbook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = hymnbook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF82242A565900829871 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		7555FF8C242A565B00829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		981E3F912E1ABEDC00A906E0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		7555FF8C242A565B00829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
+		981E3F912E1ABEDC00A906E0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.info; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		BA50D6243AC830FA84F7401F /* Pods_hymnbook.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_hymnbook.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BFBE60897FBFC351E0B74585 /* Pods-hymnbook.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hymnbook.debug.xcconfig"; path = "Target Support Files/Pods-hymnbook/Pods-hymnbook.debug.xcconfig"; sourceTree = "<group>"; };
 		C31C60EC93BFDD0DA737F3C7 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C31C6178D54580035DE2B8E5 /* FirebaseAppAnalytics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseAppAnalytics.swift; sourceTree = "<group>"; };
-		D053D33CFEC7261955E27FCC /* Pods_iosApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iosApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D58D56919A676F98D7B0BD7D /* Pods-iosApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iosApp.release.xcconfig"; path = "Target Support Files/Pods-iosApp/Pods-iosApp.release.xcconfig"; sourceTree = "<group>"; };
 		FD0498E38A6E957FD1510247 /* Pods-iosApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iosApp.debug.xcconfig"; path = "Target Support Files/Pods-iosApp/Pods-iosApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -50,7 +52,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5159ADD6EB0665BA364AB10E /* Pods_iosApp.framework in Frameworks */,
+				4D882B44C4430C60C6DFECB5 /* Pods_hymnbook.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,7 +70,7 @@
 		7555FF72242A565900829871 = {
 			isa = PBXGroup;
 			children = (
-				7555FF7D242A565900829871 /* iosApp */,
+				7555FF7D242A565900829871 /* hymnbook */,
 				7555FF7C242A565900829871 /* Products */,
 				7555FFB0242A642200829871 /* Frameworks */,
 				C11B7D1B5F3B441AB4C92394 /* Pods */,
@@ -78,12 +80,12 @@
 		7555FF7C242A565900829871 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				7555FF7B242A565900829871 /* iosApp.app */,
+				7555FF7B242A565900829871 /* hymnbook.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		7555FF7D242A565900829871 /* iosApp */ = {
+		7555FF7D242A565900829871 /* hymnbook */ = {
 			isa = PBXGroup;
 			children = (
 				981E3F912E1ABEDC00A906E0 /* GoogleService-Info.plist */,
@@ -95,13 +97,13 @@
 				C31C60EC93BFDD0DA737F3C7 /* AppDelegate.swift */,
 				C31C6178D54580035DE2B8E5 /* FirebaseAppAnalytics.swift */,
 			);
-			path = iosApp;
+			path = hymnbook;
 			sourceTree = "<group>";
 		};
 		7555FFB0242A642200829871 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				D053D33CFEC7261955E27FCC /* Pods_iosApp.framework */,
+				BA50D6243AC830FA84F7401F /* Pods_hymnbook.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -111,6 +113,8 @@
 			children = (
 				FD0498E38A6E957FD1510247 /* Pods-iosApp.debug.xcconfig */,
 				D58D56919A676F98D7B0BD7D /* Pods-iosApp.release.xcconfig */,
+				BFBE60897FBFC351E0B74585 /* Pods-hymnbook.debug.xcconfig */,
+				489FDC70F86A20E070381F07 /* Pods-hymnbook.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -118,9 +122,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		7555FF7A242A565900829871 /* iosApp */ = {
+		7555FF7A242A565900829871 /* hymnbook */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 7555FFA5242A565B00829871 /* Build configuration list for PBXNativeTarget "iosApp" */;
+			buildConfigurationList = 7555FFA5242A565B00829871 /* Build configuration list for PBXNativeTarget "hymnbook" */;
 			buildPhases = (
 				0D5A2DB55CCC46CB8658EB4F /* [CP] Check Pods Manifest.lock */,
 				7555FF77242A565900829871 /* Sources */,
@@ -135,9 +139,9 @@
 			);
 			dependencies = (
 			);
-			name = iosApp;
+			name = hymnbook;
 			productName = iosApp;
-			productReference = 7555FF7B242A565900829871 /* iosApp.app */;
+			productReference = 7555FF7B242A565900829871 /* hymnbook.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -155,7 +159,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 7555FF76242A565900829871 /* Build configuration list for PBXProject "iosApp" */;
+			buildConfigurationList = 7555FF76242A565900829871 /* Build configuration list for PBXProject "hymnbook" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -168,7 +172,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				7555FF7A242A565900829871 /* iosApp */,
+				7555FF7A242A565900829871 /* hymnbook */,
 			);
 		};
 /* End PBXProject section */
@@ -193,15 +197,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-hymnbook/Pods-hymnbook-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-hymnbook/Pods-hymnbook-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-hymnbook/Pods-hymnbook-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		0D5A2DB55CCC46CB8658EB4F /* [CP] Check Pods Manifest.lock */ = {
@@ -219,7 +223,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-iosApp-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-hymnbook-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -232,15 +236,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-hymnbook/Pods-hymnbook-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-hymnbook/Pods-hymnbook-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-hymnbook/Pods-hymnbook-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		981E3F902E1AB29200A906E0 /* Firebase Crashlytics Run Script */ = {
@@ -402,21 +406,25 @@
 		};
 		7555FFA6242A565B00829871 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FD0498E38A6E957FD1510247 /* Pods-iosApp.debug.xcconfig */;
+			baseConfigurationReference = BFBE60897FBFC351E0B74585 /* Pods-hymnbook.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"iosApp/Preview Content\"";
+				CURRENT_PROJECT_VERSION = 300;
+				DEVELOPMENT_ASSET_PATHS = "\"hymnbook/Preview Content\"";
 				DEVELOPMENT_TEAM = 4MW3HT65ST;
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = iosApp/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Watchman Music";
+				INFOPLIST_FILE = hymnbook/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "WCCRM Music (dev)";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.reference";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 3.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
@@ -432,21 +440,25 @@
 		};
 		7555FFA7242A565B00829871 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D58D56919A676F98D7B0BD7D /* Pods-iosApp.release.xcconfig */;
+			baseConfigurationReference = 489FDC70F86A20E070381F07 /* Pods-hymnbook.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"iosApp/Preview Content\"";
+				CURRENT_PROJECT_VERSION = 300;
+				DEVELOPMENT_ASSET_PATHS = "\"hymnbook/Preview Content\"";
 				DEVELOPMENT_TEAM = 4MW3HT65ST;
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = iosApp/Info.plist;
+				INFOPLIST_FILE = hymnbook/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Watchman Music";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.reference";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 3.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
@@ -463,7 +475,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		7555FF76242A565900829871 /* Build configuration list for PBXProject "iosApp" */ = {
+		7555FF76242A565900829871 /* Build configuration list for PBXProject "hymnbook" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7555FFA3242A565B00829871 /* Debug */,
@@ -472,7 +484,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		7555FFA5242A565B00829871 /* Build configuration list for PBXNativeTarget "iosApp" */ = {
+		7555FFA5242A565B00829871 /* Build configuration list for PBXNativeTarget "hymnbook" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7555FFA6242A565B00829871 /* Debug */,

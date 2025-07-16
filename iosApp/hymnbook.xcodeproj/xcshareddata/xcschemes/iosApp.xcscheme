@@ -14,9 +14,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "7555FF7A242A565900829871"
-               BuildableName = "iosApp.app"
-               BlueprintName = "iosApp"
-               ReferencedContainer = "container:iosApp.xcodeproj">
+               BuildableName = "hymnbook.app"
+               BlueprintName = "hymnbook"
+               ReferencedContainer = "container:hymnbook.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -43,9 +43,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "7555FF7A242A565900829871"
-            BuildableName = "iosApp.app"
-            BlueprintName = "iosApp"
-            ReferencedContainer = "container:iosApp.xcodeproj">
+            BuildableName = "hymnbook.app"
+            BlueprintName = "hymnbook"
+            ReferencedContainer = "container:hymnbook.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
