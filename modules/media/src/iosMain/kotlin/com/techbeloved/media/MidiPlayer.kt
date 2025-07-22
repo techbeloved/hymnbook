@@ -32,7 +32,7 @@ class MidiPlayer(
         AVMIDIPlayer(
             contentsOfURL = midiContent,
             // Downloaded from https://archive.org/download/free-soundfonts-sf2-2019-04
-            soundBankURL = URLWithString(Res.getUri("files/reality_gm_gs.sf2")),
+            soundBankURL = URLWithString(Res.getUri("files/soundfont.sf2")),
             error = error.ptr,
         )
     }

@@ -6,7 +6,7 @@ import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr
 import platform.AVFAudio.AVAudioSession
-import platform.AVFAudio.AVAudioSessionCategoryOptionDefaultToSpeaker
+import platform.AVFAudio.AVAudioSessionActivationOptionNone
 import platform.AVFAudio.AVAudioSessionCategoryPlayback
 import platform.AVFAudio.AVAudioSessionModeDefault
 import platform.AVFAudio.setActive
@@ -30,7 +30,7 @@ internal object AudioSessionInitializer {
                 setCategory(
                     category = AVAudioSessionCategoryPlayback,
                     mode = AVAudioSessionModeDefault,
-                    options = AVAudioSessionCategoryOptionDefaultToSpeaker,
+                    options = AVAudioSessionActivationOptionNone,
                     error = error.ptr,
                 )
                 setActive(active = true, error = error.ptr)
