@@ -44,7 +44,8 @@ src/main/res/menu-night/
 !/iosApp/Pods/Local Podspecs
 !/iosApp/Pods/Pods.xcodeproj
 !/iosApp/Pods/Target Support Files/shared
-/iosApp/iosApp/GoogleService-Info.plist
+/iosApp/hymnbook/GoogleService-Info.plist
 /shared/src/commonMain/composeResources/files/sheets/wccrm_hymns_v2.zip
 /shared/src/commonMain/composeResources/files/json/all_hymns_v6.json
 /shared/src/commonMain/composeResources/files/tunes/tunes_wccrm_midi_archive_hymns.zip
+/modules/media/src/iosMain/composeResources/files/soundfont.sf2
