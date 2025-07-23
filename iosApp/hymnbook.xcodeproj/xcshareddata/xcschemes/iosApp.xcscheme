@@ -48,10 +48,6 @@
             ReferencedContainer = "container:hymnbook.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <LocationScenarioReference
-         identifier = "com.apple.dt.IDEFoundation.CurrentLocationScenarioIdentifier"
-         referenceType = "1">
-      </LocationScenarioReference>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -65,6 +61,7 @@
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "Release"
+      customArchiveName = "watchmanmusic"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>
