@@ -84,8 +84,8 @@ store_cache_files() {
 }
 
 # Execute functions
-recover_cache_files
-install_jdk_if_needed
+# recover_cache_files
+# install_jdk_if_needed
 
 # --- Build Kotlin Multiplatform shared module ---
 echo "\\nBuilding Kotlin Multiplatform shared module..."
@@ -96,8 +96,11 @@ cd "$REPO_DIR"
 
 # Return to the Repo directory for Xcode to continue its build
 
- ./gradlew podinstall
+echo "Java Home is set to ${JAVA_HOME}"
+java -version
 
-store_cache_files # Store caches after build
+./gradlew podinstall
+
+# store_cache_files # Store caches after build
 
 echo "--- ci_post_clone.sh finished ---"
