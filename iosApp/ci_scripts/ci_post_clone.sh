@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Exit immediately if a command exits with a non-zero status.
 set -e
@@ -11,9 +11,11 @@ echo -n "$GOOGLE_SERVICE_PLIST_BASE64" | base64 --decode -o $GOOGLE_SERVICE_PATH
 # Define paths
 REPO_DIR=$CI_PRIMARY_REPOSITORY_PATH
 
-brew install openjdk@21
+curl -s "https://get.sdkman.io?ci=true&rcupdate=false" | bash
+source "$HOME/.sdkman/bin/sdkman-init.sh"
+sdk install java 21.0.8-amzn
 
-export JAVA_HOME=/usr/local/opt/openjdk@21
+export JAVA_HOME=/Users/local/.sdkman/candidates/java/current
 
 cd "$REPO_DIR"
 
