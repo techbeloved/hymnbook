@@ -32,7 +32,7 @@ dependencyResolutionManagement {
     }
 }
 
-include ':app', ':edittextwithsortby'
+// include ':app', ':edittextwithsortby'
 include ':shared'
 include ':desktopApp'
 include ':modules:be-server'
