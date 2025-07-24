@@ -19,7 +19,7 @@ export JAVA_HOME=/Users/local/.sdkman/candidates/java/current
 
 cd "$REPO_DIR"
 
-./gradlew podinstall
+./gradlew podinstall generateComposeResClass
 
 # store_cache_files # Store caches after build
 
