@@ -11,11 +11,9 @@ echo -n "$GOOGLE_SERVICE_PLIST_BASE64" | base64 --decode -o $GOOGLE_SERVICE_PATH
 # Define paths
 REPO_DIR=$CI_PRIMARY_REPOSITORY_PATH
 
-curl -s "https://get.sdkman.io?ci=true&rcupdate=false" | sh
-. "$HOME/.sdkman/bin/sdkman-init.sh"
-sdk install java 21.0.8-amzn
+brew install openjdk@21
 
-export JAVA_HOME=/Users/local/.sdkman/candidates/java/current
+export JAVA_HOME=/usr/local/opt/openjdk@21
 
 cd "$REPO_DIR"
 
