@@ -93,10 +93,10 @@ echo "\\nBuilding Kotlin Multiplatform shared module..."
 cd "$REPO_DIR"
 
 # This task builds the KMP framework for Xcode.
-./gradlew podPublishReleaseXCFramework
 
 # Return to the Repo directory for Xcode to continue its build
-cd "REPO_DIR"
+
+ ./gradlew podinstall
 
 store_cache_files # Store caches after build
 
