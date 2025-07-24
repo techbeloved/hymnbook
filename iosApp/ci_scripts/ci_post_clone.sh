@@ -14,9 +14,8 @@ REPO_DIR=$CI_PRIMARY_REPOSITORY_PATH
 JDK_DIR="${CI_DERIVED_DATA_PATH}/JDK"
 GRADLE_CACHE_DIR="${CI_DERIVED_DATA_PATH}/.gradle"
 KMP_SHARED_MODULE_PATH="${REPO_DIR}/shared" # Adjust if your shared module is elsewhere
-IOS_APP_DIR="${REPO_DIR}/iosApp" # Adjust if your iOS app is elsewhere
 
-JDK_VERSION="17.0.2" # Or whatever JDK version your KMP project requires (e.g., "20.0.1")
+JDK_VERSION="21.0.8" # Or whatever JDK version your KMP project requires (e.g., "20.0.1")
 ARCH_TYPE=""
 
 # Determine architecture
@@ -40,7 +39,7 @@ install_jdk_if_needed() {
 
     echo " - No valid JDK installation found, installing..."
     TAR_NAME="jdk-${JDK_VERSION}_${ARCH_TYPE}_bin.tar.gz"
-    JDK_DOWNLOAD_URL="https://download.oracle.com/java/${JDK_VERSION%.*}/archive/${TAR_NAME}" # Adjust URL for different JDK versions/providers
+    JDK_DOWNLOAD_URL="https://download.oracle.com/java/21/archive/${TAR_NAME}"
 
     curl -L -o "$TAR_NAME" "$JDK_DOWNLOAD_URL"
     tar xzf "$TAR_NAME" -C "$ROOT_DIR"
@@ -54,6 +53,7 @@ install_jdk_if_needed() {
 
     touch "$DETECT_LOC"
     echo " - Set JAVA_HOME in Xcode Cloud to ${JDK_DIR}/Home"
+    export JAVA_HOME="${JDK_DIR}/Home"
     return 0
 }
 
@@ -93,10 +93,10 @@ echo "\\nBuilding Kotlin Multiplatform shared module..."
 cd "$REPO_DIR"
 
 # This task builds the KMP framework for Xcode.
-./gradlew podPublishReleaseXCFramework
 
-# Return to the iOS app directory for Xcode to continue its build
-cd "$IOS_APP_DIR"
+# Return to the Repo directory for Xcode to continue its build
+
+ ./gradlew podinstall
 
 store_cache_files # Store caches after build
 
