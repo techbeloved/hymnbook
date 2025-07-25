@@ -3,6 +3,9 @@ package com.techbeloved.media
 import androidx.compose.runtime.Composable
 
 @Composable
-actual fun rememberPlaybackController(playbackState: PlaybackState): PlaybackController? {
+actual fun rememberPlaybackController(
+    playbackState: PlaybackState,
+    midiSoundFontPath: String?
+): PlaybackController? {
     TODO("Not yet implemented")
 }

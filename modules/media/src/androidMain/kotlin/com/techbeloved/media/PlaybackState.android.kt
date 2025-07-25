@@ -18,7 +18,10 @@ import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.guava.await
 
 @Composable
-actual fun rememberPlaybackController(playbackState: PlaybackState): PlaybackController? {
+actual fun rememberPlaybackController(
+    playbackState: PlaybackState,
+    midiSoundFontPath: String?
+): PlaybackController? {
     if (LocalInspectionMode.current) {
         return remember { DummyPlaybackController(playbackState) }
     }

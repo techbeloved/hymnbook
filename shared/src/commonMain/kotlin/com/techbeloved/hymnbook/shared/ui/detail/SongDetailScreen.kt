@@ -60,6 +60,7 @@ import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
+import hymnbook.shared.generated.resources.Res
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
@@ -97,7 +98,10 @@ internal fun SongDetailScreen(
     var currentSongId by remember { mutableStateOf<Long?>(null) }
     val pagerState by pagerViewModel.state.collectAsState()
     val playbackState = rememberPlaybackState()
-    val playbackController = rememberPlaybackController(playbackState)
+    val playbackController = rememberPlaybackController(
+        playbackState = playbackState,
+        midiSoundFontPath = Res.getUri("files/soundfont/soundfont.sf2"),
+    )
 
     LaunchedEffect(playbackState.isLooping) {
         pagerViewModel.trackSongLoopingToggle(playbackState.isLooping)
