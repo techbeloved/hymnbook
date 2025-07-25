@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,11 +8,34 @@ plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.triplet.play)
+}
+
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+
+val keystoreProperties = Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+} else {
+    keystoreProperties.setProperty("storeFile", System.getenv("KEYSTORE"))
+    keystoreProperties.setProperty("keyAlias", System.getenv("ALIAS"))
+    keystoreProperties.setProperty("keyPassword", System.getenv("KEY_PASSWORD"))
+    keystoreProperties.setProperty("storePassword", System.getenv("KEY_STORE_PASSWORD"))
 }
 
 android {
     namespace = "com.techbeloved.hymnbook"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
+
+    signingConfigs {
+        create("release_config") {
+            keyAlias = keystoreProperties["keyAlias"] as String
+            keyPassword = keystoreProperties["keyPassword"] as String
+            storeFile = file(keystoreProperties["storeFile"] as String)
+            storePassword = keystoreProperties["storePassword"] as String
+        }
+    }
+
 
     defaultConfig {
         applicationId = "com.techbeloved.hymnbook"
@@ -23,14 +49,16 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release_config")
         }
         debug {
             applicationIdSuffix = ".debug"
+            signingConfig = signingConfigs.getByName("release_config")
         }
     }
     compileOptions {
@@ -44,6 +72,24 @@ android {
         compose = true
         buildConfig = true
     }
+
+
+    playConfigs {
+        // only enable for release build in CI (release should be built only on CI)
+        register("release") {
+            enabled.set(true)
+        }
+    }
+}
+
+play {
+    track.set("internal")
+    userFraction.set(0.5)
+    updatePriority.set(2)
+    defaultToAppBundles.set(true)
+
+    // Only enable in CI
+    enabled.set(false)
 }
 
 dependencies {

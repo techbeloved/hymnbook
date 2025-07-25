@@ -9,10 +9,6 @@
     {
       "path": "json/sample_hymns.json",
       "type": "json"
-    },
-    {
-      "path": "json/all_hymns_v6.json",
-      "type": "json"
     }
   ]
 }

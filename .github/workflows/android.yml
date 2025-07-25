@@ -1,10 +1,10 @@
 name: Android CI
 
 on:
-#  push:
-#    # branches: [ "master" ]
-#  pull_request:
-#    # branches: [ "master" ]
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
   release:
     types: [ published ]
 
@@ -22,22 +22,22 @@ jobs:
       KEYSTORE: "android-signing-keystore.jks"
       HYMBOOK_GOOGLE_JSON: ${{ secrets.HYMBOOK_GOOGLE_JSON }}
       WCCRM_HYMNS_JSON_URL: ${{ secrets.WCCRM_HYMN_CATALOG }}
-      WCCRM_TOPICS_JSON_URL: ${{ secrets.WCCRM_TOPICS }}
       HYMN_ASSET_TOKEN: ${{ secrets.HYMN_ASSET_TOKEN_CLASSIC }}
-      WCCRM_HYMNS_JSON: "wccrm_hymns.json"
-      WCCRM_TOPICS_JSON: "wccrm_topics.json"
+      WCCRM_HYMNS_MANIFEST_JSON: $${ secrets.SHARED_HYMNBOOK_MANIFEST }
+      WCCRM_HYMNS_JSON: "wccrm_hymns_original.json"
       WCCRM_TUNES_ASSET_DOWNLOAD_URL: ${{ secrets.WCCRM_TUNES_ASSET }}
       WCCRM_SHEET_MUSIC_ASSET_DOWNLOAD_URL: ${{ secrets.WCCRM_CATALOG_ASSET }}
-      WCCRM_SHEET_MUSIC_ARCHIVE: "wccrm_sheet_music_v2.zip"
-      WCCRM_TUNES_ARCHIVE: "wccrm_hymns_v1.zip"
+      WCCRM_SHEET_MUSIC_ARCHIVE: "wccrm_hymns_v2.zip"
+      WCCRM_TUNES_ARCHIVE: "tunes_wccrm_midi_archive_hymns.zip"
       INTERNAL_DOWNLOAD_URL: ""
+      COMPOSE_RESOURCES_DIR: "shared/src/commonMain/composeResources/files"
       IS_RELEASE: ${{ github.event_name == 'release' }}
     steps:
       - uses: actions/checkout@v3
-      - name: set up JDK 17
+      - name: set up JDK 21
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
           cache: gradle
 
@@ -47,15 +47,22 @@ jobs:
         run: |
           echo "KEYSTORE=$(readlink -f $KEYSTORE)" >> $GITHUB_ENV
           echo "$SIGNING_KEY" | base64 -d > "$KEYSTORE"
-          echo "$HYMBOOK_GOOGLE_JSON" | base64 -d > app/google-services.json
+          echo "$HYMBOOK_GOOGLE_JSON" | base64 -d > androidApp/google-services.json
 
-          rm -rf app/src/main/assets/*.json
-          mkdir app/src/main/assets/tunes
-          mkdir app/src/main/assets/sheets
-          wget -q -O app/src/main/assets/"$WCCRM_HYMNS_JSON" $WCCRM_HYMNS_JSON_URL
-          wget -q -O app/src/main/assets/"$WCCRM_TOPICS_JSON" $WCCRM_TOPICS_JSON_URL
-          wget -q -O app/src/main/assets/tunes/"$WCCRM_TUNES_ARCHIVE" $WCCRM_TUNES_ASSET_DOWNLOAD_URL
-          wget -q -O app/src/main/assets/sheets/"$WCCRM_SHEET_MUSIC_ARCHIVE" $WCCRM_SHEET_MUSIC_ASSET_DOWNLOAD_URL
+          rm -rf $COMPOSE_RESOURCES_DIR/json/*.json
+          rm -rf $COMPOSE_RESOURCES_DIR/openlyrics/*.zip
+          rm -rf $COMPOSE_RESOURCES_DIR/sheets/*.zip
+          rm -rf $COMPOSE_RESOURCES_DIR/tunes/*.zip
+          rm -rf $COMPOSE_RESOURCES_DIR/manifest/*.json
+          mkdir -p $COMPOSE_RESOURCES_DIR/sheets
+          mkdir -p $COMPOSE_RESOURCES_DIR/manifest
+          
+          echo "$WCCRM_HYMNS_MANIFEST_JSON" > $COMPOSE_RESOURCES_DIR/manifest/filesmanifest.json
+          
+          echo "Downloading files..."
+          wget -q -O $COMPOSE_RESOURCES_DIR/json/"$WCCRM_HYMNS_JSON" $WCCRM_HYMNS_JSON_URL
+          wget -q -O $COMPOSE_RESOURCES_DIR/tunes/"$WCCRM_TUNES_ARCHIVE" $WCCRM_TUNES_ASSET_DOWNLOAD_URL
+          wget -q -O $COMPOSE_RESOURCES_DIR/sheets/"$WCCRM_SHEET_MUSIC_ARCHIVE" $WCCRM_SHEET_MUSIC_ASSET_DOWNLOAD_URL
 
       - name: Publish to play store
         if: github.event_name == 'release'
@@ -67,7 +74,7 @@ jobs:
           ./gradlew uploadReleasePrivateBundle
           # Parse the internal sharing url
           sudo apt-get install -y jq
-          echo "INTERNAL_DOWNLOAD_URL=$(cat app/build/outputs/internal-sharing/bundle/release/app-release.json | jq .downloadUrl)" >> $GITHUB_ENV
+          echo "INTERNAL_DOWNLOAD_URL=$(cat androidApp/build/outputs/internal-sharing/bundle/release/androidApp-release.json | jq .downloadUrl)" >> $GITHUB_ENV
 
       - name: Send email
         if: ${{ env.IS_RELEASE != true }} # Only send email for test builds
