@@ -33,19 +33,19 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.techbeloved.hymnbook.shared.generated.Res
+import com.techbeloved.hymnbook.shared.generated.content_description_media_not_available
+import com.techbeloved.hymnbook.shared.generated.content_description_next
+import com.techbeloved.hymnbook.shared.generated.content_description_pause
+import com.techbeloved.hymnbook.shared.generated.content_description_play
+import com.techbeloved.hymnbook.shared.generated.content_description_previous
+import com.techbeloved.hymnbook.shared.generated.content_description_show_more_controls
 import com.techbeloved.media.AudioItem
 import com.techbeloved.media.PlaybackController
 import com.techbeloved.media.PlaybackState
 import com.techbeloved.media.PlayerState
 import com.techbeloved.media.rememberPlaybackController
 import com.techbeloved.media.rememberPlaybackState
-import hymnbook.shared.generated.resources.Res
-import hymnbook.shared.generated.resources.content_description_media_not_available
-import hymnbook.shared.generated.resources.content_description_next
-import hymnbook.shared.generated.resources.content_description_pause
-import hymnbook.shared.generated.resources.content_description_play
-import hymnbook.shared.generated.resources.content_description_previous
-import hymnbook.shared.generated.resources.content_description_show_more_controls
 import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.stringResource
 

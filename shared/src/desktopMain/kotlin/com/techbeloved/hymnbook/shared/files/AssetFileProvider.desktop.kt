@@ -2,7 +2,7 @@
 
 package com.techbeloved.hymnbook.shared.files
 
-import hymnbook.shared.generated.resources.Res
+import com.techbeloved.hymnbook.shared.generated.Res
 import okio.FileSystem
 import okio.Path.Companion.toPath
 import org.jetbrains.compose.resources.ExperimentalResourceApi

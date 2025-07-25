@@ -136,6 +136,11 @@ kotlin {
     }
 }
 
+compose.resources {
+    packageOfResClass = "com.techbeloved.hymnbook.shared.generated"
+    generateResClass = always
+}
+
 android {
     namespace = "com.techbeloved.hymnbook.shared"
     compileSdk = libs.versions.android.targetSdk.get().toInt()

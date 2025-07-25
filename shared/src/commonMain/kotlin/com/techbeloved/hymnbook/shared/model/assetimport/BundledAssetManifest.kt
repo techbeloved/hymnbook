@@ -1,6 +1,6 @@
 package com.techbeloved.hymnbook.shared.model.assetimport
 
-import hymnbook.shared.generated.resources.Res
+import com.techbeloved.hymnbook.shared.generated.Res
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

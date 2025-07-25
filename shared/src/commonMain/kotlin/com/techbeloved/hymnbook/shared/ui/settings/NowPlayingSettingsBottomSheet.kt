@@ -32,17 +32,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.techbeloved.hymnbook.shared.ext.percentToNearestFive
+import com.techbeloved.hymnbook.shared.generated.Res
+import com.techbeloved.hymnbook.shared.generated.now_playing_add_to_playlist
+import com.techbeloved.hymnbook.shared.generated.now_playing_settings_loop
+import com.techbeloved.hymnbook.shared.generated.now_playing_settings_lyrics_size
+import com.techbeloved.hymnbook.shared.generated.now_playing_settings_music_speed
+import com.techbeloved.hymnbook.shared.generated.now_playing_settings_speed_down
+import com.techbeloved.hymnbook.shared.generated.now_playing_settings_speed_up
+import com.techbeloved.hymnbook.shared.generated.now_playing_settings_zoom_in
+import com.techbeloved.hymnbook.shared.generated.now_playing_settings_zoom_out
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.preferences.SongPreferences
-import hymnbook.shared.generated.resources.Res
-import hymnbook.shared.generated.resources.now_playing_add_to_playlist
-import hymnbook.shared.generated.resources.now_playing_settings_loop
-import hymnbook.shared.generated.resources.now_playing_settings_lyrics_size
-import hymnbook.shared.generated.resources.now_playing_settings_music_speed
-import hymnbook.shared.generated.resources.now_playing_settings_speed_down
-import hymnbook.shared.generated.resources.now_playing_settings_speed_up
-import hymnbook.shared.generated.resources.now_playing_settings_zoom_in
-import hymnbook.shared.generated.resources.now_playing_settings_zoom_out
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
