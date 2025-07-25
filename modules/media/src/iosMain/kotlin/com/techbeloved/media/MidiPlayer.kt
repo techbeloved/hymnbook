@@ -2,7 +2,6 @@
 
 package com.techbeloved.media
 
-import hymnbook.modules.media.generated.resources.Res
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.ObjCObjectVar
@@ -24,6 +23,7 @@ class MidiPlayer(
     private val midiContent: NSURL,
     private val coroutineScope: CoroutineScope,
     private val state: PlaybackState,
+    private val midiSoundfontPath: String,
 ) : IosMediaPlayer {
 
     private var isPaused = false
@@ -32,7 +32,7 @@ class MidiPlayer(
         AVMIDIPlayer(
             contentsOfURL = midiContent,
             // Downloaded from https://archive.org/download/free-soundfonts-sf2-2019-04
-            soundBankURL = URLWithString(Res.getUri("files/soundfont.sf2")),
+            soundBankURL = URLWithString(midiSoundfontPath),
             error = error.ptr,
         )
     }

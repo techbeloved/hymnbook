@@ -7,6 +7,7 @@ import platform.AVFoundation.AVPlayerItem
 class IosPlaybackController(
     private val state: PlaybackState,
     private val coroutineScope: CoroutineScope,
+    private val midiSoundFontPath: String?,
 ) : PlaybackController {
 
     override val isLoopingSupported: Boolean = false // Not yet
@@ -60,6 +61,7 @@ class IosPlaybackController(
                 midiContent = currentPlayerItem,
                 coroutineScope = coroutineScope,
                 state = state,
+                midiSoundfontPath = checkNotNull(midiSoundFontPath) { "Midi sound font path is not supplied" },
             )
         } else {
             DefaultMediaPlayer(

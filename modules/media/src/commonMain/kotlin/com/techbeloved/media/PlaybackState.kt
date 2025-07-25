@@ -25,6 +25,7 @@ fun rememberPlaybackState(): PlaybackState =
 @Composable
 expect fun rememberPlaybackController(
     playbackState: PlaybackState = rememberPlaybackState(),
+    midiSoundFontPath: String? = null,
 ): PlaybackController?
 
 @Stable
