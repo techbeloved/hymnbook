@@ -13,7 +13,7 @@ import com.techbeloved.hymnbook.shared.model.assetimport.AssetType
 import com.techbeloved.hymnbook.shared.model.assetimport.BundledAsset
 import com.techbeloved.hymnbook.shared.model.assetimport.BundledAssetManifest
 import com.techbeloved.hymnbook.shared.openlyrics.ImportOpenLyricsUseCase
-import hymnbook.shared.generated.resources.Res
+import com.techbeloved.hymnbook.shared.generated.Res
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import me.tatarka.inject.annotations.Inject

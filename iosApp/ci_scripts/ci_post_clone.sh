@@ -19,7 +19,7 @@ export JAVA_HOME=/Users/local/.sdkman/candidates/java/current
 
 cd "$REPO_DIR"
 
-./gradlew generateComposeResClass
+./gradlew :shared:compileKotlinIosArm64
 
 # store_cache_files # Store caches after build
 
