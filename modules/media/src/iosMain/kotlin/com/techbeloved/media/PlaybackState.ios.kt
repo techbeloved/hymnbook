@@ -9,11 +9,18 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 
 @Composable
-actual fun rememberPlaybackController(playbackState: PlaybackState): PlaybackController? {
+actual fun rememberPlaybackController(
+    playbackState: PlaybackState,
+    midiSoundFontPath: String?,
+): PlaybackController? {
     val coroutineScope = rememberCoroutineScope()
     var playbackController: PlaybackController? by remember { mutableStateOf(null) }
     DisposableEffect(playbackState) {
-        val iosPlaybackController = IosPlaybackController(playbackState, coroutineScope)
+        val iosPlaybackController = IosPlaybackController(
+            state = playbackState,
+            coroutineScope = coroutineScope,
+            midiSoundFontPath = midiSoundFontPath,
+        )
         playbackController = iosPlaybackController
         onDispose {
             iosPlaybackController.onDispose()

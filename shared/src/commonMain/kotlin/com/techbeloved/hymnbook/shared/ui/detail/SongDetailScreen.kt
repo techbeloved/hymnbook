@@ -47,6 +47,7 @@ import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.model.SongFilter
+import com.techbeloved.hymnbook.shared.soundfont.soundFontProvider
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
 import com.techbeloved.hymnbook.shared.ui.settings.NowPlayingSettingsBottomSheet
 import com.techbeloved.hymnbook.shared.ui.utils.toUiDetail
@@ -97,7 +98,10 @@ internal fun SongDetailScreen(
     var currentSongId by remember { mutableStateOf<Long?>(null) }
     val pagerState by pagerViewModel.state.collectAsState()
     val playbackState = rememberPlaybackState()
-    val playbackController = rememberPlaybackController(playbackState)
+    val playbackController = rememberPlaybackController(
+        playbackState = playbackState,
+        midiSoundFontPath = soundFontProvider(),
+    )
 
     LaunchedEffect(playbackState.isLooping) {
         pagerViewModel.trackSongLoopingToggle(playbackState.isLooping)

@@ -1,103 +1,52 @@
-#!/bin/sh
+#!/bin/bash
 
 # Exit immediately if a command exits with a non-zero status.
 set -e
 echo "--- Running ci_post_clone.sh ---"
 
 echo "--- Copy Google Service Account ---"
-echo -n "$GOOGLE_SERVICE_PLIST_BASE64" | base64 --decode -o $GOOGLE_SERVICE_PATH
+echo -n "$GOOGLE_SERVICE_PLIST_BASE64" | base64 --decode -o "$GOOGLE_SERVICE_PATH"
 
 
 # Define paths
-ROOT_DIR=$CI_WORKSPACE_PATH
 REPO_DIR=$CI_PRIMARY_REPOSITORY_PATH
-JDK_DIR="${CI_DERIVED_DATA_PATH}/JDK"
-GRADLE_CACHE_DIR="${CI_DERIVED_DATA_PATH}/.gradle"
-KMP_SHARED_MODULE_PATH="${REPO_DIR}/shared" # Adjust if your shared module is elsewhere
-IOS_APP_DIR="${REPO_DIR}/iosApp" # Adjust if your iOS app is elsewhere
 
-JDK_VERSION="17.0.2" # Or whatever JDK version your KMP project requires (e.g., "20.0.1")
-ARCH_TYPE=""
+WCCRM_HYMNS_JSON="wccrm_hymns_original.json"
+WCCRM_SHEET_MUSIC_ARCHIVE="wccrm_hymns_v2.zip"
+WCCRM_TUNES_ARCHIVE="tunes_wccrm_midi_archive_hymns.zip"
 
-# Determine architecture
-if [[ $(uname -m) == "arm64" ]]; then
-    echo " - Detected M1 (arm64)"
-    ARCH_TYPE="macos-aarch64"
-else
-    echo " - Detected Intel (x64)"
-    ARCH_TYPE="macos-x64"
-fi
+COMPOSE_RESOURCES_DIR="shared/src/commonMain/composeResources/files"
+IOS_COMPOSE_RESOURCES_DIR="shared/src/iosMain/composeResources/files"
 
-# --- Install JDK if needed ---
-install_jdk_if_needed() {
-    echo "\\nInstall JDK if needed"
-    DETECT_LOC="${JDK_DIR}/.${JDK_VERSION}.${ARCH_TYPE}"
-
-    if [ -f "$DETECT_LOC" ]; then
-        echo " - Found a valid JDK installation, skipping install"
-        return 0
-    fi
-
-    echo " - No valid JDK installation found, installing..."
-    TAR_NAME="jdk-${JDK_VERSION}_${ARCH_TYPE}_bin.tar.gz"
-    JDK_DOWNLOAD_URL="https://download.oracle.com/java/${JDK_VERSION%.*}/archive/${TAR_NAME}" # Adjust URL for different JDK versions/providers
-
-    curl -L -o "$TAR_NAME" "$JDK_DOWNLOAD_URL"
-    tar xzf "$TAR_NAME" -C "$ROOT_DIR"
-
-    rm -rf "$JDK_DIR"
-    mkdir -p "$JDK_DIR"
-    mv "${ROOT_DIR}/jdk-${JDK_VERSION}.jdk/Contents/Home" "$JDK_DIR"
-
-    rm -r "${ROOT_DIR}/jdk-${JDK_VERSION}.jdk" || true # Use || true to prevent error if dir doesn't exist
-    rm "$TAR_NAME"
-
-    touch "$DETECT_LOC"
-    echo " - Set JAVA_HOME in Xcode Cloud to ${JDK_DIR}/Home"
-    return 0
-}
-
-# --- Recover Gradle caches (optional, but recommended for speed) ---
-recover_cache_files() {
-    echo "\\nRecover cache files"
-    if [ ! -d "$GRADLE_CACHE_DIR" ]; then
-        echo " - No valid caches found, skipping"
-        return 0
-    fi
-    echo " - Copying gradle cache to ${KMP_SHARED_MODULE_PATH}/.gradle"
-    rm -rf "${KMP_SHARED_MODULE_PATH}/.gradle"
-    cp -r "$GRADLE_CACHE_DIR" "${KMP_SHARED_MODULE_PATH}"
-    return 0
-}
-
-# --- Store Gradle caches (optional, but recommended for speed) ---
-store_cache_files() {
-    echo "\\nStore cache files"
-    if [ ! -d "${KMP_SHARED_MODULE_PATH}/.gradle" ]; then
-        echo " - No gradle cache found to store, skipping"
-        return 0
-    fi
-    echo " - Copying gradle cache to ${GRADLE_CACHE_DIR}"
-    rm -rf "$GRADLE_CACHE_DIR"
-    cp -r "${KMP_SHARED_MODULE_PATH}/.gradle" "$GRADLE_CACHE_DIR"
-    return 0
-}
-
-# Execute functions
-recover_cache_files
-install_jdk_if_needed
-
-# --- Build Kotlin Multiplatform shared module ---
-echo "\\nBuilding Kotlin Multiplatform shared module..."
-# Navigate to the root of your Gradle project (where gradlew is)
 cd "$REPO_DIR"
 
-# This task builds the KMP framework for Xcode.
-./gradlew podPublishReleaseXCFramework
+rm -rf "$COMPOSE_RESOURCES_DIR"/json/*.json
+rm -rf "$COMPOSE_RESOURCES_DIR"/openlyrics/*.zip
+rm -rf "$COMPOSE_RESOURCES_DIR"/sheets/*.zip
+rm -rf "$COMPOSE_RESOURCES_DIR"/tunes/*.zip
+rm -rf "$COMPOSE_RESOURCES_DIR"/manifest/*.json
+mkdir -p "$COMPOSE_RESOURCES_DIR"/sheets
+mkdir -p "$COMPOSE_RESOURCES_DIR"/manifest
+mkdir -p "$IOS_COMPOSE_RESOURCES_DIR"/soundfont
 
-# Return to the iOS app directory for Xcode to continue its build
-cd "$IOS_APP_DIR"
+echo "$WCCRM_HYMNS_MANIFEST_JSON" > "$COMPOSE_RESOURCES_DIR"/manifest/filesmanifest.json
 
-store_cache_files # Store caches after build
+echo "Downloading song assets..."
+curl --output "$COMPOSE_RESOURCES_DIR"/json/"$WCCRM_HYMNS_JSON" "$WCCRM_HYMNS_JSON_URL"
+curl --output "$COMPOSE_RESOURCES_DIR"/tunes/"$WCCRM_TUNES_ARCHIVE" "$WCCRM_TUNES_ASSET_DOWNLOAD_URL"
+curl --output "$COMPOSE_RESOURCES_DIR"/sheets/"$WCCRM_SHEET_MUSIC_ARCHIVE" "$WCCRM_SHEET_MUSIC_ASSET_DOWNLOAD_URL"
+echo "Downloading soundfont"
+curl --output "$IOS_COMPOSE_RESOURCES_DIR"/soundfont/soundfont.sf2 "$SOUND_FONT_URL"
+echo "Download assets complete"
+
+curl -s "https://get.sdkman.io?ci=true&rcupdate=false" | bash
+source "$HOME/.sdkman/bin/sdkman-init.sh"
+sdk install java 21.0.8-amzn
+
+export JAVA_HOME=/Users/local/.sdkman/candidates/java/current
+
+./gradlew :shared:compileKotlinIosArm64
+
+# store_cache_files # Store caches after build
 
 echo "--- ci_post_clone.sh finished ---"

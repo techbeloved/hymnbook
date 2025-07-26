@@ -13,7 +13,6 @@ plugins {
     alias(libs.plugins.sqldelight)
     alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.native.cocoapods)
     alias(libs.plugins.detekt)
 }
 
@@ -30,25 +29,19 @@ kotlin {
 
     jvm("desktop")
 
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            baseName = "shared"
+            isStatic = true
+        }
+    }
     applyDefaultHierarchyTemplate()
 
     explicitApi()
-
-    cocoapods {
-        version = "1.0"
-        summary = "Hymnbook multiplatform"
-        homepage = "none.for.now"
-        license = "Apache"
-        ios.deploymentTarget = "16.0" // minSdk
-        podfile = project.file("../iosApp/Podfile")
-        framework {
-            isStatic = false
-            baseName = "shared"
-        }
-    }
 
     sourceSets {
         dependencies.ksp(libs.kotlin.inject.compiler)
@@ -141,6 +134,11 @@ kotlin {
             implementation(libs.sqldelight.jvm)
         }
     }
+}
+
+compose.resources {
+    packageOfResClass = "com.techbeloved.hymnbook.shared.generated"
+    generateResClass = always
 }
 
 android {
