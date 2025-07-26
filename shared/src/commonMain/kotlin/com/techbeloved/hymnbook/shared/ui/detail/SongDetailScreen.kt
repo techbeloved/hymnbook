@@ -45,9 +45,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.techbeloved.hymnbook.shared.generated.Res
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.model.SongFilter
+import com.techbeloved.hymnbook.shared.soundfont.soundFontProvider
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
 import com.techbeloved.hymnbook.shared.ui.settings.NowPlayingSettingsBottomSheet
 import com.techbeloved.hymnbook.shared.ui.utils.toUiDetail
@@ -100,7 +100,7 @@ internal fun SongDetailScreen(
     val playbackState = rememberPlaybackState()
     val playbackController = rememberPlaybackController(
         playbackState = playbackState,
-        midiSoundFontPath = Res.getUri("files/soundfont/soundfont.sf2"),
+        midiSoundFontPath = soundFontProvider(),
     )
 
     LaunchedEffect(playbackState.isLooping) {

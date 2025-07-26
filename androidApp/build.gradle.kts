@@ -11,28 +11,34 @@ plugins {
     alias(libs.plugins.triplet.play)
 }
 
+val isXcodeCloudBuild = System.getenv("CI_XCODE_CLOUD") != null
 val keystorePropertiesFile = rootProject.file("keystore.properties")
 
 val keystoreProperties = Properties()
-if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
-} else {
-    keystoreProperties.setProperty("storeFile", System.getenv("KEYSTORE"))
-    keystoreProperties.setProperty("keyAlias", System.getenv("ALIAS"))
-    keystoreProperties.setProperty("keyPassword", System.getenv("KEY_PASSWORD"))
-    keystoreProperties.setProperty("storePassword", System.getenv("KEY_STORE_PASSWORD"))
+if (!isXcodeCloudBuild) {
+    if (keystorePropertiesFile.exists()) {
+        keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+    } else {
+        val envVars = System.getenv()
+        keystoreProperties.setProperty("storeFile", envVars["KEYSTORE"] ?: "")
+        keystoreProperties.setProperty("keyAlias", envVars["ALIAS"] ?: "")
+        keystoreProperties.setProperty("keyPassword", envVars["KEY_PASSWORD"] ?: "")
+        keystoreProperties.setProperty("storePassword", envVars["KEY_STORE_PASSWORD"] ?: "")
+    }
 }
 
 android {
     namespace = "com.techbeloved.hymnbook"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
-    signingConfigs {
-        create("release_config") {
-            keyAlias = keystoreProperties["keyAlias"] as String
-            keyPassword = keystoreProperties["keyPassword"] as String
-            storeFile = file(keystoreProperties["storeFile"] as String)
-            storePassword = keystoreProperties["storePassword"] as String
+    if (!isXcodeCloudBuild) {
+        signingConfigs {
+            create("release_config") {
+                keyAlias = keystoreProperties["keyAlias"] as String
+                keyPassword = keystoreProperties["keyPassword"] as String
+                storeFile = file(keystoreProperties["storeFile"] as String)
+                storePassword = keystoreProperties["storePassword"] as String
+            }
         }
     }
 
@@ -47,18 +53,20 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    buildTypes {
-        release {
-            isMinifyEnabled = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-            signingConfig = signingConfigs.getByName("release_config")
-        }
-        debug {
-            applicationIdSuffix = ".debug"
-            signingConfig = signingConfigs.getByName("release_config")
+    if (!isXcodeCloudBuild) {
+        buildTypes {
+            release {
+                isMinifyEnabled = true
+                proguardFiles(
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro"
+                )
+                signingConfig = signingConfigs.getByName("release_config")
+            }
+            debug {
+                applicationIdSuffix = ".debug"
+                signingConfig = signingConfigs.getByName("release_config")
+            }
         }
     }
     compileOptions {
@@ -73,11 +81,10 @@ android {
         buildConfig = true
     }
 
-
     playConfigs {
         // only enable for release build in CI (release should be built only on CI)
         register("release") {
-            enabled.set(true)
+            enabled.set(!isXcodeCloudBuild)
         }
     }
 }
