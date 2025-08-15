@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="download_app_title">Download the Watchman Music App</string>
+    <string name="app_logo_description">Watchman Music Logo</string>
+    <string name="download_on_play_store">Download on Play Store</string>
+    <string name="download_on_app_store">Download on App Store</string>
+    <string name="download_app_description">Enjoy a variety of Christian Hymns and Songs carefully compiled and packaged for you spiritual uplifting</string>
+</resources>
