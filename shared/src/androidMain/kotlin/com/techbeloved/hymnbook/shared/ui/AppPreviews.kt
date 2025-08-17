@@ -27,6 +27,8 @@ private fun BottomControlsUiPreview() {
             onPreviousButtonClick = {},
             onNextButtonClick = {},
             onShowSettingsBottomSheet = {},
+            onShowSoundFontSettings = {},
+            isSoundFontDownloadRequired = false,
         )
     }
 }

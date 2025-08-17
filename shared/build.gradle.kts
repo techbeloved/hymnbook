@@ -177,6 +177,7 @@ sqldelight {
     databases {
         create("Database") {
             packageName.set("com.techbeloved.hymnbook")
+            schemaOutputDirectory.set(file("src/commonMain/sqldelight/databases"))
         }
         // needs to be set otherwise, with cocoapods, iosApp fails to build.
         // See https://github.com/cashapp/sqldelight/issues/1442

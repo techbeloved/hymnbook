@@ -57,11 +57,13 @@ class IosPlaybackController(
         player?.onDispose()
 
         player = if (audioItem.isMidi()) {
+            val midiSoundfontPath =
+                checkNotNull(midiSoundFontPath) { "Midi sound font path is not supplied" }
             MidiPlayer(
                 midiContent = currentPlayerItem,
                 coroutineScope = coroutineScope,
                 state = state,
-                midiSoundfontPath = checkNotNull(midiSoundFontPath) { "Midi sound font path is not supplied" },
+                midiSoundfontPath = checkNotNull(getNSURLFromRelativePath(midiSoundfontPath)),
             )
         } else {
             DefaultMediaPlayer(

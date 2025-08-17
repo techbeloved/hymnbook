@@ -40,6 +40,7 @@ import com.techbeloved.hymnbook.shared.generated.content_description_pause
 import com.techbeloved.hymnbook.shared.generated.content_description_play
 import com.techbeloved.hymnbook.shared.generated.content_description_previous
 import com.techbeloved.hymnbook.shared.generated.content_description_show_more_controls
+import com.techbeloved.hymnbook.shared.ui.soundfonts.SoundFontDownloadButton
 import com.techbeloved.media.AudioItem
 import com.techbeloved.media.PlaybackController
 import com.techbeloved.media.PlaybackState
@@ -52,9 +53,11 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun BottomControlsUi(
     audioItem: AudioItem?,
+    isSoundFontDownloadRequired: Boolean,
     onPreviousButtonClick: () -> Unit,
     onNextButtonClick: () -> Unit,
     onShowSettingsBottomSheet: () -> Unit,
+    onShowSoundFontSettings: () -> Unit,
     modifier: Modifier = Modifier,
     playbackState: PlaybackState = rememberPlaybackState(),
     controller: PlaybackController? = rememberPlaybackController(playbackState),
@@ -77,14 +80,19 @@ internal fun BottomControlsUi(
                     contentDescription = stringResource(Res.string.content_description_previous),
                 )
             }
-            if (audioItem != null) {
-                PlayButton(
+            when {
+                isSoundFontDownloadRequired -> SoundFontDownloadButton(
+                    onOpenSettingsClick = onShowSoundFontSettings,
+                    modifier = Modifier.size(48.dp),
+                )
+
+                audioItem != null -> PlayButton(
                     audioItem = audioItem,
                     playbackState = playbackState,
                     controller = controller,
                 )
-            } else {
-                DisabledPlayButton()
+
+                else -> DisabledPlayButton()
             }
             IconButton(onClick = onNextButtonClick) {
                 Icon(

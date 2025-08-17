@@ -8,6 +8,7 @@ import com.techbeloved.hymnbook.MediaFile
 import com.techbeloved.hymnbook.PlaylistEntity
 import com.techbeloved.hymnbook.SheetMusicEntity
 import com.techbeloved.hymnbook.SongEntity
+import com.techbeloved.hymnbook.SoundFontEntity
 import com.techbeloved.hymnbook.shared.data.dateColumnAdapter
 import com.techbeloved.hymnbook.shared.data.getDriverFactory
 import com.techbeloved.hymnbook.shared.data.listColumnAdapter
@@ -60,6 +61,9 @@ internal object Injector {
             PlaylistEntityAdapter = PlaylistEntity.Adapter(
                 createdAdapter = dateColumnAdapter(),
                 modifiedAdapter = dateColumnAdapter(),
+            ),
+            SoundFontEntityAdapter = SoundFontEntity.Adapter(
+                downloaded_dateAdapter = dateColumnAdapter(),
             ),
         )
     }

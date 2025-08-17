@@ -15,6 +15,7 @@ import com.techbeloved.hymnbook.shared.ui.playlist.add.AddEditPlaylistDialog
 import com.techbeloved.hymnbook.shared.ui.playlist.select.AddSongToPlaylistDialog
 import com.techbeloved.hymnbook.shared.ui.search.SearchScreen
 import com.techbeloved.hymnbook.shared.ui.songs.FilteredSongsScreen
+import com.techbeloved.hymnbook.shared.ui.soundfonts.SoundFontSettingsScreen
 
 internal fun NavGraphBuilder.addNavigationRoutes(
     navController: NavHostController,
@@ -26,6 +27,8 @@ internal fun NavGraphBuilder.addNavigationRoutes(
     addEditPlaylistDialogDestination(navController, onShowSnackbarMessage)
     addSongToPlaylistDialogDestination(navController, onShowSnackbarMessage)
     aboutScreenDestination(navController)
+
+    addSoundFontSettingsDestination(navController)
 
     composable<OpenSourceLicencesScreen> {
         OpenSourceLicencesScreen()
@@ -53,6 +56,9 @@ private fun NavGraphBuilder.songDetailDestination(navController: NavHostControll
                     popUpTo(TopLevelDestination.Home)
                 }
             },
+            onShowSoundFontSettings = {
+                navController.navigate(SoundFontSettingsScreen)
+            }
         )
     }
 }
@@ -135,5 +141,15 @@ private fun NavGraphBuilder.addSongToPlaylistDialogDestination(
                 }
             },
         )
+    }
+}
+
+private fun NavGraphBuilder.addSoundFontSettingsDestination(
+    navController: NavHostController,
+) {
+    dialog<SoundFontSettingsScreen>(dialogProperties = DialogProperties()) { backstackEntry ->
+        SoundFontSettingsScreen(onDismiss = {
+            navController.popBackStack()
+        })
     }
 }

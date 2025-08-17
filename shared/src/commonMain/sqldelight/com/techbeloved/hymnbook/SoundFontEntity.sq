@@ -1,0 +1,16 @@
+import kotlin.time.Instant;
+
+CREATE TABLE SoundFontEntity (
+    file_name TEXT PRIMARY KEY NOT NULL,
+    file_hash TEXT NOT NULL,
+    display_name TEXT NOT NULL ,
+    downloaded_date INTEGER AS Instant NOT NULL,
+    file_size TEXT NOT NULL
+);
+
+selectAll:
+SELECT * FROM SoundFontEntity;
+
+byName:
+SELECT * FROM SoundFontEntity WHERE file_name = :name
+LIMIT 1;

@@ -23,6 +23,7 @@ import com.techbeloved.hymnbook.shared.ui.playlist.add.AddEditPlaylistViewModel
 import com.techbeloved.hymnbook.shared.ui.playlist.select.AddSongToPlaylistViewModel
 import com.techbeloved.hymnbook.shared.ui.search.SearchScreenModel
 import com.techbeloved.hymnbook.shared.ui.songs.FilteredSongsViewModel
+import com.techbeloved.hymnbook.shared.ui.soundfonts.SoundFontSettingsViewModel
 import com.techbeloved.hymnbook.shared.ui.topics.TopicsViewModel
 import kotlinx.serialization.json.Json
 import me.tatarka.inject.annotations.Component
@@ -50,6 +51,8 @@ internal interface AppComponent {
     fun playlistsViewModel(): PlaylistsViewModel
 
     fun analyticsViewModel(): AnalyticsViewModel
+
+    fun soundFontSettingsViewModel(): SoundFontSettingsViewModel
 
     @Provides
     fun assetFileSource(): AssetFileSourceProvider = assetFileSourceProvider
