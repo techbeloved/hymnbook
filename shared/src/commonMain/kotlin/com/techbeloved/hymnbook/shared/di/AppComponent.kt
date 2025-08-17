@@ -2,6 +2,7 @@ package com.techbeloved.hymnbook.shared.di
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import com.techbeloved.apiclient.ApiClient
 import com.techbeloved.hymnbook.Database
 import com.techbeloved.hymnbook.shared.analytics.AppAnalytics
 import com.techbeloved.hymnbook.shared.analytics.analyticsProvider
@@ -25,6 +26,8 @@ import com.techbeloved.hymnbook.shared.ui.search.SearchScreenModel
 import com.techbeloved.hymnbook.shared.ui.songs.FilteredSongsViewModel
 import com.techbeloved.hymnbook.shared.ui.soundfonts.SoundFontSettingsViewModel
 import com.techbeloved.hymnbook.shared.ui.topics.TopicsViewModel
+import com.techbeloved.media.download.MediaDownloader
+import com.techbeloved.media.download.getPlatformMediaDownloader
 import kotlinx.serialization.json.Json
 import me.tatarka.inject.annotations.Component
 import me.tatarka.inject.annotations.KmpComponentCreate
@@ -76,6 +79,12 @@ internal interface AppComponent {
 
     @Provides
     fun json(): Json = Injector.json
+
+    @Provides
+    fun apiClient(): ApiClient = Injector.apiClient
+
+    @Provides
+    fun downloader(): MediaDownloader = getPlatformMediaDownloader()
 
     @Provides
     fun provideAnalytics(): AppAnalytics = analyticsProvider()

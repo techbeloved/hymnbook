@@ -8,6 +8,7 @@ import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr
 import kotlinx.cinterop.value
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import platform.Foundation.NSError
@@ -19,7 +20,7 @@ import platform.Foundation.NSURLSessionDownloadDelegateProtocol
 import platform.Foundation.NSURLSessionDownloadTask
 import platform.darwin.NSObject
 
-actual fun getMediaDownloader(): MediaDownloader = IosMediaDownloader()
+actual fun getPlatformMediaDownloader(): MediaDownloader = IosMediaDownloader()
 
 @OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
 class IosMediaDownloader : MediaDownloader {
@@ -32,35 +33,44 @@ class IosMediaDownloader : MediaDownloader {
         // download using ios apis
 
         val downloadDelegate = object : NSURLSessionDownloadDelegateProtocol, NSObject() {
+
+            override fun URLSession(
+                session: NSURLSession,
+                downloadTask: NSURLSessionDownloadTask,
+                didWriteData: Long,
+                totalBytesWritten: Long,
+                totalBytesExpectedToWrite: Long,
+            ) {
+                val calculatedProgress =
+                    (totalBytesWritten / totalBytesExpectedToWrite.toFloat()).coerceIn(
+                        maximumValue = 1f,
+                        minimumValue = 0f,
+                    )
+                trySend(MediaDownloadState.Downloading(calculatedProgress))
+            }
+
             override fun URLSession(
                 session: NSURLSession,
                 downloadTask: NSURLSessionDownloadTask,
                 didFinishDownloadingToURL: NSURL
             ) {
-                if (downloadTask.countOfBytesExpectedToReceive > 0) {
-                    val progress =
-                        downloadTask.countOfBytesReceived / downloadTask.countOfBytesExpectedToReceive.toFloat()
-                    trySend(MediaDownloadState.Downloading(progress))
-                }
-                if (downloadTask.progress.finished) {
-                    val savedUrl = getNSURLFromRelativePath(destination)
 
-                    memScoped {
-                        val error = alloc<ObjCObjectVar<NSError?>>()
-                        NSFileManager.defaultManager.moveItemAtURL(
-                            srcURL = didFinishDownloadingToURL,
-                            toURL = checkNotNull(savedUrl),
-                            error = error.ptr,
-                        )
+                val savedUrl = getNSURLFromRelativePath(destination)
+                memScoped {
+                    val error = alloc<ObjCObjectVar<NSError?>>()
+                    NSFileManager.defaultManager.moveItemAtURL(
+                        srcURL = didFinishDownloadingToURL,
+                        toURL = checkNotNull(savedUrl),
+                        error = error.ptr,
+                    )
 
-                        if (error.value != null) {
-                            trySend(MediaDownloadState.Error(error.value!!.localizedDescription))
-                        } else {
-                            trySend(MediaDownloadState.Success)
-                        }
+                    if (error.value != null) {
+                        trySend(MediaDownloadState.Error(error.value!!.localizedDescription))
+                    } else {
+                        trySend(MediaDownloadState.Success)
                     }
-
                 }
+                this@callbackFlow.close()
             }
         }
 
@@ -74,5 +84,7 @@ class IosMediaDownloader : MediaDownloader {
         val downloadUrl = NSURL.URLWithString(url)
         val downloadTask = session.downloadTaskWithURL(checkNotNull(downloadUrl))
         downloadTask.resume()
+
+        awaitClose { downloadTask.cancel() }
     }
 }

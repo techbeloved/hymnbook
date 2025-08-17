@@ -1,5 +1,8 @@
 package com.techbeloved.hymnbook.shared.ui.soundfonts
 
+import kotlinx.collections.immutable.ImmutableList
+
 internal data class SoundFontSettingsState(
-    val isAvailable: Boolean = false,
+    val items: ImmutableList<SoundFontItem>,
+    val isLoading: Boolean,
 )

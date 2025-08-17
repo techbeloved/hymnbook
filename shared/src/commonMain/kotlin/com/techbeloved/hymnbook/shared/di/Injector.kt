@@ -3,6 +3,7 @@ package com.techbeloved.hymnbook.shared.di
 import androidx.datastore.core.DataStore
 import app.cash.sqldelight.EnumColumnAdapter
 import app.cash.sqldelight.db.SqlDriver
+import com.techbeloved.apiclient.ApiClient
 import com.techbeloved.hymnbook.Database
 import com.techbeloved.hymnbook.MediaFile
 import com.techbeloved.hymnbook.PlaylistEntity
@@ -19,6 +20,7 @@ import kotlinx.serialization.json.Json
 import nl.adaptivity.xmlutil.XmlDeclMode
 import nl.adaptivity.xmlutil.core.XmlVersion
 import nl.adaptivity.xmlutil.serialization.XML
+import kotlin.getValue
 
 internal object Injector {
 
@@ -43,6 +45,8 @@ internal object Injector {
             repairNamespaces = true
         }
     }
+
+    val apiClient by lazy { ApiClient() }
 
     val preferencesDataStore by lazy { createPlatformDataStore() }
 

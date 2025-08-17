@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.twotone.PlaylistAdd
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Piano
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
@@ -41,6 +42,8 @@ import com.techbeloved.hymnbook.shared.generated.now_playing_settings_speed_down
 import com.techbeloved.hymnbook.shared.generated.now_playing_settings_speed_up
 import com.techbeloved.hymnbook.shared.generated.now_playing_settings_zoom_in
 import com.techbeloved.hymnbook.shared.generated.now_playing_settings_zoom_out
+import com.techbeloved.hymnbook.shared.generated.now_playing_soundfont
+import com.techbeloved.hymnbook.shared.generated.now_playing_soundfont_description
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.preferences.SongPreferences
 import org.jetbrains.compose.resources.stringResource
@@ -53,8 +56,10 @@ internal fun NowPlayingSettingsBottomSheet(
     onZoomOut: () -> Unit,
     onZoomIn: () -> Unit,
     onChangeSongDisplayMode: (songDisplayMode: SongDisplayMode) -> Unit,
+    onSoundfonts: () -> Unit,
     onAddSongToPlaylist: () -> Unit,
     onToggleLooping: (isLooping: Boolean) -> Unit,
+    isSoundfontSupported: Boolean,
     isLooping: Boolean,
     isLoopingSupported: Boolean,
     preferences: SongPreferences,
@@ -84,6 +89,21 @@ internal fun NowPlayingSettingsBottomSheet(
                         imageVector = Icons.AutoMirrored.TwoTone.PlaylistAdd,
                         contentDescription = stringResource(Res.string.now_playing_add_to_playlist),
                     )
+                }
+            }
+
+            if (isSoundfontSupported) {
+                FilledTonalButton(
+                    onClick = onSoundfonts,
+                ) {
+                    Row {
+                        Text(text = stringResource(Res.string.now_playing_soundfont))
+                        Spacer(Modifier.width(8.dp))
+                        Icon(
+                            imageVector = Icons.Default.Piano,
+                            contentDescription = stringResource(Res.string.now_playing_soundfont_description),
+                        )
+                    }
                 }
             }
         }
@@ -116,7 +136,7 @@ internal fun NowPlayingSettingsBottomSheet(
             onZoomOut = onZoomOut,
             modifier = Modifier.fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
-            fontSize = MaterialTheme.typography.bodySmall.fontSize *  preferences.fontSize,
+            fontSize = MaterialTheme.typography.bodySmall.fontSize * preferences.fontSize,
         )
     }
 }

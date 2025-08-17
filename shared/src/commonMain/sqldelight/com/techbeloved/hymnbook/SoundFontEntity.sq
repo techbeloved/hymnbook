@@ -8,6 +8,10 @@ CREATE TABLE SoundFontEntity (
     file_size TEXT NOT NULL
 );
 
+insert:
+INSERT OR REPLACE INTO SoundFontEntity(file_name, file_hash, display_name, downloaded_date, file_size)
+VALUES(:fileName, :fileHash, :displayName, :downloadedDate, :fileSize);
+
 selectAll:
 SELECT * FROM SoundFontEntity;
 

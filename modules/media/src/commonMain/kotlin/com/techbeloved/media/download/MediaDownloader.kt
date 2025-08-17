@@ -2,7 +2,7 @@ package com.techbeloved.media.download
 
 import kotlinx.coroutines.flow.Flow
 
-expect fun getMediaDownloader(): MediaDownloader
+expect fun getPlatformMediaDownloader(): MediaDownloader
 
 interface MediaDownloader {
 

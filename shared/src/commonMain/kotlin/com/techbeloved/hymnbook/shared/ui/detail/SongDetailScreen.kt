@@ -101,11 +101,12 @@ internal fun SongDetailScreen(
 
     // Check if soundfont is available and use it to create a playback controller
     val soundFontState = (pagerState as? SongDetailPagerState.Content)?.soundFontState
-            as? SoundFontState.Available
+    val soundFontStateAvailable = soundFontState as? SoundFontState.Available
+    val isSoundFontSupported = soundFontState !is SoundFontState.NotSupported
 
     val playbackController = rememberPlaybackController(
         playbackState = playbackState,
-        midiSoundFontPath = soundFontState?.soundFont?.fileHash?.path,
+        midiSoundFontPath = soundFontStateAvailable?.soundFont?.fileHash?.path,
     )
 
     LaunchedEffect(playbackState.isLooping) {
@@ -192,6 +193,8 @@ internal fun SongDetailScreen(
                 },
                 isLooping = playbackState.isLooping,
                 isLoopingSupported = playbackController?.isLoopingSupported == true,
+                onSoundfonts = onShowSoundFontSettings,
+                isSoundfontSupported = isSoundFontSupported,
             )
         }
     }
