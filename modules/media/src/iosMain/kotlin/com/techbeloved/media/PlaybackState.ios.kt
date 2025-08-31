@@ -15,15 +15,17 @@ actual fun rememberPlaybackController(
 ): PlaybackController? {
     val coroutineScope = rememberCoroutineScope()
     var playbackController: PlaybackController? by remember { mutableStateOf(null) }
-    DisposableEffect(playbackState) {
-        val iosPlaybackController = IosPlaybackController(
-            state = playbackState,
-            coroutineScope = coroutineScope,
-            midiSoundFontPath = midiSoundFontPath,
-        )
-        playbackController = iosPlaybackController
+    DisposableEffect(playbackState, midiSoundFontPath) {
+        if (midiSoundFontPath != null) {
+            val iosPlaybackController = IosPlaybackController(
+                state = playbackState,
+                coroutineScope = coroutineScope,
+                midiSoundFontPath = midiSoundFontPath,
+            )
+            playbackController = iosPlaybackController
+        }
         onDispose {
-            iosPlaybackController.onDispose()
+            (playbackController as? IosPlaybackController)?.onDispose()
         }
     }
     return playbackController

@@ -17,6 +17,7 @@ dependencies {
 
     implementation(libs.logback)
     implementation(libs.slf4j.api)
+    implementation(platform(libs.ktor.bom))
     implementation(libs.ktor.server.core)
     implementation(libs.ktor.server.netty)
     implementation(libs.ktor.server.status.pages)

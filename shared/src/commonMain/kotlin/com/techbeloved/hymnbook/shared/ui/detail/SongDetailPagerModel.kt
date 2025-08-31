@@ -19,11 +19,14 @@ import com.techbeloved.hymnbook.shared.preferences.SongPreferences
 import com.techbeloved.hymnbook.shared.sheetmusic.GetAvailableSheetMusicForSongUseCase
 import com.techbeloved.hymnbook.shared.songbooks.GetSongbookEntriesForSongUseCase
 import com.techbeloved.hymnbook.shared.songs.GetSongIdsByFilterUseCase
+import com.techbeloved.hymnbook.shared.soundfont.GetSoundFontPreferenceFlowUseCase
+import com.techbeloved.hymnbook.shared.soundfont.IsSoundFontSupportedUseCase
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -40,6 +43,8 @@ internal class SongDetailPagerModel @Inject constructor(
     private val changePreferenceUseCase: ChangePreferenceUseCase,
     getSongPreferenceFlowUseCase: GetSongPreferenceFlowUseCase,
     private val changeFontSizeUseCase: ChangeFontSizeUseCase,
+    private val getSoundFontPreferenceFlowUseCase: GetSoundFontPreferenceFlowUseCase,
+    private val isSoundFontSupportedUseCase: IsSoundFontSupportedUseCase,
     @Assisted savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -67,8 +72,9 @@ internal class SongDetailPagerModel @Inject constructor(
                 val songEntries = songIds
             }
         },
-        selectedPage
-    ) { preferences, songEntries, selectedPageIndex ->
+        selectedPage,
+        getSoundFontState(),
+        ) { preferences, songEntries, selectedPageIndex, soundFontState ->
 
         val currentIndex = if (selectedPageIndex < 0) songEntries.initialPage else selectedPageIndex
         val currentEntry = songEntries.songEntries[currentIndex]
@@ -103,6 +109,7 @@ internal class SongDetailPagerModel @Inject constructor(
             }.toImmutableList(),
             currentDisplayMode = preferences.songDisplayMode,
             currentSongBookEntry = songbookEntries.firstOrNull(),
+            soundFontState = soundFontState,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -156,6 +163,17 @@ internal class SongDetailPagerModel @Inject constructor(
             changeFontSizeUseCase(isIncrease = false)
         }
     }
+
+    private fun getSoundFontState() =
+        if (isSoundFontSupportedUseCase()) getSoundFontPreferenceFlowUseCase().map { soundFont ->
+            if (soundFont != null) {
+                SoundFontState.Available(soundFont)
+            } else {
+                SoundFontState.NotAvailable
+            }
+        } else {
+            flowOf(SoundFontState.NotSupported)
+        }
 
     @Inject
     class Factory(val create: (SavedStateHandle) -> SongDetailPagerModel)

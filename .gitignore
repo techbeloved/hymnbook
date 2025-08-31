@@ -53,3 +53,4 @@ src/main/res/menu-night/
 /modules/media/src/iosMain/composeResources/files/soundfont.sf2
 /shared/src/commonMain/composeResources/files/json/wccrm_hymns_original.json
 /shared/src/iosMain/composeResources/files/soundfont/soundfont.sf2
+/modules/api-client/build/

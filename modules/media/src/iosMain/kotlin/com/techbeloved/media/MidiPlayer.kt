@@ -15,7 +15,6 @@ import kotlinx.coroutines.launch
 import platform.AVFAudio.AVMIDIPlayer
 import platform.Foundation.NSError
 import platform.Foundation.NSURL
-import platform.Foundation.NSURL.Companion.URLWithString
 
 private const val THOUSAND = 1000.0
 
@@ -23,7 +22,7 @@ class MidiPlayer(
     private val midiContent: NSURL,
     private val coroutineScope: CoroutineScope,
     private val state: PlaybackState,
-    private val midiSoundfontPath: String,
+    private val midiSoundfontPath: NSURL,
 ) : IosMediaPlayer {
 
     private var isPaused = false
@@ -32,7 +31,7 @@ class MidiPlayer(
         AVMIDIPlayer(
             contentsOfURL = midiContent,
             // Downloaded from https://archive.org/download/free-soundfonts-sf2-2019-04
-            soundBankURL = URLWithString(midiSoundfontPath),
+            soundBankURL = midiSoundfontPath,
             error = error.ptr,
         )
     }

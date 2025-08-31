@@ -1,10 +1,10 @@
 package com.techbeloved.hymnbook.analytics
 
 import android.os.Bundle
+import com.google.firebase.Firebase
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.analytics
 import com.google.firebase.analytics.logEvent
-import com.google.firebase.ktx.Firebase
 import com.techbeloved.hymnbook.shared.analytics.AppAnalytics
 import com.techbeloved.hymnbook.shared.analytics.TrackingBundle
 import com.techbeloved.hymnbook.shared.analytics.TrackingEvent

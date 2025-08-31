@@ -18,6 +18,8 @@
     <string name="settings_dark_mode">Dark Mode</string>
     <string name="settings_system_default">System Default</string>
     <string name="now_playing_add_to_playlist">Add to playlist</string>
+    <string name="now_playing_soundfont">Soundfonts</string>
+    <string name="now_playing_soundfont_description">Soundfonts</string>
     <string name="now_playing_settings_loop">Loop</string>
     <string name="now_playing_settings_lyrics_size">Lyrics Size</string>
     <string name="now_playing_settings_music_speed">Music Speed</string>
@@ -32,4 +34,5 @@
     <string name="content_description_pause">Pause</string>
     <string name="content_description_play">Play</string>
     <string name="content_description_media_not_available">Playable media not available</string>
+    <string name="content_description_download_soundfont">Download sound font</string>
 </resources>

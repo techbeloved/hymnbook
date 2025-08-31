@@ -35,6 +35,7 @@ dependencyResolutionManagement {
 // include ':app', ':edittextwithsortby'
 include ':shared'
 include ':desktopApp'
+include ':modules:api-client'
 include ':modules:be-server'
 include ':modules:media'
 include ':modules:sheetmusic'

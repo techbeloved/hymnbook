@@ -47,7 +47,6 @@ import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.model.SongFilter
-import com.techbeloved.hymnbook.shared.soundfont.soundFontProvider
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
 import com.techbeloved.hymnbook.shared.ui.settings.NowPlayingSettingsBottomSheet
 import com.techbeloved.hymnbook.shared.ui.utils.toUiDetail
@@ -87,6 +86,7 @@ internal data class SongDetailScreen(
 @Composable
 internal fun SongDetailScreen(
     onOpenSearch: () -> Unit,
+    onShowSoundFontSettings: () -> Unit,
     onAddSongToPlaylist: (songId: Long) -> Unit,
     pagerViewModel: SongDetailPagerModel = viewModel(
         factory = SongDetailPagerModel.Factory,
@@ -98,9 +98,15 @@ internal fun SongDetailScreen(
     var currentSongId by remember { mutableStateOf<Long?>(null) }
     val pagerState by pagerViewModel.state.collectAsState()
     val playbackState = rememberPlaybackState()
+
+    // Check if soundfont is available and use it to create a playback controller
+    val soundFontState = (pagerState as? SongDetailPagerState.Content)?.soundFontState
+    val soundFontStateAvailable = soundFontState as? SoundFontState.Available
+    val isSoundFontSupported = soundFontState !is SoundFontState.NotSupported
+
     val playbackController = rememberPlaybackController(
         playbackState = playbackState,
-        midiSoundFontPath = soundFontProvider(),
+        midiSoundFontPath = soundFontStateAvailable?.soundFont?.fileHash?.path,
     )
 
     LaunchedEffect(playbackState.isLooping) {
@@ -135,6 +141,7 @@ internal fun SongDetailScreen(
                 playbackState = playbackState,
                 controller = playbackController,
                 onOpenSearch = onOpenSearch,
+                onShowSoundFontSettings = onShowSoundFontSettings,
             )
         }
 
@@ -186,6 +193,8 @@ internal fun SongDetailScreen(
                 },
                 isLooping = playbackState.isLooping,
                 isLoopingSupported = playbackController?.isLoopingSupported == true,
+                onSoundfonts = onShowSoundFontSettings,
+                isSoundfontSupported = isSoundFontSupported,
             )
         }
     }
@@ -250,6 +259,7 @@ private fun SongPager(
     pageContent: @Composable (songId: Long, contentPadding: PaddingValues) -> Unit,
     onPageChanged: (newPage: Int) -> Unit,
     onShowSettingsBottomSheet: () -> Unit,
+    onShowSoundFontSettings: () -> Unit,
     playbackState: PlaybackState,
     controller: PlaybackController?,
     onOpenSearch: () -> Unit,
@@ -305,6 +315,8 @@ private fun SongPager(
                     playbackState = playbackState,
                     controller = controller,
                     onShowSettingsBottomSheet = onShowSettingsBottomSheet,
+                    isSoundFontDownloadRequired = state.soundFontState is SoundFontState.NotAvailable,
+                    onShowSoundFontSettings = onShowSoundFontSettings,
                 )
             }
         }

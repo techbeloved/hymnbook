@@ -3,11 +3,13 @@ package com.techbeloved.hymnbook.shared.di
 import androidx.datastore.core.DataStore
 import app.cash.sqldelight.EnumColumnAdapter
 import app.cash.sqldelight.db.SqlDriver
+import com.techbeloved.apiclient.ApiClient
 import com.techbeloved.hymnbook.Database
 import com.techbeloved.hymnbook.MediaFile
 import com.techbeloved.hymnbook.PlaylistEntity
 import com.techbeloved.hymnbook.SheetMusicEntity
 import com.techbeloved.hymnbook.SongEntity
+import com.techbeloved.hymnbook.SoundFontEntity
 import com.techbeloved.hymnbook.shared.data.dateColumnAdapter
 import com.techbeloved.hymnbook.shared.data.getDriverFactory
 import com.techbeloved.hymnbook.shared.data.listColumnAdapter
@@ -18,6 +20,7 @@ import kotlinx.serialization.json.Json
 import nl.adaptivity.xmlutil.XmlDeclMode
 import nl.adaptivity.xmlutil.core.XmlVersion
 import nl.adaptivity.xmlutil.serialization.XML
+import kotlin.getValue
 
 internal object Injector {
 
@@ -43,6 +46,8 @@ internal object Injector {
         }
     }
 
+    val apiClient by lazy { ApiClient() }
+
     val preferencesDataStore by lazy { createPlatformDataStore() }
 
     val inMemoryDataStore: DataStore<InMemoryPreferences> by lazy { InMemoryDataStore() }
@@ -60,6 +65,9 @@ internal object Injector {
             PlaylistEntityAdapter = PlaylistEntity.Adapter(
                 createdAdapter = dateColumnAdapter(),
                 modifiedAdapter = dateColumnAdapter(),
+            ),
+            SoundFontEntityAdapter = SoundFontEntity.Adapter(
+                downloaded_dateAdapter = dateColumnAdapter(),
             ),
         )
     }

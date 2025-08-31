@@ -47,6 +47,7 @@ kotlin {
         dependencies.ksp(libs.kotlin.inject.compiler)
         dependencies.ksp(libs.kotlin.inject.anvil.compiler)
         commonMain.dependencies {
+            implementation(project(":modules:api-client"))
             implementation(project(":modules:media"))
             implementation(project(":modules:sheetmusic"))
             implementation(compose.runtime)
@@ -177,6 +178,7 @@ sqldelight {
     databases {
         create("Database") {
             packageName.set("com.techbeloved.hymnbook")
+            schemaOutputDirectory.set(file("src/commonMain/sqldelight/databases"))
         }
         // needs to be set otherwise, with cocoapods, iosApp fails to build.
         // See https://github.com/cashapp/sqldelight/issues/1442
