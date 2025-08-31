@@ -13,6 +13,8 @@ import com.techbeloved.hymnbook.shared.files.assetFileSourceProvider
 import com.techbeloved.hymnbook.shared.files.defaultAssetArchiveExtractor
 import com.techbeloved.hymnbook.shared.files.defaultOkioFileSystemProvider
 import com.techbeloved.hymnbook.shared.preferences.InMemoryPreferences
+import com.techbeloved.hymnbook.shared.search.SearchSongsUseCase
+import com.techbeloved.hymnbook.shared.songshare.ExtractSongShareDataUseCase
 import com.techbeloved.hymnbook.shared.time.DefaultInstantProvider
 import com.techbeloved.hymnbook.shared.time.InstantProvider
 import com.techbeloved.hymnbook.shared.ui.analytics.AnalyticsViewModel
@@ -38,6 +40,10 @@ import software.amazon.lastmile.kotlin.inject.anvil.SingleIn
 @Component
 @SingleIn(AppScope::class)
 internal interface AppComponent {
+
+    fun searchSongsUseCase(): SearchSongsUseCase
+
+    fun extractSongShareDataUseCase(): ExtractSongShareDataUseCase
 
     fun filteredSongsViewModelFactory(): FilteredSongsViewModel.Factory
 
@@ -88,9 +94,11 @@ internal interface AppComponent {
 
     @Provides
     fun provideAnalytics(): AppAnalytics = analyticsProvider()
+
     @Provides
     fun provideInstantProvider(instantProvider: DefaultInstantProvider): InstantProvider =
         instantProvider
+
     fun addNewPlaylistViewModelFactory(): AddEditPlaylistViewModel.Factory
     fun addSongToPlaylistViewModelFactory(): AddSongToPlaylistViewModel.Factory
 
