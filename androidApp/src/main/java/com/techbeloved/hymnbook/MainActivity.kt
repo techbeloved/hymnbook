@@ -1,5 +1,6 @@
 package com.techbeloved.hymnbook
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -10,6 +11,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
 import com.techbeloved.hymnbook.shared.App
+import com.techbeloved.hymnbook.shared.songshare.DeeplinkHandler
 import com.techbeloved.media.DefaultMediaControllerDisposer
 import com.techbeloved.media.MediaControllerDisposer
 
@@ -24,6 +26,9 @@ class MainActivity : AppCompatActivity(),
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         analytics
+
+        handleIntent(intent)
+
         setContent {
             App()
         }
@@ -32,6 +37,19 @@ class MainActivity : AppCompatActivity(),
     override fun onStop() {
         onDispose()
         super.onStop()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleIntent(intent)
+    }
+
+    private fun handleIntent(intent: Intent) {
+        val appLinkAction = intent.action
+        val appLinkData = intent.data
+        if (Intent.ACTION_VIEW == appLinkAction && appLinkData != null) {
+            DeeplinkHandler.setDeeplink(deeplink = appLinkData.toString())
+        }
     }
 }
 
