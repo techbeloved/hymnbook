@@ -19,6 +19,7 @@ import com.techbeloved.hymnbook.shared.preferences.SongPreferences
 import com.techbeloved.hymnbook.shared.sheetmusic.GetAvailableSheetMusicForSongUseCase
 import com.techbeloved.hymnbook.shared.songbooks.GetSongbookEntriesForSongUseCase
 import com.techbeloved.hymnbook.shared.songs.GetSongIdsByFilterUseCase
+import com.techbeloved.hymnbook.shared.songshare.GetSongShareDataUseCase
 import com.techbeloved.hymnbook.shared.soundfont.GetSoundFontPreferenceFlowUseCase
 import com.techbeloved.hymnbook.shared.soundfont.IsSoundFontSupportedUseCase
 import kotlinx.collections.immutable.toImmutableList
@@ -45,19 +46,16 @@ internal class SongDetailPagerModel @Inject constructor(
     private val changeFontSizeUseCase: ChangeFontSizeUseCase,
     private val getSoundFontPreferenceFlowUseCase: GetSoundFontPreferenceFlowUseCase,
     private val isSoundFontSupportedUseCase: IsSoundFontSupportedUseCase,
+    private val getSongShareDataUseCase: GetSongShareDataUseCase,
     @Assisted savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val bottomSheetVisible = MutableStateFlow(false)
 
-    val bottomSheetState =
+    private val bottomSheetState =
         bottomSheetVisible.combine(getSongPreferenceFlowUseCase()) { visible, prefs ->
-            if (visible) DetailBottomSheetState.Show(prefs) else DetailBottomSheetState.Hidden
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
-            DetailBottomSheetState.Hidden,
-        )
+            visible to prefs
+        }
 
     private val route = savedStateHandle.toRoute<SongDetailScreen>()
     private val initialSongId = route.initialSongId
@@ -74,13 +72,15 @@ internal class SongDetailPagerModel @Inject constructor(
         },
         selectedPage,
         getSoundFontState(),
-        ) { preferences, songEntries, selectedPageIndex, soundFontState ->
+        bottomSheetState,
+    ) { preferences, songEntries, selectedPageIndex, soundFontState, bottomSheetVisible ->
 
         val currentIndex = if (selectedPageIndex < 0) songEntries.initialPage else selectedPageIndex
         val currentEntry = songEntries.songEntries[currentIndex]
         val songbookEntries = getSongbookEntriesForSongUseCase(currentEntry)
         val availableMedia = getAvailableMediaForSongUseCase(currentEntry)
         val availableSheetMusic = getAvailableSheetMusicForSongUseCase(currentEntry)
+        val songShareData = getSongShareDataUseCase(currentEntry)
 
         SongDetailPagerState.Content(
             initialPage = songEntries.initialPage,
@@ -110,6 +110,11 @@ internal class SongDetailPagerModel @Inject constructor(
             currentDisplayMode = preferences.songDisplayMode,
             currentSongBookEntry = songbookEntries.firstOrNull(),
             soundFontState = soundFontState,
+            bottomSheetState = if (bottomSheetVisible.first) {
+                DetailBottomSheetState.Show(preferences = bottomSheetVisible.second, shareAppData = songShareData)
+            } else {
+                DetailBottomSheetState.Hidden
+            },
         )
     }.stateIn(
         scope = viewModelScope,

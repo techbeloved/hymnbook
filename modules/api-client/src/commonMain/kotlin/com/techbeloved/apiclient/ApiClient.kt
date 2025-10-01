@@ -33,8 +33,6 @@ private fun createHttpClient() = platformHttpClient {
         connectTimeoutMillis = NetworkTimeout
         socketTimeoutMillis = NetworkTimeout
     }
-
-    install(HttpCache)
 }
 
 

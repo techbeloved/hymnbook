@@ -12,6 +12,7 @@
 		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
 		7555FF83242A565900829871 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF82242A565900829871 /* ContentView.swift */; };
 		981E3F922E1ABEDC00A906E0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 981E3F912E1ABEDC00A906E0 /* GoogleService-Info.plist */; };
+		982047342E897DF50024BB0F /* ShareButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982047332E897DE80024BB0F /* ShareButtonView.swift */; };
 		984F2DC22E32F54A0040591B /* FirebaseAnalyticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 984F2DC12E32F54A0040591B /* FirebaseAnalyticsCore */; };
 		984F2DC42E32F54A0040591B /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 984F2DC32E32F54A0040591B /* FirebaseCrashlytics */; };
 		C31C6A4A84C97B27C70CC93C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C31C60EC93BFDD0DA737F3C7 /* AppDelegate.swift */; };
@@ -39,6 +40,7 @@
 		7555FF82242A565900829871 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		7555FF8C242A565B00829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
 		981E3F912E1ABEDC00A906E0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.info; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		982047332E897DE80024BB0F /* ShareButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareButtonView.swift; sourceTree = "<group>"; };
 		9874027E2E50C84700A1BB73 /* hymnbook.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = hymnbook.entitlements; sourceTree = "<group>"; };
 		C31C60EC93BFDD0DA737F3C7 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C31C6178D54580035DE2B8E5 /* FirebaseAppAnalytics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseAppAnalytics.swift; sourceTree = "<group>"; };
@@ -84,6 +86,7 @@
 		7555FF7D242A565900829871 /* hymnbook */ = {
 			isa = PBXGroup;
 			children = (
+				982047332E897DE80024BB0F /* ShareButtonView.swift */,
 				9874027E2E50C84700A1BB73 /* hymnbook.entitlements */,
 				981E3F912E1ABEDC00A906E0 /* GoogleService-Info.plist */,
 				058557BA273AAA24004C7B11 /* Assets.xcassets */,
@@ -223,6 +226,7 @@
 				7555FF83242A565900829871 /* ContentView.swift in Sources */,
 				C31C6A4A84C97B27C70CC93C /* AppDelegate.swift in Sources */,
 				C31C6F09E9D969049E67EE3C /* FirebaseAppAnalytics.swift in Sources */,
+				982047342E897DF50024BB0F /* ShareButtonView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

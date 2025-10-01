@@ -30,6 +30,8 @@ import com.techbeloved.hymnbook.shared.ui.navigation.addNavigationRoutes
 import com.techbeloved.hymnbook.shared.ui.theme.AppTheme
 import kotlinx.coroutines.launch
 
+internal const val AppHost = "app.watchmanmusic.com"
+
 @Composable
 public fun App() {
     LogDefaultAnalytics()

@@ -92,9 +92,6 @@ versions = "0.52.0"
 anotherPdfViewer = "2.3.7"
 uiViewbinding = "1.9.0"
 fragmentCompose = "1.8.9"
-kotlinStdlib = "2.2.0"
-kotlinTest = "2.2.0"
-core = "1.7.0"
 
 [libraries]
 android-pdf-viewer = { module = "com.github.DImuthuUpe:AndroidPdfViewer", version.ref = "androidPdfViewer" }
@@ -166,11 +163,11 @@ firebase-dynamic-links = { module = "com.google.firebase:firebase-dynamic-links"
 firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 firebase-storage = { module = "com.google.firebase:firebase-storage" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
-kotlin-inject-runtime = { module = "me.tatarka.inject:kotlin-inject-runtime-kmp", version.ref = "kotlinInject"}
-kotlin-inject-anvil-compiler = { module = "software.amazon.lastmile.kotlin.inject.anvil:compiler", version.ref = "kotlinInjectAnvil"}
-kotlin-inject-anvil-runtime = { module = "software.amazon.lastmile.kotlin.inject.anvil:runtime", version.ref = "kotlinInjectAnvil"}
-kotlin-inject-anvil-runtime-optional = { module = "software.amazon.lastmile.kotlin.inject.anvil:runtime-optional", version.ref = "kotlinInjectAnvil"}
-kotlin-inject-compiler = { module = "me.tatarka.inject:kotlin-inject-compiler-ksp", version.ref = "kotlinInject"}
+kotlin-inject-runtime = { module = "me.tatarka.inject:kotlin-inject-runtime-kmp", version.ref = "kotlinInject" }
+kotlin-inject-anvil-compiler = { module = "software.amazon.lastmile.kotlin.inject.anvil:compiler", version.ref = "kotlinInjectAnvil" }
+kotlin-inject-anvil-runtime = { module = "software.amazon.lastmile.kotlin.inject.anvil:runtime", version.ref = "kotlinInjectAnvil" }
+kotlin-inject-anvil-runtime-optional = { module = "software.amazon.lastmile.kotlin.inject.anvil:runtime-optional", version.ref = "kotlinInjectAnvil" }
+kotlin-inject-compiler = { module = "me.tatarka.inject:kotlin-inject-compiler-ksp", version.ref = "kotlinInject" }
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "dateTime" }
 kotlinx-io = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", version.ref = "kotlinxIo" }
@@ -225,9 +222,9 @@ timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "tim
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 coil-network = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil" }
 
-jetbrains-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "jetbrainsNavigation"}
-jetbrains-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "jetbrainsViewModel"}
-jetbrains-runtime-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "jetbrainsViewModel"}
+jetbrains-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "jetbrainsNavigation" }
+jetbrains-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "jetbrainsViewModel" }
+jetbrains-runtime-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "jetbrainsViewModel" }
 
 pdf-viewer = { module = "io.github.afreakyelf:Pdf-Viewer", version.ref = "anotherPdfViewer" }
 
@@ -238,9 +235,6 @@ test-junit = { group = "junit", name = "junit", version.ref = "test_junit" }
 test-espresso = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
 test-hilt = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt_android" }
 androidx-ui-viewbinding = { group = "androidx.compose.ui", name = "ui-viewbinding", version.ref = "uiViewbinding" }
-kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinStdlib" }
-kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlinTest" }
-androidx-core = { group = "androidx.test", name = "core", version.ref = "core" }
 
 [bundles]
 media3 = ["androidx-media3-exoplayer", "androidx-media3-ui", "androidx-media3-session", "androidx-media3-common-ktx", "androidx-media3-exoplayer-midi"]
@@ -268,4 +262,4 @@ firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 triplet-play = { id = "com.github.triplet.play", version.ref = "triplet" }
 benmanes-versions = { id = "com.github.ben-manes.versions", version.ref = "versions" }
-about-libraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutLibraries"}
+about-libraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutLibraries" }
