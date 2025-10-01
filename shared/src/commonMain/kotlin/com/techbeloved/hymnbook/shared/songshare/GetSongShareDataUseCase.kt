@@ -21,7 +21,7 @@ internal class GetSongShareDataUseCase @Inject constructor(
             val songbookEntries = getSongbookEntriesForSongUseCase(songId).firstOrNull()
             ShareAppData(
                 title = "Sharing song: ${song.title}",
-                description = "${song.title} || ${songbookEntries?.songbook} #${songbookEntries?.entry}",
+                text = "${song.title} || ${songbookEntries?.songbook} #${songbookEntries?.entry}",
                 url = URLBuilder(
                     protocol = URLProtocol.HTTPS,
                     host = AppHost,

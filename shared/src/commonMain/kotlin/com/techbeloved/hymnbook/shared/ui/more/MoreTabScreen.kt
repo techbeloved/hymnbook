@@ -68,7 +68,7 @@ internal fun MoreTabScreen(
                             onClick(
                                 shareData = ShareAppData(
                                     title = "Download Watchman Hymnbook App",
-                                    description = "Download Watchman Hymnbook App",
+                                    text = "Download Watchman Hymnbook App",
                                     url = URLBuilder(
                                         protocol = URLProtocol.HTTPS,
                                         host = AppHost
