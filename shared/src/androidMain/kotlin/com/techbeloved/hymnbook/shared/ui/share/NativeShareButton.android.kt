@@ -14,7 +14,7 @@ internal actual fun NativeShareButton(
             type = "text/plain"
             putExtra(Intent.EXTRA_TITLE, shareAppData.title)
             val shareText = """
-                ${shareAppData.description}
+                ${shareAppData.text}
                 ${shareAppData.url}
             """.trimIndent()
             putExtra(Intent.EXTRA_TEXT, shareText)

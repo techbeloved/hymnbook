@@ -24,7 +24,7 @@ struct ShareButtonView {
 public class SwiftInteropImpl: SwiftInterop {
     public func shareData(data: ShareAppData) {
         let shareButtonView = ShareButtonView()
-        let text = "\(data.description)\n\(data.url)"
+        let text = "\(data.text)\n\(data.url)"
         shareButtonView.share(text)
     }
 }
