@@ -23,7 +23,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.techbeloved.hymnbook.shared.AppHost
+import com.techbeloved.hymnbook.shared.songshare.ShareAppData
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
+import com.techbeloved.hymnbook.shared.ui.share.NativeShareButton
+import io.ktor.http.URLBuilder
+import io.ktor.http.URLProtocol
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -55,15 +60,27 @@ internal fun MoreTabScreen(
                 modifier = Modifier.padding(innerPadding)
                     .verticalScroll(rememberScrollState()),
             ) {
-                ListItem(
-                    headlineContent = { Text(text = "Shared the App") },
-                    modifier = Modifier.clickable {
-                        // Open app sharing
-                    },
-                    leadingContent = {
-                        Icon(imageVector = Icons.TwoTone.Share, contentDescription = null)
-                    }
-                )
+                NativeShareButton {
+                    ListItem(
+                        headlineContent = { Text(text = "Shared the App") },
+                        modifier = Modifier.clickable {
+                            // Open app sharing
+                            onClick(
+                                shareData = ShareAppData(
+                                    title = "Download Watchman Hymnbook App",
+                                    description = "Download Watchman Hymnbook App",
+                                    url = URLBuilder(
+                                        protocol = URLProtocol.HTTPS,
+                                        host = AppHost
+                                    ).buildString(),
+                                )
+                            )
+                        },
+                        leadingContent = {
+                            Icon(imageVector = Icons.TwoTone.Share, contentDescription = null)
+                        }
+                    )
+                }
 
                 ListItem(
                     headlineContent = { Text(text = "About") },

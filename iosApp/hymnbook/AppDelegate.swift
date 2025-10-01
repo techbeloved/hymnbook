@@ -8,14 +8,16 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         FirebaseApp.configure()
-        IosInjector.init().setAnalytics(appAnalytics: FirebaseAppAnalytics())
+        let iosInjector = IosInjector.init()
+        iosInjector.setAnalytics(appAnalytics: FirebaseAppAnalytics())
+        iosInjector.setSwiftInterop(swiftInterop: SwiftInteropImpl())
 
         return true
     }
 
-    func application(_ application: NSApplication,
+    func application(_ application: UIApplication,
                      continue userActivity: NSUserActivity,
-                     restorationHandler: @escaping ([NSUserActivityRestoring]) -> Void) -> Bool {
+                     restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
         // Get URL components from the incoming user activity.
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
               let incomingURL = userActivity.webpageURL,
@@ -26,6 +28,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 
         // Check for specific URL components that you need.
-       DeeplinkHandler.setDeeplink(deeplink: incomingURL.absoluteString)
+        DeeplinkHandler.init().setDeeplink(deeplink: incomingURL.absoluteString)
+        return true
     }
 }

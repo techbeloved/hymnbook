@@ -5,6 +5,7 @@ package com.techbeloved.hymnbook.shared.ui.settings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +16,7 @@ import androidx.compose.material.icons.automirrored.twotone.PlaylistAdd
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Piano
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FilledTonalIconButton
@@ -42,14 +44,18 @@ import com.techbeloved.hymnbook.shared.generated.now_playing_settings_speed_down
 import com.techbeloved.hymnbook.shared.generated.now_playing_settings_speed_up
 import com.techbeloved.hymnbook.shared.generated.now_playing_settings_zoom_in
 import com.techbeloved.hymnbook.shared.generated.now_playing_settings_zoom_out
+import com.techbeloved.hymnbook.shared.generated.now_playing_share_action
 import com.techbeloved.hymnbook.shared.generated.now_playing_soundfont
 import com.techbeloved.hymnbook.shared.generated.now_playing_soundfont_description
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.preferences.SongPreferences
+import com.techbeloved.hymnbook.shared.songshare.ShareAppData
+import com.techbeloved.hymnbook.shared.ui.share.NativeShareButton
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun NowPlayingSettingsBottomSheet(
+    shareAppData: ShareAppData,
     onDismiss: () -> Unit,
     onSpeedUp: () -> Unit,
     onSpeedDown: () -> Unit,
@@ -72,13 +78,29 @@ internal fun NowPlayingSettingsBottomSheet(
         sheetState = bottomSheetState,
         modifier = modifier,
     ) {
-        Row(
+        FlowRow(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(
                 space = 16.dp,
                 alignment = Alignment.CenterHorizontally,
             )
         ) {
+            NativeShareButton {
+                FilledTonalButton(
+                    onClick = {
+                        onClick(shareData = shareAppData)
+                    },
+                ) {
+                    Row {
+                        Text(text = stringResource(Res.string.now_playing_share_action))
+                        Spacer(Modifier.width(8.dp))
+                        Icon(
+                            imageVector = Icons.Default.Share,
+                            contentDescription = stringResource(Res.string.now_playing_share_action),
+                        )
+                    }
+                }
+            }
             FilledTonalButton(
                 onClick = onAddSongToPlaylist,
             ) {

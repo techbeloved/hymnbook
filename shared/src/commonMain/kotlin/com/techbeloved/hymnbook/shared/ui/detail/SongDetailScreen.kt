@@ -60,7 +60,6 @@ import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
@@ -143,6 +142,53 @@ internal fun SongDetailScreen(
                 onOpenSearch = onOpenSearch,
                 onShowSoundFontSettings = onShowSoundFontSettings,
             )
+
+            when (val state = state.bottomSheetState) {
+                DetailBottomSheetState.Hidden -> {
+                    // BottomSheet is hidden
+                }
+
+                is DetailBottomSheetState.Show -> {
+                    NowPlayingSettingsBottomSheet(
+                        onDismiss = pagerViewModel::onHideSettings,
+                        onSpeedUp = {
+                            playbackController?.changePlaybackSpeed(
+                                speed = changeMusicSpeed(
+                                    currentSpeed = playbackState.playbackSpeed,
+                                    isIncrease = true,
+                                ),
+                            )
+                        },
+                        onSpeedDown = {
+                            playbackController?.changePlaybackSpeed(
+                                speed = changeMusicSpeed(
+                                    currentSpeed = playbackState.playbackSpeed,
+                                    isIncrease = false,
+                                ),
+                            )
+                        },
+                        onZoomOut = pagerViewModel::onDecreaseFontSize,
+                        onZoomIn = pagerViewModel::onIncreaseFontSize,
+                        onChangeSongDisplayMode = pagerViewModel::onChangeSongDisplayMode,
+                        preferences = state.preferences,
+                        playbackSpeed = playbackState.playbackSpeed,
+                        onAddSongToPlaylist = {
+                            pagerViewModel.onHideSettings()
+                            currentSongId?.let { onAddSongToPlaylist(it) }
+                        },
+                        onToggleLooping = {
+                            playbackController?.toggleLooping()
+                        },
+                        isLooping = playbackState.isLooping,
+                        isLoopingSupported = playbackController?.isLoopingSupported == true,
+                        onSoundfonts = onShowSoundFontSettings,
+                        isSoundfontSupported = isSoundFontSupported,
+                        shareAppData = state.shareAppData,
+                    )
+                }
+            }
+
+
         }
 
         SongDetailPagerState.Loading -> {
@@ -154,50 +200,8 @@ internal fun SongDetailScreen(
         }
     }
 
-    val bottomSheetState by pagerViewModel.bottomSheetState.collectAsState(context = Dispatchers.Main.immediate)
-    when (val state = bottomSheetState) {
-        DetailBottomSheetState.Hidden -> {
-            // BottomSheet is hidden
-        }
 
-        is DetailBottomSheetState.Show -> {
-            NowPlayingSettingsBottomSheet(
-                onDismiss = pagerViewModel::onHideSettings,
-                onSpeedUp = {
-                    playbackController?.changePlaybackSpeed(
-                        speed = changeMusicSpeed(
-                            currentSpeed = playbackState.playbackSpeed,
-                            isIncrease = true,
-                        ),
-                    )
-                },
-                onSpeedDown = {
-                    playbackController?.changePlaybackSpeed(
-                        speed = changeMusicSpeed(
-                            currentSpeed = playbackState.playbackSpeed,
-                            isIncrease = false,
-                        ),
-                    )
-                },
-                onZoomOut = pagerViewModel::onDecreaseFontSize,
-                onZoomIn = pagerViewModel::onIncreaseFontSize,
-                onChangeSongDisplayMode = pagerViewModel::onChangeSongDisplayMode,
-                preferences = state.preferences,
-                playbackSpeed = playbackState.playbackSpeed,
-                onAddSongToPlaylist = {
-                    pagerViewModel.onHideSettings()
-                    currentSongId?.let { onAddSongToPlaylist(it) }
-                },
-                onToggleLooping = {
-                    playbackController?.toggleLooping()
-                },
-                isLooping = playbackState.isLooping,
-                isLoopingSupported = playbackController?.isLoopingSupported == true,
-                onSoundfonts = onShowSoundFontSettings,
-                isSoundfontSupported = isSoundFontSupported,
-            )
-        }
-    }
+
 }
 
 @Composable

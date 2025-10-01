@@ -18,6 +18,7 @@
     <string name="settings_dark_mode">Dark Mode</string>
     <string name="settings_system_default">System Default</string>
     <string name="now_playing_add_to_playlist">Add to playlist</string>
+    <string name="now_playing_share_action">Share</string>
     <string name="now_playing_soundfont">Soundfonts</string>
     <string name="now_playing_soundfont_description">Soundfonts</string>
     <string name="now_playing_settings_loop">Loop</string>

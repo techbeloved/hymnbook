@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalHazeMaterialsApi::class)
 
 package com.techbeloved.hymnbook.shared.ui.more.about
 
@@ -39,6 +39,7 @@ import com.techbeloved.hymnbook.shared.generated.about_app_title
 import com.techbeloved.hymnbook.shared.generated.about_wccrm_description
 import com.techbeloved.hymnbook.shared.generated.about_wccrm_title
 import com.techbeloved.hymnbook.shared.generated.connect_with_us
+import com.techbeloved.hymnbook.shared.generated.instagram_glyph_black
 import com.techbeloved.hymnbook.shared.generated.legal
 import com.techbeloved.hymnbook.shared.generated.open_source_licenses
 import com.techbeloved.hymnbook.shared.generated.privacy_policy
@@ -47,11 +48,15 @@ import com.techbeloved.hymnbook.shared.ui.AppTopBar
 import com.techbeloved.hymnbook.shared.ui.icons.IconPack
 import com.techbeloved.hymnbook.shared.ui.icons.iconpack.XTwitterLogo
 import com.techbeloved.hymnbook.shared.ui.icons.iconpack.Youtube
+import com.techbeloved.hymnbook.shared.ui.share.OpenExternalUrlButton
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
 import kotlinx.serialization.Serializable
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -153,9 +158,29 @@ private fun SocialMediaSection(modifier: Modifier = Modifier) {
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 4.dp, end = 16.dp)
         )
-        SocialMediaItem(title = "Facebook", imageVector = Icons.TwoTone.Facebook) {}
-        SocialMediaItem(title = "X (Twitter)", imageVector = IconPack.XTwitterLogo) {}
-        SocialMediaItem(title = "YouTube", imageVector = IconPack.Youtube) {}
+        OpenExternalUrlButton {
+            SocialMediaItem(title = "YouTube", imageVector = IconPack.Youtube) {
+                onClick("https://www.youtube.com/@vowtelevision")
+            }
+        }
+        OpenExternalUrlButton {
+            SocialMediaItem(title = "Facebook", imageVector = Icons.TwoTone.Facebook) {
+                onClick("https://www.facebook.com/vowtv")
+            }
+        }
+        OpenExternalUrlButton {
+            SocialMediaItem(
+                title = "Instagram",
+                drawableResource = Res.drawable.instagram_glyph_black
+            ) {
+                onClick("https://www.instagram.com/vowtv")
+            }
+        }
+        OpenExternalUrlButton {
+            SocialMediaItem(title = "X (Twitter)", imageVector = IconPack.XTwitterLogo) {
+                onClick("https://x.com/vowtelevision")
+            }
+        }
     }
 }
 
@@ -166,6 +191,32 @@ private fun SocialMediaItem(title: String, imageVector: ImageVector, onClick: ()
         leadingContent = {
             Icon(
                 imageVector = imageVector,
+                contentDescription = title,
+                modifier = Modifier.size(24.dp),
+            )
+        },
+        trailingContent = {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = null,
+            )
+        },
+        modifier = Modifier.clickable(onClick = onClick)
+            .padding(horizontal = 16.dp)
+    )
+}
+
+@Composable
+private fun SocialMediaItem(
+    title: String,
+    drawableResource: DrawableResource,
+    onClick: () -> Unit
+) {
+    ListItem(
+        headlineContent = { Text(text = title) },
+        leadingContent = {
+            Icon(
+                painter = painterResource(drawableResource),
                 contentDescription = title,
                 modifier = Modifier.size(24.dp),
             )

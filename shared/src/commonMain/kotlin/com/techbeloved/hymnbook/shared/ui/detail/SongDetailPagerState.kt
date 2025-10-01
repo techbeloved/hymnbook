@@ -20,6 +20,7 @@ internal sealed interface SongDetailPagerState {
         val isSheetMusicAvailableForCurrentItem: Boolean,
         val soundFontState: SoundFontState,
         val pages: ImmutableList<Long>,
+        val bottomSheetState: DetailBottomSheetState,
     ) : SongDetailPagerState
 }
 
