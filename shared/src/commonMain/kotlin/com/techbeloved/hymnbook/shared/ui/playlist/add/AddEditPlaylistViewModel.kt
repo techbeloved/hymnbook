@@ -1,5 +1,9 @@
 package com.techbeloved.hymnbook.shared.ui.playlist.add
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.createSavedStateHandle
@@ -33,24 +37,20 @@ internal class AddEditPlaylistViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val args = savedStateHandle.toRoute<AddEditPlaylistDialog>()
-    private val playlistName = savedStateHandle.getStateFlow<String?>("playlistName", null)
-    private val playlistDescription =
-        savedStateHandle.getStateFlow<String?>("playlistDescription", null)
-
-    private val playlistImageUrl = savedStateHandle.getStateFlow<String?>("playlistImageUrl", null)
 
     private val inProgress = MutableStateFlow(false)
     private val playlistSaved = MutableStateFlow<PlaylistSaved?>(null)
 
+    var title by mutableStateOf("")
+    var description by mutableStateOf("")
+
     private val editing = combine(
-        playlistName,
-        playlistDescription,
-        playlistImageUrl
-    ) { name, description, imageUrl ->
+        snapshotFlow { title },
+        snapshotFlow { description },
+    ) { name, description ->
         Editing(
-            name = name ?: "",
-            description = description ?: "",
-            imageUrl = imageUrl,
+            name = name,
+            description = description,
         )
     }
 
@@ -71,7 +71,6 @@ internal class AddEditPlaylistViewModel @Inject constructor(
             oldItem = oldPlaylist,
             name = editing.name.ifBlank { oldPlaylist?.name ?: "" },
             description = editing.description.ifBlank { oldPlaylist?.description ?: "" },
-            imageUrl = editing.imageUrl ?: oldPlaylist?.imageUrl,
             isLoading = inProgress,
             playlistSaved = playlistSaved,
         )
@@ -81,20 +80,27 @@ internal class AddEditPlaylistViewModel @Inject constructor(
         initialValue = AddEditPlaylistState(isNewPlaylist = true),
     )
 
+    init {
+        viewModelScope.launch {
+            val playlist =
+                if (args.playlistId != null) getPlaylistByIdUseCase(args.playlistId) else null
+            playlist?.let {
+                title = it.name
+                description = it.description ?: ""
+            }
+        }
+    }
+
     fun onNameChanged(name: String) {
         if (name.length < NAME_MAX_LENGTH) {
-            savedStateHandle["playlistName"] = name
+            title = name
         }
     }
 
     fun onDescriptionChanged(description: String) {
         if (description.length < DESCRIPTION_MAX_LENGTH) {
-            savedStateHandle["playlistDescription"] = description
+            this.description = description
         }
-    }
-
-    fun onImageUrlChanged(imageUrl: String?) {
-        savedStateHandle["playlistImageUrl"] = imageUrl
     }
 
     fun onSavePlaylist() {
@@ -106,13 +112,13 @@ internal class AddEditPlaylistViewModel @Inject constructor(
                     playlistId = args.playlistId,
                     name = currentState.name,
                     description = currentState.description.ifBlank { null },
-                    imageUrl = currentState.imageUrl,
+                    imageUrl = null,
                 )
             } else {
                 createPlaylistUseCase(
                     name = currentState.name,
                     description = currentState.description.ifBlank { null },
-                    imageUrl = currentState.imageUrl,
+                    imageUrl = null,
                 )
             }
             if (args.songId != null) {
@@ -132,7 +138,6 @@ internal class AddEditPlaylistViewModel @Inject constructor(
     data class Editing(
         val name: String,
         val description: String,
-        val imageUrl: String?,
     )
 
     @Inject
