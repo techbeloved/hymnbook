@@ -106,6 +106,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.lifecycle.ktx)
+    implementation(libs.app.update.ktx)
     implementation(libs.compose.activity)
     implementation(platform(libs.compose.bom))
     implementation(platform(libs.firebase.bom))

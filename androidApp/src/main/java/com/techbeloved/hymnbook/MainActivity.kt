@@ -6,10 +6,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.firebase.Firebase
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
+import com.techbeloved.hymnbook.inappupdates.CheckAppUpdates
 import com.techbeloved.hymnbook.shared.App
 import com.techbeloved.hymnbook.shared.songshare.DeeplinkHandler
 import com.techbeloved.media.DefaultMediaControllerDisposer
@@ -31,6 +34,7 @@ class MainActivity : AppCompatActivity(),
 
         setContent {
             App()
+            CheckAppUpdates(appUpdateManager = remember { AppUpdateManagerFactory.create(this) })
         }
     }
 
