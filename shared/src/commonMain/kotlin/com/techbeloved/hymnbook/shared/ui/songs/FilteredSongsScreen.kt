@@ -20,6 +20,7 @@ import com.techbeloved.hymnbook.shared.ui.AppTopBar
 import com.techbeloved.hymnbook.shared.ui.listing.SongListingUi
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
 import kotlinx.serialization.Serializable
@@ -32,12 +33,13 @@ internal data class FilteredSongsScreen(
     val orderByTitle: Boolean,
     val title: String = "",
 ) {
-    val songFilter get() = SongFilter(
-        topics = topics,
-        songbooks = songbooks,
-        playlistIds = playlistIds,
-        orderByTitle = orderByTitle,
-    )
+    val songFilter
+        get() = SongFilter(
+            topics = topics,
+            songbooks = songbooks,
+            playlistIds = playlistIds,
+            orderByTitle = orderByTitle,
+        )
 }
 
 @Composable
@@ -83,7 +85,8 @@ private fun FilteredSongsUi(
         SongListingUi(
             songItems = state.songs,
             contentPadding = innerPadding,
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize()
+                .hazeSource(hazeState),
             onSongItemClicked = onSongItemClicked,
         )
     }

@@ -84,6 +84,8 @@ internal fun AboutScreen(
         floatingActionButtonPosition = FabPosition.End,
         modifier = modifier,
     ) { innerPadding ->
+        val version = remember { defaultAppVersionProvider.get() }
+
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier.padding(innerPadding)
@@ -107,7 +109,7 @@ internal fun AboutScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = "Version: ${defaultAppVersionProvider.get().name}",
+                    text = "Version: ${version.name} (${version.code})",
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.padding(16.dp)
                 )
