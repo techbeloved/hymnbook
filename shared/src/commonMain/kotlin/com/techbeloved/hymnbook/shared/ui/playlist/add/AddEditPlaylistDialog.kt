@@ -26,7 +26,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -46,7 +45,7 @@ internal fun AddEditPlaylistDialog(
         viewModel.onScreenLoaded()
     }
 
-    val state by viewModel.state.collectAsStateWithLifecycle(context = Dispatchers.Main.immediate)
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(state.playlistSaved) {
         if (state.playlistSaved != null) {
@@ -71,7 +70,7 @@ internal fun AddEditPlaylistDialog(
             )
             Spacer(Modifier.height(16.dp))
             TextField(
-                value = state.name,
+                value = viewModel.title,
                 onValueChange = viewModel::onNameChanged,
                 label = { Text("Title") },
                 modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -80,7 +79,7 @@ internal fun AddEditPlaylistDialog(
             )
             Spacer(Modifier.height(16.dp))
             TextField(
-                value = state.description,
+                value = viewModel.description,
                 onValueChange = viewModel::onDescriptionChanged,
                 label = { Text("Description") },
                 modifier = Modifier.align(Alignment.CenterHorizontally)
