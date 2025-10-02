@@ -47,7 +47,7 @@ android {
         applicationId = "com.techbeloved.hymnbook"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 300
+        versionCode = 301
         versionName = "3.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -91,7 +91,7 @@ android {
 
 play {
     track.set("internal")
-    userFraction.set(0.5)
+    userFraction.set(1.0)
     updatePriority.set(2)
     defaultToAppBundles.set(true)
 
