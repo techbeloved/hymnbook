@@ -35,7 +35,6 @@ src/main/res/menu-night/
 /.kotlin/
 /modules/media/build/
 /modules/sheetmusic/build
-/modules/media/src/iosMain/composeResources/files/yamaha_grand_piano.sf2
 /modules/be-server/build
 /iosApp/Pods/
 *.xcuserdatad/
@@ -50,7 +49,5 @@ src/main/res/menu-night/
 /shared/src/commonMain/composeResources/files/sheets/wccrm_hymns_v2.zip
 /shared/src/commonMain/composeResources/files/json/all_hymns_v6.json
 /shared/src/commonMain/composeResources/files/tunes/tunes_wccrm_midi_archive_hymns.zip
-/modules/media/src/iosMain/composeResources/files/soundfont.sf2
 /shared/src/commonMain/composeResources/files/json/wccrm_hymns_original.json
-/shared/src/iosMain/composeResources/files/soundfont/soundfont.sf2
 /modules/api-client/build/

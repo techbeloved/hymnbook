@@ -27,7 +27,6 @@ rm -rf "$COMPOSE_RESOURCES_DIR"/tunes/*.zip
 rm -rf "$COMPOSE_RESOURCES_DIR"/manifest/*.json
 mkdir -p "$COMPOSE_RESOURCES_DIR"/sheets
 mkdir -p "$COMPOSE_RESOURCES_DIR"/manifest
-mkdir -p "$IOS_COMPOSE_RESOURCES_DIR"/soundfont
 
 echo "$WCCRM_HYMNS_MANIFEST_JSON" > "$COMPOSE_RESOURCES_DIR"/manifest/filesmanifest.json
 
@@ -35,8 +34,6 @@ echo "Downloading song assets..."
 curl --output "$COMPOSE_RESOURCES_DIR"/json/"$WCCRM_HYMNS_JSON" "$WCCRM_HYMNS_JSON_URL"
 curl --output "$COMPOSE_RESOURCES_DIR"/tunes/"$WCCRM_TUNES_ARCHIVE" "$WCCRM_TUNES_ASSET_DOWNLOAD_URL"
 curl --output "$COMPOSE_RESOURCES_DIR"/sheets/"$WCCRM_SHEET_MUSIC_ARCHIVE" "$WCCRM_SHEET_MUSIC_ASSET_DOWNLOAD_URL"
-echo "Downloading soundfont"
-curl --output "$IOS_COMPOSE_RESOURCES_DIR"/soundfont/soundfont.sf2 "$SOUND_FONT_URL"
 echo "Download assets complete"
 
 curl -s "https://get.sdkman.io?ci=true&rcupdate=false" | bash
