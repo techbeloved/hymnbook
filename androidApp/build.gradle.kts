@@ -91,7 +91,7 @@ android {
 
 play {
     track.set("internal")
-    userFraction.set(1.0)
+    userFraction.set(0.5)
     updatePriority.set(2)
     defaultToAppBundles.set(true)
 
