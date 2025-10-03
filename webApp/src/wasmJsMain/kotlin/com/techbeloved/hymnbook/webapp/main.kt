@@ -50,7 +50,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 private const val PlayStoreUrl =
     "https://play.google.com/store/apps/details?id=com.techbeloved.hymnbook"
 
-private const val AppStoreUrl = "https://apps.apple.com" // To be done after publishing to appstore
+private const val AppStoreUrl = "https://apps.apple.com/us/app/watchman-music/id6748705382"
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
@@ -169,7 +169,6 @@ private fun WebAppPromotion(
                     TextButton(
                         onClick = onAppAppStoreClick,
                         modifier = Modifier,
-                        enabled = false,
                     ) {
                         Box(modifier = Modifier) {
                             Image(
@@ -177,12 +176,6 @@ private fun WebAppPromotion(
                                 contentDescription = stringResource(Res.string.download_on_app_store),
                                 modifier = Modifier.height(48.dp),
                                 contentScale = ContentScale.FillHeight,
-                            )
-                            Text(
-                                text = "Coming Soon",
-                                style = MaterialTheme.typography.titleSmall,
-                                color = MaterialTheme.colorScheme.onSecondaryContainer,
-                                modifier = Modifier.background(MaterialTheme.colorScheme.secondaryContainer.copy(alpha = .8f)),
                             )
                         }
                     }
