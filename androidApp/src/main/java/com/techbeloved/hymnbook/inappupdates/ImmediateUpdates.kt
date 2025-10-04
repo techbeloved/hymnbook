@@ -19,10 +19,12 @@ fun ImmediateUpdates(
 
         }
     LaunchedEffect(Unit) {
-        appUpdateManager.startUpdateFlowForResult(
-            appUpdateInfo,
-            activityLauncher,
-            AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE).build(),
-        )
+        runCatching {
+            appUpdateManager.startUpdateFlowForResult(
+                appUpdateInfo,
+                activityLauncher,
+                AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE).build(),
+            )
+        }
     }
 }

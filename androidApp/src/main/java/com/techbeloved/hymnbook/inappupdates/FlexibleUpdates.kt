@@ -10,6 +10,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.LifecycleStartEffect
 import com.google.android.play.core.appupdate.AppUpdateInfo
@@ -19,12 +20,16 @@ import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.ktx.installStatus
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 @Composable
 fun FlexibleUpdates(
     appUpdateManager: AppUpdateManager,
     appUpdateInfo: AppUpdateInfo,
 ) {
+
+    val scope = rememberCoroutineScope()
 
     var showUpdateDownloaded by remember { mutableStateOf(false) }
 
@@ -34,11 +39,13 @@ fun FlexibleUpdates(
         }
 
     LaunchedEffect(Unit) {
-        appUpdateManager.startUpdateFlowForResult(
-            appUpdateInfo,
-            activityLauncher,
-            AppUpdateOptions.newBuilder(AppUpdateType.FLEXIBLE).build(),
-        )
+        runCatching {
+            appUpdateManager.startUpdateFlowForResult(
+                appUpdateInfo,
+                activityLauncher,
+                AppUpdateOptions.newBuilder(AppUpdateType.FLEXIBLE).build(),
+            )
+        }
     }
 
     LifecycleStartEffect(Unit) {
@@ -58,7 +65,9 @@ fun FlexibleUpdates(
             onDismissRequest = {},
             confirmButton = {
                 Button(onClick = {
-                    appUpdateManager.completeUpdate()
+                    scope.launch {
+                        runCatching { appUpdateManager.completeUpdate().await() }
+                    }
                 }) {
                     Text("Restart")
                 }
