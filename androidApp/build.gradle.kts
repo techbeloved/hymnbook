@@ -47,7 +47,7 @@ android {
         applicationId = "com.techbeloved.hymnbook"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 301
+        versionCode = 302
         versionName = "3.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

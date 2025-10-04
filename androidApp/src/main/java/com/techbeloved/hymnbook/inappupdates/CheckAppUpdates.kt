@@ -37,7 +37,7 @@ fun CheckAppUpdates(
 
 
     LaunchedEffect(Unit) {
-        val updateInfo = appUpdateManager.requestAppUpdateInfo()
+        val updateInfo = runCatching { appUpdateManager.requestAppUpdateInfo() }.getOrNull()
         appUpdateInfo = updateInfo
     }
 
