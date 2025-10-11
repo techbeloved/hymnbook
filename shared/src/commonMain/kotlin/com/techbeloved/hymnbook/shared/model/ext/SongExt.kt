@@ -39,3 +39,21 @@ internal fun SongDetail.lyricsByVerseOrder(): List<Lyric> {
         lyricsByType[Lyric.Type.Ending]?.forEach { add(it) }
     }
 }
+
+/**
+ * Returns a list of lyrics with chorus and pre-chorus after the first verse and occurs only once.
+ * Compare to [lyricsByVerseOrder], the chorus is not repeated after every verse.
+ */
+internal fun SongDetail.lyricsCompact(): List<Lyric> = buildList {
+    val lyricsByType = lyrics.groupBy { it.type }
+    lyricsByType[Lyric.Type.Intro]?.forEach { add(it) }
+    lyricsByType[Lyric.Type.Verse]?.sortedBy { it.label }?. forEachIndexed { index, lyric ->
+        add(lyric)
+        if (index == 0) {
+            lyricsByType[Lyric.Type.PreChorus]?.forEach { add(it) }
+            lyricsByType[Lyric.Type.Chorus]?.forEach { add(it) }
+        }
+    }
+    lyricsByType[Lyric.Type.Bridge]?.forEach { add(it) }
+    lyricsByType[Lyric.Type.Ending]?.forEach { add(it) }
+}

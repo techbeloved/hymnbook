@@ -40,8 +40,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -201,7 +201,6 @@ internal fun SongDetailScreen(
     }
 
 
-
 }
 
 @Composable
@@ -232,16 +231,11 @@ private fun SongDetailUi(
                 val textStyle = MaterialTheme.typography.bodyLarge
                 val defaultFontSize = textStyle.fontSize
                 val fontSize = defaultFontSize * state.fontSizeMultiplier
-                val lineHeight = textStyle.lineHeight * LineHeightMultiplier
                 CompositionLocalProvider(
                     LocalContentColor provides MaterialTheme.colorScheme.onSurface,
                     LocalTextStyle provides textStyle.merge(
                         fontSize = fontSize,
-                        lineHeight = lineHeight,
-                        lineHeightStyle = LineHeightStyle(
-                            alignment = LineHeightStyle.Alignment.Proportional,
-                            trim = LineHeightStyle.Trim.None,
-                        ),
+                        lineHeight = LineHeightMultiplier.em,
                     )
                 ) {
 

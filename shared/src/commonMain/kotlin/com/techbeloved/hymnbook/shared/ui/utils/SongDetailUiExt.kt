@@ -13,13 +13,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.unit.TextUnit
-import com.techbeloved.hymnbook.SongDetail
 import com.techbeloved.hymnbook.shared.model.Lyric
-import com.techbeloved.hymnbook.shared.model.ext.lyricsByVerseOrder
-import com.techbeloved.hymnbook.shared.model.ext.songbookEntries
+import com.techbeloved.hymnbook.shared.songs.SongData
 
 @Composable
-internal fun SongDetail.toUiDetail(fontSize: TextUnit): AnnotatedString {
+internal fun SongData.toUiDetail(fontSize: TextUnit): AnnotatedString {
     val textStyle = LocalTextStyle.current
     val localDensity = LocalDensity.current
     val textMeasurer = rememberTextMeasurer()
@@ -37,10 +35,10 @@ internal fun SongDetail.toUiDetail(fontSize: TextUnit): AnnotatedString {
         lineOverflow.toSp()
     }
 
-
     val content = buildAnnotatedString {
-        val bookEntries = songbookEntries()
+        val bookEntries = songbookEntries
 
+        appendLine()
         pushStyle(SpanStyle(fontSize = fontSize, fontWeight = FontWeight.ExtraBold))
 
         append("Hymn ")
@@ -54,8 +52,8 @@ internal fun SongDetail.toUiDetail(fontSize: TextUnit): AnnotatedString {
         pop() // italic book entry
 
         // Verses
-        val lyricsByOrder = lyricsByVerseOrder()
-        for (lyric in lyricsByOrder) {
+
+        for (lyric in lyrics) {
             // start first line
             val allLines = lyric.content.split("\n")
             val firstLine = allLines.first()
@@ -69,7 +67,7 @@ internal fun SongDetail.toUiDetail(fontSize: TextUnit): AnnotatedString {
                         restOfContent = restOfContent,
                         gapWidth = bulletWidth,
                     )
-                    appendLine()
+                    append(' ')
                 }
 
                 Lyric.Type.Chorus, Lyric.Type.PreChorus -> {
@@ -78,7 +76,7 @@ internal fun SongDetail.toUiDetail(fontSize: TextUnit): AnnotatedString {
                         gapWidth = bulletWidth,
                         lineOverflowIndent = lineOverflowIndent,
                     )
-                    appendLine()
+                    append(' ')
                 }
 
                 else -> {
@@ -87,10 +85,18 @@ internal fun SongDetail.toUiDetail(fontSize: TextUnit): AnnotatedString {
                         gapWidth = bulletWidth,
                         lineOverflowIndent = lineOverflowIndent,
                     )
-                    appendLine()
+                    append(' ')
                 }
             }
         }
+        if (authors.isNotEmpty()) {
+            appendLine()
+            append("Authors")
+            for (author in authors) {
+                append("${author.type}: ${author.name}")
+            }
+        }
+        appendLine()
     }
     return content
 }

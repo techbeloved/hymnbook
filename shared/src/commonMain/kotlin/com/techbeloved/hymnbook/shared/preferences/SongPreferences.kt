@@ -9,6 +9,7 @@ internal data class SongPreferences(
     val songDisplayMode: SongDisplayMode,
     val isPreferMidi: Boolean,
     val fontSize: Float,
+    val isCompactDisplay: Boolean,
 ) {
     companion object {
 
@@ -33,6 +34,11 @@ internal data class SongPreferences(
             inMemory = false,
             key = floatPreferencesKey("song.FontSize"),
             defaultValue = DEFAULT_FONT_SIZE,
+        )
+        val songCompactDisplayPrefKey = PreferenceKey(
+            inMemory = false,
+            key = booleanPreferencesKey("song.CompactDisplay"),
+            defaultValue = false,
         )
     }
 }

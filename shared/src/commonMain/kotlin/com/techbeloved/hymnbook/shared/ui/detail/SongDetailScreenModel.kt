@@ -7,9 +7,15 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.techbeloved.hymnbook.shared.di.appComponent
 import com.techbeloved.hymnbook.shared.model.SheetMusic
+import com.techbeloved.hymnbook.shared.model.ext.authors
+import com.techbeloved.hymnbook.shared.model.ext.lyricsByVerseOrder
+import com.techbeloved.hymnbook.shared.model.ext.lyricsCompact
+import com.techbeloved.hymnbook.shared.model.ext.songbookEntries
+import com.techbeloved.hymnbook.shared.model.ext.topics
 import com.techbeloved.hymnbook.shared.preferences.GetSongPreferenceFlowUseCase
 import com.techbeloved.hymnbook.shared.sheetmusic.GetAvailableSheetMusicForSongUseCase
 import com.techbeloved.hymnbook.shared.songs.GetSongDetailUseCase
+import com.techbeloved.hymnbook.shared.songs.SongData
 import com.techbeloved.sheetmusic.SheetMusicItem
 import com.techbeloved.sheetmusic.SheetMusicType
 import kotlinx.coroutines.flow.SharingStarted
@@ -49,7 +55,14 @@ internal class SongDetailScreenModel @Inject constructor(
             } else {
                 null
             },
-            content = songDetail,
+            content = SongData(
+                title = songDetail.title,
+                alternativeTitles = songDetail.alternate_title?.let { listOf(it) } ?: emptyList(),
+                authors = songDetail.authors(),
+                lyrics = if (true) songDetail.lyricsCompact() else songDetail.lyricsByVerseOrder(),
+                songbookEntries = songDetail.songbookEntries(),
+                topics = songDetail.topics(),
+            ),
             songDisplayMode = prefs.songDisplayMode,
             fontSizeMultiplier = prefs.fontSize,
         )
