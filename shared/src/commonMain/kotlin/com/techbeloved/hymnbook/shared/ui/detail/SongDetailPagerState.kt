@@ -16,7 +16,6 @@ internal sealed interface SongDetailPagerState {
         val currentSongId: Long,
         val currentSongBookEntry: SongBookEntry?,
         val currentDisplayMode: SongDisplayMode,
-        val displayModes: ImmutableList<SongDisplayModeState>,
         val isSheetMusicAvailableForCurrentItem: Boolean,
         val soundFontState: SoundFontState,
         val pages: ImmutableList<Long>,

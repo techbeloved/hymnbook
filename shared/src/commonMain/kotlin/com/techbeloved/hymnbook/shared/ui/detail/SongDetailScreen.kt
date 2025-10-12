@@ -45,6 +45,8 @@ import androidx.compose.ui.unit.em
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.techbeloved.hymnbook.shared.generated.Res
+import com.techbeloved.hymnbook.shared.generated.no_sheet_music_available
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.model.SongFilter
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
@@ -62,6 +64,7 @@ import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
+import org.jetbrains.compose.resources.stringResource
 
 private const val LineHeightMultiplier = 1.5f
 
@@ -209,12 +212,18 @@ private fun SongDetailUi(
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
-    if (state.songDisplayMode == SongDisplayMode.SheetMusic && state.sheetMusic != null) {
-        SheetMusicUi(
-            sheetMusicItem = state.sheetMusic,
-            modifier = modifier.fillMaxSize()
-                .padding(contentPadding),
-        )
+    if (state.songDisplayMode == SongDisplayMode.SheetMusic) {
+        if (state.sheetMusic != null) {
+            SheetMusicUi(
+                sheetMusicItem = state.sheetMusic,
+                modifier = modifier.fillMaxSize()
+                    .padding(contentPadding),
+            )
+        } else {
+            Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(text = stringResource(Res.string.no_sheet_music_available))
+            }
+        }
     } else {
         Column(
             modifier = modifier

@@ -94,19 +94,6 @@ internal class SongDetailPagerModel @Inject constructor(
             currentSongId = currentEntry,
 
             pages = songEntries.songEntries.toImmutableList(),
-            displayModes = SongDisplayMode.entries.map { mode ->
-                SongDisplayModeState(
-                    displayMode = mode,
-                    isEnabled = when (mode) {
-                        SongDisplayMode.Lyrics -> true
-                        SongDisplayMode.SheetMusic -> availableSheetMusic != null
-                    },
-                    text = when (mode) {
-                        SongDisplayMode.Lyrics -> "Lyrics"
-                        SongDisplayMode.SheetMusic -> "Sheet"
-                    },
-                )
-            }.toImmutableList(),
             currentDisplayMode = preferences.songDisplayMode,
             currentSongBookEntry = songbookEntries.firstOrNull(),
             soundFontState = soundFontState,
