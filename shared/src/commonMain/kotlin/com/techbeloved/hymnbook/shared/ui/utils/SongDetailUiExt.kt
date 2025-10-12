@@ -11,6 +11,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.unit.TextUnit
 import com.techbeloved.hymnbook.shared.model.Lyric
@@ -36,20 +37,20 @@ internal fun SongData.toUiDetail(fontSize: TextUnit): AnnotatedString {
     }
 
     val content = buildAnnotatedString {
-        val bookEntries = songbookEntries
 
         appendLine()
-        pushStyle(SpanStyle(fontSize = fontSize, fontWeight = FontWeight.ExtraBold))
+        pushStyle(ParagraphStyle(textAlign = TextAlign.Center))
+        pushStyle(SpanStyle(fontSize = fontSize * 1.15, fontWeight = FontWeight.ExtraBold))
 
-        append("Hymn ")
-        bookEntries.firstOrNull()?.let {
-            append(it.entry)
+        appendLine(title.trim())
+
+        authors.firstOrNull()?.let { author ->
+            pushStyle(SpanStyle(fontStyle = FontStyle.Normal, fontWeight = FontWeight.Light, fontSize = fontSize * .75f))
+            appendLine(author.name)
+            pop()
         }
-        append(" - ")
-        append(title.trim())
-
-        appendLine()
-        pop() // italic book entry
+        pop() // bold title
+        pop() // end centred paragraph
 
         // Verses
 
@@ -87,13 +88,6 @@ internal fun SongData.toUiDetail(fontSize: TextUnit): AnnotatedString {
                     )
                     append(' ')
                 }
-            }
-        }
-        if (authors.isNotEmpty()) {
-            appendLine()
-            append("Authors")
-            for (author in authors) {
-                append("${author.type}: ${author.name}")
             }
         }
         appendLine()

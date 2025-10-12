@@ -5,6 +5,7 @@ package com.techbeloved.hymnbook.shared.ui.detail
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,6 +41,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -49,7 +52,7 @@ import com.techbeloved.hymnbook.shared.generated.Res
 import com.techbeloved.hymnbook.shared.generated.no_sheet_music_available
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.model.SongFilter
-import com.techbeloved.hymnbook.shared.ui.AppTopBar
+import com.techbeloved.hymnbook.shared.ui.CenteredAppTopBar
 import com.techbeloved.hymnbook.shared.ui.settings.NowPlayingSettingsBottomSheet
 import com.techbeloved.hymnbook.shared.ui.utils.toUiDetail
 import com.techbeloved.media.PlaybackController
@@ -282,11 +285,28 @@ private fun SongPager(
     }
     Scaffold(
         topBar = {
-            AppTopBar(
+            CenteredAppTopBar(
                 scrollBehaviour = scrollBehavior,
                 containerColor = MaterialTheme.colorScheme.surface.copy(alpha = .5f),
                 modifier = Modifier.hazeEffect(hazeState, style = HazeMaterials.ultraThin()),
-                title = state.currentSongBookEntry?.songbook.orEmpty(),
+                titleContent = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier,
+                    ) {
+                        Text(
+                            text = state.currentSongBookEntry?.songbook.orEmpty(),
+                            overflow = TextOverflow.MiddleEllipsis,
+                            maxLines = 1,
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(
+                            text = state.currentSongBookEntry?.entry.orEmpty(),
+                            fontWeight = FontWeight.SemiBold,
+                            maxLines = 1,
+                        )
+                    }
+                },
                 actions = {
                     Spacer(Modifier.width(8.dp))
                     IconButton(onClick = onOpenSearch, modifier = Modifier) {
