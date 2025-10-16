@@ -54,6 +54,7 @@ import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.model.SongFilter
 import com.techbeloved.hymnbook.shared.ui.CenteredAppTopBar
 import com.techbeloved.hymnbook.shared.ui.settings.NowPlayingSettingsBottomSheet
+import com.techbeloved.hymnbook.shared.ui.share.NativeShareButton
 import com.techbeloved.hymnbook.shared.ui.utils.toUiDetail
 import com.techbeloved.media.PlaybackController
 import com.techbeloved.media.PlaybackState
@@ -155,42 +156,46 @@ internal fun SongDetailScreen(
                 }
 
                 is DetailBottomSheetState.Show -> {
-                    NowPlayingSettingsBottomSheet(
-                        onDismiss = pagerViewModel::onHideSettings,
-                        onSpeedUp = {
-                            playbackController?.changePlaybackSpeed(
-                                speed = changeMusicSpeed(
-                                    currentSpeed = playbackState.playbackSpeed,
-                                    isIncrease = true,
-                                ),
-                            )
-                        },
-                        onSpeedDown = {
-                            playbackController?.changePlaybackSpeed(
-                                speed = changeMusicSpeed(
-                                    currentSpeed = playbackState.playbackSpeed,
-                                    isIncrease = false,
-                                ),
-                            )
-                        },
-                        onZoomOut = pagerViewModel::onDecreaseFontSize,
-                        onZoomIn = pagerViewModel::onIncreaseFontSize,
-                        onChangeSongDisplayMode = pagerViewModel::onChangeSongDisplayMode,
-                        preferences = state.preferences,
-                        playbackSpeed = playbackState.playbackSpeed,
-                        onAddSongToPlaylist = {
-                            pagerViewModel.onHideSettings()
-                            currentSongId?.let { onAddSongToPlaylist(it) }
-                        },
-                        onToggleLooping = {
-                            playbackController?.toggleLooping()
-                        },
-                        isLooping = playbackState.isLooping,
-                        isLoopingSupported = playbackController?.isLoopingSupported == true,
-                        onSoundfonts = onShowSoundFontSettings,
-                        isSoundfontSupported = isSoundFontSupported,
-                        shareAppData = state.shareAppData,
-                    )
+                    NativeShareButton {
+                        NowPlayingSettingsBottomSheet(
+                            onShareSongClick = {
+                                onClick(state.shareAppData)
+                            },
+                            onDismiss = pagerViewModel::onHideSettings,
+                            onSpeedUp = {
+                                playbackController?.changePlaybackSpeed(
+                                    speed = changeMusicSpeed(
+                                        currentSpeed = playbackState.playbackSpeed,
+                                        isIncrease = true,
+                                    ),
+                                )
+                            },
+                            onSpeedDown = {
+                                playbackController?.changePlaybackSpeed(
+                                    speed = changeMusicSpeed(
+                                        currentSpeed = playbackState.playbackSpeed,
+                                        isIncrease = false,
+                                    ),
+                                )
+                            },
+                            onZoomOut = pagerViewModel::onDecreaseFontSize,
+                            onZoomIn = pagerViewModel::onIncreaseFontSize,
+                            onChangeSongDisplayMode = pagerViewModel::onChangeSongDisplayMode,
+                            onSoundfonts = onShowSoundFontSettings,
+                            onAddSongToPlaylist = {
+                                pagerViewModel.onHideSettings()
+                                currentSongId?.let { onAddSongToPlaylist(it) }
+                            },
+                            onToggleLooping = {
+                                playbackController?.toggleLooping()
+                            },
+                            isSoundfontSupported = isSoundFontSupported,
+                            isLooping = playbackState.isLooping,
+                            isLoopingSupported = playbackController?.isLoopingSupported == true,
+                            preferences = state.preferences,
+                            playbackSpeed = playbackState.playbackSpeed,
+                        )
+                    }
                 }
             }
 
