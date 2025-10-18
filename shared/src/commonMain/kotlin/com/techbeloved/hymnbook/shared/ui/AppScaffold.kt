@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -21,6 +19,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.techbeloved.hymnbook.shared.ui.navigation.LocalNavController
 
 internal expect val navigationArrowBack: ImageVector
+
+@Composable
+internal expect fun NavigateUpButton(onClick: () -> Unit)
 
 @Composable
 internal fun AppTopBar(
@@ -48,15 +49,13 @@ internal fun AppTopBar(
         navigationIcon = {
             if (showUpButton) {
                 val navigator = LocalNavController.current
-                IconButton(onClick = { navigator?.navigateUp() }) {
-                    Icon(navigationArrowBack, contentDescription = "Navigate up")
-                }
+                NavigateUpButton(onClick = { navigator?.navigateUp() })
             }
         },
         actions = actions,
         modifier = modifier,
         scrollBehavior = scrollBehaviour,
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+        colors = TopAppBarDefaults.topAppBarColors(
             containerColor = containerColor,
             scrolledContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
             navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
@@ -93,15 +92,13 @@ internal fun CenteredAppTopBar(
         navigationIcon = {
             if (showUpButton) {
                 val navigator = LocalNavController.current
-                IconButton(onClick = { navigator?.navigateUp() }) {
-                    Icon(navigationArrowBack, contentDescription = "Navigate up")
-                }
+                NavigateUpButton(onClick = { navigator?.navigateUp() })
             }
         },
         actions = actions,
         modifier = modifier,
         scrollBehavior = scrollBehaviour,
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+        colors = TopAppBarDefaults.topAppBarColors(
             containerColor = containerColor,
             scrolledContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
             navigationIconContentColor = MaterialTheme.colorScheme.onSurface,

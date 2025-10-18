@@ -2,6 +2,7 @@
 
 package com.techbeloved.hymnbook.shared.ui.detail
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
@@ -17,11 +19,15 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Search
+import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -34,10 +40,12 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -49,6 +57,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.techbeloved.hymnbook.shared.generated.Res
+import com.techbeloved.hymnbook.shared.generated.content_description_search
+import com.techbeloved.hymnbook.shared.generated.content_description_show_more_controls
 import com.techbeloved.hymnbook.shared.generated.no_sheet_music_available
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.model.SongFilter
@@ -282,6 +292,7 @@ private fun SongPager(
 ) {
     val hazeState = remember { HazeState() }
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val bottomAppBarScrollBehavior = BottomAppBarDefaults.exitAlwaysScrollBehavior()
     val pagerState = rememberPagerState(state.initialPage, pageCount = { state.pages.size })
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(pagerState.settledPage) {
@@ -302,12 +313,12 @@ private fun SongPager(
                         Text(
                             text = state.currentSongBookEntry?.songbook.orEmpty(),
                             overflow = TextOverflow.MiddleEllipsis,
+                            fontWeight = FontWeight.SemiBold,
                             maxLines = 1,
                         )
                         Spacer(Modifier.width(8.dp))
                         Text(
                             text = state.currentSongBookEntry?.entry.orEmpty(),
-                            fontWeight = FontWeight.SemiBold,
                             maxLines = 1,
                         )
                     }
@@ -315,41 +326,76 @@ private fun SongPager(
                 actions = {
                     Spacer(Modifier.width(8.dp))
                     IconButton(onClick = onOpenSearch, modifier = Modifier) {
-                        Icon(imageVector = Icons.TwoTone.Search, contentDescription = "Search")
+                        Icon(
+                            imageVector = Icons.TwoTone.Search,
+                            contentDescription = stringResource(Res.string.content_description_search),
+                        )
+                    }
+                    FilledTonalIconButton(
+                        onClick = onShowSettingsBottomSheet,
+                    ) {
+                        Icon(
+                            imageVector = Icons.TwoTone.Settings,
+                            contentDescription = stringResource(Res.string.content_description_show_more_controls),
+                        )
                     }
                 }
             )
         },
         bottomBar = {
-            BottomAppBar(
-                containerColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = .8f),
-                modifier = Modifier.hazeEffect(hazeState, style = HazeMaterials.ultraThin()),
-            ) {
-                BottomControlsUi(
-                    audioItem = state.audioItem,
-                    onPreviousButtonClick = {
-                        val currentPage = pagerState.currentPage
-                        if (currentPage > 0) {
-                            coroutineScope.launch {
-                                pagerState.animateScrollToPage(currentPage - 1)
+            var progressVisible by remember { mutableStateOf(false) }
+            var progress by remember { mutableFloatStateOf(0f) }
+
+            LaunchedEffect(playbackState) {
+                snapshotFlow {
+                    object {
+                        val progress = playbackState.position.toFloat() / playbackState.duration
+                        val isPlaying = playbackState.isPlaying
+                    }
+                }.collect {
+                    progress = it.progress
+                    progressVisible = it.isPlaying
+                }
+            }
+            Column {
+                AnimatedVisibility(visible = progressVisible) {
+                    LinearProgressIndicator(
+                        progress = { progress },
+                        modifier = Modifier.fillMaxWidth().height(1.dp),
+                        gapSize = 2.dp,
+                    )
+                }
+
+                BottomAppBar(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = .8f),
+                    modifier = Modifier.hazeEffect(hazeState, style = HazeMaterials.ultraThin()),
+                    scrollBehavior = bottomAppBarScrollBehavior,
+                ) {
+                    BottomControlsUi(
+                        audioItem = state.audioItem,
+                        onPreviousButtonClick = {
+                            val currentPage = pagerState.currentPage
+                            if (currentPage > 0) {
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(currentPage - 1)
+                                }
                             }
-                        }
-                    },
-                    onNextButtonClick = {
-                        val currentPage = pagerState.currentPage
-                        if (currentPage < pagerState.pageCount - 1) {
-                            coroutineScope.launch {
-                                pagerState.animateScrollToPage(currentPage + 1)
+                        },
+                        onNextButtonClick = {
+                            val currentPage = pagerState.currentPage
+                            if (currentPage < pagerState.pageCount - 1) {
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(currentPage + 1)
+                                }
                             }
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    playbackState = playbackState,
-                    controller = controller,
-                    onShowSettingsBottomSheet = onShowSettingsBottomSheet,
-                    isSoundFontDownloadRequired = state.soundFontState is SoundFontState.NotAvailable,
-                    onShowSoundFontSettings = onShowSoundFontSettings,
-                )
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        playbackState = playbackState,
+                        controller = controller,
+                        isSoundFontDownloadRequired = state.soundFontState is SoundFontState.NotAvailable,
+                        onShowSoundFontSettings = onShowSoundFontSettings,
+                    )
+                }
             }
         }
     ) { innerPadding ->
@@ -359,6 +405,7 @@ private fun SongPager(
                 key = { state.pages[it] },
                 modifier = modifier
                     .nestedScroll(scrollBehavior.nestedScrollConnection)
+                    .nestedScroll(bottomAppBarScrollBehavior.nestedScrollConnection)
                     .hazeSource(hazeState),
                 userScrollEnabled = state.currentDisplayMode != SongDisplayMode.SheetMusic,
             ) { page ->
