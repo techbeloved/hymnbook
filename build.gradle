@@ -4,14 +4,11 @@ plugins {
     //trick: for the same plugin versions in all sub-modules
     alias libs.plugins.android.application apply false
     alias libs.plugins.android.library apply false
-    alias libs.plugins.hilt apply false
     alias libs.plugins.sqldelight apply false
     alias libs.plugins.kotlin.multiplatform apply false
     alias libs.plugins.kotlin.serialization apply false
     alias libs.plugins.kotlin.android apply false
-    alias libs.plugins.kotlin.kapt apply false
     alias libs.plugins.kotlin.ksp apply false
-    alias libs.plugins.kotlin.parcelize apply false
     alias libs.plugins.androidx.navigation.safe.args apply false
     alias libs.plugins.firebase.crashlytics apply false
     alias libs.plugins.google.services apply false
@@ -19,7 +16,6 @@ plugins {
     alias libs.plugins.jetbrains.compose.hotreload apply false
     alias libs.plugins.jetbrains.jvm apply false
     alias libs.plugins.jetbrains.compose.compiler apply false
-    alias libs.plugins.native.cocoapods apply false
     alias libs.plugins.detekt apply false
     alias libs.plugins.benmanes.versions apply true
     alias libs.plugins.about.libraries apply true

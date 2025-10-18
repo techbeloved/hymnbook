@@ -1,5 +1,0 @@
-A few updates to enhance your experience
-
-✰ Simplified UI flow! Sheet music and lyrics can now be switched on the same screen. No need to navigate away to view sheet music separately
-✰ Fix a few stability and UI issues.
-✰ Add support for Android 13
