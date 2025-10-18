@@ -12,11 +12,13 @@ internal class GetSongPreferenceFlowUseCase @Inject constructor(
         repository.getPreferenceFlow(SongPreferences.songDisplayModePrefKey),
         repository.getPreferenceFlow(SongPreferences.isPreferMidiPrefKey),
         repository.getPreferenceFlow(SongPreferences.songFontSizePrefKey),
-    ) { displayMode, isPreferMidi, fontSize ->
+        repository.getPreferenceFlow(SongPreferences.songCompactDisplayPrefKey),
+    ) { displayMode, isPreferMidi, fontSize, isCompactDisplay ->
         SongPreferences(
             songDisplayMode = SongDisplayMode.valueOf(displayMode),
             isPreferMidi = isPreferMidi,
             fontSize = fontSize,
+            isCompactDisplay = isCompactDisplay,
         )
     }
 }

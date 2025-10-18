@@ -11,15 +11,14 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.unit.TextUnit
-import com.techbeloved.hymnbook.SongDetail
 import com.techbeloved.hymnbook.shared.model.Lyric
-import com.techbeloved.hymnbook.shared.model.ext.lyricsByVerseOrder
-import com.techbeloved.hymnbook.shared.model.ext.songbookEntries
+import com.techbeloved.hymnbook.shared.songs.SongData
 
 @Composable
-internal fun SongDetail.toUiDetail(fontSize: TextUnit): AnnotatedString {
+internal fun SongData.toUiDetail(fontSize: TextUnit): AnnotatedString {
     val textStyle = LocalTextStyle.current
     val localDensity = LocalDensity.current
     val textMeasurer = rememberTextMeasurer()
@@ -37,25 +36,25 @@ internal fun SongDetail.toUiDetail(fontSize: TextUnit): AnnotatedString {
         lineOverflow.toSp()
     }
 
-
     val content = buildAnnotatedString {
-        val bookEntries = songbookEntries()
-
-        pushStyle(SpanStyle(fontSize = fontSize, fontWeight = FontWeight.ExtraBold))
-
-        append("Hymn ")
-        bookEntries.firstOrNull()?.let {
-            append(it.entry)
-        }
-        append(" - ")
-        append(title.trim())
 
         appendLine()
-        pop() // italic book entry
+        pushStyle(ParagraphStyle(textAlign = TextAlign.Center))
+        pushStyle(SpanStyle(fontSize = fontSize * 1.15, fontWeight = FontWeight.ExtraBold))
+
+        appendLine(title.trim())
+
+        authors.firstOrNull()?.let { author ->
+            pushStyle(SpanStyle(fontStyle = FontStyle.Normal, fontWeight = FontWeight.Light, fontSize = fontSize * .75f))
+            appendLine(author.name)
+            pop()
+        }
+        pop() // bold title
+        pop() // end centred paragraph
 
         // Verses
-        val lyricsByOrder = lyricsByVerseOrder()
-        for (lyric in lyricsByOrder) {
+
+        for (lyric in lyrics) {
             // start first line
             val allLines = lyric.content.split("\n")
             val firstLine = allLines.first()
@@ -69,7 +68,7 @@ internal fun SongDetail.toUiDetail(fontSize: TextUnit): AnnotatedString {
                         restOfContent = restOfContent,
                         gapWidth = bulletWidth,
                     )
-                    appendLine()
+                    append(' ')
                 }
 
                 Lyric.Type.Chorus, Lyric.Type.PreChorus -> {
@@ -78,7 +77,7 @@ internal fun SongDetail.toUiDetail(fontSize: TextUnit): AnnotatedString {
                         gapWidth = bulletWidth,
                         lineOverflowIndent = lineOverflowIndent,
                     )
-                    appendLine()
+                    append(' ')
                 }
 
                 else -> {
@@ -87,10 +86,11 @@ internal fun SongDetail.toUiDetail(fontSize: TextUnit): AnnotatedString {
                         gapWidth = bulletWidth,
                         lineOverflowIndent = lineOverflowIndent,
                     )
-                    appendLine()
+                    append(' ')
                 }
             }
         }
+        appendLine()
     }
     return content
 }
