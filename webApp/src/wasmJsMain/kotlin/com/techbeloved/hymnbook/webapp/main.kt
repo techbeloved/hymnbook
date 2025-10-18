@@ -153,15 +153,24 @@ private fun WebAppPromotion(
                     .height(80.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                TextButton(
-                    onClick = onGooglePlayStoreClick,
-                    modifier = Modifier,
-                ) {
-                    Image(
-                        painter = painterResource(Res.drawable.download_on_playstore_color),
-                        contentDescription = stringResource(Res.string.download_on_play_store),
-                        modifier = Modifier.height(48.dp),
-                        contentScale = ContentScale.FillHeight,
+                Box(modifier = Modifier) {
+                    TextButton(
+                        onClick = onGooglePlayStoreClick,
+                        modifier = Modifier,
+                        enabled = false,
+                    ) {
+                        Image(
+                            painter = painterResource(Res.drawable.download_on_playstore_color),
+                            contentDescription = stringResource(Res.string.download_on_play_store),
+                            modifier = Modifier.height(48.dp),
+                            contentScale = ContentScale.FillHeight,
+                        )
+                    }
+                    Text(
+                        text = "Coming Soon",
+                        style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer,
+                        modifier = Modifier.background(MaterialTheme.colorScheme.secondaryContainer.copy(alpha = .8f)),
                     )
                 }
 
@@ -169,6 +178,7 @@ private fun WebAppPromotion(
                     TextButton(
                         onClick = onAppAppStoreClick,
                         modifier = Modifier,
+                        enabled = false,
                     ) {
                         Box(modifier = Modifier) {
                             Image(
@@ -176,6 +186,12 @@ private fun WebAppPromotion(
                                 contentDescription = stringResource(Res.string.download_on_app_store),
                                 modifier = Modifier.height(48.dp),
                                 contentScale = ContentScale.FillHeight,
+                            )
+                            Text(
+                                text = "Coming Soon",
+                                style = MaterialTheme.typography.titleSmall,
+                                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                                modifier = Modifier.background(MaterialTheme.colorScheme.secondaryContainer.copy(alpha = .8f)),
                             )
                         }
                     }

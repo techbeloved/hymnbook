@@ -1,41 +1,56 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 
 package com.techbeloved.hymnbook.shared.ui.settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.twotone.PlaylistAdd
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Piano
+import androidx.compose.material.icons.filled.Lyrics
+import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.SheetState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.techbeloved.hymnbook.shared.ext.percentToNearestFive
 import com.techbeloved.hymnbook.shared.generated.Res
+import com.techbeloved.hymnbook.shared.generated.ic_lyrics_compact
 import com.techbeloved.hymnbook.shared.generated.now_playing_add_to_playlist
 import com.techbeloved.hymnbook.shared.generated.now_playing_settings_loop
 import com.techbeloved.hymnbook.shared.generated.now_playing_settings_lyrics_size
@@ -45,17 +60,14 @@ import com.techbeloved.hymnbook.shared.generated.now_playing_settings_speed_up
 import com.techbeloved.hymnbook.shared.generated.now_playing_settings_zoom_in
 import com.techbeloved.hymnbook.shared.generated.now_playing_settings_zoom_out
 import com.techbeloved.hymnbook.shared.generated.now_playing_share_action
-import com.techbeloved.hymnbook.shared.generated.now_playing_soundfont
-import com.techbeloved.hymnbook.shared.generated.now_playing_soundfont_description
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.preferences.SongPreferences
-import com.techbeloved.hymnbook.shared.songshare.ShareAppData
-import com.techbeloved.hymnbook.shared.ui.share.NativeShareButton
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun NowPlayingSettingsBottomSheet(
-    shareAppData: ShareAppData,
     onDismiss: () -> Unit,
     onSpeedUp: () -> Unit,
     onSpeedDown: () -> Unit,
@@ -70,95 +82,52 @@ internal fun NowPlayingSettingsBottomSheet(
     isLoopingSupported: Boolean,
     preferences: SongPreferences,
     playbackSpeed: Int,
+    onShareSongClick: () -> Unit,
     modifier: Modifier = Modifier,
     bottomSheetState: SheetState = rememberModalBottomSheetState(),
 ) {
+    val localScope = rememberCoroutineScope()
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = bottomSheetState,
         modifier = modifier,
     ) {
-        FlowRow(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(
-                space = 16.dp,
-                alignment = Alignment.CenterHorizontally,
-            )
-        ) {
-            NativeShareButton {
-                FilledTonalButton(
-                    onClick = {
-                        onClick(shareData = shareAppData)
-                    },
-                ) {
-                    Row {
-                        Text(text = stringResource(Res.string.now_playing_share_action))
-                        Spacer(Modifier.width(8.dp))
-                        Icon(
-                            imageVector = Icons.Default.Share,
-                            contentDescription = stringResource(Res.string.now_playing_share_action),
-                        )
-                    }
-                }
-            }
-            FilledTonalButton(
-                onClick = onAddSongToPlaylist,
-            ) {
-                Row {
-                    Text(text = stringResource(Res.string.now_playing_add_to_playlist))
-                    Spacer(Modifier.width(8.dp))
-                    Icon(
-                        imageVector = Icons.AutoMirrored.TwoTone.PlaylistAdd,
-                        contentDescription = stringResource(Res.string.now_playing_add_to_playlist),
-                    )
-                }
-            }
-
-            if (isSoundfontSupported) {
-                FilledTonalButton(
-                    onClick = onSoundfonts,
-                ) {
-                    Row {
-                        Text(text = stringResource(Res.string.now_playing_soundfont))
-                        Spacer(Modifier.width(8.dp))
-                        Icon(
-                            imageVector = Icons.Default.Piano,
-                            contentDescription = stringResource(Res.string.now_playing_soundfont_description),
-                        )
-                    }
-                }
-            }
-        }
-        SheetMusicToggle(
+        SongDisplayModeSection(
             songDisplayMode = preferences.songDisplayMode,
             onToggle = onChangeSongDisplayMode,
             modifier = Modifier.fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
         )
-        if (isLoopingSupported) {
-            HorizontalDivider()
-            LoopingControls(
-                isLooping = isLooping,
-                onToggleLooping = onToggleLooping,
-                modifier = Modifier.fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 16.dp),
-            )
-        }
-        HorizontalDivider()
-        MusicSpeedControls(
-            currentSpeed = playbackSpeed,
-            onSpeedUp = onSpeedUp,
-            onSpeedDown = onSpeedDown,
-            modifier = Modifier.fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 16.dp),
-        )
-        HorizontalDivider()
-        ZoomButtons(
-            onZoomIn = onZoomIn,
+        LyricsAppearanceSection(
             onZoomOut = onZoomOut,
+            onZoomIn = onZoomIn,
+            preferences = preferences,
             modifier = Modifier.fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
-            fontSize = MaterialTheme.typography.bodySmall.fontSize * preferences.fontSize,
+        )
+        AudioControlsSection(
+            onSpeedUp = onSpeedUp,
+            onSpeedDown = onSpeedDown,
+            onSoundfonts = onSoundfonts,
+            onToggleLooping = onToggleLooping,
+            isSoundfontSupported = isSoundfontSupported,
+            isLooping = isLooping,
+            isLoopingSupported = isLoopingSupported,
+            playbackSpeed = playbackSpeed,
+            modifier = Modifier.fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+        )
+        ActionsSection(
+            modifier = Modifier.fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            onShare = {
+                localScope.launch {
+                    bottomSheetState.hide()
+                    onShareSongClick()
+                    onDismiss()
+                }
+            },
+            onAddSongToPlaylist = onAddSongToPlaylist,
         )
     }
 }
@@ -192,7 +161,7 @@ private fun ZoomButtons(
         modifier = modifier,
         text = stringResource(Res.string.now_playing_settings_lyrics_size),
     ) {
-        FilledTonalIconButton(
+        OutlinedIconButton(
             onClick = onZoomOut,
             modifier = Modifier.align(Alignment.CenterStart),
         ) {
@@ -202,13 +171,13 @@ private fun ZoomButtons(
             )
         }
         Text(
-            text = "A",
+            text = "Aa",
             fontSize = fontSize,
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.labelMedium,
             modifier = Modifier.align(Alignment.Center),
         )
-        FilledTonalIconButton(
+        FilledIconButton(
             onClick = onZoomIn,
             modifier = Modifier.align(Alignment.CenterEnd),
         ) {
@@ -231,7 +200,7 @@ private fun MusicSpeedControls(
         modifier = modifier,
         text = stringResource(Res.string.now_playing_settings_music_speed),
     ) {
-        FilledTonalIconButton(
+        OutlinedIconButton(
             onClick = onSpeedDown,
             modifier = Modifier.align(Alignment.CenterStart),
         ) {
@@ -246,7 +215,7 @@ private fun MusicSpeedControls(
             style = MaterialTheme.typography.labelMedium,
             modifier = Modifier.align(Alignment.Center),
         )
-        FilledTonalIconButton(
+        FilledIconButton(
             onClick = onSpeedUp,
             modifier = Modifier.align(Alignment.CenterEnd),
         ) {
@@ -259,22 +228,208 @@ private fun MusicSpeedControls(
 }
 
 @Composable
-private fun SheetMusicToggle(
+private fun SongDisplayModeSection(
     songDisplayMode: SongDisplayMode,
     onToggle: (songDisplayMode: SongDisplayMode) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    SettingsControl(
-        text = "Sheet Music",
+    Column(modifier = modifier) {
+        Text(text = "View", style = MaterialTheme.typography.titleMedium)
+        Spacer(Modifier.height(8.dp))
+        Surface(modifier = Modifier.fillMaxWidth(), shape = MaterialTheme.shapes.small) {
+            FlowRow(
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+                verticalArrangement = Arrangement.spacedBy(2.dp),
+                maxItemsInEachRow = 3,
+            ) {
+                SongDisplayMode.entries.forEachIndexed { index, mode ->
+                    ToggleButton(
+                        checked = songDisplayMode == mode,
+                        onCheckedChange = { isChecked ->
+                            if (isChecked) {
+                                onToggle(mode)
+                            }
+                        },
+                        modifier = Modifier.weight(1f)
+                            .semantics { role = Role.RadioButton },
+                        shapes = when (index) {
+                            0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                            SongDisplayMode.entries.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                            else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+                        },
+                        contentPadding = PaddingValues(4.dp)
+                    ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            mode.Icon()
+                            Text(
+                                text = mode.title,
+                                maxLines = 1,
+                                style = MaterialTheme.typography.bodyMediumEmphasized,
+                            )
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+}
+
+@Composable
+private fun SongDisplayMode.Icon() = when (this) {
+    SongDisplayMode.Lyrics -> Icon(
+        imageVector = Icons.Default.Lyrics,
+        contentDescription = null,
+        modifier = Modifier.size(24.dp),
+    )
+
+    SongDisplayMode.LyricsCompact -> Icon(
+        painter = painterResource(Res.drawable.ic_lyrics_compact),
+        contentDescription = null,
+        modifier = Modifier.size(24.dp),
+    )
+
+    SongDisplayMode.SheetMusic -> Icon(
+        imageVector = Icons.Default.MusicNote,
+        contentDescription = null,
+        modifier = Modifier.size(24.dp),
+    )
+}
+
+@Composable
+private fun LyricsAppearanceSection(
+    onZoomOut: () -> Unit,
+    onZoomIn: () -> Unit,
+    preferences: SongPreferences,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier) {
+        Text(text = "Appearance", style = MaterialTheme.typography.titleMedium)
+        Spacer(Modifier.height(8.dp))
+
+        Surface(modifier = Modifier.fillMaxWidth(), shape = MaterialTheme.shapes.small) {
+            Column(
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp)
+                    .fillMaxWidth(),
+            ) {
+                ZoomButtons(
+                    onZoomIn = onZoomIn,
+                    onZoomOut = onZoomOut,
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize * preferences.fontSize,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun AudioControlsSection(
+    onSpeedUp: () -> Unit,
+    onSpeedDown: () -> Unit,
+    onSoundfonts: () -> Unit,
+    onToggleLooping: (isLooping: Boolean) -> Unit,
+    isSoundfontSupported: Boolean,
+    isLooping: Boolean,
+    isLoopingSupported: Boolean,
+    playbackSpeed: Int,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier) {
+        Text(text = "Audio", style = MaterialTheme.typography.titleMedium)
+        Spacer(Modifier.height(8.dp))
+        Surface(modifier = Modifier.fillMaxWidth(), shape = MaterialTheme.shapes.small) {
+            Column(
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp)
+                    .fillMaxWidth(),
+            ) {
+                if (isLoopingSupported) {
+                    LoopingControls(
+                        isLooping = isLooping,
+                        onToggleLooping = onToggleLooping,
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 16.dp),
+                    )
+                    HorizontalDivider()
+                }
+                MusicSpeedControls(
+                    currentSpeed = playbackSpeed,
+                    onSpeedUp = onSpeedUp,
+                    onSpeedDown = onSpeedDown,
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 16.dp),
+                )
+            }
+        }
+
+    }
+}
+
+@Composable
+private fun ActionsSection(
+    modifier: Modifier = Modifier,
+    onShare: () -> Unit,
+    onAddSongToPlaylist: () -> Unit,
+) {
+    Surface(modifier = modifier.fillMaxWidth(), shape = MaterialTheme.shapes.small) {
+        FlowRow(
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp),
+            maxItemsInEachRow = 3,
+        ) {
+            SettingsActionButton(
+                title = stringResource(Res.string.now_playing_share_action),
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.Share,
+                        contentDescription = stringResource(Res.string.now_playing_share_action),
+                    )
+                },
+                onClick = onShare,
+                modifier = Modifier.weight(1f),
+            )
+            SettingsActionButton(
+                title = stringResource(Res.string.now_playing_add_to_playlist),
+                icon = {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.TwoTone.PlaylistAdd,
+                        contentDescription = stringResource(Res.string.now_playing_add_to_playlist),
+                    )
+                },
+                onClick = onAddSongToPlaylist,
+                modifier = Modifier.weight(1f),
+            )
+
+        }
+    }
+}
+
+@Composable
+private fun SettingsActionButton(
+    title: String,
+    onClick: () -> Unit,
+    icon: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    OutlinedButton(
+        onClick = onClick,
         modifier = modifier,
+        shapes = ButtonDefaults.shapes(),
+        contentPadding = PaddingValues(4.dp)
     ) {
-        Switch(
-            checked = songDisplayMode == SongDisplayMode.SheetMusic,
-            onCheckedChange = { isChecked ->
-                onToggle(if (isChecked) SongDisplayMode.SheetMusic else SongDisplayMode.Lyrics)
-            },
-            modifier = Modifier.align(Alignment.CenterEnd),
-        )
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            icon()
+            Text(
+                text = title,
+                maxLines = 1,
+                style = MaterialTheme.typography.bodyMediumEmphasized,
+            )
+        }
     }
 }
 
