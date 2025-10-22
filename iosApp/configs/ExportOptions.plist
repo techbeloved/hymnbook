@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!--
+      This file tells xcodebuild how to package your .ipa
+      It must be present in your repository for the build to work.
+
+      - method: "app-store" is correct for TestFlight uploads.
+      - provisioningProfiles: Leave this empty if you use "Automatic" signing
+        in the build step. xcodebuild will handle it.
+      - signingCertificate: Set to "Apple Distribution".
+    -->
+    <key>method</key>
+    <string>app-store</string>
+    <key>signingStyle</key>
+    <string>automatic</string>
+    <key>stripSwiftSymbols</key>
+    <true/>
+    <key>signingCertificate</key>
+    <string>Apple Distribution</string>
+    <key>teamID</key>
+    <string>4MW3HT65ST</string>
+    <key>uploadBitcode</key>
+    <false/>
+    <key>uploadSymbols</key>
+    <true/>
+</dict>
+</plist>
