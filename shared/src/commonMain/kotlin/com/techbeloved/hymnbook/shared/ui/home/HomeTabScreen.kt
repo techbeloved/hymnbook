@@ -7,18 +7,18 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.twotone.Sort
-import androidx.compose.material.icons.twotone.Search
+import androidx.compose.material.icons.automirrored.filled.Sort
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
@@ -78,7 +78,7 @@ internal fun HomeTabScreen(
                 actions = {
                     Spacer(Modifier.width(8.dp))
                     IconButton(onClick = onOpenSearch, modifier = Modifier) {
-                        Icon(imageVector = Icons.TwoTone.Search, contentDescription = "Search")
+                        Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
                     }
                     Spacer(Modifier.width(12.dp))
                     SortByButton(
@@ -131,10 +131,10 @@ private fun SortByButton(
     ) {
         IconButton(
             onClick = {},
-            modifier = Modifier.menuAnchor(type = MenuAnchorType.PrimaryNotEditable),
+            modifier = Modifier.menuAnchor(type = ExposedDropdownMenuAnchorType.PrimaryNotEditable),
         ) {
             Icon(
-                imageVector = Icons.AutoMirrored.TwoTone.Sort,
+                imageVector = Icons.AutoMirrored.Filled.Sort,
                 contentDescription = "Sort By",
             )
         }

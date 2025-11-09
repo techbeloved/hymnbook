@@ -9,14 +9,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -48,7 +48,7 @@ internal fun SongbookSelector(
     ) {
         Row(
             modifier = Modifier
-                .menuAnchor(type = MenuAnchorType.PrimaryNotEditable)
+                .menuAnchor(type = ExposedDropdownMenuAnchorType.PrimaryNotEditable)
                 .background(
                     color = MaterialTheme.colorScheme.surfaceVariant,
                     shape = MaterialTheme.shapes.small
@@ -89,7 +89,7 @@ private fun TrailingIcon(
     modifier: Modifier = Modifier,
 ) {
     Icon(
-        imageVector = Icons.TwoTone.KeyboardArrowDown,
+        imageVector = Icons.Filled.KeyboardArrowDown,
         contentDescription = null,
         modifier = modifier.rotate(degrees = if (expanded) 180f else 0f),
     )

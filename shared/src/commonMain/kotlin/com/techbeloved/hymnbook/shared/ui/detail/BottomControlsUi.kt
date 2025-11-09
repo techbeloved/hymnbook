@@ -12,10 +12,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronLeft
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
-import androidx.compose.material.icons.twotone.ChevronLeft
-import androidx.compose.material.icons.twotone.ChevronRight
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FilledTonalIconButton
@@ -71,7 +71,7 @@ internal fun BottomControlsUi(
                 modifier = Modifier.size(56.dp),
             ) {
                 Icon(
-                    imageVector = Icons.TwoTone.ChevronLeft,
+                    imageVector = Icons.Filled.ChevronLeft,
                     contentDescription = stringResource(Res.string.content_description_previous),
                 )
             }
@@ -98,7 +98,7 @@ internal fun BottomControlsUi(
                 modifier = Modifier.size(56.dp),
             ) {
                 Icon(
-                    imageVector = Icons.TwoTone.ChevronRight,
+                    imageVector = Icons.Filled.ChevronRight,
                     contentDescription = stringResource(Res.string.content_description_next),
                 )
             }

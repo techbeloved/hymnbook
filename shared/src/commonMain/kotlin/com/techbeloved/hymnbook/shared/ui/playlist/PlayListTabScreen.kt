@@ -17,12 +17,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.twotone.PlaylistAdd
-import androidx.compose.material.icons.twotone.AddCircle
-import androidx.compose.material.icons.twotone.Delete
-import androidx.compose.material.icons.twotone.MoreVert
+import androidx.compose.material.icons.automirrored.filled.PlaylistAdd
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FabPosition
@@ -31,7 +32,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -121,7 +121,7 @@ private fun PlaylistsUi(
                 },
                 icon = {
                     Icon(
-                        imageVector = Icons.TwoTone.AddCircle,
+                        imageVector = Icons.Filled.Add,
                         contentDescription = "New Playlist"
                     )
                 },
@@ -230,7 +230,7 @@ private fun PlaylistsEmptyUi(
             modifier = Modifier.size(60.dp),
         ) {
             Icon(
-                imageVector = Icons.AutoMirrored.TwoTone.PlaylistAdd,
+                imageVector = Icons.AutoMirrored.Filled.PlaylistAdd,
                 contentDescription = "Add Playlist",
             )
         }
@@ -315,9 +315,9 @@ private fun PlaylistItemMoreMenu(
 
         IconButton(
             onClick = { },
-            modifier = Modifier.menuAnchor(type = MenuAnchorType.PrimaryNotEditable),
+            modifier = Modifier.menuAnchor(type = ExposedDropdownMenuAnchorType.PrimaryNotEditable),
         ) {
-            Icon(imageVector = Icons.TwoTone.MoreVert, contentDescription = "More options")
+            Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "More options")
         }
 
         ExposedDropdownMenu(
@@ -334,7 +334,7 @@ private fun PlaylistItemMoreMenu(
                 },
                 leadingIcon = {
                     Icon(
-                        imageVector = Icons.TwoTone.Delete,
+                        imageVector = Icons.Filled.Delete,
                         contentDescription = "Delete",
                     )
                 }

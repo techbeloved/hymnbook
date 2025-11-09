@@ -4,8 +4,9 @@ package com.techbeloved.hymnbook.shared.ui
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -66,18 +67,20 @@ internal fun AppTopBar(
     )
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun CenteredAppTopBar(
     modifier: Modifier = Modifier,
     title: String = "",
     titleContent: @Composable (() -> Unit)? = null,
+    subtitleContent: @Composable (() -> Unit)? = null,
     showUpButton: Boolean = true,
     scrollBehaviour: TopAppBarScrollBehavior? = null,
     containerColor: Color = MaterialTheme.colorScheme.surface,
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
     actions: @Composable (RowScope.() -> Unit) = {},
 ) {
-    CenterAlignedTopAppBar(
+    LargeFlexibleTopAppBar(
         title = if (titleContent != null) {
             titleContent
         } else {
@@ -89,6 +92,7 @@ internal fun CenteredAppTopBar(
                 )
             }
         },
+        subtitle = subtitleContent,
         navigationIcon = {
             if (showUpButton) {
                 val navigator = LocalNavController.current
