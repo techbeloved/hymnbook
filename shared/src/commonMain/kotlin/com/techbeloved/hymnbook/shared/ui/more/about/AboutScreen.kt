@@ -14,7 +14,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.twotone.Facebook
+import androidx.compose.material.icons.filled.Facebook
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
@@ -166,7 +166,7 @@ private fun SocialMediaSection(modifier: Modifier = Modifier) {
             }
         }
         OpenExternalUrlButton {
-            SocialMediaItem(title = "Facebook", imageVector = Icons.TwoTone.Facebook) {
+            SocialMediaItem(title = "Facebook", imageVector = Icons.Filled.Facebook) {
                 onClick("https://www.facebook.com/vowtv")
             }
         }

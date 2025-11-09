@@ -3,10 +3,10 @@
 package com.techbeloved.hymnbook.shared.ui.detail
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,13 +18,11 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.Search
-import androidx.compose.material.icons.twotone.Settings
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -34,6 +32,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -49,7 +48,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
@@ -60,6 +59,7 @@ import com.techbeloved.hymnbook.shared.generated.Res
 import com.techbeloved.hymnbook.shared.generated.content_description_search
 import com.techbeloved.hymnbook.shared.generated.content_description_show_more_controls
 import com.techbeloved.hymnbook.shared.generated.no_sheet_music_available
+import com.techbeloved.hymnbook.shared.generated.show_lyrics
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.model.SongFilter
 import com.techbeloved.hymnbook.shared.ui.CenteredAppTopBar
@@ -150,6 +150,9 @@ internal fun SongDetailScreen(
                     SongDetailUi(
                         state = uiDetail,
                         contentPadding = contentPadding,
+                        onShowLyrics = {
+                            pagerViewModel.onChangeSongDisplayMode(SongDisplayMode.Lyrics)
+                        },
                     )
                 },
                 onPageChanged = pagerViewModel::onPageSelected,
@@ -228,6 +231,7 @@ internal fun SongDetailScreen(
 private fun SongDetailUi(
     state: SongUiDetail,
     contentPadding: PaddingValues,
+    onShowLyrics: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (state.songDisplayMode == SongDisplayMode.SheetMusic) {
@@ -238,8 +242,19 @@ private fun SongDetailUi(
                     .padding(contentPadding),
             )
         } else {
-            Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(text = stringResource(Res.string.no_sheet_music_available))
+            Column(
+                modifier = modifier.fillMaxSize().padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(
+                    text = stringResource(Res.string.no_sheet_music_available),
+                    textAlign = TextAlign.Center,
+                )
+                Spacer(Modifier.height(16.dp))
+                TextButton(onClick = onShowLyrics) {
+                    Text(text = stringResource(Res.string.show_lyrics))
+                }
             }
         }
     } else {
@@ -292,7 +307,6 @@ private fun SongPager(
 ) {
     val hazeState = remember { HazeState() }
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    val bottomAppBarScrollBehavior = BottomAppBarDefaults.exitAlwaysScrollBehavior()
     val pagerState = rememberPagerState(state.initialPage, pageCount = { state.pages.size })
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(pagerState.settledPage) {
@@ -306,36 +320,30 @@ private fun SongPager(
                 containerColor = MaterialTheme.colorScheme.surface.copy(alpha = .5f),
                 modifier = Modifier.hazeEffect(hazeState, style = HazeMaterials.ultraThin()),
                 titleContent = {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
+                    val title = "${state.currentSongBookEntry?.songbook}"
+                    Text(
+                        text = title,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1,
                         modifier = Modifier,
-                    ) {
-                        Text(
-                            text = state.currentSongBookEntry?.songbook.orEmpty(),
-                            overflow = TextOverflow.MiddleEllipsis,
-                            fontWeight = FontWeight.SemiBold,
-                            maxLines = 1,
-                        )
-                        Spacer(Modifier.width(8.dp))
-                        Text(
-                            text = state.currentSongBookEntry?.entry.orEmpty(),
-                            maxLines = 1,
-                        )
-                    }
+                    )
+                },
+                subtitleContent = {
+                    Text(text = "Hymn, ${state.currentSongBookEntry?.entry}")
                 },
                 actions = {
                     Spacer(Modifier.width(8.dp))
                     IconButton(onClick = onOpenSearch, modifier = Modifier) {
                         Icon(
-                            imageVector = Icons.TwoTone.Search,
+                            imageVector = Icons.Filled.Search,
                             contentDescription = stringResource(Res.string.content_description_search),
                         )
                     }
-                    FilledTonalIconButton(
+                    IconButton(
                         onClick = onShowSettingsBottomSheet,
                     ) {
                         Icon(
-                            imageVector = Icons.TwoTone.Settings,
+                            imageVector = Icons.Filled.Settings,
                             contentDescription = stringResource(Res.string.content_description_show_more_controls),
                         )
                     }
@@ -369,7 +377,6 @@ private fun SongPager(
                 BottomAppBar(
                     containerColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = .8f),
                     modifier = Modifier.hazeEffect(hazeState, style = HazeMaterials.ultraThin()),
-                    scrollBehavior = bottomAppBarScrollBehavior,
                 ) {
                     BottomControlsUi(
                         audioItem = state.audioItem,
@@ -405,7 +412,6 @@ private fun SongPager(
                 key = { state.pages[it] },
                 modifier = modifier
                     .nestedScroll(scrollBehavior.nestedScrollConnection)
-                    .nestedScroll(bottomAppBarScrollBehavior.nestedScrollConnection)
                     .hazeSource(hazeState),
                 userScrollEnabled = state.currentDisplayMode != SongDisplayMode.SheetMusic,
             ) { page ->

@@ -15,7 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.twotone.PlaylistAdd
+import androidx.compose.material.icons.automirrored.filled.PlaylistAdd
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Lyrics
 import androidx.compose.material.icons.filled.MusicNote
@@ -397,7 +397,7 @@ private fun ActionsSection(
                 title = stringResource(Res.string.now_playing_add_to_playlist),
                 icon = {
                     Icon(
-                        imageVector = Icons.AutoMirrored.TwoTone.PlaylistAdd,
+                        imageVector = Icons.AutoMirrored.Filled.PlaylistAdd,
                         contentDescription = stringResource(Res.string.now_playing_add_to_playlist),
                     )
                 },

@@ -35,6 +35,7 @@
     <string name="content_description_show_more_controls">Show more controls</string>
     <string name="content_description_pause">Pause</string>
     <string name="content_description_play">Play</string>
+    <string name="show_lyrics">Show lyrics</string>
     <string name="content_description_media_not_available">Playable media not available</string>
     <string name="content_description_download_soundfont">Download sound font</string>
     <string name="no_sheet_music_available">No sheet music available for the current song!</string>

@@ -139,7 +139,8 @@ kotlin {
 
 compose.resources {
     packageOfResClass = "com.techbeloved.hymnbook.shared.generated"
-    generateResClass = always
+    generateResClass = auto
+    publicResClass = false
 }
 
 android {

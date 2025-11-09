@@ -19,7 +19,7 @@ internal data class SongPreferences(
         const val FONT_CHANGE_STEP = 1.15f
 
         val songDisplayModePrefKey = PreferenceKey(
-            inMemory = true,
+            inMemory = false,
             key = stringPreferencesKey("song.DisplayMode"),
             defaultValue = SongDisplayMode.Lyrics.name,
         )

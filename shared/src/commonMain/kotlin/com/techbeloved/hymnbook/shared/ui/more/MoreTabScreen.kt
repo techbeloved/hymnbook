@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.Info
-import androidx.compose.material.icons.twotone.Share
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
@@ -77,7 +77,7 @@ internal fun MoreTabScreen(
                             )
                         },
                         leadingContent = {
-                            Icon(imageVector = Icons.TwoTone.Share, contentDescription = null)
+                            Icon(imageVector = Icons.Filled.Share, contentDescription = null)
                         }
                     )
                 }
@@ -88,7 +88,7 @@ internal fun MoreTabScreen(
                         onAboutClick()
                     },
                     leadingContent = {
-                        Icon(imageVector = Icons.TwoTone.Info, contentDescription = null)
+                        Icon(imageVector = Icons.Filled.Info, contentDescription = null)
                     }
                 )
             }
