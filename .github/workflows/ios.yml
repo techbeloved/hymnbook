@@ -1,0 +1,95 @@
+name: iOS CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  release:
+    types: [ published ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    env:
+
+      HYMBOOK_GOOGLE_JSON: ${{ secrets.HYMBOOK_GOOGLE_JSON }}
+      WCCRM_HYMNS_JSON_URL: ${{ secrets.WCCRM_HYMN_CATALOG }}
+      HYMN_ASSET_TOKEN: ${{ secrets.HYMN_ASSET_TOKEN_CLASSIC }}
+      WCCRM_HYMNS_MANIFEST_JSON: ${{ secrets.SHARED_HYMNBOOK_MANIFEST }}
+      WCCRM_HYMNS_JSON: "wccrm_hymns_original.json"
+      WCCRM_TUNES_ASSET_DOWNLOAD_URL: ${{ secrets.WCCRM_TUNES_ASSET }}
+      WCCRM_SHEET_MUSIC_ASSET_DOWNLOAD_URL: ${{ secrets.WCCRM_CATALOG_ASSET }}
+      WCCRM_SHEET_MUSIC_ARCHIVE: "wccrm_hymns_v2.zip"
+      WCCRM_TUNES_ARCHIVE: "tunes_wccrm_midi_archive_hymns.zip"
+      INTERNAL_DOWNLOAD_URL: ""
+      COMPOSE_RESOURCES_DIR: "shared/src/commonMain/composeResources/files"
+      IS_RELEASE: ${{ github.event_name == 'release' }}
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Prepare Build Environment
+        run: |
+          echo "$HYMBOOK_GOOGLE_JSON" | base64 -d > androidApp/google-services.json
+
+          rm -rf $COMPOSE_RESOURCES_DIR/json/*.json
+          rm -rf $COMPOSE_RESOURCES_DIR/openlyrics/*.zip
+          rm -rf $COMPOSE_RESOURCES_DIR/sheets/*.zip
+          rm -rf $COMPOSE_RESOURCES_DIR/tunes/*.zip
+          rm -rf $COMPOSE_RESOURCES_DIR/manifest/*.json
+          mkdir -p $COMPOSE_RESOURCES_DIR/sheets
+          mkdir -p $COMPOSE_RESOURCES_DIR/manifest
+
+          echo "$WCCRM_HYMNS_MANIFEST_JSON" > $COMPOSE_RESOURCES_DIR/manifest/filesmanifest.json
+
+          echo "Downloading files..."
+          wget -q -O $COMPOSE_RESOURCES_DIR/json/"$WCCRM_HYMNS_JSON" $WCCRM_HYMNS_JSON_URL
+          wget -q -O $COMPOSE_RESOURCES_DIR/tunes/"$WCCRM_TUNES_ARCHIVE" $WCCRM_TUNES_ASSET_DOWNLOAD_URL
+          wget -q -O $COMPOSE_RESOURCES_DIR/sheets/"$WCCRM_SHEET_MUSIC_ARCHIVE" $WCCRM_SHEET_MUSIC_ASSET_DOWNLOAD_URL
+
+      - name: Select Xcode version
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '26.0.1'
+
+      - name: Resolve SPM dependencies
+        run: |
+          cd iosApp
+          xcodebuild -resolvePackageDependencies
+
+      - name: Build and Archive
+        env:
+          SCHEME: "hymnbook" # <-- UPDATE THIS
+          PROJECT: "iosApp/hymnbook.xcodeproj"
+          CONFIGURATION: "Release"
+          ARCHIVE_PATH: "./build/hymnbook.xcarchive"
+          EXPORT_PATH: "./build/export"
+          EXPORT_OPTIONS_PLIST: "iosApp/configs/ExportOptions.plist"
+        run: |
+          set -o pipefail &&
+            xcodebuild archive \
+              -project "$PROJECT" \
+              -scheme "$SCHEME" \
+              -configuration "$CONFIGURATION" \
+              -archivePath "$ARCHIVE_PATH" \
+              -allowProvisioningUpdates \
+              ENABLE_BITCODE=NO \
+              CODE_SIGN_STYLE="Automatic" \
+              | xcpretty
+          
+            xcodebuild -exportArchive \
+              -archivePath "$ARCHIVE_PATH" \
+              -exportPath "$EXPORT_PATH" \
+              -exportOptionsPlist "$EXPORT_OPTIONS_PLIST" \
+              | xcpretty
