@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
+        window.setNavigationBarContrastEnforced(false)
         super.onCreate(savedInstanceState)
         analytics
 
