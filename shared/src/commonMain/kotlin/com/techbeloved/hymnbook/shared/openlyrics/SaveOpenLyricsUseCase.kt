@@ -11,8 +11,8 @@ import com.techbeloved.hymnbook.shared.model.ext.OpenLyricsSong
 import com.techbeloved.hymnbook.shared.model.ext.toLyric
 import com.techbeloved.hymnbook.shared.time.InstantProvider
 import kotlinx.coroutines.withContext
-import kotlin.time.Instant
 import me.tatarka.inject.annotations.Inject
+import kotlin.time.Instant
 
 internal class SaveOpenLyricsUseCase @Inject constructor(
     private val database: Database,
@@ -62,14 +62,24 @@ internal class SaveOpenLyricsUseCase @Inject constructor(
             // Authors
             val authorSongs = song.properties.authors?.map { author ->
                 database.authorEntityQueries.insert(author.value, null, null, null)
-                AuthorSongs(author.value, songId, author.type, author.comment)
+                val yearInComment = author.comment?.let {
+                    Regex("""\d{4}""").find(it)?.value?.toLong()
+                }
+                AuthorSongs(
+                    author = author.value,
+                    song_id = songId,
+                    author_type = author.type,
+                    comment = author.comment,
+                    year = yearInComment,
+                )
             }
             authorSongs?.forEach { authorSong ->
                 database.authorSongsQueries.insert(
-                    authorSong.author,
-                    authorSong.song_id,
-                    authorSong.author_type,
-                    authorSong.comment,
+                    author = authorSong.author,
+                    song_id = authorSong.song_id,
+                    author_type = authorSong.author_type,
+                    comment = authorSong.comment,
+                    year = authorSong.year,
                 )
             }
         }

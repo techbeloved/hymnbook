@@ -55,6 +55,7 @@ import androidx.compose.ui.unit.em
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.techbeloved.hymnbook.shared.config.defaultAppConfig
 import com.techbeloved.hymnbook.shared.generated.Res
 import com.techbeloved.hymnbook.shared.generated.content_description_search
 import com.techbeloved.hymnbook.shared.generated.content_description_show_more_controls
@@ -62,6 +63,7 @@ import com.techbeloved.hymnbook.shared.generated.no_sheet_music_available
 import com.techbeloved.hymnbook.shared.generated.show_lyrics
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.model.SongFilter
+import com.techbeloved.hymnbook.shared.songs.CopyrightStatus
 import com.techbeloved.hymnbook.shared.ui.CenteredAppTopBar
 import com.techbeloved.hymnbook.shared.ui.settings.NowPlayingSettingsBottomSheet
 import com.techbeloved.hymnbook.shared.ui.share.NativeShareButton
@@ -234,59 +236,86 @@ private fun SongDetailUi(
     onShowLyrics: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    if (state.songDisplayMode == SongDisplayMode.SheetMusic) {
-        if (state.sheetMusic != null) {
-            SheetMusicUi(
-                sheetMusicItem = state.sheetMusic,
+    when {
+        shouldEnforceCopyright(state.content?.copyright) -> {
+            CopyrightSongNotAvailableUi(
                 modifier = modifier.fillMaxSize()
                     .padding(contentPadding),
             )
-        } else {
-            Column(
-                modifier = modifier.fillMaxSize().padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Text(
-                    text = stringResource(Res.string.no_sheet_music_available),
-                    textAlign = TextAlign.Center,
+        }
+
+        state.songDisplayMode == SongDisplayMode.SheetMusic -> {
+            if (state.sheetMusic != null) {
+                SheetMusicUi(
+                    sheetMusicItem = state.sheetMusic,
+                    modifier = modifier.fillMaxSize()
+                        .padding(contentPadding),
                 )
-                Spacer(Modifier.height(16.dp))
-                TextButton(onClick = onShowLyrics) {
-                    Text(text = stringResource(Res.string.show_lyrics))
-                }
+            } else {
+                SheetMusicNotAvailable(
+                    modifier = modifier.fillMaxSize().padding(16.dp),
+                    onShowLyrics = onShowLyrics,
+                )
             }
         }
-    } else {
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(
-                    top = contentPadding.calculateTopPadding(),
-                    bottom = contentPadding.calculateBottomPadding(),
-                ),
-        ) {
-            if (state.content != null) {
 
-                // All these to calculate the line height based on the font size
-                val textStyle = MaterialTheme.typography.bodyLarge
-                val defaultFontSize = textStyle.fontSize
-                val fontSize = defaultFontSize * state.fontSizeMultiplier
-                CompositionLocalProvider(
-                    LocalContentColor provides MaterialTheme.colorScheme.onSurface,
-                    LocalTextStyle provides textStyle.merge(
-                        fontSize = fontSize,
-                        lineHeight = LineHeightMultiplier.em,
-                    )
-                ) {
+        else -> LyricsUi(
+            modifier = modifier.padding(contentPadding),
+            state = state,
+        )
+    }
+}
 
-                    Text(
-                        text = state.content.toUiDetail(fontSize),
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(horizontal = 16.dp),
-                    )
-                }
+@Composable
+private fun SheetMusicNotAvailable(
+    onShowLyrics: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(
+            text = stringResource(Res.string.no_sheet_music_available),
+            textAlign = TextAlign.Center,
+        )
+        Spacer(Modifier.height(16.dp))
+        TextButton(onClick = onShowLyrics) {
+            Text(text = stringResource(Res.string.show_lyrics))
+        }
+    }
+}
+
+@Composable
+private fun LyricsUi(
+    state: SongUiDetail,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
+    ) {
+        if (state.content != null) {
+
+            // All these to calculate the line height based on the font size
+            val textStyle = MaterialTheme.typography.bodyLarge
+            val defaultFontSize = textStyle.fontSize
+            val fontSize = defaultFontSize * state.fontSizeMultiplier
+            CompositionLocalProvider(
+                LocalContentColor provides MaterialTheme.colorScheme.onSurface,
+                LocalTextStyle provides textStyle.merge(
+                    fontSize = fontSize,
+                    lineHeight = LineHeightMultiplier.em,
+                )
+            ) {
+
+                Text(
+                    text = state.content.toUiDetail(fontSize),
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                )
             }
         }
     }
@@ -420,3 +449,9 @@ private fun SongPager(
         }
     }
 }
+
+private fun shouldEnforceCopyright(
+    copyright: String?,
+): Boolean = (!copyright.isNullOrBlank()
+        && !CopyrightStatus.PUBLIC_DOMAIN.contentEquals(copyright, ignoreCase = true)
+        && defaultAppConfig.enforceCopyrightRestriction)

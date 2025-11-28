@@ -160,10 +160,12 @@ private fun DownloadButton(
     Surface(
         onClick = onClick,
         modifier = modifier,
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        shape = MaterialTheme.shapes.small,
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(4.dp),
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(

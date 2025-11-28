@@ -30,6 +30,12 @@ internal data class JsonSongAttribution(
     val musicBy: String?,
     @SerialName("lyrics_by")
     val lyricsBy: String?,
+    @SerialName("author")
+    val author: String?,
+    @SerialName("date")
+    val date: String?,
+    @SerialName("copyright")
+    val copyright: String?,
 )
 
 @Serializable

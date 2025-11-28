@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Lyrics
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.SettingsInputComponent
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroupDefaults
@@ -28,6 +29,7 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
@@ -60,6 +62,8 @@ import com.techbeloved.hymnbook.shared.generated.now_playing_settings_speed_up
 import com.techbeloved.hymnbook.shared.generated.now_playing_settings_zoom_in
 import com.techbeloved.hymnbook.shared.generated.now_playing_settings_zoom_out
 import com.techbeloved.hymnbook.shared.generated.now_playing_share_action
+import com.techbeloved.hymnbook.shared.generated.now_playing_soundfont
+import com.techbeloved.hymnbook.shared.generated.now_playing_soundfont_description
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.preferences.SongPreferences
 import kotlinx.coroutines.launch
@@ -355,6 +359,7 @@ private fun AudioControlsSection(
                     )
                     HorizontalDivider()
                 }
+
                 MusicSpeedControls(
                     currentSpeed = playbackSpeed,
                     onSpeedUp = onSpeedUp,
@@ -362,6 +367,25 @@ private fun AudioControlsSection(
                     modifier = Modifier.fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 16.dp),
                 )
+                if (isSoundfontSupported) {
+                    HorizontalDivider()
+                    SettingsControl(
+                        text = stringResource(Res.string.now_playing_soundfont),
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 16.dp),
+                    ) {
+                        IconButton(
+                            onClick = onSoundfonts,
+                        ) {
+                            Row {
+                                Icon(
+                                    imageVector = Icons.Default.SettingsInputComponent,
+                                    contentDescription = stringResource(Res.string.now_playing_soundfont_description),
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -447,7 +471,8 @@ private fun SettingsControl(
         Text(text = text, modifier = Modifier.weight(weight = 1f))
 
         Box(
-            Modifier.weight(weight = 1f),
+            modifier = Modifier.weight(weight = 1f),
+            contentAlignment = Alignment.CenterEnd,
         ) {
             controls()
         }

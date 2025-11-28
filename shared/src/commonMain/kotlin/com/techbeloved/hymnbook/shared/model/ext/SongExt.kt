@@ -15,8 +15,8 @@ internal fun SongDetail.songbookEntries() =
 
 internal fun SongDetail.authors(): List<SongAuthor> = authors?.let { authorEntry ->
     authorEntry.split("::").map {
-        val (name, type, comment) = it.split("||")
-        SongAuthor(name, type, comment)
+        val (name, year, type, comment) = it.split("||")
+        SongAuthor(name = name, type = type, comment = comment, year = year.toIntOrNull() ?: 0)
     }
 } ?: emptyList()
 
@@ -47,7 +47,7 @@ internal fun SongDetail.lyricsByVerseOrder(): List<Lyric> {
 internal fun SongDetail.lyricsCompact(): List<Lyric> = buildList {
     val lyricsByType = lyrics.groupBy { it.type }
     lyricsByType[Lyric.Type.Intro]?.forEach { add(it) }
-    lyricsByType[Lyric.Type.Verse]?.sortedBy { it.label }?. forEachIndexed { index, lyric ->
+    lyricsByType[Lyric.Type.Verse]?.sortedBy { it.label }?.forEachIndexed { index, lyric ->
         add(lyric)
         if (index == 0) {
             lyricsByType[Lyric.Type.PreChorus]?.forEach { add(it) }

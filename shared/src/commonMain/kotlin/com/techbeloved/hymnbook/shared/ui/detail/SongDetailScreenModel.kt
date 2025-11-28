@@ -67,6 +67,7 @@ internal class SongDetailScreenModel @Inject constructor(
                 },
                 songbookEntries = songDetail.songbookEntries(),
                 topics = songDetail.topics(),
+                copyright = songDetail.copyright,
             ),
             songDisplayMode = prefs.songDisplayMode,
             fontSizeMultiplier = prefs.fontSize,
