@@ -23,7 +23,7 @@ CREATE INDEX IF NOT EXISTS Song_title ON SongEntity(title);
 CREATE VIEW IF NOT EXISTS SongDetail AS
 SELECT s.id, s.title, s.alternate_title, s.lyrics, s.verse_order, s.copyright,
     GROUP_CONCAT(b.songbook || '||' || b.entry, '::') AS songbookEntries,
-    GROUP_CONCAT(a.author || '||' || a.author_type || '||' || a.comment, '::') AS authors,
+    GROUP_CONCAT(a.author || '||' || a.year || '||' || a.author_type || '||' || a.comment, '::') AS authors,
     GROUP_CONCAT(t.topic, '::') AS topics
 FROM SongEntity AS s
 LEFT JOIN SongbookSongs AS b ON b.song_id=s.id

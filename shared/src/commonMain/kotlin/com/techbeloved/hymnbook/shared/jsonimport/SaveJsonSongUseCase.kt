@@ -1,5 +1,6 @@
 package com.techbeloved.hymnbook.shared.jsonimport
 
+import com.techbeloved.hymnbook.AuthorSongs
 import com.techbeloved.hymnbook.Database
 import com.techbeloved.hymnbook.SongbookSongs
 import com.techbeloved.hymnbook.TopicSongs
@@ -10,8 +11,8 @@ import com.techbeloved.hymnbook.shared.model.jsonimport.JsonSongbook
 import com.techbeloved.hymnbook.shared.model.jsonimport.JsonSongbookMetadata
 import com.techbeloved.hymnbook.shared.time.InstantProvider
 import kotlinx.coroutines.withContext
-import kotlin.time.Instant
 import me.tatarka.inject.annotations.Inject
+import kotlin.time.Instant
 
 internal class SaveJsonSongUseCase @Inject constructor(
     private val database: Database,
@@ -59,9 +60,44 @@ internal class SaveJsonSongUseCase @Inject constructor(
                     song_id = topicSong.song_id,
                 )
                 // Authors
-                // Figure out how to deal with authors. Currently we only have credits, music by, and lyrics by.
-                // Which are more of comments or history.
+                saveAuthors(songId = songId, song = song)
             }
+        }
+    }
+
+    private fun saveAuthors(
+        songId: Long,
+        song: JsonSongLyric,
+    ) {
+        val authorSongs = song.attribution?.author?.let { author ->
+            database.authorEntityQueries.insert(author, null, null, null)
+            val comments = buildString {
+                if (!song.attribution.lyricsBy.isNullOrBlank()) {
+                    appendLine("Lyrics by: ${song.attribution.lyricsBy}")
+                }
+                if (!song.attribution.musicBy.isNullOrBlank()) {
+                    appendLine("Music by: ${song.attribution.musicBy}")
+                }
+                if (!song.attribution.credits.isNullOrBlank()) {
+                    appendLine("Credits: ${song.attribution.credits}")
+                }
+            }
+            AuthorSongs(
+                author = author,
+                song_id = songId,
+                author_type = "Lyrics",
+                comment = comments,
+                year = song.attribution.date?.toLongOrNull(),
+            )
+        }
+        authorSongs?.let { authorSong ->
+            database.authorSongsQueries.insert(
+                author = authorSong.author,
+                song_id = authorSong.song_id,
+                author_type = authorSong.author_type,
+                comment = authorSong.comment,
+                year = authorSong.year,
+            )
         }
     }
 
@@ -82,7 +118,7 @@ internal class SaveJsonSongUseCase @Inject constructor(
                 lyrics = lyrics,
                 verse_order = null,
                 comments = null,
-                copyright = null,
+                copyright = song.attribution?.copyright,
                 search_title = song.title,
                 search_lyrics = lyrics.joinToString(separator = " ") { it.content },
                 search_songbook = "${song.number}",
@@ -97,7 +133,7 @@ internal class SaveJsonSongUseCase @Inject constructor(
                 lyrics = lyrics,
                 verse_order = null,
                 comments = null,
-                copyright = null,
+                copyright = song.attribution?.copyright,
                 search_title = song.title,
                 search_lyrics = lyrics.joinToString(separator = " ") { it.content },
                 search_songbook = "${song.number}",

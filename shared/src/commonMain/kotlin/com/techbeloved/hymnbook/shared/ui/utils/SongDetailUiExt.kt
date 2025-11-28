@@ -45,8 +45,14 @@ internal fun SongData.toUiDetail(fontSize: TextUnit): AnnotatedString {
         appendLine(title.trim())
 
         authors.firstOrNull()?.let { author ->
-            pushStyle(SpanStyle(fontStyle = FontStyle.Normal, fontWeight = FontWeight.Light, fontSize = fontSize * .75f))
-            appendLine(author.name)
+            pushStyle(
+                SpanStyle(
+                    fontStyle = FontStyle.Normal,
+                    fontWeight = FontWeight.Light,
+                    fontSize = fontSize * .75f
+                )
+            )
+            appendLine("${author.name}, ${author.year}")
             pop()
         }
         pop() // bold title
@@ -91,6 +97,18 @@ internal fun SongData.toUiDetail(fontSize: TextUnit): AnnotatedString {
             }
         }
         appendLine()
+        if (!copyright.isNullOrBlank() && copyright.equals("public domain", ignoreCase = true)) {
+            pushStyle(
+                SpanStyle(
+                    fontStyle = FontStyle.Normal,
+                    fontWeight = FontWeight.Light,
+                    fontSize = fontSize * .75f,
+                )
+            )
+            appendLine(copyright)
+            pop()
+            appendLine()
+        }
     }
     return content
 }

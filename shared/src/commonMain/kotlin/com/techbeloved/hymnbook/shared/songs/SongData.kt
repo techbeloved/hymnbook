@@ -8,6 +8,7 @@ internal data class SongData(
     val title: String,
     val alternativeTitles: List<String>,
     val lyrics: List<Lyric>,
+    val copyright: String?,
     val topics: List<String>,
     val authors: List<SongAuthor>,
     val songbookEntries: Set<SongBookEntry>,

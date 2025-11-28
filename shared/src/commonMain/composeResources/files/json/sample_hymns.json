@@ -113,7 +113,10 @@
       "attribution": {
         "credits": null,
         "music_by": "Azmon Carl G. Gläser, 1828; arranged by Lowell Mason, Modern Psalmist, 1839 .",
-        "lyrics_by": "Charles Wesley, 1739. Wesley wrote this hymn to commemorate the first anniversary of his conversion to Christ. He notes in his Journal:"
+        "lyrics_by": "Charles Wesley, 1739. Wesley wrote this hymn to commemorate the first anniversary of his conversion to Christ. He notes in his Journal:",
+        "author": "Charles Wesley",
+        "date": "1739",
+        "copyright": "Public Domain"
       },
       "topic": 1,
       "first": "O for a thousand tongues to sing\nMy great Redeemer's praise,\nThe glories of my God and king,\nThe triumphs of His grace!"
@@ -133,7 +136,10 @@
       "attribution": {
         "credits": null,
         "music_by": "Lobe den Herren Ander Theil des Erneuerten Gesangbuch, second edition (Bremen, Germany: 1665); harmony by William S. Bennett, 1864 .",
-        "lyrics_by": "Joachim Neander, in A und Ω Glaub- und Liebesübung (Stralsund: 1680) (Lobe den Herren); translated from German to English by Catherine Winkworth, 1863."
+        "lyrics_by": "Joachim Neander, in A und Ω Glaub- und Liebesübung (Stralsund: 1680) (Lobe den Herren); translated from German to English by Catherine Winkworth, 1863.",
+        "author": "Joachim Neander; Catherine Winkworth",
+        "copyright": "Public Domain",
+        "date": "1680"
       },
       "topic": 1,
       "first": "Praise to the Lord, the Almighty, the king of creation!\nO my soul, praise Him, for He is thy health and salvation!\nAll ye who hear, now to His temple draw near;\nPraise Him in glad adoration."
@@ -151,10 +157,35 @@
       "attribution": {
         "credits": null,
         "music_by": "W. Howard Doane .",
-        "lyrics_by": "Fanny Crosby, in Brightest and Best, by W. H. Doane & Robert Lowry (Chicago, Illinois: Biglow & Main, 1875), number 118."
+        "lyrics_by": "Fanny Crosby, in Brightest and Best, by W. H. Doane & Robert Lowry (Chicago, Illinois: Biglow & Main, 1875), number 118.",
+        "author": "Fanny Crosby",
+        "date": "1875",
+        "copyright": "Public Domain"
       },
       "topic": 1,
       "first": "To God be the glory, great things He has done;\nSo loved He the world that He gave us His Son,\nWho yielded His life an atonement for sin,\nAnd opened the life gate that all may go in."
+    },
+    {
+      "title": "Great is our God",
+      "num": 4,
+      "verses": [
+        "Oh praise the Lord, the Lord \nFor He is good\nHis judgments just, His mercy \nDoth endure\nFrom Zion's hill praise ye\nThe Lord of Heaven,\nPraise in the heights and\nAll ye stars of light.",
+        "He knows our ways,\nThe starry host He numbered\nTheir paths He laid, He calleth \nThem by name:\nHe lifted up and helps \nThe meek and lowly\nAnd casteth down, the wicked \nIn their ways.",
+        "When I look up into the\nHeaven's splendour\nThe starry host, as far as\nEye doth see\nI see His face in all of\nHeaven's glory\nAnd feel the tug, His gentle\nHand on me.",
+        "When I survey the wondrous\nWork at Calvary,\nMy heart and soul as yet\nCan't understand\nFor what is man that Thou\nDidst visit him\nDid glory crown, set o'er\nThe works His hands."
+      ],
+      "chorus": "Kings of the earth, yes\nJudges great and small,\nGreat is our God,\nGreat is our God,\nYe mountains, hills, \nYe stormy winds that call,\nGreat is our God, \nGreat is our God.",
+      "id": "hymn_4",
+      "attribution": {
+        "credits": null,
+        "music_by": null,
+        "lyrics_by": null,
+        "author": "Alton H. Howard",
+        "date": "1972",
+        "copyright": "Copyrighted"
+      },
+      "topic": 1,
+      "first": "Oh praise the Lord, the Lord \nFor He is good\nHis judgments just, His mercy \nDoth endure\nFrom Zion's hill praise ye\nThe Lord of Heaven\nPraise in the heights and\nAll ye stars of light"
     },
     {
       "title": "A mighty fortress",
@@ -170,7 +201,10 @@
       "attribution": {
         "credits": null,
         "music_by": "Johann S. Bach (PHH 7)",
-        "lyrics_by": "Martin Luther. born at Eisleben, Nov. 10, 1483; entered the University of Erfurt, 1501 (B.A. 1502, M.A.. 1503); became an Augustinian monk, 1505; ordained priest, 1507; appointed Professor at the University of Wittenberg, 1508, and in 1512 D.D.; published his 95 Theses, 1517; and burnt the Papal Bull which had condemned them, 1520; attended the Diet of Worms, 1521; translated the Bible into German, 1521-34; and died at Eisleben, Feb. 18, 1546. The details of his life and of his work as a reformer are accessible to English readers in a great variety of forms. Luther had a huge influence on German hymnody.\n\nLuther wrote this text sometime between 1527 and 1529 as a paraphrase of Psalm 46, though stanza four comes directly from Luther’s own persecution experience. The most commonly used English version is a translation by Frederick H. Hedge in 1853. The text is full of battle imagery; this, coupled with the historic use of the hymn in actual battles, can be troubling for Christians who struggle with making sense of warfare. There is a case for arguing that we need to see this hymn in light of the history in which it was written, when Christians were fighting to defend their faith. However, this text also needs to be understood in terms of a spiritual struggle against the powers of darkness. Whether we believe in very real, physical demons and tempters, or less concrete forces, we are in the midst of a very real war between good and evil. That sounds very dramatic and almost cliché, but it is important to remember. Luther reminds us that we can’t simply sit back and watch as horrible things unfold in our world, but that we must join the battle, knowing that God is on our side, and that we fight for a side that has, in a sense, already won."
+        "lyrics_by": "Martin Luther. born at Eisleben, Nov. 10, 1483; entered the University of Erfurt, 1501 (B.A. 1502, M.A.. 1503); became an Augustinian monk, 1505; ordained priest, 1507; appointed Professor at the University of Wittenberg, 1508, and in 1512 D.D.; published his 95 Theses, 1517; and burnt the Papal Bull which had condemned them, 1520; attended the Diet of Worms, 1521; translated the Bible into German, 1521-34; and died at Eisleben, Feb. 18, 1546. The details of his life and of his work as a reformer are accessible to English readers in a great variety of forms. Luther had a huge influence on German hymnody.\n\nLuther wrote this text sometime between 1527 and 1529 as a paraphrase of Psalm 46, though stanza four comes directly from Luther’s own persecution experience. The most commonly used English version is a translation by Frederick H. Hedge in 1853. The text is full of battle imagery; this, coupled with the historic use of the hymn in actual battles, can be troubling for Christians who struggle with making sense of warfare. There is a case for arguing that we need to see this hymn in light of the history in which it was written, when Christians were fighting to defend their faith. However, this text also needs to be understood in terms of a spiritual struggle against the powers of darkness. Whether we believe in very real, physical demons and tempters, or less concrete forces, we are in the midst of a very real war between good and evil. That sounds very dramatic and almost cliché, but it is important to remember. Luther reminds us that we can’t simply sit back and watch as horrible things unfold in our world, but that we must join the battle, knowing that God is on our side, and that we fight for a side that has, in a sense, already won.",
+        "author": "Martin Luther. born at Eisleben",
+        "date": "1501",
+        "copyright": "Public Domain"
       },
       "topic": 1,
       "first": "A mighty fortress is our God,\nA bulwark never failing;\nOur helper he, amid the flood\nOf mortal ills prevailing.\nFor still our ancient foe\nDoes seek to work us woe;\nHis craft and power are great,\nAnd armed with cruel hate,\nOn earth is not his equal."
