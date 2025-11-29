@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.GppMaybe
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -21,11 +22,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.techbeloved.hymnbook.shared.generated.Res
 import com.techbeloved.hymnbook.shared.generated.content_unavailable
+import com.techbeloved.hymnbook.shared.generated.content_unavailable_button_text
 import com.techbeloved.hymnbook.shared.generated.content_unavailable_explanation
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun CopyrightSongNotAvailableUi(
+    onOnlineSearchButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -58,5 +61,9 @@ internal fun CopyrightSongNotAvailableUi(
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 16.dp),
         )
+        Spacer(Modifier.height(24.dp))
+        Button(onClick =  onOnlineSearchButtonClick) {
+            Text(text = stringResource(Res.string.content_unavailable_button_text))
+        }
     }
 }
