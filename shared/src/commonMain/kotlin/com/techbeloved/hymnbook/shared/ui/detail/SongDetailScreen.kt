@@ -48,6 +48,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -64,6 +65,7 @@ import com.techbeloved.hymnbook.shared.generated.show_lyrics
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.model.SongFilter
 import com.techbeloved.hymnbook.shared.songs.CopyrightStatus
+import com.techbeloved.hymnbook.shared.songs.SongData
 import com.techbeloved.hymnbook.shared.ui.CenteredAppTopBar
 import com.techbeloved.hymnbook.shared.ui.settings.NowPlayingSettingsBottomSheet
 import com.techbeloved.hymnbook.shared.ui.share.NativeShareButton
@@ -78,6 +80,7 @@ import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
+import io.ktor.http.URLBuilder
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
@@ -236,11 +239,17 @@ private fun SongDetailUi(
     onShowLyrics: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val uriHandler = LocalUriHandler.current
     when {
         shouldEnforceCopyright(state.content?.copyright) -> {
             CopyrightSongNotAvailableUi(
                 modifier = modifier.fillMaxSize()
                     .padding(contentPadding),
+                onOnlineSearchButtonClick = {
+                   state.content?.let { getSongGoogleSearchUrl(it) }?.let { uri ->
+                       uriHandler.openUri(uri)
+                   }
+                },
             )
         }
 
@@ -455,3 +464,18 @@ private fun shouldEnforceCopyright(
 ): Boolean = (!copyright.isNullOrBlank()
         && !CopyrightStatus.PUBLIC_DOMAIN.contentEquals(copyright, ignoreCase = true)
         && defaultAppConfig.enforceCopyrightRestriction)
+
+private fun getSongGoogleSearchUrl(songData: SongData): String? {
+    val title = songData.title
+    val firstLine = songData.lyrics.firstOrNull()
+        ?.content?.substringBefore("\n")
+    return if (firstLine != null) {
+        val searchQuery = "$title $firstLine hymn lyrics"
+        URLBuilder("https://www.google.com/search")
+            .apply {
+                parameters.append("q", searchQuery)
+            }.buildString()
+    } else {
+        null
+    }
+}
