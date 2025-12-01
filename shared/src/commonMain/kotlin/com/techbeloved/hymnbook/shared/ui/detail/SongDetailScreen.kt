@@ -240,35 +240,37 @@ private fun SongDetailUi(
     modifier: Modifier = Modifier,
 ) {
     val uriHandler = LocalUriHandler.current
-    when {
-        shouldEnforceCopyright(state.content?.copyright) -> {
-            CopyrightSongNotAvailableUi(
-                modifier = modifier.fillMaxSize()
-                    .padding(contentPadding),
-                onOnlineSearchButtonClick = {
-                   state.content?.let { getSongGoogleSearchUrl(it) }?.let { uri ->
-                       uriHandler.openUri(uri)
-                   }
-                },
-            )
-        }
+    if (state.songDisplayMode == SongDisplayMode.SheetMusic) {
+        when {
+            shouldEnforceCopyright(state.content?.copyright) -> {
+                CopyrightSongNotAvailableUi(
+                    modifier = modifier.fillMaxSize()
+                        .padding(contentPadding),
+                    onOnlineSearchButtonClick = {
+                        state.content?.let { getSongGoogleSearchUrl(it) }?.let { uri ->
+                            uriHandler.openUri(uri)
+                        }
+                    },
+                )
+            }
 
-        state.songDisplayMode == SongDisplayMode.SheetMusic -> {
-            if (state.sheetMusic != null) {
+            state.sheetMusic != null -> {
                 SheetMusicUi(
                     sheetMusicItem = state.sheetMusic,
                     modifier = modifier.fillMaxSize()
                         .padding(contentPadding),
                 )
-            } else {
+            }
+
+            else -> {
                 SheetMusicNotAvailable(
                     modifier = modifier.fillMaxSize().padding(16.dp),
                     onShowLyrics = onShowLyrics,
                 )
             }
         }
-
-        else -> LyricsUi(
+    } else {
+        LyricsUi(
             modifier = modifier.padding(contentPadding),
             state = state,
         )
@@ -470,7 +472,7 @@ private fun getSongGoogleSearchUrl(songData: SongData): String? {
     val firstLine = songData.lyrics.firstOrNull()
         ?.content?.substringBefore("\n")
     return if (firstLine != null) {
-        val searchQuery = "$title $firstLine hymn lyrics"
+        val searchQuery = "$title $firstLine hymn sheet music"
         URLBuilder("https://www.google.com/search")
             .apply {
                 parameters.append("q", searchQuery)
