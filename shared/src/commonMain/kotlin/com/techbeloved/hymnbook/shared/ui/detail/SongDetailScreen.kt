@@ -176,9 +176,6 @@ internal fun SongDetailScreen(
                 is DetailBottomSheetState.Show -> {
                     NativeShareButton {
                         NowPlayingSettingsBottomSheet(
-                            onShareSongClick = {
-                                onClick(state.shareAppData)
-                            },
                             onDismiss = pagerViewModel::onHideSettings,
                             onSpeedUp = {
                                 playbackController?.changePlaybackSpeed(
@@ -212,6 +209,11 @@ internal fun SongDetailScreen(
                             isLoopingSupported = playbackController?.isLoopingSupported == true,
                             preferences = state.preferences,
                             playbackSpeed = playbackState.playbackSpeed,
+                            onShareSongClick = {
+                                onClick(state.shareAppData)
+                            },
+                            darkModePreference = state.darkModePreference,
+                            onToggleDarkMode = pagerViewModel::onToggleDarkMode,
                         )
                     }
                 }
@@ -360,16 +362,15 @@ private fun SongPager(
                 containerColor = MaterialTheme.colorScheme.surface.copy(alpha = .5f),
                 modifier = Modifier.hazeEffect(hazeState, style = HazeMaterials.ultraThin()),
                 titleContent = {
-                    val title = "${state.currentSongBookEntry?.songbook}"
                     Text(
-                        text = title,
+                        text = "Hymn, ${state.currentSongBookEntry?.entry}",
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
                         modifier = Modifier,
                     )
                 },
                 subtitleContent = {
-                    Text(text = "Hymn, ${state.currentSongBookEntry?.entry}")
+                    Text(text = "${state.currentSongBookEntry?.songbook}")
                 },
                 actions = {
                     Spacer(Modifier.width(8.dp))

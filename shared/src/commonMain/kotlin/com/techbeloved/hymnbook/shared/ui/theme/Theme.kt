@@ -8,8 +8,7 @@ import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
-import androidx.compose.ui.graphics.Color
+import com.techbeloved.hymnbook.shared.settings.DarkModePreference
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -239,27 +238,17 @@ private val highContrastDarkColorScheme = darkColorScheme(
     surfaceContainerHighest = surfaceContainerHighestDarkHighContrast,
 )
 
-@Immutable
-internal data class ColorFamily(
-    val color: Color,
-    val onColor: Color,
-    val colorContainer: Color,
-    val onColorContainer: Color,
-)
-
-internal val unspecified_scheme = ColorFamily(
-    Color.Unspecified,
-    Color.Unspecified,
-    Color.Unspecified,
-    Color.Unspecified
-)
-
 @Composable
 internal fun AppTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkMode: DarkModePreference = DarkModePreference.System,
     content: @Composable () -> Unit,
 ) {
     val contrastMode = platformContrastMode()
+    val darkTheme = when (darkMode) {
+        DarkModePreference.Light -> false
+        DarkModePreference.Dark -> true
+        DarkModePreference.System -> isSystemInDarkTheme()
+    }
     val colorScheme = when (contrastMode) {
         ContrastMode.Default -> if (darkTheme) darkScheme else lightScheme
         ContrastMode.Medium -> if (darkTheme) mediumContrastDarkColorScheme else mediumContrastLightColorScheme

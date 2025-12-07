@@ -15,7 +15,7 @@ internal fun SongDetail.songbookEntries() =
 
 internal fun SongDetail.authors(): List<SongAuthor> = authors?.let { authorEntry ->
     authorEntry.split("::").map {
-        val (name, year, type, comment) = it.split("||")
+        val (name, year, type, comment) = it.split("||") + listOf("", "", "", "") // Pad with empty strings
         SongAuthor(name = name, type = type, comment = comment, year = year.toIntOrNull() ?: 0)
     }
 } ?: emptyList()

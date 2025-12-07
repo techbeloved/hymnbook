@@ -57,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.techbeloved.hymnbook.shared.model.playlist.PlaylistItem
+import com.techbeloved.hymnbook.shared.settings.DarkModePreference
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
 import com.techbeloved.hymnbook.shared.ui.dialog.AppDialog
 import com.techbeloved.hymnbook.shared.ui.theme.AppTheme
@@ -209,7 +210,7 @@ private fun PlaylistsUiPreviewDark() {
     )
     val state =
         PlaylistsUiState(playlists = persistentListOf(item1, item2))
-    AppTheme(darkTheme = true) {
+    AppTheme(darkMode = DarkModePreference.Dark) {
         PlaylistsUi(state = state, onAddPlaylistClick = { }, onDelete = {}, onItemClick = {})
     }
 }
