@@ -14,8 +14,11 @@ import com.techbeloved.hymnbook.shared.media.GetAvailableMediaForSongUseCase
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.preferences.ChangeFontSizeUseCase
 import com.techbeloved.hymnbook.shared.preferences.ChangePreferenceUseCase
+import com.techbeloved.hymnbook.shared.preferences.GetPreferenceFlowUseCase
 import com.techbeloved.hymnbook.shared.preferences.GetSongPreferenceFlowUseCase
 import com.techbeloved.hymnbook.shared.preferences.SongPreferences
+import com.techbeloved.hymnbook.shared.settings.DarkModePreference
+import com.techbeloved.hymnbook.shared.settings.DarkModePreferenceKey
 import com.techbeloved.hymnbook.shared.sheetmusic.GetAvailableSheetMusicForSongUseCase
 import com.techbeloved.hymnbook.shared.songbooks.GetSongbookEntriesForSongUseCase
 import com.techbeloved.hymnbook.shared.songs.GetSongIdsByFilterUseCase
@@ -47,23 +50,23 @@ internal class SongDetailPagerModel @Inject constructor(
     private val getSoundFontPreferenceFlowUseCase: GetSoundFontPreferenceFlowUseCase,
     private val isSoundFontSupportedUseCase: IsSoundFontSupportedUseCase,
     private val getSongShareDataUseCase: GetSongShareDataUseCase,
+    getPreferenceFlowUseCase: GetPreferenceFlowUseCase,
     @Assisted savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val bottomSheetVisible = MutableStateFlow(false)
 
-    private val bottomSheetState =
-        bottomSheetVisible.combine(getSongPreferenceFlowUseCase()) { visible, prefs ->
-            visible to prefs
-        }
+    private val preferencesFlow = combine(
+        getSongPreferenceFlowUseCase(),
+        getPreferenceFlowUseCase(DarkModePreferenceKey).map { DarkModePreference.valueOf(it) }
+    ) { songPrefs, darkModePref -> songPrefs to darkModePref }
 
     private val route = savedStateHandle.toRoute<SongDetailScreen>()
     private val initialSongId = route.initialSongId
 
     private val selectedPage = MutableStateFlow(-1)
     val state = combine(
-        getSongPreferenceFlowUseCase(),
-
+        preferencesFlow,
         getSongEntriesFlow().map { songIds ->
             object {
                 val initialPage = songIds.indexOfFirst { it == initialSongId }
@@ -72,8 +75,8 @@ internal class SongDetailPagerModel @Inject constructor(
         },
         selectedPage,
         getSoundFontState(),
-        bottomSheetState,
-    ) { preferences, songEntries, selectedPageIndex, soundFontState, bottomSheetVisible ->
+        bottomSheetVisible,
+    ) { (preferences, darkMode), songEntries, selectedPageIndex, soundFontState, bottomSheetVisible ->
 
         val currentIndex = if (selectedPageIndex < 0) songEntries.initialPage else selectedPageIndex
         val currentEntry = songEntries.songEntries[currentIndex]
@@ -97,8 +100,12 @@ internal class SongDetailPagerModel @Inject constructor(
             currentDisplayMode = preferences.songDisplayMode,
             currentSongBookEntry = songbookEntries.firstOrNull(),
             soundFontState = soundFontState,
-            bottomSheetState = if (bottomSheetVisible.first) {
-                DetailBottomSheetState.Show(preferences = bottomSheetVisible.second, shareAppData = songShareData)
+            bottomSheetState = if (bottomSheetVisible) {
+                DetailBottomSheetState.Show(
+                    preferences = preferences,
+                    shareAppData = songShareData,
+                    darkModePreference = darkMode,
+                )
             } else {
                 DetailBottomSheetState.Hidden
             },
@@ -137,6 +144,12 @@ internal class SongDetailPagerModel @Inject constructor(
     fun onChangeSongDisplayMode(songDisplayMode: SongDisplayMode) {
         viewModelScope.launch {
             changePreferenceUseCase(SongPreferences.songDisplayModePrefKey) { songDisplayMode.name }
+        }
+    }
+
+    fun onToggleDarkMode(darkModePreference: DarkModePreference) {
+        viewModelScope.launch {
+            changePreferenceUseCase(DarkModePreferenceKey) { darkModePreference.name }
         }
     }
 

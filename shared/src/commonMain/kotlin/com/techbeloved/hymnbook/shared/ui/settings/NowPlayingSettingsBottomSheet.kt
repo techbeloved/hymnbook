@@ -17,8 +17,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.PlaylistAdd
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Lyrics
 import androidx.compose.material.icons.filled.MusicNote
+import androidx.compose.material.icons.filled.Nightlight
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.SettingsInputComponent
 import androidx.compose.material.icons.filled.Share
@@ -66,6 +69,7 @@ import com.techbeloved.hymnbook.shared.generated.now_playing_soundfont
 import com.techbeloved.hymnbook.shared.generated.now_playing_soundfont_description
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.preferences.SongPreferences
+import com.techbeloved.hymnbook.shared.settings.DarkModePreference
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -87,6 +91,8 @@ internal fun NowPlayingSettingsBottomSheet(
     preferences: SongPreferences,
     playbackSpeed: Int,
     onShareSongClick: () -> Unit,
+    darkModePreference: DarkModePreference,
+    onToggleDarkMode: (DarkModePreference) -> Unit,
     modifier: Modifier = Modifier,
     bottomSheetState: SheetState = rememberModalBottomSheetState(),
 ) {
@@ -108,6 +114,8 @@ internal fun NowPlayingSettingsBottomSheet(
             preferences = preferences,
             modifier = Modifier.fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
+            darkModePreference = darkModePreference,
+            onToggleDarkMode = onToggleDarkMode,
         )
         AudioControlsSection(
             onSpeedUp = onSpeedUp,
@@ -241,43 +249,62 @@ private fun SongDisplayModeSection(
         Text(text = "View", style = MaterialTheme.typography.titleMedium)
         Spacer(Modifier.height(8.dp))
         Surface(modifier = Modifier.fillMaxWidth(), shape = MaterialTheme.shapes.small) {
-            FlowRow(
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
-                verticalArrangement = Arrangement.spacedBy(2.dp),
-                maxItemsInEachRow = 3,
-            ) {
-                SongDisplayMode.entries.forEachIndexed { index, mode ->
-                    ToggleButton(
-                        checked = songDisplayMode == mode,
-                        onCheckedChange = { isChecked ->
-                            if (isChecked) {
-                                onToggle(mode)
-                            }
-                        },
-                        modifier = Modifier.weight(1f)
-                            .semantics { role = Role.RadioButton },
-                        shapes = when (index) {
-                            0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
-                            SongDisplayMode.entries.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
-                            else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
-                        },
-                        contentPadding = PaddingValues(4.dp)
-                    ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            mode.Icon()
-                            Text(
-                                text = mode.title,
-                                maxLines = 1,
-                                style = MaterialTheme.typography.bodyMediumEmphasized,
-                            )
-                        }
-                    }
-                }
+            SettingsToggleRow(
+                selected = songDisplayMode,
+                items = SongDisplayMode.entries,
+                title = { it.title },
+                icon = { it.Icon() },
+                onToggle = onToggle,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+    }
+}
 
+@Composable
+private inline fun <reified T> SettingsToggleRow(
+    selected: T,
+    items: List<T>,
+    crossinline title: (T) -> String,
+    crossinline onToggle: (setting: T) -> Unit,
+    crossinline icon: @Composable (T) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    FlowRow(
+        modifier = modifier.padding(horizontal = 8.dp, vertical = 16.dp)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+        verticalArrangement = Arrangement.spacedBy(2.dp),
+        maxItemsInEachRow = 3,
+    ) {
+        items.forEachIndexed { index, item ->
+            ToggleButton(
+                checked = selected == item,
+                onCheckedChange = { isChecked ->
+                    if (isChecked) {
+                        onToggle(item)
+                    }
+                },
+                modifier = Modifier.weight(1f)
+                    .semantics { role = Role.RadioButton },
+                shapes = when (index) {
+                    0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                    SongDisplayMode.entries.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                    else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+                },
+                contentPadding = PaddingValues(4.dp)
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    icon(item)
+                    Text(
+                        text = title(item),
+                        maxLines = 1,
+                        style = MaterialTheme.typography.bodyMediumEmphasized,
+                    )
+                }
             }
         }
+
     }
 }
 
@@ -307,6 +334,8 @@ private fun LyricsAppearanceSection(
     onZoomOut: () -> Unit,
     onZoomIn: () -> Unit,
     preferences: SongPreferences,
+    darkModePreference: DarkModePreference,
+    onToggleDarkMode: (DarkModePreference) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -325,9 +354,28 @@ private fun LyricsAppearanceSection(
                         .padding(horizontal = 16.dp, vertical = 8.dp),
                     fontSize = MaterialTheme.typography.bodySmall.fontSize * preferences.fontSize,
                 )
+                SettingsToggleRow(
+                    selected = darkModePreference,
+                    items = DarkModePreference.entries,
+                    title = { it.name },
+                    onToggle = onToggleDarkMode,
+                    icon = { it.Icon() },
+                    modifier = Modifier.fillMaxWidth(),
+                )
             }
         }
     }
+}
+
+@Composable
+private fun DarkModePreference.Icon() {
+    val icon = when (this) {
+        DarkModePreference.Light -> Icons.Default.LightMode
+        DarkModePreference.Dark -> Icons.Default.DarkMode
+        DarkModePreference.System -> Icons.Default.Nightlight
+    }
+
+    Icon(imageVector = icon, contentDescription = null)
 }
 
 @Composable

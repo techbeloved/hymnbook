@@ -52,7 +52,7 @@ internal fun SongData.toUiDetail(fontSize: TextUnit): AnnotatedString {
                     fontSize = fontSize * .75f
                 )
             )
-            appendLine("${author.name}, ${author.year}")
+            appendLine("${author.name}, ${if (author.year > 0) author.year else ""}")
             pop()
         }
         pop() // bold title

@@ -176,9 +176,6 @@ internal fun SongDetailScreen(
                 is DetailBottomSheetState.Show -> {
                     NativeShareButton {
                         NowPlayingSettingsBottomSheet(
-                            onShareSongClick = {
-                                onClick(state.shareAppData)
-                            },
                             onDismiss = pagerViewModel::onHideSettings,
                             onSpeedUp = {
                                 playbackController?.changePlaybackSpeed(
@@ -212,6 +209,11 @@ internal fun SongDetailScreen(
                             isLoopingSupported = playbackController?.isLoopingSupported == true,
                             preferences = state.preferences,
                             playbackSpeed = playbackState.playbackSpeed,
+                            onShareSongClick = {
+                                onClick(state.shareAppData)
+                            },
+                            darkModePreference = state.darkModePreference,
+                            onToggleDarkMode = pagerViewModel::onToggleDarkMode,
                         )
                     }
                 }
