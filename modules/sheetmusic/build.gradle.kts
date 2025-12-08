@@ -56,7 +56,6 @@ kotlin {
         val desktopMain by getting
 
         androidMain.dependencies {
-            implementation(compose.preview)
             implementation(libs.compose.activity)
             implementation(libs.android.pdf.viewer3)
             implementation(libs.pdf.viewer)
@@ -64,12 +63,9 @@ kotlin {
             implementation(libs.androidx.ui.viewbinding)
         }
         commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.materialIconsExtended)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
+            implementation(libs.jetbrains.compose.runtime)
+            implementation(libs.jetbrains.material.compose)
+            implementation(libs.jetbrains.compose.foundation)
             implementation(libs.kotlinx.collections.immutable)
             implementation(libs.coil.compose)
             implementation(libs.coil.network)

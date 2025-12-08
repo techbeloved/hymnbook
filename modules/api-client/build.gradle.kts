@@ -47,7 +47,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.collections.immutable)
-            implementation(project.dependencies.platform(libs.ktor.bom))
+            api(project.dependencies.platform(libs.ktor.bom))
             api(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.client.logging)

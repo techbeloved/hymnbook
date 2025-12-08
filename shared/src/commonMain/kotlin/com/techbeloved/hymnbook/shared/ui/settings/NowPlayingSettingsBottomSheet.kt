@@ -354,6 +354,7 @@ private fun LyricsAppearanceSection(
                         .padding(horizontal = 16.dp, vertical = 8.dp),
                     fontSize = MaterialTheme.typography.bodySmall.fontSize * preferences.fontSize,
                 )
+                HorizontalDivider()
                 SettingsToggleRow(
                     selected = darkModePreference,
                     items = DarkModePreference.entries,

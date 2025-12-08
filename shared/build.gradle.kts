@@ -50,15 +50,15 @@ kotlin {
             implementation(project(":modules:api-client"))
             implementation(project(":modules:media"))
             implementation(project(":modules:sheetmusic"))
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.materialIconsExtended)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
+            implementation(libs.jetbrains.compose.runtime)
+            implementation(libs.jetbrains.compose.foundation)
+            implementation(libs.jetbrains.material.icons)
+            implementation(libs.jetbrains.compose.resources)
+            implementation(libs.jetbrains.compose.preview)
             implementation(libs.jetbrains.material.compose)
             implementation(libs.jetbrains.navigation.compose)
             implementation(libs.jetbrains.viewmodel.compose)
-            implementation(libs.jetbrains.runtime.compose)
+            implementation(libs.jetbrains.lifecycle.runtime.compose)
             implementation(libs.kotlinx.collections.immutable)
             implementation(libs.kotlinx.serialization)
             implementation(libs.kotlinx.io)
@@ -77,6 +77,8 @@ kotlin {
 
             // okio
             implementation(libs.squareup.okio)
+
+            // ktor
 
             // xmlutil
             implementation(libs.xmlutil.core)
@@ -99,15 +101,12 @@ kotlin {
         androidMain.dependencies {
             api(libs.compose.activity)
             implementation(libs.sqldelight.android)
-            implementation(compose.preview)
-            implementation(compose.uiTooling)
-            implementation(compose.ui)
             // Requery Sqlite
             implementation(libs.requery.sqlite.android)
         }
         val desktopMain by getting {
             dependencies {
-                implementation(compose.desktop.common)
+                implementation(libs.jetbrains.compose.desktop)
                 implementation(libs.sqldelight.jvm)
                 implementation(libs.coroutines.swing)
             }
@@ -160,7 +159,7 @@ android {
 }
 
 dependencies {
-    debugImplementation(compose.uiTooling)
+    debugImplementation(libs.jetbrains.compose.ui.tooling)
 }
 
 aboutLibraries {

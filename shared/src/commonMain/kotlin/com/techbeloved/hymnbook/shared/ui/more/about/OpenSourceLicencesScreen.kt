@@ -13,19 +13,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.tooling.preview.Preview
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
 import com.mikepenz.aboutlibraries.ui.compose.rememberLibraries
+import com.techbeloved.hymnbook.shared.generated.Res
+import com.techbeloved.hymnbook.shared.generated.open_source_licenses
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
-import com.techbeloved.hymnbook.shared.generated.Res
-import com.techbeloved.hymnbook.shared.generated.open_source_licenses
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Serializable
 internal object OpenSourceLicencesScreen
