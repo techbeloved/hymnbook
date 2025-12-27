@@ -2,13 +2,11 @@
 
 package com.techbeloved.hymnbook.shared.ui.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import com.techbeloved.hymnbook.shared.settings.DarkModePreference
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -240,15 +238,10 @@ private val highContrastDarkColorScheme = darkColorScheme(
 
 @Composable
 internal fun AppTheme(
-    darkMode: DarkModePreference = DarkModePreference.System,
+    darkTheme: Boolean = isAppInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
     val contrastMode = platformContrastMode()
-    val darkTheme = when (darkMode) {
-        DarkModePreference.Light -> false
-        DarkModePreference.Dark -> true
-        DarkModePreference.System -> isSystemInDarkTheme()
-    }
     val colorScheme = when (contrastMode) {
         ContrastMode.Default -> if (darkTheme) darkScheme else lightScheme
         ContrastMode.Medium -> if (darkTheme) mediumContrastDarkColorScheme else mediumContrastLightColorScheme

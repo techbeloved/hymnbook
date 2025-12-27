@@ -25,6 +25,7 @@ import com.techbeloved.hymnbook.shared.ui.playlist.PlaylistsViewModel
 import com.techbeloved.hymnbook.shared.ui.playlist.add.AddEditPlaylistViewModel
 import com.techbeloved.hymnbook.shared.ui.playlist.select.AddSongToPlaylistViewModel
 import com.techbeloved.hymnbook.shared.ui.search.SearchScreenModel
+import com.techbeloved.hymnbook.shared.ui.settings.GetDarkModePreferenceFlowUseCaseImpl
 import com.techbeloved.hymnbook.shared.ui.settings.SettingsViewModel
 import com.techbeloved.hymnbook.shared.ui.songs.FilteredSongsViewModel
 import com.techbeloved.hymnbook.shared.ui.soundfonts.SoundFontSettingsViewModel
@@ -103,6 +104,7 @@ internal interface AppComponent {
     fun addNewPlaylistViewModelFactory(): AddEditPlaylistViewModel.Factory
     fun addSongToPlaylistViewModelFactory(): AddSongToPlaylistViewModel.Factory
     fun settingsViewModel(): SettingsViewModel
+    fun getDarkModePreferenceFlowUseCase(): GetDarkModePreferenceFlowUseCaseImpl
 
     companion object
 }

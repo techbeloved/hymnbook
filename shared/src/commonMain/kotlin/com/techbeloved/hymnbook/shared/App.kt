@@ -10,19 +10,14 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.techbeloved.hymnbook.shared.di.appComponent
-import com.techbeloved.hymnbook.shared.settings.DarkModePreference
 import com.techbeloved.hymnbook.shared.songshare.SongShareHandler
 import com.techbeloved.hymnbook.shared.ui.analytics.LogDefaultAnalytics
 import com.techbeloved.hymnbook.shared.ui.appbar.BottomNavigationBar
@@ -32,21 +27,15 @@ import com.techbeloved.hymnbook.shared.ui.home.isATopLevelDestination
 import com.techbeloved.hymnbook.shared.ui.home.navigationItems
 import com.techbeloved.hymnbook.shared.ui.navigation.LocalNavController
 import com.techbeloved.hymnbook.shared.ui.navigation.addNavigationRoutes
-import com.techbeloved.hymnbook.shared.ui.settings.SettingsViewModel
 import com.techbeloved.hymnbook.shared.ui.theme.AppTheme
 import kotlinx.coroutines.launch
 
 internal const val AppHost = "app.watchmanmusic.com"
 
 @Composable
-public fun App(onDarkMode: (DarkModePreference) -> Unit = {}) {
-    val settingsViewModel: SettingsViewModel = viewModel { appComponent.settingsViewModel() }
-    val darkMode by settingsViewModel.darkModePref.collectAsStateWithLifecycle()
-    LaunchedEffect(darkMode) {
-        onDarkMode(darkMode)
-    }
+public fun App() {
     LogDefaultAnalytics()
-    AppTheme(darkMode = darkMode) {
+    AppTheme {
         val navController = rememberNavController()
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val isBottomNavVisible by derivedStateOf { navBackStackEntry?.destination?.isATopLevelDestination() == true }

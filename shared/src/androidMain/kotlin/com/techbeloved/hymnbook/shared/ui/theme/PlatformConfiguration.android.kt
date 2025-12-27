@@ -3,6 +3,7 @@ package com.techbeloved.hymnbook.shared.ui.theme
 import android.app.UiModeManager
 import android.content.Context
 import android.os.Build
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
@@ -31,3 +32,6 @@ internal actual fun platformContrastMode(): ContrastMode {
         ContrastMode.Default
     }
 }
+
+@Composable
+internal actual fun isAppInDarkTheme()  = isSystemInDarkTheme()
