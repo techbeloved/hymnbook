@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.PlaylistAdd
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
@@ -24,8 +23,6 @@ import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.Nightlight
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.SettingsInputComponent
-import androidx.compose.material.icons.filled.Share
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -35,7 +32,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Surface
@@ -44,7 +40,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
@@ -56,7 +51,6 @@ import androidx.compose.ui.unit.dp
 import com.techbeloved.hymnbook.shared.ext.percentToNearestFive
 import com.techbeloved.hymnbook.shared.generated.Res
 import com.techbeloved.hymnbook.shared.generated.ic_lyrics_compact
-import com.techbeloved.hymnbook.shared.generated.now_playing_add_to_playlist
 import com.techbeloved.hymnbook.shared.generated.now_playing_settings_loop
 import com.techbeloved.hymnbook.shared.generated.now_playing_settings_lyrics_size
 import com.techbeloved.hymnbook.shared.generated.now_playing_settings_music_speed
@@ -64,13 +58,11 @@ import com.techbeloved.hymnbook.shared.generated.now_playing_settings_speed_down
 import com.techbeloved.hymnbook.shared.generated.now_playing_settings_speed_up
 import com.techbeloved.hymnbook.shared.generated.now_playing_settings_zoom_in
 import com.techbeloved.hymnbook.shared.generated.now_playing_settings_zoom_out
-import com.techbeloved.hymnbook.shared.generated.now_playing_share_action
 import com.techbeloved.hymnbook.shared.generated.now_playing_soundfont
 import com.techbeloved.hymnbook.shared.generated.now_playing_soundfont_description
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.preferences.SongPreferences
 import com.techbeloved.hymnbook.shared.settings.DarkModePreference
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -83,20 +75,17 @@ internal fun NowPlayingSettingsBottomSheet(
     onZoomIn: () -> Unit,
     onChangeSongDisplayMode: (songDisplayMode: SongDisplayMode) -> Unit,
     onSoundfonts: () -> Unit,
-    onAddSongToPlaylist: () -> Unit,
     onToggleLooping: (isLooping: Boolean) -> Unit,
     isSoundfontSupported: Boolean,
     isLooping: Boolean,
     isLoopingSupported: Boolean,
     preferences: SongPreferences,
     playbackSpeed: Int,
-    onShareSongClick: () -> Unit,
     darkModePreference: DarkModePreference,
     onToggleDarkMode: (DarkModePreference) -> Unit,
     modifier: Modifier = Modifier,
     bottomSheetState: SheetState = rememberModalBottomSheetState(),
 ) {
-    val localScope = rememberCoroutineScope()
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = bottomSheetState,
@@ -128,18 +117,6 @@ internal fun NowPlayingSettingsBottomSheet(
             playbackSpeed = playbackSpeed,
             modifier = Modifier.fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
-        )
-        ActionsSection(
-            modifier = Modifier.fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            onShare = {
-                localScope.launch {
-                    bottomSheetState.hide()
-                    onShareSongClick()
-                    onDismiss()
-                }
-            },
-            onAddSongToPlaylist = onAddSongToPlaylist,
         )
     }
 }
@@ -438,71 +415,6 @@ private fun AudioControlsSection(
             }
         }
 
-    }
-}
-
-@Composable
-private fun ActionsSection(
-    modifier: Modifier = Modifier,
-    onShare: () -> Unit,
-    onAddSongToPlaylist: () -> Unit,
-) {
-    Surface(modifier = modifier.fillMaxWidth(), shape = MaterialTheme.shapes.small) {
-        FlowRow(
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(2.dp),
-            maxItemsInEachRow = 3,
-        ) {
-            SettingsActionButton(
-                title = stringResource(Res.string.now_playing_share_action),
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.Share,
-                        contentDescription = stringResource(Res.string.now_playing_share_action),
-                    )
-                },
-                onClick = onShare,
-                modifier = Modifier.weight(1f),
-            )
-            SettingsActionButton(
-                title = stringResource(Res.string.now_playing_add_to_playlist),
-                icon = {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.PlaylistAdd,
-                        contentDescription = stringResource(Res.string.now_playing_add_to_playlist),
-                    )
-                },
-                onClick = onAddSongToPlaylist,
-                modifier = Modifier.weight(1f),
-            )
-
-        }
-    }
-}
-
-@Composable
-private fun SettingsActionButton(
-    title: String,
-    onClick: () -> Unit,
-    icon: @Composable () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    OutlinedButton(
-        onClick = onClick,
-        modifier = modifier,
-        shapes = ButtonDefaults.shapes(),
-        contentPadding = PaddingValues(4.dp)
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            icon()
-            Text(
-                text = title,
-                maxLines = 1,
-                style = MaterialTheme.typography.bodyMediumEmphasized,
-            )
-        }
     }
 }
 

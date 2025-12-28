@@ -29,6 +29,7 @@
     <string name="now_playing_settings_zoom_in">Zoom In</string>
     <string name="now_playing_settings_speed_down">Speed Down</string>
     <string name="now_playing_settings_speed_up">Speed Up</string>
+    <string name="content_description_more">More</string>
     <string name="content_description_search">Search</string>
     <string name="content_description_previous">Previous</string>
     <string name="content_description_next">Next</string>

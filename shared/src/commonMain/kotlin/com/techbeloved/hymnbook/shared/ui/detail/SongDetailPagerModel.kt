@@ -100,10 +100,10 @@ internal class SongDetailPagerModel @Inject constructor(
             currentDisplayMode = preferences.songDisplayMode,
             currentSongBookEntry = songbookEntries.firstOrNull(),
             soundFontState = soundFontState,
+            shareAppData = songShareData,
             bottomSheetState = if (bottomSheetVisible) {
                 DetailBottomSheetState.Show(
                     preferences = preferences,
-                    shareAppData = songShareData,
                     darkModePreference = darkMode,
                 )
             } else {

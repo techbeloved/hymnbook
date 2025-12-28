@@ -11,7 +11,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
@@ -28,6 +27,7 @@ import com.techbeloved.hymnbook.shared.AppHost
 import com.techbeloved.hymnbook.shared.songshare.ShareAppData
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
 import com.techbeloved.hymnbook.shared.ui.share.NativeShareButton
+import com.techbeloved.hymnbook.shared.ui.share.ShareIcon
 import io.ktor.http.URLBuilder
 import io.ktor.http.URLProtocol
 
@@ -77,7 +77,7 @@ internal fun MoreTabScreen(
                             )
                         },
                         leadingContent = {
-                            Icon(imageVector = Icons.Filled.Share, contentDescription = null)
+                            Icon(imageVector = ShareIcon, contentDescription = null)
                         }
                     )
                 }
