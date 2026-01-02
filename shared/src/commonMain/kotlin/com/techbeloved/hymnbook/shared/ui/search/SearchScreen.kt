@@ -10,10 +10,11 @@ import com.techbeloved.hymnbook.shared.model.SongTitle
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal object SearchScreen
+internal data class SearchScreen(val isSpeedDial: Boolean = false)
 
 @Composable
 internal fun SearchScreen(
+    isSpeedDial: Boolean,
     onSongItemClicked: (SongTitle) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SearchScreenModel = viewModel(factory = SearchScreenModel.Factory),
@@ -30,5 +31,6 @@ internal fun SearchScreen(
         modifier = modifier,
         onSongItemClicked = onSongItemClicked,
         onFilterBySongbook = viewModel::onFilterBySongbook,
+        isSpeedDial = isSpeedDial,
     )
 }

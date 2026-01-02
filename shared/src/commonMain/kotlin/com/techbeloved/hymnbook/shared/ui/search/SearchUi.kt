@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.techbeloved.hymnbook.shared.model.SongTitle
 import com.techbeloved.hymnbook.shared.ui.listing.SongListingUi
@@ -44,6 +45,7 @@ internal fun SearchUi(
     onQueryChange: (newQuery: String) -> Unit,
     onFilterBySongbook: (songbook: String) -> Unit,
     modifier: Modifier = Modifier,
+    isSpeedDial: Boolean = false,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
@@ -54,6 +56,11 @@ internal fun SearchUi(
                 placeholderText = "Search songs",
                 onQueryChange = onQueryChange,
                 query = query,
+                keyboardType = if (isSpeedDial) {
+                    KeyboardType.Number
+                } else {
+                    KeyboardType.Text
+                },
             )
         },
     ) { innerPadding ->

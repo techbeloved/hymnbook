@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -39,7 +38,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.techbeloved.hymnbook.shared.model.SongTitle
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
 import com.techbeloved.hymnbook.shared.ui.listing.SongListingUi
-import com.techbeloved.hymnbook.shared.ui.songbook.SongbookSelector
+import com.techbeloved.hymnbook.shared.ui.search.HomeSearchBar
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
@@ -49,7 +48,7 @@ import dev.chrisbanes.haze.materials.HazeMaterials
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun HomeTabScreen(
-    onOpenSearch: () -> Unit,
+    onOpenSearch: (isSpeedDial: Boolean) -> Unit,
     onSongItemClicked: (SongTitle) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeScreenModel = viewModel(factory = HomeScreenModel.Factory),
@@ -67,20 +66,14 @@ internal fun HomeTabScreen(
                 scrollBehaviour = scrollBehavior,
                 modifier = Modifier.hazeEffect(hazeState, style = HazeMaterials.ultraThin()),
                 titleContent = {
-                    if (!state.isLoading) {
-                        SongbookSelector(
-                            songbooks = state.songbooks,
-                            selectedSongbook = state.currentSongbook,
-                            onSongbookSelected = viewModel::onUpdateSongbook,
-                        )
-                    }
+                    HomeSearchBar(
+                        onSearchClick = { onOpenSearch(false) },
+                        onSpeedDialClick = { onOpenSearch(true) },
+                        placeholder = state.currentSongbook?.name?.let { "Search $it" },
+                    )
                 },
                 actions = {
                     Spacer(Modifier.width(8.dp))
-                    IconButton(onClick = onOpenSearch, modifier = Modifier) {
-                        Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
-                    }
-                    Spacer(Modifier.width(12.dp))
                     SortByButton(
                         onSortBy = viewModel::onUpdateSortBy,
                         sortBy = state.sortBy,
@@ -142,7 +135,7 @@ private fun SortByButton(
         ExposedDropdownMenu(
             expanded = isExpanded,
             onDismissRequest = { isExpanded = false },
-            matchTextFieldWidth = false,
+            matchAnchorWidth = false,
             shape = MaterialTheme.shapes.medium,
         ) {
             SortBy.entries.forEach { entry ->

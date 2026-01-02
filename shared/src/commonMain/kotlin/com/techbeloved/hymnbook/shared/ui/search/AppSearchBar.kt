@@ -24,8 +24,10 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
+import com.techbeloved.hymnbook.shared.ui.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,6 +38,7 @@ internal fun AppSearchBar(
     placeholderText: String,
     modifier: Modifier = Modifier,
     maxChar: Int = 50,
+    keyboardType: KeyboardType = KeyboardType.Text,
 ) {
     val focusRequester = remember { FocusRequester() }
 
@@ -56,7 +59,7 @@ internal fun AppSearchBar(
                         color = MaterialTheme.colorScheme.onSurface,
                     ),
                     keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text,
+                        keyboardType = keyboardType,
                         imeAction = ImeAction.Search,
                     ),
                     keyboardActions = KeyboardActions(onSearch = { onSearch(query) }),
@@ -95,4 +98,17 @@ internal fun AppSearchBar(
         )
     }
 
+}
+
+@Preview
+@Composable
+private fun PreviewAppSearchBar() {
+    AppTheme {
+        AppSearchBar(
+            query = "",
+            onSearch = {},
+            onQueryChange = {},
+            placeholderText = "Search",
+        )
+    }
 }

@@ -59,6 +59,7 @@ kotlin {
             implementation(libs.jetbrains.navigation.compose)
             implementation(libs.jetbrains.viewmodel.compose)
             implementation(libs.jetbrains.lifecycle.runtime.compose)
+            implementation(libs.jetbrains.window.sizeclass)
             implementation(libs.kotlinx.collections.immutable)
             implementation(libs.kotlinx.serialization)
             implementation(libs.kotlinx.io)
