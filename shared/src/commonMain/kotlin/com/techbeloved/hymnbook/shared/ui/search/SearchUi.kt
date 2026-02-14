@@ -17,6 +17,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.History
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -92,16 +93,29 @@ internal fun SearchUi(
                     modifier = Modifier.fillMaxSize(),
                 )
 
+                state.isTyping -> SearchSuggestionsUi(
+                    suggestions = state.searchSuggestions.suggestions,
+                    onSuggestionClicked = {
+                        onQueryChange(it)
+                        onSearch(it)
+                    },
+                    history = state.searchSuggestions.history,
+                    onHistoryClicked = {
+                        onQueryChange(it)
+                        onSearch(it)
+                    }
+                )
                 state.query.isBlank() -> DefaultSearchUi(
-                    recentSongs = state.recentSongs,
+                    recentSongs = state.recentSearches.songs,
                     onRecentSongClicked = onSongItemClicked,
-                    recentSearches = state.recentSearches,
+                    recentSearches = state.recentSearches.searches,
                     onRecentSearchClicked = {
                         onQueryChange(it)
                         onSearch(it)
                     },
                     modifier = Modifier.fillMaxSize()
                 )
+
 
                 state.results.isEmpty() -> NoSearchResultsUi(
                     searchQuery = state.query,
@@ -232,6 +246,34 @@ private fun SongbooksFilter(
 }
 
 @Composable
+private fun SearchSuggestionsUi(
+    suggestions: ImmutableList<String>,
+    onSuggestionClicked: (String) -> Unit,
+    history: ImmutableList<String>,
+    onHistoryClicked: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+
+    LazyColumn(modifier = modifier) {
+        items(history) { item ->
+            ListItem(
+                modifier = Modifier.clickable { onHistoryClicked(item) },
+                headlineContent = { Text(item) },
+                leadingContent = { Icon(Icons.Rounded.History, contentDescription = null) }
+            )
+        }
+
+        items(suggestions) { item ->
+            ListItem(
+                modifier = Modifier.clickable { onSuggestionClicked(item) },
+                headlineContent = { Text(item) },
+                leadingContent = { Icon(Icons.Rounded.Search, contentDescription = null) }
+            )
+        }
+    }
+}
+
+@Composable
 private fun DefaultSearchUi(
     recentSongs: ImmutableList<SongTitle>,
     onRecentSongClicked: (SongTitle) -> Unit,
@@ -315,23 +357,25 @@ private fun SearchUiWithRecentSongsPreview() {
     AppTheme {
         SearchUi(
             state = SearchState(
-                recentSongs = persistentListOf(
-                    SongTitle(
-                        id = 1,
-                        title = "Praise to the Lord the Almighty",
-                        alternateTitle = null,
-                        songbookEntry = "12",
-                        songbook = "songbook"
+                recentSearches = RecentSearches(
+                    searches = persistentListOf("Search 1", "Search 2"),
+                    songs = persistentListOf(
+                        SongTitle(
+                            id = 1,
+                            title = "Praise to the Lord the Almighty",
+                            alternateTitle = null,
+                            songbookEntry = "12",
+                            songbook = "songbook"
+                        ),
+                        SongTitle(
+                            id = 2,
+                            title = "Song 2",
+                            alternateTitle = "Alternate Title 2",
+                            songbookEntry = "13",
+                            songbook = "songbook"
+                        ),
                     ),
-                    SongTitle(
-                        id = 2,
-                        title = "Song 2",
-                        alternateTitle = "Alternate Title 2",
-                        songbookEntry = "13",
-                        songbook = "songbook"
-                    ),
-                ),
-                recentSearches = persistentListOf("Search 1", "Search 2"),
+                )
             ),
             query = "",
             onSearch = {},

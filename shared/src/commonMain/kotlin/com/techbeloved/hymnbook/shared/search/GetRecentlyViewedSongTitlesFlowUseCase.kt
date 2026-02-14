@@ -1,10 +1,10 @@
 package com.techbeloved.hymnbook.shared.search
 
 import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToList
 import com.techbeloved.hymnbook.Database
 import com.techbeloved.hymnbook.shared.dispatcher.DispatchersProvider
 import com.techbeloved.hymnbook.shared.model.SongTitle
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import me.tatarka.inject.annotations.Inject
 
@@ -14,8 +14,9 @@ internal class GetRecentlyViewedSongTitlesFlowUseCase @Inject constructor(
 ) {
     operator fun invoke() =
         database.recentlyViewedSongsEntityQueries.getRecentlyViewedSongs(lmt = 10).asFlow()
+            .mapToList(dispatchersProvider.io())
             .map { query ->
-                query.executeAsList().map {
+                query.map {
                     SongTitle(
                         id = it.id,
                         title = it.title,
@@ -24,5 +25,5 @@ internal class GetRecentlyViewedSongTitlesFlowUseCase @Inject constructor(
                         songbookEntry = it.songbook_entry,
                     )
                 }
-            }.flowOn(dispatchersProvider.io())
+            }
 }

@@ -30,3 +30,9 @@ SELECT query, last_searched_at FROM SearchHistoryEntity
 WHERE query LIKE :query || '%' ESCAPE '\'
 ORDER BY last_searched_at DESC
 LIMIT :lmt;
+
+getSearchSuggestions:
+SELECT sd.title
+FROM SongDetail AS sd
+WHERE sd.title LIKE :query || '%' ESCAPE '\'
+ORDER BY sd.title LIMIT :limit;

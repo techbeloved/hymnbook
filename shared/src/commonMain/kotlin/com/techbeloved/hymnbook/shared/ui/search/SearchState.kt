@@ -9,7 +9,11 @@ internal data class SearchState(
     val query: String = "",
     val selectedSongbook: String? = null,
     val songbooks: ImmutableList<String> = persistentListOf(),
-    val recentSongs: ImmutableList<SongTitle> = persistentListOf(),
-    val recentSearches: ImmutableList<String> = persistentListOf(),
+    val recentSearches: RecentSearches = RecentSearches(),
     val isLoading: Boolean = false,
+    val isTyping: Boolean = false,
+    val searchSuggestions: SearchSuggestion = SearchSuggestion(
+        suggestions = persistentListOf(),
+        history = persistentListOf(),
+    ),
 )
