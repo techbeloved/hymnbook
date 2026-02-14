@@ -178,6 +178,7 @@ aboutLibraries {
 sqldelight {
     databases {
         create("Database") {
+            dialect("app.cash.sqldelight:sqlite-3-24-dialect:2.2.1")
             packageName.set("com.techbeloved.hymnbook")
             schemaOutputDirectory.set(file("src/commonMain/sqldelight/databases"))
         }

@@ -61,7 +61,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.techbeloved.hymnbook.shared.config.defaultAppConfig
@@ -92,6 +94,7 @@ import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
 import io.ktor.http.URLBuilder
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
@@ -146,6 +149,19 @@ internal fun SongDetailScreen(
     }
     LaunchedEffect(playbackState.playbackSpeed) {
         pagerViewModel.trackSongSpeed(playbackState.playbackSpeed)
+    }
+    if (pagerState is SongDetailPagerState.Content) {
+        val state = pagerState as SongDetailPagerState.Content
+        LifecycleResumeEffect(state.currentSongId, state.currentSongBookEntry) {
+            lifecycleScope.launch {
+                delay(timeMillis = 500)
+                pagerViewModel.onTrackCurrentSong(
+                    songId = state.currentSongId,
+                    songbookEntry = state.currentSongBookEntry,
+                )
+            }
+            onPauseOrDispose { }
+        }
     }
     when (val state = pagerState) {
         is SongDetailPagerState.Content -> {

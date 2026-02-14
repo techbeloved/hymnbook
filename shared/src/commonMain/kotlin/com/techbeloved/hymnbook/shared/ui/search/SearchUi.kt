@@ -1,5 +1,6 @@
 package com.techbeloved.hymnbook.shared.ui.search
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,12 +11,18 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.History
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -29,10 +36,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.techbeloved.hymnbook.shared.model.SongTitle
 import com.techbeloved.hymnbook.shared.ui.listing.SongListingUi
+import com.techbeloved.hymnbook.shared.ui.theme.AppTheme
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,12 +88,23 @@ internal fun SearchUi(
             )
 
             when {
-                state.query.isNotBlank() && state.results.isEmpty() -> NoSearchResultsUi(
-                    searchQuery = state.query,
+                state.isLoading -> SearchLoading(
                     modifier = Modifier.fillMaxSize(),
                 )
 
-                state.isLoading -> SearchLoading(
+                state.query.isBlank() -> DefaultSearchUi(
+                    recentSongs = state.recentSongs,
+                    onRecentSongClicked = onSongItemClicked,
+                    recentSearches = state.recentSearches,
+                    onRecentSearchClicked = {
+                        onQueryChange(it)
+                        onSearch(it)
+                    },
+                    modifier = Modifier.fillMaxSize()
+                )
+
+                state.results.isEmpty() -> NoSearchResultsUi(
+                    searchQuery = state.query,
                     modifier = Modifier.fillMaxSize(),
                 )
 
@@ -206,5 +228,116 @@ private fun SongbooksFilter(
             )
         }
         Spacer(Modifier.width(16.dp))
+    }
+}
+
+@Composable
+private fun DefaultSearchUi(
+    recentSongs: ImmutableList<SongTitle>,
+    onRecentSongClicked: (SongTitle) -> Unit,
+    recentSearches: ImmutableList<String>,
+    onRecentSearchClicked: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    LazyColumn(modifier = modifier) {
+
+        if (recentSongs.isNotEmpty()) {
+            item {
+                Text(
+                    text = "Recent songs",
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                )
+            }
+            items(recentSongs, key = { it.id }) { item ->
+                ListItem(
+                    modifier = Modifier.clickable {
+                        onRecentSongClicked(item)
+                    },
+                    headlineContent = {
+                        Text(text = item.title)
+                    },
+                    leadingContent = {
+                        Text(
+                            text = item.songbookEntry.orEmpty(),
+                            modifier = Modifier.width(32.dp),
+                            textAlign = TextAlign.End,
+                        )
+                    },
+                    supportingContent = if (item.alternateTitle.isNullOrBlank()) {
+                        null
+                    } else {
+                        {
+                            Text(text = item.alternateTitle)
+                        }
+                    }
+                )
+            }
+        }
+
+        if (recentSearches.isNotEmpty()) {
+            item {
+                Text(
+                    text = "Recent searches",
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                )
+            }
+            items(recentSearches) { search ->
+                ListItem(
+                    modifier = Modifier.clickable { onRecentSearchClicked(search) },
+                    headlineContent = { Text(search) },
+                    leadingContent = { Icon(Icons.Rounded.History, contentDescription = null) }
+                )
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun SearchUiPreview() {
+    AppTheme {
+        SearchUi(
+            state = SearchState(),
+            query = "",
+            onSearch = {},
+            onSongItemClicked = {},
+            onQueryChange = {},
+            onFilterBySongbook = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun SearchUiWithRecentSongsPreview() {
+    AppTheme {
+        SearchUi(
+            state = SearchState(
+                recentSongs = persistentListOf(
+                    SongTitle(
+                        id = 1,
+                        title = "Praise to the Lord the Almighty",
+                        alternateTitle = null,
+                        songbookEntry = "12",
+                        songbook = "songbook"
+                    ),
+                    SongTitle(
+                        id = 2,
+                        title = "Song 2",
+                        alternateTitle = "Alternate Title 2",
+                        songbookEntry = "13",
+                        songbook = "songbook"
+                    ),
+                ),
+                recentSearches = persistentListOf("Search 1", "Search 2"),
+            ),
+            query = "",
+            onSearch = {},
+            onSongItemClicked = {},
+            onQueryChange = {},
+            onFilterBySongbook = {},
+        )
     }
 }

@@ -9,6 +9,9 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.techbeloved.hymnbook.shared.analytics.TrackAnalyticsEventUseCase
 import com.techbeloved.hymnbook.shared.di.appComponent
+import com.techbeloved.hymnbook.shared.search.GetLatestSearchHistoryFlowUseCase
+import com.techbeloved.hymnbook.shared.search.GetRecentlyViewedSongTitlesFlowUseCase
+import com.techbeloved.hymnbook.shared.search.SaveSearchQueryToSearchHistoryUseCase
 import com.techbeloved.hymnbook.shared.search.SearchSongsUseCase
 import com.techbeloved.hymnbook.shared.songbooks.GetAllSongbooksUseCase
 import com.techbeloved.hymnbook.shared.songbooks.GetPreferredSongbookUseCase
@@ -26,17 +29,27 @@ internal class SearchScreenModel @Inject constructor(
     private val searchSongsUseCase: SearchSongsUseCase,
     private val getPreferredSongbookUseCase: GetPreferredSongbookUseCase,
     private val trackAnalyticsUseCase: TrackAnalyticsEventUseCase,
+    private val saveSearchQueryToSearchHistoryUseCase: SaveSearchQueryToSearchHistoryUseCase,
     songbooksUseCase: GetAllSongbooksUseCase,
+    getLatestSearchHistoryUseCase: GetLatestSearchHistoryFlowUseCase,
+    getRecentlyViewedSongbooksUseCase: GetRecentlyViewedSongTitlesFlowUseCase,
 ) : ViewModel() {
 
     var searchQuery by mutableStateOf("")
         private set
 
     private val _state: MutableStateFlow<SearchState> = MutableStateFlow(initialState)
-    val state = combine(songbooksUseCase(), _state) { songbooks, state ->
+    val state = combine(
+        songbooksUseCase(),
+        getLatestSearchHistoryUseCase(),
+        getRecentlyViewedSongbooksUseCase(),
+        _state
+    ) { songbooks, recentSearches, recentSongs, state ->
         state.copy(
             songbooks = songbooks.map { it.name }.toImmutableList(),
             selectedSongbook = state.selectedSongbook ?: getPreferredSongbookUseCase(),
+            recentSearches = recentSearches.toImmutableList(),
+            recentSongs = recentSongs.toImmutableList(),
         )
     }.stateIn(
         scope = viewModelScope,
@@ -55,7 +68,8 @@ internal class SearchScreenModel @Inject constructor(
         if (searchQuery.isBlank()) return
         _state.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            val selectedSongbook = state.value.selectedSongbook ?: state.value.songbooks.firstOrNull()
+            val selectedSongbook =
+                state.value.selectedSongbook ?: state.value.songbooks.firstOrNull()
             val results = searchSongsUseCase(searchQuery, selectedSongbook)
             _state.update {
                 it.copy(
@@ -66,6 +80,7 @@ internal class SearchScreenModel @Inject constructor(
                 )
             }
             trackAnalyticsUseCase(SearchAnalytics.actionSearch(searchQuery))
+            saveSearchQueryToSearchHistoryUseCase(searchQuery)
         }
     }
 
