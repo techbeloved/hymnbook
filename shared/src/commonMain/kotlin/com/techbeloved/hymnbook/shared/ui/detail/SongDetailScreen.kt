@@ -154,7 +154,7 @@ internal fun SongDetailScreen(
         val state = pagerState as SongDetailPagerState.Content
         LifecycleResumeEffect(state.currentSongId, state.currentSongBookEntry) {
             lifecycleScope.launch {
-                delay(timeMillis = 500)
+                delay(timeMillis = 3000)
                 pagerViewModel.onTrackCurrentSong(
                     songId = state.currentSongId,
                     songbookEntry = state.currentSongBookEntry,
