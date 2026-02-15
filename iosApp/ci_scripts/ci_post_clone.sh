@@ -39,22 +39,30 @@ echo "Download assets complete"
 # --- CHANGED SECTION START ---
 echo "Installing Java 21 via Homebrew..."
 
-# Unlink old java versions if necessary to avoid conflicts (optional but recommended)
-# brew unlink java || true
-
 # Install OpenJDK 21
 brew install openjdk@21
 
-export JAVA_HOME=$(brew --prefix openjdk@21)
+# 1. Get the architecture-specific path from Homebrew
+BREW_OPENJDK_PATH=$(brew --prefix openjdk@21)
 
-# Add Java to the PATH
+# 2. Construct the correct JAVA_HOME path for macOS
+#    Homebrew installs the actual JDK bundle inside 'libexec/openjdk.jdk'
+export JAVA_HOME="$BREW_OPENJDK_PATH/libexec/openjdk.jdk/Contents/Home"
+
+# 3. Add to PATH so commands in this script (like java -version) work
 export PATH="$JAVA_HOME/bin:$PATH"
 
 echo "Java version:"
 java -version
+
+# 4. Create a symlink in the repository root so Xcode can find this JDK later
+#    $CI_PRIMARY_REPOSITORY_PATH is the root of your cloned project
+ln -sfn "$JAVA_HOME" "$CI_PRIMARY_REPOSITORY_PATH/openjdk-21-symlink"
+
+echo "Created Java symlink at: $CI_PRIMARY_REPOSITORY_PATH/openjdk-21-symlink"
 # --- CHANGED SECTION END ---
 
-./gradlew :shared:compileKotlinIosArm64
+# ./gradlew :shared:compileKotlinIosArm64
 
 # store_cache_files # Store caches after build
 
