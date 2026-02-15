@@ -45,12 +45,10 @@ echo "Installing Java 21 via Homebrew..."
 # Install OpenJDK 21
 brew install openjdk@21
 
-# Symlink it so the system wrappers find it (Required for macOS)
-sudo ln -sfn "$(brew --prefix openjdk@21)"/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-21.jdk
-
-# Set JAVA_HOME
 export JAVA_HOME=$(brew --prefix openjdk@21)
-export PATH=$JAVA_HOME/bin:$PATH
+
+# Add Java to the PATH
+export PATH="$JAVA_HOME/bin:$PATH"
 
 echo "Java version:"
 java -version
