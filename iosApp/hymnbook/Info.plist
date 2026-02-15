@@ -52,5 +52,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>This allows you to search for hymns and songs using your voice.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>This app needs access to the microphone to listen to your voice search commands.</string>
 </dict>
 </plist>

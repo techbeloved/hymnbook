@@ -8,6 +8,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Clear
+import androidx.compose.material.icons.rounded.Mic
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -41,6 +42,12 @@ internal fun AppSearchBar(
     keyboardType: KeyboardType = KeyboardType.Text,
 ) {
     val focusRequester = remember { FocusRequester() }
+    val voiceLauncher = rememberVoiceRecognitionLauncher { text ->
+        if (!text.isNullOrBlank()) {
+            onQueryChange(text)
+            onSearch(text)
+        }
+    }
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
@@ -88,6 +95,10 @@ internal fun AppSearchBar(
                 if (query.isNotEmpty()) {
                     IconButton(onClick = { onQueryChange("") }) {
                         Icon(imageVector = Icons.Rounded.Clear, contentDescription = "Clear search")
+                    }
+                } else {
+                    IconButton(onClick = { voiceLauncher.launch() }) {
+                        Icon(imageVector = Icons.Rounded.Mic, contentDescription = "Voice search")
                     }
                 }
             }
