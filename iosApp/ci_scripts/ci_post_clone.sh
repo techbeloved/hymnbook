@@ -16,10 +16,10 @@ WCCRM_SHEET_MUSIC_ARCHIVE="wccrm_hymns_v2.zip"
 WCCRM_TUNES_ARCHIVE="tunes_wccrm_midi_archive_hymns.zip"
 
 COMPOSE_RESOURCES_DIR="shared/src/commonMain/composeResources/files"
-IOS_COMPOSE_RESOURCES_DIR="shared/src/iosMain/composeResources/files"
 
 cd "$REPO_DIR"
 
+# ... (Existing file cleanup and directory creation logic remains the same) ...
 rm -rf "$COMPOSE_RESOURCES_DIR"/json/*.json
 rm -rf "$COMPOSE_RESOURCES_DIR"/openlyrics/*.zip
 rm -rf "$COMPOSE_RESOURCES_DIR"/sheets/*.zip
@@ -36,11 +36,25 @@ curl --output "$COMPOSE_RESOURCES_DIR"/tunes/"$WCCRM_TUNES_ARCHIVE" "$WCCRM_TUNE
 curl --output "$COMPOSE_RESOURCES_DIR"/sheets/"$WCCRM_SHEET_MUSIC_ARCHIVE" "$WCCRM_SHEET_MUSIC_ASSET_DOWNLOAD_URL"
 echo "Download assets complete"
 
-curl -s "https://get.sdkman.io?ci=true&rcupdate=false" | bash
-source "$HOME/.sdkman/bin/sdkman-init.sh"
-sdk install java 21.0.8-amzn
+# --- CHANGED SECTION START ---
+echo "Installing Java 21 via Homebrew..."
 
-export JAVA_HOME=/Users/local/.sdkman/candidates/java/current
+# Unlink old java versions if necessary to avoid conflicts (optional but recommended)
+# brew unlink java || true
+
+# Install OpenJDK 21
+brew install openjdk@21
+
+# Symlink it so the system wrappers find it (Required for macOS)
+sudo ln -sfn "$(brew --prefix openjdk@21)"/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-21.jdk
+
+# Set JAVA_HOME
+export JAVA_HOME=$(brew --prefix openjdk@21)
+export PATH=$JAVA_HOME/bin:$PATH
+
+echo "Java version:"
+java -version
+# --- CHANGED SECTION END ---
 
 ./gradlew :shared:compileKotlinIosArm64
 
