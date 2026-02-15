@@ -11,6 +11,7 @@ import androidx.navigation.toRoute
 import com.techbeloved.hymnbook.shared.analytics.TrackAnalyticsEventUseCase
 import com.techbeloved.hymnbook.shared.di.appComponent
 import com.techbeloved.hymnbook.shared.media.GetAvailableMediaForSongUseCase
+import com.techbeloved.hymnbook.shared.model.SongBookEntry
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.preferences.ChangeFontSizeUseCase
 import com.techbeloved.hymnbook.shared.preferences.ChangePreferenceUseCase
@@ -22,6 +23,7 @@ import com.techbeloved.hymnbook.shared.settings.DarkModePreferenceKey
 import com.techbeloved.hymnbook.shared.sheetmusic.GetAvailableSheetMusicForSongUseCase
 import com.techbeloved.hymnbook.shared.songbooks.GetSongbookEntriesForSongUseCase
 import com.techbeloved.hymnbook.shared.songs.GetSongIdsByFilterUseCase
+import com.techbeloved.hymnbook.shared.songs.TrackSongViewUseCase
 import com.techbeloved.hymnbook.shared.songshare.GetSongShareDataUseCase
 import com.techbeloved.hymnbook.shared.soundfont.GetSoundFontPreferenceFlowUseCase
 import com.techbeloved.hymnbook.shared.soundfont.IsSoundFontSupportedUseCase
@@ -50,6 +52,7 @@ internal class SongDetailPagerModel @Inject constructor(
     private val getSoundFontPreferenceFlowUseCase: GetSoundFontPreferenceFlowUseCase,
     private val isSoundFontSupportedUseCase: IsSoundFontSupportedUseCase,
     private val getSongShareDataUseCase: GetSongShareDataUseCase,
+    private val trackSongViewUseCase: TrackSongViewUseCase,
     getPreferenceFlowUseCase: GetPreferenceFlowUseCase,
     @Assisted savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -100,10 +103,10 @@ internal class SongDetailPagerModel @Inject constructor(
             currentDisplayMode = preferences.songDisplayMode,
             currentSongBookEntry = songbookEntries.firstOrNull(),
             soundFontState = soundFontState,
+            shareAppData = songShareData,
             bottomSheetState = if (bottomSheetVisible) {
                 DetailBottomSheetState.Show(
                     preferences = preferences,
-                    shareAppData = songShareData,
                     darkModePreference = darkMode,
                 )
             } else {
@@ -179,6 +182,18 @@ internal class SongDetailPagerModel @Inject constructor(
         } else {
             flowOf(SoundFontState.NotSupported)
         }
+
+    fun onTrackCurrentSong(
+        songId: Long,
+        songbookEntry: SongBookEntry?,
+    ) {
+        viewModelScope.launch {
+            trackSongViewUseCase(
+                songId = songId,
+                songbookEntry = songbookEntry,
+            )
+        }
+    }
 
     @Inject
     class Factory(val create: (SavedStateHandle) -> SongDetailPagerModel)

@@ -1,0 +1,29 @@
+CREATE TABLE IF NOT EXISTS RecentlyViewedSongsEntity (
+    song_id INTEGER NOT NULL,
+    songbook TEXT,
+    songbook_entry TEXT,
+    view_count INTEGER NOT NULL DEFAULT 1,
+    last_viewed_at INTEGER DEFAULT (strftime('%s', 'now')),
+    FOREIGN KEY (song_id) REFERENCES SongEntity(id) ON DELETE CASCADE,
+    UNIQUE(song_id, songbook, songbook_entry)
+);
+
+upsert:
+INSERT INTO RecentlyViewedSongsEntity(song_id, songbook, songbook_entry, view_count, last_viewed_at)
+VALUES (:song_id, :songbook, :songbook_entry, 1, strftime('%s', 'now'))
+    ON CONFLICT(song_id, songbook, songbook_entry) DO UPDATE SET
+        last_viewed_at = excluded.last_viewed_at,
+        view_count=view_count+1;
+
+
+getRecentlyViewedSongs:
+SELECT sd.id, sd.title, sd.alternate_title, rs.songbook, rs.songbook_entry
+FROM RecentlyViewedSongsEntity AS rs
+JOIN SongDetail AS sd ON sd.id = rs.song_id
+ORDER BY last_viewed_at DESC LIMIT :lmt;
+
+getMostViewedSongs:
+SELECT sd.id, sd.title, sd.alternate_title, rs.songbook, rs.songbook_entry, rs.view_count
+FROM RecentlyViewedSongsEntity AS rs
+JOIN SongDetail AS sd ON sd.id = rs.song_id
+ORDER BY view_count DESC LIMIT :lmt;

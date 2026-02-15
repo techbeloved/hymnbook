@@ -1,0 +1,38 @@
+CREATE TABLE IF NOT EXISTS SearchHistoryEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT ,
+    query TEXT NOT NULL UNIQUE COLLATE NOCASE,
+    last_searched_at INTEGER DEFAULT (strftime('%s', 'now'))
+);
+
+CREATE TRIGGER IF NOT EXISTS limit_search_history
+AFTER INSERT ON SearchHistoryEntity
+BEGIN
+    DELETE FROM SearchHistoryEntity
+    WHERE id NOT IN (
+        SELECT id FROM SearchHistoryEntity
+        ORDER BY last_searched_at DESC
+        LIMIT 100
+    );
+END;
+
+upsert:
+INSERT INTO SearchHistoryEntity(query, last_searched_at)
+VALUES (?,  strftime('%s', 'now'))
+    ON CONFLICT(query) DO UPDATE SET
+        last_searched_at = excluded.last_searched_at;
+
+getLatest:
+SELECT query, last_searched_at FROM SearchHistoryEntity
+ORDER BY last_searched_at DESC LIMIT :lmt;
+
+filter:
+SELECT query, last_searched_at FROM SearchHistoryEntity
+WHERE query LIKE :query || '%' ESCAPE '\'
+ORDER BY last_searched_at DESC
+LIMIT :lmt;
+
+getSearchSuggestions:
+SELECT sd.title
+FROM SongDetail AS sd
+WHERE sd.title LIKE :query || '%' ESCAPE '\'
+ORDER BY sd.title LIMIT :limit;

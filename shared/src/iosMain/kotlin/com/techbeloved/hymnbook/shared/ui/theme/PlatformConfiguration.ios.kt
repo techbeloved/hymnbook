@@ -1,12 +1,17 @@
 package com.techbeloved.hymnbook.shared.ui.theme
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.uikit.LocalUIViewController
+import com.techbeloved.hymnbook.shared.di.appComponent
+import com.techbeloved.hymnbook.shared.settings.DarkModePreference
+import kotlinx.coroutines.flow.map
 import platform.Foundation.NSNotificationCenter
 import platform.Foundation.NSOperationQueue
 import platform.UIKit.UIAccessibilityContrastHigh
@@ -53,4 +58,21 @@ internal fun isHighContrastEnabled(): State<Boolean> {
         }
     }
     return isHighContrastState
+}
+
+@Composable
+internal actual fun isAppInDarkTheme(): Boolean {
+    val defaultState = isSystemInDarkTheme()
+    val preferenceFlow = remember {
+        appComponent.getDarkModePreferenceFlowUseCase().invoke()
+            .map { darkMode ->
+                when (darkMode) {
+                    DarkModePreference.Light -> false
+                    DarkModePreference.Dark -> true
+                    DarkModePreference.System -> defaultState
+                }
+            }
+    }
+
+    return preferenceFlow.collectAsState(defaultState).value
 }

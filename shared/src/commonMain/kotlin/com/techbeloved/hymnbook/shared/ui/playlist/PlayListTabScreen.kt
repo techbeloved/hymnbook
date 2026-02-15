@@ -52,18 +52,17 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.techbeloved.hymnbook.shared.model.playlist.PlaylistItem
-import com.techbeloved.hymnbook.shared.settings.DarkModePreference
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
 import com.techbeloved.hymnbook.shared.ui.dialog.AppDialog
 import com.techbeloved.hymnbook.shared.ui.theme.AppTheme
 import com.techbeloved.hymnbook.shared.ui.utils.generateRandomPastelColor
 import kotlinx.collections.immutable.persistentListOf
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.time.Instant
 
 @Composable
@@ -210,7 +209,7 @@ private fun PlaylistsUiPreviewDark() {
     )
     val state =
         PlaylistsUiState(playlists = persistentListOf(item1, item2))
-    AppTheme(darkMode = DarkModePreference.Dark) {
+    AppTheme(darkTheme = true) {
         PlaylistsUi(state = state, onAddPlaylistClick = { }, onDelete = {}, onItemClick = {})
     }
 }

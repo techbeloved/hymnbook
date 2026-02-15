@@ -12,17 +12,25 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.PlaylistAddCircle
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -53,7 +61,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.techbeloved.hymnbook.shared.config.defaultAppConfig
@@ -61,6 +71,8 @@ import com.techbeloved.hymnbook.shared.generated.Res
 import com.techbeloved.hymnbook.shared.generated.content_description_search
 import com.techbeloved.hymnbook.shared.generated.content_description_show_more_controls
 import com.techbeloved.hymnbook.shared.generated.no_sheet_music_available
+import com.techbeloved.hymnbook.shared.generated.now_playing_add_to_playlist
+import com.techbeloved.hymnbook.shared.generated.now_playing_share_action
 import com.techbeloved.hymnbook.shared.generated.show_lyrics
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.model.SongFilter
@@ -69,6 +81,7 @@ import com.techbeloved.hymnbook.shared.songs.SongData
 import com.techbeloved.hymnbook.shared.ui.CenteredAppTopBar
 import com.techbeloved.hymnbook.shared.ui.settings.NowPlayingSettingsBottomSheet
 import com.techbeloved.hymnbook.shared.ui.share.NativeShareButton
+import com.techbeloved.hymnbook.shared.ui.share.ShareIcon
 import com.techbeloved.hymnbook.shared.ui.utils.toUiDetail
 import com.techbeloved.media.PlaybackController
 import com.techbeloved.media.PlaybackState
@@ -81,6 +94,7 @@ import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
 import io.ktor.http.URLBuilder
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
@@ -136,37 +150,58 @@ internal fun SongDetailScreen(
     LaunchedEffect(playbackState.playbackSpeed) {
         pagerViewModel.trackSongSpeed(playbackState.playbackSpeed)
     }
+    if (pagerState is SongDetailPagerState.Content) {
+        val state = pagerState as SongDetailPagerState.Content
+        LifecycleResumeEffect(state.currentSongId, state.currentSongBookEntry) {
+            lifecycleScope.launch {
+                delay(timeMillis = 3000)
+                pagerViewModel.onTrackCurrentSong(
+                    songId = state.currentSongId,
+                    songbookEntry = state.currentSongBookEntry,
+                )
+            }
+            onPauseOrDispose { }
+        }
+    }
     when (val state = pagerState) {
         is SongDetailPagerState.Content -> {
-            SongPager(
-                state = state,
-                pageContent = { songId, contentPadding ->
-                    LaunchedEffect(songId) {
-                        currentSongId = songId
+            NativeShareButton {
+                SongPager(
+                    state = state,
+                    pageContent = { songId, contentPadding ->
+                        LaunchedEffect(songId) {
+                            currentSongId = songId
+                        }
+                        val screenModel: SongDetailScreenModel = viewModel(
+                            key = songId.toString(),
+                            factory = SongDetailScreenModel.Factory,
+                            extras = MutableCreationExtras().apply {
+                                set(SongDetailScreenModel.SONG_ID_KEY, songId)
+                            },
+                        )
+                        val uiDetail by screenModel.state.collectAsStateWithLifecycle()
+                        SongDetailUi(
+                            state = uiDetail,
+                            contentPadding = contentPadding,
+                            onShowLyrics = {
+                                pagerViewModel.onChangeSongDisplayMode(SongDisplayMode.Lyrics)
+                            },
+                        )
+                    },
+                    onPageChanged = pagerViewModel::onPageSelected,
+                    onShowSettingsBottomSheet = pagerViewModel::onShowSettings,
+                    playbackState = playbackState,
+                    controller = playbackController,
+                    onOpenSearch = onOpenSearch,
+                    onShowSoundFontSettings = onShowSoundFontSettings,
+                    onShare = {
+                        onClick(state.shareAppData)
+                    },
+                    onAddToPlaylist = {
+                        currentSongId?.let { onAddSongToPlaylist(it) }
                     }
-                    val screenModel: SongDetailScreenModel = viewModel(
-                        key = songId.toString(),
-                        factory = SongDetailScreenModel.Factory,
-                        extras = MutableCreationExtras().apply {
-                            set(SongDetailScreenModel.SONG_ID_KEY, songId)
-                        },
-                    )
-                    val uiDetail by screenModel.state.collectAsStateWithLifecycle()
-                    SongDetailUi(
-                        state = uiDetail,
-                        contentPadding = contentPadding,
-                        onShowLyrics = {
-                            pagerViewModel.onChangeSongDisplayMode(SongDisplayMode.Lyrics)
-                        },
-                    )
-                },
-                onPageChanged = pagerViewModel::onPageSelected,
-                onShowSettingsBottomSheet = pagerViewModel::onShowSettings,
-                playbackState = playbackState,
-                controller = playbackController,
-                onOpenSearch = onOpenSearch,
-                onShowSoundFontSettings = onShowSoundFontSettings,
-            )
+                )
+            }
 
             when (val state = state.bottomSheetState) {
                 DetailBottomSheetState.Hidden -> {
@@ -197,10 +232,6 @@ internal fun SongDetailScreen(
                             onZoomIn = pagerViewModel::onIncreaseFontSize,
                             onChangeSongDisplayMode = pagerViewModel::onChangeSongDisplayMode,
                             onSoundfonts = onShowSoundFontSettings,
-                            onAddSongToPlaylist = {
-                                pagerViewModel.onHideSettings()
-                                currentSongId?.let { onAddSongToPlaylist(it) }
-                            },
                             onToggleLooping = {
                                 playbackController?.toggleLooping()
                             },
@@ -209,9 +240,6 @@ internal fun SongDetailScreen(
                             isLoopingSupported = playbackController?.isLoopingSupported == true,
                             preferences = state.preferences,
                             playbackSpeed = playbackState.playbackSpeed,
-                            onShareSongClick = {
-                                onClick(state.shareAppData)
-                            },
                             darkModePreference = state.darkModePreference,
                             onToggleDarkMode = pagerViewModel::onToggleDarkMode,
                         )
@@ -340,6 +368,8 @@ private fun SongPager(
     state: SongDetailPagerState.Content,
     pageContent: @Composable (songId: Long, contentPadding: PaddingValues) -> Unit,
     onPageChanged: (newPage: Int) -> Unit,
+    onAddToPlaylist: () -> Unit,
+    onShare: () -> Unit,
     onShowSettingsBottomSheet: () -> Unit,
     onShowSoundFontSettings: () -> Unit,
     playbackState: PlaybackState,
@@ -363,7 +393,7 @@ private fun SongPager(
                 modifier = Modifier.hazeEffect(hazeState, style = HazeMaterials.ultraThin()),
                 titleContent = {
                     Text(
-                        text = "Hymn, ${state.currentSongBookEntry?.entry}",
+                        text = "HSCF, ${state.currentSongBookEntry?.entry}",
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
                         modifier = Modifier,
@@ -374,12 +404,6 @@ private fun SongPager(
                 },
                 actions = {
                     Spacer(Modifier.width(8.dp))
-                    IconButton(onClick = onOpenSearch, modifier = Modifier) {
-                        Icon(
-                            imageVector = Icons.Filled.Search,
-                            contentDescription = stringResource(Res.string.content_description_search),
-                        )
-                    }
                     IconButton(
                         onClick = onShowSettingsBottomSheet,
                     ) {
@@ -388,6 +412,16 @@ private fun SongPager(
                             contentDescription = stringResource(Res.string.content_description_show_more_controls),
                         )
                     }
+                    IconButton(onClick = onOpenSearch, modifier = Modifier) {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = stringResource(Res.string.content_description_search),
+                        )
+                    }
+                    ShowMoreButton(
+                        onAddToPlaylist = onAddToPlaylist,
+                        onShare = onShare,
+                    )
                 }
             )
         },
@@ -458,6 +492,69 @@ private fun SongPager(
             ) { page ->
                 pageContent(state.pages[page], innerPadding)
             }
+        }
+    }
+}
+
+@Composable
+private fun ShowMoreButton(
+    onAddToPlaylist: () -> Unit,
+    onShare: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    var isExpanded by remember { mutableStateOf(false) }
+    ExposedDropdownMenuBox(
+        expanded = isExpanded,
+        onExpandedChange = { isExpanded = it },
+        modifier = modifier,
+    ) {
+        IconButton(
+            onClick = {},
+            modifier = Modifier.menuAnchor(type = ExposedDropdownMenuAnchorType.PrimaryNotEditable),
+        ) {
+            Icon(
+                imageVector = Icons.Default.MoreVert,
+                contentDescription = "More",
+            )
+        }
+
+        ExposedDropdownMenu(
+            expanded = isExpanded,
+            onDismissRequest = { isExpanded = false },
+            shape = MaterialTheme.shapes.medium,
+            matchAnchorWidth = false,
+        ) {
+
+            DropdownMenuItem(
+                text = { Text(text = stringResource(Res.string.now_playing_add_to_playlist)) },
+                onClick = {
+                    onAddToPlaylist()
+                    isExpanded = false
+                },
+                contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.PlaylistAddCircle,
+                        contentDescription = null,
+                    )
+                }
+            )
+            HorizontalDivider()
+            DropdownMenuItem(
+                text = { Text(text = stringResource(Res.string.now_playing_share_action)) },
+                onClick = {
+                    onShare()
+                    isExpanded = false
+                },
+                contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                leadingIcon = {
+                    Icon(
+                        imageVector = ShareIcon,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp),
+                    )
+                },
+            )
         }
     }
 }

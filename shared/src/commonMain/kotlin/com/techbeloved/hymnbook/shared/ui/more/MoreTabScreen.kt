@@ -11,7 +11,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
@@ -23,13 +22,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import com.techbeloved.hymnbook.shared.AppHost
 import com.techbeloved.hymnbook.shared.songshare.ShareAppData
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
 import com.techbeloved.hymnbook.shared.ui.share.NativeShareButton
+import com.techbeloved.hymnbook.shared.ui.share.ShareIcon
 import io.ktor.http.URLBuilder
 import io.ktor.http.URLProtocol
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 internal fun MoreTabScreen(
@@ -77,7 +77,7 @@ internal fun MoreTabScreen(
                             )
                         },
                         leadingContent = {
-                            Icon(imageVector = Icons.Filled.Share, contentDescription = null)
+                            Icon(imageVector = ShareIcon, contentDescription = null)
                         }
                     )
                 }

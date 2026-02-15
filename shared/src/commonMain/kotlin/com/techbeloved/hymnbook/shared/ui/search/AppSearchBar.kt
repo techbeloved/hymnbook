@@ -8,6 +8,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Clear
+import androidx.compose.material.icons.rounded.Mic
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -24,8 +25,10 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.techbeloved.hymnbook.shared.ui.AppTopBar
+import com.techbeloved.hymnbook.shared.ui.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,8 +39,15 @@ internal fun AppSearchBar(
     placeholderText: String,
     modifier: Modifier = Modifier,
     maxChar: Int = 50,
+    keyboardType: KeyboardType = KeyboardType.Text,
 ) {
     val focusRequester = remember { FocusRequester() }
+    val voiceLauncher = rememberVoiceRecognitionLauncher { text ->
+        if (!text.isNullOrBlank()) {
+            onQueryChange(text)
+            onSearch(text)
+        }
+    }
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
@@ -56,7 +66,7 @@ internal fun AppSearchBar(
                         color = MaterialTheme.colorScheme.onSurface,
                     ),
                     keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text,
+                        keyboardType = keyboardType,
                         imeAction = ImeAction.Search,
                     ),
                     keyboardActions = KeyboardActions(onSearch = { onSearch(query) }),
@@ -86,6 +96,10 @@ internal fun AppSearchBar(
                     IconButton(onClick = { onQueryChange("") }) {
                         Icon(imageVector = Icons.Rounded.Clear, contentDescription = "Clear search")
                     }
+                } else {
+                    IconButton(onClick = { voiceLauncher.launch() }) {
+                        Icon(imageVector = Icons.Rounded.Mic, contentDescription = "Voice search")
+                    }
                 }
             }
         )
@@ -95,4 +109,17 @@ internal fun AppSearchBar(
         )
     }
 
+}
+
+@Preview
+@Composable
+private fun PreviewAppSearchBar() {
+    AppTheme {
+        AppSearchBar(
+            query = "",
+            onSearch = {},
+            onQueryChange = {},
+            placeholderText = "Search",
+        )
+    }
 }

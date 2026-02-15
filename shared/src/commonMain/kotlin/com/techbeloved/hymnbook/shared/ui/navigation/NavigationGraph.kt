@@ -51,7 +51,7 @@ private fun NavGraphBuilder.songDetailDestination(navController: NavHostControll
                 navController.navigate(AddSongToPlaylistDialog(songId))
             },
             onOpenSearch = {
-                navController.navigate(SearchScreen)
+                navController.navigate(SearchScreen())
             },
             onShowSoundFontSettings = {
                 navController.navigate(SoundFontSettingsScreen)
@@ -62,17 +62,21 @@ private fun NavGraphBuilder.songDetailDestination(navController: NavHostControll
 
 private fun NavGraphBuilder.searchScreenDestination(navController: NavHostController) {
     composable<SearchScreen> {
-        SearchScreen(onSongItemClicked = { song ->
-            navController.navigate(
-                SongDetailScreen(
-                    initialSongId = song.id,
-                    topics = SongFilter.NONE.topics,
-                    songbooks = song.songbook?.let { listOf(it) } ?: SongFilter.NONE.songbooks,
-                    orderByTitle = SongFilter.NONE.orderByTitle,
-                    playlistIds = SongFilter.NONE.playlistIds,
+        val args = it.toRoute<SearchScreen>()
+        SearchScreen(
+            onSongItemClicked = { song ->
+                navController.navigate(
+                    SongDetailScreen(
+                        initialSongId = song.id,
+                        topics = SongFilter.NONE.topics,
+                        songbooks = song.songbook?.let { listOf(it) } ?: SongFilter.NONE.songbooks,
+                        orderByTitle = SongFilter.NONE.orderByTitle,
+                        playlistIds = SongFilter.NONE.playlistIds,
+                    )
                 )
-            )
-        })
+            },
+            isSpeedDial = args.isSpeedDial,
+        )
     }
 }
 

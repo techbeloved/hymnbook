@@ -3,6 +3,7 @@ package com.techbeloved.hymnbook.shared.ui.detail
 import com.techbeloved.hymnbook.shared.model.SongBookEntry
 import com.techbeloved.hymnbook.shared.model.SongDisplayMode
 import com.techbeloved.hymnbook.shared.model.soundfont.SavedSoundFont
+import com.techbeloved.hymnbook.shared.songshare.ShareAppData
 import com.techbeloved.media.AudioItem
 import kotlinx.collections.immutable.ImmutableList
 
@@ -20,6 +21,7 @@ internal sealed interface SongDetailPagerState {
         val soundFontState: SoundFontState,
         val pages: ImmutableList<Long>,
         val bottomSheetState: DetailBottomSheetState,
+        val shareAppData: ShareAppData,
     ) : SongDetailPagerState
 }
 

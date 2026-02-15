@@ -17,5 +17,6 @@ class HymnApp : Application() {
             ),
             appAnalytics = FirebaseAppAnalytics(),
         )
+
     }
 }

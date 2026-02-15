@@ -68,7 +68,7 @@ internal fun NavGraphBuilder.addHomeRoutes(
 ) {
     composable<TopLevelDestination.Home> {
         HomeTabScreen(
-            onOpenSearch = { navController.navigate(SearchScreen) },
+            onOpenSearch = { navController.navigate(SearchScreen(isSpeedDial = it)) },
             onSongItemClicked = { song ->
                 navController.navigate(
                     SongDetailScreen(
