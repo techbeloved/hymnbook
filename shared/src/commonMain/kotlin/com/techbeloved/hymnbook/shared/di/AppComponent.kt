@@ -55,7 +55,7 @@ internal interface AppComponent {
 
     fun homeScreenModel(): HomeScreenModel
 
-    fun searchScreenModel(): SearchScreenModel
+    fun searchScreenModelFactory(): SearchScreenModel.Factory
 
     fun topicsViewModel(): TopicsViewModel
 

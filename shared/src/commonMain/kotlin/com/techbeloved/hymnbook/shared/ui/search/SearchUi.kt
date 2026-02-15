@@ -93,6 +93,14 @@ internal fun SearchUi(
                     modifier = Modifier.fillMaxSize(),
                 )
 
+                state.isSpeedDial && query.isNotBlank() -> SearchResults(
+                    results = state.results,
+                    contentPadding = PaddingValues(),
+                    modifier = Modifier
+                        .nestedScroll(scrollBehavior.nestedScrollConnection),
+                    onSongItemClicked = onSongItemClicked,
+                )
+
                 state.isTyping -> SearchSuggestionsUi(
                     suggestions = state.searchSuggestions.suggestions,
                     onSuggestionClicked = {

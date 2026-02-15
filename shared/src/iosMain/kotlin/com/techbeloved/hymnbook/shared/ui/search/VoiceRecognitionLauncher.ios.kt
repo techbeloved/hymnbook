@@ -88,7 +88,7 @@ private fun VoiceSearchDialog(
                     }
 
                     val audioSession = AVAudioSession.sharedInstance()
-                    try {
+                    runCatching {
                         audioSession.setCategory(
                             AVAudioSessionCategoryRecord,
                             mode = AVAudioSessionModeMeasurement,
@@ -100,8 +100,8 @@ private fun VoiceSearchDialog(
                             withOptions = AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation,
                             error = null
                         )
-                    } catch (e: Exception) {
-                        errorMessage = "Audio Session Error: ${e.message}"
+                    }.onFailure {
+                        errorMessage = "Audio Session Error: ${it.message}"
                         return@dispatch_async
                     }
 
@@ -121,7 +121,7 @@ private fun VoiceSearchDialog(
 
                     try {
                         audioEngine.startAndReturnError(null)
-                    } catch (e: Exception) {
+                    } catch (_: Exception) {
                         errorMessage = "Audio Engine Error"
                         return@dispatch_async
                     }
@@ -130,7 +130,9 @@ private fun VoiceSearchDialog(
                     recognitionRequest?.shouldReportPartialResults = true
 
                     recognitionTask =
-                        speechRecognizer?.recognitionTaskWithRequest(recognitionRequest!!) { result: SFSpeechRecognitionResult?, error: NSError? ->
+                        speechRecognizer.recognitionTaskWithRequest(
+                            checkNotNull(recognitionRequest)
+                        ) { result: SFSpeechRecognitionResult?, error: NSError? ->
                             dispatch_async(dispatch_get_main_queue()) {
                                 var isFinal = false
                                 if (result != null) {

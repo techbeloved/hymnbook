@@ -12,6 +12,7 @@ internal data class SearchState(
     val recentSearches: RecentSearches = RecentSearches(),
     val isLoading: Boolean = false,
     val isTyping: Boolean = false,
+    val isSpeedDial: Boolean = false,
     val searchSuggestions: SearchSuggestion = SearchSuggestion(
         suggestions = persistentListOf(),
         history = persistentListOf(),
