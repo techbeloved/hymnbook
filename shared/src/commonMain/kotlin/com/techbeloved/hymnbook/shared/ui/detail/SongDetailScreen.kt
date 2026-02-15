@@ -393,7 +393,7 @@ private fun SongPager(
                 modifier = Modifier.hazeEffect(hazeState, style = HazeMaterials.ultraThin()),
                 titleContent = {
                     Text(
-                        text = "Hymn, ${state.currentSongBookEntry?.entry}",
+                        text = "HSCF, ${state.currentSongBookEntry?.entry}",
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
                         modifier = Modifier,
