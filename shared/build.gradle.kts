@@ -1,12 +1,11 @@
 
 import com.mikepenz.aboutlibraries.plugin.DuplicateMode
 import com.mikepenz.aboutlibraries.plugin.DuplicateRule
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.about.libraries)
     alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.jetbrains.compose.compiler)
     alias(libs.plugins.jetbrains.compose.hotreload)
@@ -21,11 +20,15 @@ kotlin {
     compilerOptions {
         optIn.add("kotlin.time.ExperimentalTime")
     }
-    androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
+    androidLibrary {
+        namespace = "com.techbeloved.hymnbook.shared"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
+        androidResources {
+            enable = true
         }
     }
+    jvmToolchain(libs.versions.jdk.get().toInt())
 
     jvm("desktop")
 
@@ -143,24 +146,8 @@ compose.resources {
     publicResClass = false
 }
 
-android {
-    namespace = "com.techbeloved.hymnbook.shared"
-    compileSdk = libs.versions.android.targetSdk.get().toInt()
-    defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
-    }
-
-    kotlin {
-        jvmToolchain(libs.versions.jdk.get().toInt())
-    }
-
-    sourceSets["main"].apply {
-        res.srcDirs("src/androidMain/res")
-    }
-}
-
 dependencies {
-    debugImplementation(libs.jetbrains.compose.ui.tooling)
+    androidRuntimeClasspath(libs.jetbrains.compose.ui.tooling)
 }
 
 aboutLibraries {

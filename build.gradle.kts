@@ -22,6 +22,7 @@ plugins {
     alias(libs.plugins.benmanes.versions) apply true
     alias(libs.plugins.about.libraries) apply true
     alias(libs.plugins.triplet.play) apply false
+    alias(libs.plugins.android.kotlin.multiplatform.library) apply false
 }
 
 tasks.named<DependencyUpdatesTask>("dependencyUpdates") {
