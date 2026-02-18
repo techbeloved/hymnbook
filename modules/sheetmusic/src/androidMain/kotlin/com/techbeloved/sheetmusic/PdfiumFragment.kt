@@ -4,9 +4,9 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import com.github.barteksc.pdfviewer.PDFView
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle
 import com.github.barteksc.pdfviewer.util.FitPolicy
-import com.techbeloved.sheetmusic.databinding.PdfiumFragmentBinding
 import java.io.File
 
 internal class PdfiumFragment : Fragment(R.layout.pdfium_fragment) {
@@ -15,12 +15,12 @@ internal class PdfiumFragment : Fragment(R.layout.pdfium_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val binding = PdfiumFragmentBinding.bind(view)
+       val pdfview: PDFView = view.findViewById<PDFView>(R.id.pdfview)
 
         val isDarkMode = isDarkMode()
-        binding.pdfview.isZooming
+        pdfview.isZooming
 
-        binding.pdfview.fromFile(File(documentPath))
+        pdfview.fromFile(File(documentPath))
             .onError { error ->
                 println(error)
             }
